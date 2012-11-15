@@ -16,3 +16,6 @@
   --namespace="org.jboss.search.suggestions.templates" \
   --output_mode='script' \
   --output_file=./src/main/webapp/testing-only.js
+
+echo "---------------------------------------"
+echo "src/main/webapp/testing-only.js updated"
