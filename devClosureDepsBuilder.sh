@@ -13,6 +13,7 @@
   --namespace="LoggingWindow" \
   --namespace="Init" \
   --namespace="org.jboss.search.SearchFieldHandler" \
+  --namespace="org.jboss.search.client.Client" \
   --namespace="org.jboss.search.suggestions.templates" \
   --output_mode='script' \
   --output_file=./src/main/webapp/testing-only.js

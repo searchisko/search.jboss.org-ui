@@ -11,6 +11,7 @@
   --root=./src/main/javascript \
   --root=./src/test/webapp/js \
   --namespace="org.jboss.search.SearchFieldHandler" \
+  --namespace="org.jboss.search.client.Client" \
   --namespace="org.jboss.search.gui.test.SearchFieldHandlerTest" \
   --namespace="org.jboss.search.suggestions.templates" \
   --output_mode='list' \

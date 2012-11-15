@@ -20,6 +20,7 @@ goog.provide('Init');
 
 goog.require('org.jboss.search.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.templates');
+goog.require('org.jboss.search.client.Client');
 
 goog.require('goog.array');
 
@@ -46,53 +47,16 @@ goog.require('goog.debug.Logger');
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
     var query_suggestions_div = /** @type {!HTMLInputElement} */ goog.dom.getElement('search_suggestions');
 
-    /**
-     *
-     * @param {!String} query_string
-     */
-    var tmp_query_suggestions = function(query_string) {
-        return {
-            sections: [
-                {
-                    caption: "Search",
-                    options: [query_string]
-                },
-                {
-                    caption: "Query Completions",
-                    options: [
-                        "<strong>Hiberna</strong>te",
-                        "<strong>Hiberna</strong>te query",
-                        "<strong>Hiberna</strong>te session"
-                    ]
-                },
-                {
-                    caption: "Filters",
-                    options: [
-                        "<strong>Add</strong> project filter for <strong>Hibernate</strong>",
-                        "<strong>Add</strong> project filter for <strong>Infinispan</strong>",
-                        "<strong>Search</strong> project <strong>Hibernate</strong> only"
-                    ]
-                },
-                {
-                    caption: "Mails",
-                    options: [
-                        "<strong>Add</strong> some Mails filter",
-                        "Do some other fancy thing here",
-                        "Or do something else"
-                    ]
-                }
-            ]
-        }
-    };
+    var client = new org.jboss.search.client.Client();
 
     /**
      *
-     * @param data {Object}
+     * @param data {!Object}
      * @return {String}
      */
-    var generateSuggestions = function(data) {
+    var generateSuggestionsHTML = function(data) {
         var html = "";
-        if (data && /** @type {Array.<Object>} */ data.sections) {
+        if (data && /** @type {!Array.<Object>} */ data.sections) {
             goog.array.forEach(data.sections, function(section){
                 html += org.jboss.search.suggestions.templates.suggestions_section(section);
             });
@@ -102,8 +66,14 @@ goog.require('goog.debug.Logger');
 
     var callback = function(query_string) {
         query_suggestions_div.innerHTML = "";
-        query_suggestions_div.innerHTML = generateSuggestions(tmp_query_suggestions(query_string));
-        goog.dom.classes.remove(query_suggestions_div, 'hidden');
+        var suggestions = client.getSearchSuggestions(query_string);
+        if (suggestions.sections) {
+            query_suggestions_div.innerHTML = generateSuggestionsHTML(suggestions);
+            goog.dom.classes.remove(query_suggestions_div, 'hidden');
+        } else {
+            goog.dom.classes.add(query_suggestions_div, 'hidden');
+        }
+
     };
 
     // prepare keyHandlers for the main search field
