@@ -19,6 +19,9 @@
 goog.provide('Init');
 
 goog.require('org.jboss.search.SearchFieldHandler');
+goog.require('org.jboss.search.suggestions.templates');
+
+goog.require('goog.array');
 
 goog.require('goog.async.Delay');
 
@@ -41,11 +44,66 @@ goog.require('goog.debug.Logger');
     var log = goog.debug.Logger.getLogger('init');
 
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
-    var query_suggestions = /** @type {!HTMLInputElement} */ goog.dom.getElement('search_suggestions');
+    var query_suggestions_div = /** @type {!HTMLInputElement} */ goog.dom.getElement('search_suggestions');
+
+    /**
+     *
+     * @param {!String} query_string
+     */
+    var tmp_query_suggestions = function(query_string) {
+        return {
+            sections: [
+                {
+                    caption: "Search",
+                    options: [query_string]
+                },
+                {
+                    caption: "Query Completions",
+                    options: [
+                        "<strong>Hiberna</strong>te",
+                        "<strong>Hiberna</strong>te query",
+                        "<strong>Hiberna</strong>te session"
+                    ]
+                },
+                {
+                    caption: "Filters",
+                    options: [
+                        "<strong>Add</strong> project filter for <strong>Hibernate</strong>",
+                        "<strong>Add</strong> project filter for <strong>Infinispan</strong>",
+                        "<strong>Search</strong> project <strong>Hibernate</strong> only"
+                    ]
+                },
+                {
+                    caption: "Mails",
+                    options: [
+                        "<strong>Add</strong> some Mails filter",
+                        "Do some other fancy thing here",
+                        "Or do something else"
+                    ]
+                }
+            ]
+        }
+    };
+
+    /**
+     *
+     * @param data {Object}
+     * @return {String}
+     */
+    var generateSuggestions = function(data) {
+        var html = "";
+        if (data && /** @type {Array.<Object>} */ data.sections) {
+            goog.array.forEach(data.sections, function(section){
+                html += org.jboss.search.suggestions.templates.suggestions_section(section);
+            });
+        }
+        return html;
+    };
 
     var callback = function(query_string) {
-        log.info("Start query: '" + query_string + "'");
-        goog.dom.classes.remove(query_suggestions, 'hidden');
+        query_suggestions_div.innerHTML = "";
+        query_suggestions_div.innerHTML = generateSuggestions(tmp_query_suggestions(query_string));
+        goog.dom.classes.remove(query_suggestions_div, 'hidden');
     };
 
     // prepare keyHandlers for the main search field
@@ -53,7 +111,8 @@ goog.require('goog.debug.Logger');
 
     keyHandlers[goog.events.KeyCodes.ESC] = function(/** @type {goog.events.KeyEvent} */ event, /** goog.async.Delay */ delay) {
         delay.stop();
-        goog.dom.classes.add(query_suggestions, 'hidden');
+        goog.dom.classes.add(query_suggestions_div, 'hidden');
+        query_suggestions_div.innerHTML = "";
     };
 
     keyHandlers[goog.events.KeyCodes.UP] = function(/** @type {goog.events.KeyEvent} */ event, /** goog.async.Delay */ delay) {
@@ -72,18 +131,21 @@ goog.require('goog.debug.Logger');
     // thus we have to handle it
     keyHandlers[goog.events.KeyCodes.TAB] = function(/** @type {goog.events.KeyEvent} */ event, /** goog.async.Delay */ delay) {
         delay.stop();
-        goog.dom.classes.add(query_suggestions, 'hidden');
+        goog.dom.classes.add(query_suggestions_div, 'hidden');
+        query_suggestions_div.innerHTML = "";
     };
 
     keyHandlers[goog.events.KeyCodes.ENTER] = function(/** @type {goog.events.KeyEvent} */ event, /** goog.async.Delay */ delay) {
         // just fake for now...
-        goog.dom.classes.add(query_suggestions, 'hidden');
+        goog.dom.classes.add(query_suggestions_div, 'hidden');
+        query_suggestions_div.innerHTML = "";
         event.preventDefault();
     };
 
     var blurHandler = function() {
         log.info("BLUR happend!");
-        goog.dom.classes.add(query_suggestions, 'hidden');
+        goog.dom.classes.add(query_suggestions_div, 'hidden');
+        query_suggestions_div.innerHTML = "";
     };
 
     var fieldHandled = new org.jboss.search.SearchFieldHandler(query_field, 600, callback, blurHandler, keyHandlers);

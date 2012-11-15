@@ -1,8 +1,21 @@
 {namespace org.jboss.search.suggestions.templates}
 
 /**
- * Says hello to the world.
+ * Search suggestion section DIV.
+ *
+ * @param caption
+ * @param options
  */
-{template .helloWorld}
-  Hello world!
+{template .suggestions_section}
+    <div class="suggestions_section">
+        {foreach $option in $options}
+        <div class="selectable">
+            {if isFirst($option)}
+            <div class="caption">{$caption}</div>
+            {/if}
+            <div class="option">{$option|noAutoescape}</div>
+        </div>
+        {/foreach}
+        <div class="suggestion_section_last"></div>
+    </div>
 {/template}
