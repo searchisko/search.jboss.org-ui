@@ -1,0 +1,25 @@
+   ========================================================================
+   ==                     JBoss Community Search GUI                     ==
+   ========================================================================
+
+   JBoss, Home of Professional Open Source
+   Copyright 2012 Red Hat Inc. and/or its affiliates and other contributors as indicated by the @authors tag.
+   All rights reserved.
+
+   This product includes the following software:
+
+   - Closure compiler & library (r2180)
+     https://developers.google.com/closure/
+     License: Apache License 2.0
+     
+   - Closure templates (2011-22-12)
+     https://code.google.com/p/closure-templates/
+     License: Apache License 2.0
+
+   - jQuery 1.7.1
+     http://jquery.com
+     License: MIT, http://jquery.org/license/
+
+   - Eric Meyer's Reset CSS v2.0
+     http://meyerweb.com/eric/tools/css/reset/
+     License: none (public domain)

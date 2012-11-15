@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reset_override.css">
+    <link rel="stylesheet" href="css/search_top.css">
+    <link rel="stylesheet" href="css/search_layout.css">
+    <link rel="stylesheet" href="css/search_field.css">
+    <link rel="stylesheet" href="css/search_suggestions.css">
+
+    <title>Search JBoss Community</title>
+
+</head>
+<body>
+
+    <div id="search_top">
+        <div>
+            <h1>JBoss Community Search</h1>
+        </div>
+        <div>
+            <form method="get" id="searchform" action="#">
+                <!--<label for="query_field">Search : </label>-->
+                <!--The 'input' and 'change' events apply.-->
+                <input
+                    id="query_field" type="text"
+                    placeholder="Search"
+                    autocomplete="off"
+                    autofocus="true" >
+            </form>
+        </div>
+        <div id="active_search_filters">
+
+        </div>
+    </div>
+
+    <div id="search_filters">
+        <div id="first_filters_row">
+            <div class="content caption">Content</div>
+            <div class="content option">All</div>
+            <div class="content option">Mails</div>
+            <div class="content option">Tickets</div>
+            <div class="content option">Blogs</div>
+            <div class="content_clear"></div>
+        </div>
+        <div id="second_filters_row">
+            <div class="filter caption">Filter</div>
+            <div class="filter option">Date</div>
+            <div class="filter option">Project</div>
+            <div class="filter option">Author</div>
+            <div class="filter_clear"></div>
+        </div>
+    </div>
+
+    <!--<div id="search_suggestions"/>-->
+    <div id="search_suggestions" class="hidden">
+
+        <div class="suggestions_section">
+            <div class="selectable">
+                <div class="caption">Search</div>
+                <div class="option">Hiberna</div>
+            </div>
+            <div class="suggestion_section_last"></div>
+        </div>
+
+        <div class="suggestions_section">
+            <div class="selectable">
+                <div class="caption">Query Completions</div>
+                <div class="option"><strong>Hiberna</strong>te</div>
+            </div>
+            <div class="selectable">
+                <div class="option"><strong>Hiberna</strong>te query</div>
+            </div>
+            <div class="selectable">
+                <div class="option"><strong>Hiberna</strong>te session</div>
+            </div>
+            <div class="suggestion_section_last"></div>
+        </div>
+
+        <div class="suggestions_section">
+            <div class="selectable">
+                <div class="caption">Filters</div>
+                <div class="option"><strong>Add</strong> project filter for <strong>Hibernate</strong></div>
+            </div>
+            <div class="selectable"
+                    ><div class="option"><strong>Add</strong> project filter for <strong>Infinispan</strong></div>
+            </div>
+            <div class="selectable">
+                <div class="option"><strong>Search</strong> project <strong>Hibernate</strong> only</div>
+            </div>
+            <div class="suggestion_section_last"></div>
+        </div>
+
+        <div class="suggestions_section">
+            <div class="selectable">
+                <div class="caption">Mails</div>
+                <div class="option"><strong>Add</strong> some Mails filter</div>
+            </div>
+            <div class="selectable">
+                <div class="option">Do some other fancy thing here</div>
+            </div>
+            <div class="selectable">
+                <div class="option">Or do something else</div>
+            </div>
+            <div class="suggestion_section_last"></div>
+        </div>
+
+    </div>
+
+    <div id="search_results"/>
+
+    <script type="text/javascript">
+        var CLOSURE_NO_DEPS = true;
+    </script>
+
+    <!-- SWITCH -->
+        <!-- in production -->
+        <!--<script type="text/javascript" src="js/lib/jquery/jquery-1.7.1.min.js" charset="UTF-8"></script>-->
+        <!--<script type="text/javascript" src="javascript/compiled/search.jboss.org.gui-min.js" charset="UTF-8"></script>-->
+
+        <!-- in local development -->
+        <script type="text/javascript" src="testing-only.js" charset="UTF-8"></script>
+    <!-- END -->
+
+</body>
+</html>
