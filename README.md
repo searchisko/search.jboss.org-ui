@@ -1,6 +1,6 @@
 # Search Web UI
 
-Web UI for the (the new) [search.jboss.org](http://search.jboss.org/)
+Web UI for (the new) [search.jboss.org](http://search.jboss.org/)
 
 !!! WORK IN PROGRESS !!!
 
@@ -35,6 +35,14 @@ By Closure compiler version we mean **release** number as defined for Maven use:
 
 [ClosureJavascriptFramework](https://github.com/jlgrock/ClosureJavascriptFramework) Maven plugin is used to compile javascript source code. Specific version of Closure compiler used by this Maven plugin is set in `pom.xml` in property `${closure.library.version}`.
 
+Note that as of writing the ClosureJavascriptFramework (1.13.2) comes with older version of closure-library bundled in it. Unless [this issues](https://github.com/jlgrock/ClosureJavascriptFramework/issues/20) is fixed you have to build [this fork](https://github.com/lukas-vlcek/ClosureJavascriptFramework) and install locally into Maven repo:
+
+```
+git clone https://github.com/lukas-vlcek/ClosureJavascriptFramework;
+cd ClosureJavascriptFramework;
+mvm clean install;
+```
+
 #### Unit Testing via jsTestDriver
 
 Tests are implemented using [jsTestDriver](http://code.google.com/p/js-test-driver/). These tests are pure JavaScript executed in (captured) browser so we need to make sure
@@ -50,7 +58,7 @@ then it is important to make sure correct paths are used in `jsTestDriver.conf`:
 
 ```
 load:
-  - src/test/closure-library-r2180/closure/goog/base.js
+  - closure-library-r2180/closure/goog/base.js
   - ... etc
 ```
 
