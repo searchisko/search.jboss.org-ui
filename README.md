@@ -35,13 +35,7 @@ By Closure compiler version we mean **release** number as defined for Maven use:
 
 [ClosureJavascriptFramework](https://github.com/jlgrock/ClosureJavascriptFramework) Maven plugin is used to compile javascript source code. Specific version of Closure compiler used by this Maven plugin is set in `pom.xml` in property `${closure.library.version}`.
 
-Note that as of writing the ClosureJavascriptFramework (1.13.2) comes with older version of closure-library bundled in it. Unless [this issues](https://github.com/jlgrock/ClosureJavascriptFramework/issues/20) is fixed you have to build [this fork](https://github.com/lukas-vlcek/ClosureJavascriptFramework) and install locally into Maven repo:
-
-```
-git clone https://github.com/lukas-vlcek/ClosureJavascriptFramework;
-cd ClosureJavascriptFramework;
-mvm clean install;
-```
+We need to use ClosureJavascriptFramework version `1.14.0` or newer.
 
 #### Unit Testing via jsTestDriver
 
