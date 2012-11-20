@@ -43,7 +43,7 @@ goog.require('goog.debug.Logger');
     var log = goog.debug.Logger.getLogger('init');
 
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
-    var query_suggestions_div = /** @type {!HTMLInputElement} */ goog.dom.getElement('search_suggestions');
+    var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
 
     var client = new org.jboss.search.client.Client();
 
@@ -74,41 +74,65 @@ goog.require('goog.debug.Logger');
 
     };
 
-    // prepare keyHandlers for the main search field
-    var keyHandlers = {};
-
-    keyHandlers[goog.events.KeyCodes.ESC] = function(/** @type {goog.events.KeyEvent} */ event, /** @type {goog.async.Delay} */ delay) {
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeEscHandler = function(event, delay) {
         delay.stop();
         goog.dom.classes.add(query_suggestions_div, 'hidden');
         query_suggestions_div.innerHTML = "";
     };
 
-    keyHandlers[goog.events.KeyCodes.UP] = function(/** @type {goog.events.KeyEvent} */ event, /** @type {goog.async.Delay} */ delay) {
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodePreventDefaultHandler = function(event, delay) {
         event.preventDefault();
     };
 
-    keyHandlers[goog.events.KeyCodes.DOWN] = function(/** @type {goog.events.KeyEvent} */ event, /** @type {goog.async.Delay} */ delay) {
-        event.preventDefault();
-    };
-
-    keyHandlers[goog.events.KeyCodes.RIGHT] = function(/** @type {goog.events.KeyEvent} */ event, /** @type {goog.async.Delay} */ delay) {
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeRightHandler = function(event, delay) {
         // will do something later...
     };
 
-    // TAB key does not seem to yield true in @see {goog.events.KeyCodes.isTextModifyingKeyEvent}
-    // thus we have to handle it
-    keyHandlers[goog.events.KeyCodes.TAB] = function(/** @type {goog.events.KeyEvent} */ event, /** @type {goog.async.Delay} */ delay) {
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeTabHandler = function(event, delay) {
         delay.stop();
         goog.dom.classes.add(query_suggestions_div, 'hidden');
         query_suggestions_div.innerHTML = "";
     };
 
-    keyHandlers[goog.events.KeyCodes.ENTER] = function(/** @type {goog.events.KeyEvent} */ event, /** @type {goog.async.Delay} */ delay) {
-        // just fake for now...
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeEnterHandler = function(event, delay) {
+//        just fake for now...
         goog.dom.classes.add(query_suggestions_div, 'hidden');
         query_suggestions_div.innerHTML = "";
         event.preventDefault();
     };
+
+    // prepare keyHandlers for the main search field
+    var keyHandlers = {};
+
+    keyHandlers[goog.events.KeyCodes.ESC] = keyCodeEscHandler;
+    keyHandlers[goog.events.KeyCodes.UP] = keyCodePreventDefaultHandler;
+    keyHandlers[goog.events.KeyCodes.DOWN] = keyCodePreventDefaultHandler;
+    keyHandlers[goog.events.KeyCodes.RIGHT] = keyCodeRightHandler;
+    keyHandlers[goog.events.KeyCodes.ENTER] = keyCodeEnterHandler;
+
+    // TAB key does not seem to yield true in @see {goog.events.KeyCodes.isTextModifyingKeyEvent}
+    // thus we have to handle it
+    keyHandlers[goog.events.KeyCodes.TAB] = keyCodeTabHandler;
 
     var blurHandler = function() {
         log.info("BLUR happend!");
