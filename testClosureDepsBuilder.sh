@@ -9,11 +9,11 @@
 ./closure-library-r2180/closure/bin/build/closurebuilder.py \
   --root=./closure-library-r2180 \
   --root=./src/main/javascript \
-  --root=./src/test/webapp/js \
+  --root=./src/test/jsTestDriver \
   --namespace="org.jboss.search.SearchFieldHandler" \
   --namespace="org.jboss.search.client.Client" \
-  --namespace="org.jboss.search.gui.test.SearchFieldHandlerTest" \
   --namespace="org.jboss.search.suggestions.templates" \
+  --namespace="org.jboss.search.gui.test.SearchFieldHandlerAsyncTest" \
   --output_mode='list' \
   --output_file=./rawlist
 
