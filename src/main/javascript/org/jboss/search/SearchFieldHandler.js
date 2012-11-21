@@ -52,7 +52,7 @@ goog.require('goog.debug.Logger');
  * @param {number} callbackDelay Delay in ms to call the callback
  * @param {!Function} callback what should happen after the delay
  * @param {!Function=} opt_blurHandler what should happen on BLUR event
- * @param {Object.<goog.events.KeyCodes, Function>=} keyHandlers user defined functions per keyCode
+ * @param {Object.<(goog.events.KeyCodes|number), function(goog.events.KeyEvent, goog.async.Delay)>=} keyHandlers user defined functions per keyCode
  * @constructor
  * @extends {goog.Disposable}
  */
@@ -86,12 +86,12 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, o
     // listen for key strokes
     this.keyListenerId_ = goog.events.listen(keyHandler,
         goog.events.KeyHandler.EventType.KEY,
-        function(/** @type {goog.events.Event} */ e) {
+        function(e) {
 
             var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
 //            log.finest("keyEvent: " + goog.debug.expose(keyEvent));
 
-            if (goog.object.get(userKeyHandlers, keyEvent.keyCode)) {
+            if (goog.object.get(userKeyHandlers, keyEvent.keyCode.toString(10))) {
                 userKeyHandlers[keyEvent.keyCode](keyEvent, delay);
             }
             else if (goog.events.KeyCodes.isTextModifyingKeyEvent(/** @type {goog.events.BrowserEvent} */ (e))) {
@@ -119,7 +119,7 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, o
     // listen to content changes
     this.changeListenerId_ = goog.events.listen(inputHandler,
         goog.events.EventType.INPUT,
-        function(/** @type {goog.events.Event} */ e) {
+        function(e) {
 //            log.info("Field suddenly changed to: " + goog.debug.expose(e));
             delay.start();
 
