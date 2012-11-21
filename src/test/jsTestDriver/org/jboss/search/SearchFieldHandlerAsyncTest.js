@@ -16,7 +16,7 @@
     limitations under the License.
 */
 
-goog.provide("org.jboss.search.gui.test.SearchFieldHandlerAsyncTest");
+goog.provide("test.org.jboss.search.SearchFieldHandlerAsyncTest");
 
 goog.require('goog.testing.events');
 

@@ -12,8 +12,14 @@
   --root=./src/test/jsTestDriver \
   --namespace="org.jboss.search.SearchFieldHandler" \
   --namespace="org.jboss.search.client.Client" \
+  --namespace="org.jboss.search.suggestions.query.Model" \
+  --namespace="org.jboss.search.suggestions.query.Search" \
+  --namespace="org.jboss.search.suggestions.query.Suggestion" \
   --namespace="org.jboss.search.suggestions.templates" \
-  --namespace="org.jboss.search.gui.test.SearchFieldHandlerAsyncTest" \
+  --namespace="test.org.jboss.search.SearchFieldHandlerAsyncTest" \
+  --namespace="org.jboss.search.suggestions.query.Model" \
+  --namespace="org.jboss.search.suggestions.query.Search" \
+  --namespace="org.jboss.search.suggestions.query.Suggestion" \
   --output_mode='list' \
   --output_file=./rawlist
 
