@@ -83,3 +83,5 @@ Note the `soyutils_usegoog.js` script in `src/main/javascript/soyutils_slink`. I
 Configure automatic execution of build scripts from within IntelliJ IDEA. Whenever you change content in `/src/main/soy_templates` folder compile them in the background. As a result compiled templates will be in sync with soy files and both will be stored in the code repository. 
 
 HOWTO - <http://www.jetbrains.com/idea/webhelp/external-tools.html>
+
+The other option might be (?) using [plovr](http://plovr.com) tool.
