@@ -24,28 +24,66 @@ goog.require('org.jboss.search.suggestions.query.Suggestion');
 
 TestCase('ModelTest', {
 
-    testSeachModel: function() {
-
-        var model = new org.jboss.search.suggestions.query.Model();
+    /**
+     * Test that 'search' section of query suggestions response can be parsed.
+     */
+    testSearchModel: function() {
 
         // query is empty string after initialization
-        assertEquals("Should be empty", "", model.getSearch().query_string);
+        var model = new org.jboss.search.suggestions.query.Model();
 
-        var source = { foo : { bar : { } } };
-        model.update(source);
+        assertEquals("Should be empty", "", model.getSearch().query_string);
 
         // query is empty if source does not follow expected taxonomy
+        var source = { foo : { bar : { } } };
+        model.parse(source);
+
         assertEquals("Should be empty", "", model.getSearch().query_string);
 
+        // query is extracted correctly
         var source = {
             search : {
                 search : { query : "Hello"}
             }
         };
-        model.update(source);
+        model.parse(source);
 
-        // query is extracted correctly
         assertEquals("Should be 'Hello'", "Hello", model.getSearch().query_string);
+    },
 
+    /**
+     * Test that 'suggestions' section of query suggestions response can be parsed.
+     */
+    testSuggestionModel: function() {
+
+        // suggestions section in empty array after initialization
+        var model = new org.jboss.search.suggestions.query.Model();
+
+        assertEquals("Should be empty array", [], model.getSuggestions());
+
+        // invalid suggestions
+        var source = { foo: [] };
+        model.parse(source);
+
+        assertEquals(0, model.getSuggestions().length);
+
+        // valid suggestions
+        var source = { suggestions: [
+            { suggestion: { value: "Hibernate" },         search: { query: "Hibernate" } },
+            { suggestion: { value: "Hibernate query" },   search: { query: "Hibernate query" } },
+            { suggestion: { value: "Hibernate session" }, search: { query: "Hibernate session" } }
+        ]};
+
+        model.parse(source);
+
+        assertEquals("There should be 3 suggestions", 3, model.getSuggestions().length);
+
+        assertEquals("Hibernate", model.getSuggestions()[0].value);
+        assertEquals("Hibernate query", model.getSuggestions()[1].value);
+        assertEquals("Hibernate session", model.getSuggestions()[2].value);
+
+        assertEquals("Hibernate", model.getSuggestions()[0].query_string);
+        assertEquals("Hibernate query", model.getSuggestions()[1].query_string);
+        assertEquals("Hibernate session", model.getSuggestions()[2].query_string);
     }
 });
