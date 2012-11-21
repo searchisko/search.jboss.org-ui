@@ -10,18 +10,19 @@
   --root=./closure-library-r2180 \
   --root=./src/main/javascript \
   --root=./src/test/jsTestDriver \
+  \
+  --output_mode='list' \
+  --output_file=./rawlist \
+  \
   --namespace="org.jboss.search.SearchFieldHandler" \
   --namespace="org.jboss.search.client.Client" \
   --namespace="org.jboss.search.suggestions.query.Model" \
   --namespace="org.jboss.search.suggestions.query.Search" \
   --namespace="org.jboss.search.suggestions.query.Suggestion" \
   --namespace="org.jboss.search.suggestions.templates" \
+  \
   --namespace="test.org.jboss.search.SearchFieldHandlerAsyncTest" \
-  --namespace="org.jboss.search.suggestions.query.Model" \
-  --namespace="org.jboss.search.suggestions.query.Search" \
-  --namespace="org.jboss.search.suggestions.query.Suggestion" \
-  --output_mode='list' \
-  --output_file=./rawlist
+  --namespace="test.org.jboss.search.suggestions.query.ModelTest" \
 
 # prepare the output for the jsTestDriver.conf format
 # put the following output into the 'load:' section
