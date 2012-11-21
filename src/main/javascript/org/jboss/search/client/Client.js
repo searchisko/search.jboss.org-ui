@@ -24,6 +24,8 @@
 
 goog.provide('org.jboss.search.client.Client');
 
+//goog.require('goog.json');
+
 /**
  *
  * @constructor
@@ -35,59 +37,75 @@ org.jboss.search.client.Client = function() {
 /**
  *
  * @param {!String} query_string
+ * @param {!function(Object):number} callback Function that is called with JSON response as an argument
+ * @param {number} timeout in ms
+ * @return {number} timeoutId
  */
-org.jboss.search.client.Client.prototype.getSearchSuggestions = function(query_string) {
-    if (query_string.trim().length == 0) {
-        return {}
-    }
-    return {
-        view: {
-            search: {
-                caption: "Search",
-                options: [query_string]
+org.jboss.search.client.Client.prototype.getSearchSuggestions = function(query_string, callback, timeout) {
+
+    var timeoutId = setTimeout(function(){
+
+        var /** @type {Object} */ result;
+
+        if (query_string.trim().length == 0) {
+            result = {};
+        }
+        result = {
+            view: {
+                search: {
+                    caption: "Search",
+                    options: [query_string]
+                },
+                suggestions: {
+                    caption: "Query Completions",
+                    options: [
+                        "<strong>Hiberna</strong>te",
+                        "<strong>Hiberna</strong>te query",
+                        "<strong>Hiberna</strong>te session"
+                    ]
+                },
+                filters: {
+                    caption: "Filters",
+                    options: [
+                        "<strong>Add</strong> project filter for <strong>Hibernate</strong>",
+                        "<strong>Add</strong> project filter for <strong>Infinispan</strong>",
+                        "<strong>Search</strong> project <strong>Hibernate</strong> only"
+                    ]
+                },
+                mails: {
+                    caption: "Mails",
+                    options: [
+                        "<strong>Add</strong> some Mails filter",
+                        "Do some other fancy thing here",
+                        "Or do something else"
+                    ]
+                }
             },
-            suggestions: {
-                caption: "Query Completions",
-                options: [
-                    "<strong>Hiberna</strong>te",
-                    "<strong>Hiberna</strong>te query",
-                    "<strong>Hiberna</strong>te session"
-                ]
-            },
-            filters: {
-                caption: "Filters",
-                options: [
-                    "<strong>Add</strong> project filter for <strong>Hibernate</strong>",
-                    "<strong>Add</strong> project filter for <strong>Infinispan</strong>",
-                    "<strong>Search</strong> project <strong>Hibernate</strong> only"
-                ]
-            },
-            mails: {
-                caption: "Mails",
-                options: [
-                    "<strong>Add</strong> some Mails filter",
-                    "Do some other fancy thing here",
-                    "Or do something else"
+            model : {
+                search: { search: { query: query_string } },
+                suggestions : [
+                    { suggestion: { value: "Hibernate" },         search: { query: "Hibernate" } },
+                    { suggestion: { value: "Hibernate query" },   search: { query: "Hibernate query" } },
+                    { suggestion: { value: "Hibernate session" }, search: { query: "Hibernate session" } }
+                ],
+                filters: [
+                    { filter_add: [ "Hibernate" ] },
+                    { filter_add: [ "Infinispan" ] },
+                    { filter: [ "Hibernate" ] }
+                ],
+                mails: [
+                    {},
+                    {},
+                    {}
                 ]
             }
-        },
-        model : {
-            search: { search: { query: query_string } },
-            suggestions : [
-                { suggestion: { value: "Hibernate" },         search: { query: "Hibernate" } },
-                { suggestion: { value: "Hibernate query" },   search: { query: "Hibernate query" } },
-                { suggestion: { value: "Hibernate session" }, search: { query: "Hibernate session" } }
-            ],
-            filters: [
-                { filter_add: [ "Hibernate" ] },
-                { filter_add: [ "Infinispan" ] },
-                { filter: [ "Hibernate" ] }
-            ],
-            mails: [
-                {},
-                {},
-                {}
-            ]
-        }
-    }
+        };
+
+//        callback( goog.json.unsafeParse(result) );
+        callback( result );
+
+    // TODO:timeout will be used in XHR
+    }, timeout);
+
+    return timeoutId;
 };

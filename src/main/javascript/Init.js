@@ -74,19 +74,22 @@ goog.require('goog.debug.Logger');
 
     var callback = function(query_string) {
 
-        query_suggestions_div.innerHTML = "";
-        var responseData = client.getSearchSuggestions(query_string);
+        // TODO: keep timeoutId in case the callback is cancelled, then you need to clearTimeout(timeoutId) !!!
+        var timeoutId = client.getSearchSuggestions(query_string, function(responseData){
 
-        query_suggestions_model = parseQuerySuggestionsModel(goog.object.get(responseData, "model", {}));
+            var model = /** @type {!Object} */ (goog.object.get(responseData, "model", {}));
+            query_suggestions_model = parseQuerySuggestionsModel(model);
 
-        if (goog.object.containsKey(responseData, "view")) {
-            query_suggestions_div.innerHTML = generateQuerySuggestionsHTML(goog.object.get(responseData, "view", {}));
-            goog.dom.classes.remove(query_suggestions_div, 'hidden');
-        } else {
-            goog.dom.classes.add(query_suggestions_div, 'hidden');
-            query_suggestions_div.innerHTML = "";
-        }
+            if (goog.object.containsKey(responseData, "view")) {
+                var view = /** @type {!Object} */ (goog.object.get(responseData, "view", {}));
+                query_suggestions_div.innerHTML = generateQuerySuggestionsHTML(view);
+                goog.dom.classes.remove(query_suggestions_div, 'hidden');
+            } else {
+                goog.dom.classes.add(query_suggestions_div, 'hidden');
+                query_suggestions_div.innerHTML = "";
+            }
 
+        }, 1500);
     };
 
     /**
