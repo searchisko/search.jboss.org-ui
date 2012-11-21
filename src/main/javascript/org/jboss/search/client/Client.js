@@ -41,12 +41,12 @@ org.jboss.search.client.Client.prototype.getSearchSuggestions = function(query_s
         return {}
     }
     return {
-        sections: [
-            {
+        view: {
+            search: {
                 caption: "Search",
                 options: [query_string]
             },
-            {
+            suggestions: {
                 caption: "Query Completions",
                 options: [
                     "<strong>Hiberna</strong>te",
@@ -54,7 +54,7 @@ org.jboss.search.client.Client.prototype.getSearchSuggestions = function(query_s
                     "<strong>Hiberna</strong>te session"
                 ]
             },
-            {
+            filters: {
                 caption: "Filters",
                 options: [
                     "<strong>Add</strong> project filter for <strong>Hibernate</strong>",
@@ -62,7 +62,7 @@ org.jboss.search.client.Client.prototype.getSearchSuggestions = function(query_s
                     "<strong>Search</strong> project <strong>Hibernate</strong> only"
                 ]
             },
-            {
+            mails: {
                 caption: "Mails",
                 options: [
                     "<strong>Add</strong> some Mails filter",
@@ -70,6 +70,24 @@ org.jboss.search.client.Client.prototype.getSearchSuggestions = function(query_s
                     "Or do something else"
                 ]
             }
-        ]
+        },
+        model : {
+            search: { search: { query: query_string } },
+            suggestions : [
+                { suggestion: { value: "Hibernate" },         search: { query: "Hibernate" } },
+                { suggestion: { value: "Hibernate query" },   search: { query: "Hibernate query" } },
+                { suggestion: { value: "Hibernate session" }, search: { query: "Hibernate session" } }
+            ],
+            filters: [
+                { filter_add: [ "Hibernate" ] },
+                { filter_add: [ "Infinispan" ] },
+                { filter: [ "Hibernate" ] }
+            ],
+            mails: [
+                {},
+                {},
+                {}
+            ]
+        }
     }
 };

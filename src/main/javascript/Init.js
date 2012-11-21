@@ -32,6 +32,8 @@ goog.require('goog.events.EventType');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 
+goog.require('goog.object');
+
 goog.require('goog.debug.Logger');
 
 /**
@@ -44,32 +46,45 @@ goog.require('goog.debug.Logger');
 
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
     var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
+    var query_suggestions_model = {};
 
     var client = new org.jboss.search.client.Client();
 
     /**
      *
-     * @param data {!Object}
-     * @return {String}
+     * @param {!Object} model
+     * @return {!Object}
      */
-    var generateSuggestionsHTML = function(data) {
+    var parseQuerySuggestionsModel = function(model) {
+        return model;
+    }
+
+    /**
+     * Generate HTML for given query suggestions
+     * @param {!Object} view
+     * @return {!String}
+     */
+    var generateQuerySuggestionsHTML = function(view) {
         var html = "";
-        if (data && /** @type {!Array.<Object>} */ data.sections) {
-            goog.array.forEach(data.sections, function(section){
-                html += org.jboss.search.suggestions.templates.suggestions_section(section);
-            });
-        }
+        goog.array.forEach(goog.object.getValues(view), function(view_section) {
+            html += org.jboss.search.suggestions.templates.suggestions_section(view_section);
+        });
         return html;
     };
 
     var callback = function(query_string) {
+
         query_suggestions_div.innerHTML = "";
-        var suggestions = client.getSearchSuggestions(query_string);
-        if (suggestions.sections) {
-            query_suggestions_div.innerHTML = generateSuggestionsHTML(suggestions);
+        var responseData = client.getSearchSuggestions(query_string);
+
+        query_suggestions_model = parseQuerySuggestionsModel(goog.object.get(responseData, "model", {}));
+
+        if (goog.object.containsKey(responseData, "view")) {
+            query_suggestions_div.innerHTML = generateQuerySuggestionsHTML(goog.object.get(responseData, "view", {}));
             goog.dom.classes.remove(query_suggestions_div, 'hidden');
         } else {
             goog.dom.classes.add(query_suggestions_div, 'hidden');
+            query_suggestions_div.innerHTML = "";
         }
 
     };
