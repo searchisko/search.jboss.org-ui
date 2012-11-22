@@ -20,6 +20,9 @@
     See regarding custom underline:
     http://stackoverflow.com/questions/1734618/css-underline-possible-to-increase-gap
 
+    See regarding :before & :after
+    http://coding.smashingmagazine.com/2011/07/13/learning-to-use-the-before-and-after-pseudo-elements-in-css/
+
     See regarding em vs px:
     http://www.w3schools.com/css/css_font.asp
     pixels/16=em
@@ -37,12 +40,10 @@
 }
 
 .hit > .left {
-    position: relative;
     float: left;
 }
 
 .hit > .main {
-    position: relative;
     /*float: right;*/
     margin-left: 60px;
 }
@@ -55,10 +56,19 @@
 .hit > .main > .title {
     font-size: 16px;
     /*text-decoration: underline;*/
-    color: rgb(34, 56, 102);
     /*white-space: nowrap;*/
+
+    /*color: rgb(34, 56, 102);*/
+    color: rgb(40, 74, 128);
+
+    /* experimental underline */
+    padding-bottom: 1px;
+    /*padding-bottom: 2px;*/
+    /*border-bottom: rgba(34, 56, 102, 0.45) solid 1px;*/
+    display: inline-block;
 }
 
+/* project icons could be done this way? */
 /*
 .hit > .main > .link:before {
     content: '';
@@ -71,9 +81,22 @@
 
 .hit > .main > .link > a {
     font-size: 11px;
-    text-decoration: underline;
-    color: rgb(105, 85, 43);
+    text-decoration: none;
+    /*text-decoration: underline;*/
     /*white-space: nowrap;*/
+
+    /*color: rgb(105, 85, 43);*/
+    color: rgb(124, 103, 47);
+
+    /* experimental underline */
+    padding-bottom: 0px;
+    border-bottom: rgba(105, 85, 43, 0.45) solid 1px;
+    display: inline-block;
+}
+
+.hit > .main > .link {
+    /* leave a white space below the link */
+    margin-bottom: 4px;
 }
 
 .hit > .main > .snippet {
