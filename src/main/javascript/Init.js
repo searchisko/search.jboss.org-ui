@@ -153,7 +153,6 @@ goog.require('goog.debug.Logger');
     keyHandlers[goog.events.KeyCodes.TAB] = keyCodeTabHandler;
 
     var blurHandler = function() {
-        log.info("BLUR happend!");
         goog.dom.classes.add(query_suggestions_div, 'hidden');
         query_suggestions_div.innerHTML = "";
     };
