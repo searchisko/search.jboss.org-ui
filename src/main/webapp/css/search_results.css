@@ -1,0 +1,87 @@
+/*
+    JBoss, Home of Professional Open Source
+    Copyright 2012 Red Hat Inc. and/or its affiliates and other contributors
+    as indicated by the @authors tag. All rights reserved.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+/*
+    See regarding custom underline:
+    http://stackoverflow.com/questions/1734618/css-underline-possible-to-increase-gap
+
+    See regarding em vs px:
+    http://www.w3schools.com/css/css_font.asp
+    pixels/16=em
+    p {font-size:0.875em;} // 14px/16=0.875em
+*/
+
+#search_results {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hit {
+    line-height: 115%;
+}
+
+.hit > .left {
+    position: relative;
+    float: left;
+}
+
+.hit > .main {
+    position: relative;
+    /*float: right;*/
+    margin-left: 60px;
+}
+
+.hit_spacer {
+    height: 40px;
+    clear: both;
+}
+
+.hit > .main > .title {
+    font-size: 16px;
+    /*text-decoration: underline;*/
+    color: rgb(34, 56, 102);
+    /*white-space: nowrap;*/
+}
+
+/*
+.hit > .main > .link:before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    background-color: rgb(200,200,200);
+    display: inline-block;
+}
+*/
+
+.hit > .main > .link > a {
+    font-size: 11px;
+    text-decoration: underline;
+    color: rgb(105, 85, 43);
+    /*white-space: nowrap;*/
+}
+
+.hit > .main > .snippet {
+    font-size: 12px;
+    /*letter-spacing: 0.02em;*/
+    color: rgb(69, 69, 69);
+}
+
+.hit > .main > .snippet > .date {
+    color: rgb(92, 116, 122);
+}
