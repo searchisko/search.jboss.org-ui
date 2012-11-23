@@ -26,10 +26,8 @@
 
     position: absolute;
     /* TODO DYNAMIC */
-    top: 65px;
-    /*left: 365px;*/
+    top: 72px;
 
-    position: fixed;
     left: 50%;
     margin-left: -235px;
 

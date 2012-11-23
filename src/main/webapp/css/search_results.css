@@ -35,6 +35,12 @@
     margin-right: auto;
 }
 
+.statistics {
+    margin: 20px 0 20px 60px;
+    color: gray;
+    font-size: 0.75em;
+}
+
 .hit {
     line-height: 115%;
 }
@@ -108,3 +114,19 @@
 .hit > .main > .snippet > .date {
     color: rgb(92, 116, 122);
 }
+
+.pagination {
+    text-align: center;
+    word-spacing: 1.5em;
+    font-size: 0.75em;
+    padding-bottom: 5em;
+    color: gray;
+}
+
+/*
+.pagination span {
+    width: 30px;
+    border: 1px solid black;
+    display: inline-table;
+}
+*/
