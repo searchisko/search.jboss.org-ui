@@ -49,8 +49,15 @@
     float: left;
 }
 
+.hit > .left .avatar {
+    /*
+        TODO: clicking avatar icon will fire Popover Right
+        See: http://twitter.github.com/bootstrap/javascript.html#popovers
+    */
+    cursor: pointer;
+}
+
 .hit > .main {
-    /*float: right;*/
     margin-left: 60px;
 }
 
