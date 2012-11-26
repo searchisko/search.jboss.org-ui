@@ -1,4 +1,5 @@
 /*
+    @preserve
     JBoss, Home of Professional Open Source
     Copyright 2012 Red Hat Inc. and/or its affiliates and other contributors
     as indicated by the @authors tag. All rights reserved.
@@ -20,7 +21,7 @@ goog.provide('Init');
 
 goog.require('org.jboss.search.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.templates');
-goog.require('org.jboss.search.client.Client');
+//goog.require('org.jboss.search.client.Client');
 
 goog.require('goog.array');
 
@@ -34,7 +35,17 @@ goog.require('goog.dom.classes');
 
 goog.require('goog.object');
 
+goog.require('goog.string');
+
+goog.require('goog.net.XhrManager');
+goog.require('goog.net.XhrManager.Event');
+goog.require('goog.net.XhrManager.Request');
+
 goog.require('goog.debug.Logger');
+
+// Added to get rid of advanced compilation errors - Closure dependencies are broken ?
+goog.require('goog.Uri');
+goog.require('goog.net.XhrLite');
 
 /**
  * @fileoverview Initialization of the Search UI.
@@ -44,11 +55,37 @@ goog.require('goog.debug.Logger');
 {
     var log = goog.debug.Logger.getLogger('init');
 
+    /**
+     * Used as an identified to abort or/and send the search suggestions request.
+     * @type {string}
+     * @const
+     */
+    var SEARCH_SUGGESTION_REQUEST_ID = "1";
+
+    /**
+     * Used as an identified to abort or/and send the search results request.
+     * @type {string}
+     * @const
+     */
+    var SEARCH_RESULTS_REQUEST_ID = "2";
+
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
     var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
     var query_suggestions_model = {};
 
-    var client = new org.jboss.search.client.Client();
+    /** @type {goog.net.XhrManager} */
+    var xhrManager = new goog.net.XhrManager();
+
+//    var client = new org.jboss.search.client.Client();
+
+    /**
+     * Hide and clean suggestions element.
+     */
+    var hideAndCleanSuggestionsElement = function() {
+        xhrManager.abort(SEARCH_SUGGESTION_REQUEST_ID);
+        goog.dom.classes.add(query_suggestions_div, 'hidden');
+        query_suggestions_div.innerHTML = "";
+    };
 
     /**
      *
@@ -74,22 +111,43 @@ goog.require('goog.debug.Logger');
 
     var callback = function(query_string) {
 
-        // TODO: keep timeoutId in case the callback is cancelled, then you need to clearTimeout(timeoutId) !!!
-        var timeoutId = client.getSearchSuggestions(query_string, function(responseData){
+        if (goog.string.isEmptySafe(query_string)) {
 
-            var model = /** @type {!Object} */ (goog.object.get(responseData, "model", {}));
-            query_suggestions_model = parseQuerySuggestionsModel(model);
+            hideAndCleanSuggestionsElement();
 
-            if (goog.object.containsKey(responseData, "view")) {
-                var view = /** @type {!Object} */ (goog.object.get(responseData, "view", {}));
-                query_suggestions_div.innerHTML = generateQuerySuggestionsHTML(view);
-                goog.dom.classes.remove(query_suggestions_div, 'hidden');
-            } else {
-                goog.dom.classes.add(query_suggestions_div, 'hidden');
-                query_suggestions_div.innerHTML = "";
-            }
+        } else {
 
-        }, 1500);
+            xhrManager.send(
+                SEARCH_SUGGESTION_REQUEST_ID,
+                "../../test/resources/suggestions_response.json",
+                "GET",
+                "", // post_data
+                {}, // headers_map
+                10, // priority
+
+                // callback, The only param is the event object from the COMPLETE event.
+                function(e) {
+                    var event = /** @type goog.net.XhrManager.Event */ e;
+                    var response = event.target.getResponseJson();
+
+                    // for now replace token with actual query string
+                    response.view.search.options[0] = query_string;
+                    response.model.search.search.query = query_string;
+
+                    var model = /** @type {!Object} */ (goog.object.get(response, "model", {}));
+                    query_suggestions_model = parseQuerySuggestionsModel(model);
+
+                    if (goog.object.containsKey(response, "view")) {
+                        var view = /** @type {!Object} */ (goog.object.get(response, "view", {}));
+                        query_suggestions_div.innerHTML = generateQuerySuggestionsHTML(view);
+                        goog.dom.classes.remove(query_suggestions_div, 'hidden');
+                    } else {
+                        hideAndCleanSuggestionsElement();
+                    }
+
+                }
+            );
+        }
     };
 
     /**
@@ -98,8 +156,7 @@ goog.require('goog.debug.Logger');
      */
     var keyCodeEscHandler = function(event, delay) {
         delay.stop();
-        goog.dom.classes.add(query_suggestions_div, 'hidden');
-        query_suggestions_div.innerHTML = "";
+        hideAndCleanSuggestionsElement();
     };
 
     /**
@@ -124,8 +181,7 @@ goog.require('goog.debug.Logger');
      */
     var keyCodeTabHandler = function(event, delay) {
         delay.stop();
-        goog.dom.classes.add(query_suggestions_div, 'hidden');
-        query_suggestions_div.innerHTML = "";
+        hideAndCleanSuggestionsElement();
     };
 
     /**
@@ -134,8 +190,7 @@ goog.require('goog.debug.Logger');
      */
     var keyCodeEnterHandler = function(event, delay) {
 //        just fake for now...
-        goog.dom.classes.add(query_suggestions_div, 'hidden');
-        query_suggestions_div.innerHTML = "";
+        hideAndCleanSuggestionsElement();
         event.preventDefault();
     };
 
@@ -153,8 +208,7 @@ goog.require('goog.debug.Logger');
     keyHandlers[goog.events.KeyCodes.TAB] = keyCodeTabHandler;
 
     var blurHandler = function() {
-        goog.dom.classes.add(query_suggestions_div, 'hidden');
-        query_suggestions_div.innerHTML = "";
+        hideAndCleanSuggestionsElement();
     };
 
     var fieldHandled = new org.jboss.search.SearchFieldHandler(query_field, 600, callback, blurHandler, keyHandlers);
