@@ -99,6 +99,20 @@
     z-index: 70;
 }
 
+/* selected option */
+.suggestions_section > div.selectable.selected {
+    background-color: rgba(27, 87, 247, 0.95);
+}
+
+.suggestions_section > div.selectable.selected > div.caption {
+    color: white;
+}
+
+.suggestions_section > div.selectable.selected > div.option {
+    color: white;
+}
+
+/* hovered option */
 .suggestions_section > div.selectable:hover {
     background-color: rgba(27, 87, 247, 0.95);
 }

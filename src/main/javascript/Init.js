@@ -71,7 +71,12 @@ goog.require('goog.net.XhrLite');
 
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
     var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
+    /** @type {boolean} */
+    var query_suggestions_shown = false;
     var query_suggestions_model = {};
+
+    /** @type {number} */
+    var selected_option = -1;
 
     /** @type {goog.net.XhrManager} */
     var xhrManager = new goog.net.XhrManager();
@@ -79,12 +84,15 @@ goog.require('goog.net.XhrLite');
 //    var client = new org.jboss.search.client.Client();
 
     /**
-     * Hide and clean suggestions element.
+     * Hide and clean suggestions element and empty the model.
      */
-    var hideAndCleanSuggestionsElement = function() {
+    var hideAndCleanSuggestionsElementAndModel = function() {
         xhrManager.abort(SEARCH_SUGGESTION_REQUEST_ID);
         goog.dom.classes.add(query_suggestions_div, 'hidden');
         query_suggestions_div.innerHTML = "";
+        query_suggestions_model = {};
+        query_suggestions_shown = false;
+        selected_option = -1;
     };
 
     /**
@@ -113,7 +121,7 @@ goog.require('goog.net.XhrLite');
 
         if (goog.string.isEmptySafe(query_string)) {
 
-            hideAndCleanSuggestionsElement();
+            hideAndCleanSuggestionsElementAndModel();
 
         } else {
 
@@ -140,9 +148,17 @@ goog.require('goog.net.XhrLite');
                     if (goog.object.containsKey(response, "view")) {
                         var view = /** @type {!Object} */ (goog.object.get(response, "view", {}));
                         query_suggestions_div.innerHTML = generateQuerySuggestionsHTML(view);
+
+                        var selectable_elements = goog.dom.getElementsByClass('selectable', query_suggestions_div);
+                        if (selectable_elements.length > 0) {
+                            selected_option = 0;
+                            goog.dom.classes.add(selectable_elements[selected_option], 'selected');
+                        }
+
                         goog.dom.classes.remove(query_suggestions_div, 'hidden');
+                        query_suggestions_shown = true;
                     } else {
-                        hideAndCleanSuggestionsElement();
+                        hideAndCleanSuggestionsElementAndModel();
                     }
 
                 }
@@ -156,16 +172,48 @@ goog.require('goog.net.XhrLite');
      */
     var keyCodeEscHandler = function(event, delay) {
         delay.stop();
-        hideAndCleanSuggestionsElement();
+        hideAndCleanSuggestionsElementAndModel();
     };
 
     /**
      * @param {goog.events.KeyEvent} event
      * @param {goog.async.Delay} delay
      */
-    var keyCodePreventDefaultHandler = function(event, delay) {
+    var keyCodeDownHandler = function(event, delay) {
         event.preventDefault();
+        if (query_suggestions_shown) {
+            var selectable_elements = goog.dom.getElementsByClass('selectable', query_suggestions_div);
+            if (selected_option < (selectable_elements.length-1)) {
+                if (selected_option > -1) goog.dom.classes.remove(selectable_elements[selected_option], 'selected');
+                selected_option += 1;
+                goog.dom.classes.add(selectable_elements[selected_option], 'selected');
+            }
+        }
     };
+
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeUpHandler = function(event, delay) {
+        event.preventDefault();
+        if (query_suggestions_shown) {
+            var selectable_elements = goog.dom.getElementsByClass('selectable', query_suggestions_div);
+            if (selected_option > 0) {
+                goog.dom.classes.remove(selectable_elements[selected_option], 'selected');
+                selected_option -= 1;
+                goog.dom.classes.add(selectable_elements[selected_option], 'selected');
+            }
+        }
+    };
+
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+//    var keyCodePreventDefaultHandler = function(event, delay) {
+//        event.preventDefault();
+//    };
 
     /**
      * @param {goog.events.KeyEvent} event
@@ -181,7 +229,7 @@ goog.require('goog.net.XhrLite');
      */
     var keyCodeTabHandler = function(event, delay) {
         delay.stop();
-        hideAndCleanSuggestionsElement();
+        hideAndCleanSuggestionsElementAndModel();
     };
 
     /**
@@ -190,7 +238,7 @@ goog.require('goog.net.XhrLite');
      */
     var keyCodeEnterHandler = function(event, delay) {
 //        just fake for now...
-        hideAndCleanSuggestionsElement();
+        hideAndCleanSuggestionsElementAndModel();
         event.preventDefault();
     };
 
@@ -198,8 +246,8 @@ goog.require('goog.net.XhrLite');
     var keyHandlers = {};
 
     keyHandlers[goog.events.KeyCodes.ESC] = keyCodeEscHandler;
-    keyHandlers[goog.events.KeyCodes.UP] = keyCodePreventDefaultHandler;
-    keyHandlers[goog.events.KeyCodes.DOWN] = keyCodePreventDefaultHandler;
+    keyHandlers[goog.events.KeyCodes.UP] = keyCodeUpHandler;
+    keyHandlers[goog.events.KeyCodes.DOWN] = keyCodeDownHandler;
     keyHandlers[goog.events.KeyCodes.RIGHT] = keyCodeRightHandler;
     keyHandlers[goog.events.KeyCodes.ENTER] = keyCodeEnterHandler;
 
@@ -208,7 +256,7 @@ goog.require('goog.net.XhrLite');
     keyHandlers[goog.events.KeyCodes.TAB] = keyCodeTabHandler;
 
     var blurHandler = function() {
-        hideAndCleanSuggestionsElement();
+        hideAndCleanSuggestionsElementAndModel();
     };
 
     var fieldHandled = new org.jboss.search.SearchFieldHandler(query_field, 600, callback, blurHandler, keyHandlers);
