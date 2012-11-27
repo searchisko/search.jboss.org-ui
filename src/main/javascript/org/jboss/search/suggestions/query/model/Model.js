@@ -22,9 +22,9 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.suggestions.query.Model');
-goog.provide('org.jboss.search.suggestions.query.Search');
-goog.provide('org.jboss.search.suggestions.query.Suggestion');
+goog.provide('org.jboss.search.suggestions.query.model.Model');
+goog.provide('org.jboss.search.suggestions.query.model.Search');
+goog.provide('org.jboss.search.suggestions.query.model.Suggestion');
 
 goog.require('goog.object');
 
@@ -33,7 +33,7 @@ goog.require('goog.object');
  * @param {!string} query_string
  * @constructor
  */
-org.jboss.search.suggestions.query.Search = function(query_string) {
+org.jboss.search.suggestions.query.model.Search = function(query_string) {
     this.query_string = query_string;
 };
 
@@ -43,7 +43,7 @@ org.jboss.search.suggestions.query.Search = function(query_string) {
  * @param {!string} query_string
  * @constructor
  */
-org.jboss.search.suggestions.query.Suggestion = function(value, query_string) {
+org.jboss.search.suggestions.query.model.Suggestion = function(value, query_string) {
     this.value = value;
     this.query_string = query_string;
 };
@@ -52,38 +52,38 @@ org.jboss.search.suggestions.query.Suggestion = function(value, query_string) {
  * Representation of whole query suggestions model.
  * @constructor
  */
-org.jboss.search.suggestions.query.Model = function() {
+org.jboss.search.suggestions.query.model.Model = function() {
 
     /**
-     * @type {!org.jboss.search.suggestions.query.Search}
+     * @type {!org.jboss.search.suggestions.query.model.Search}
      * @private
      */
-    this.search_ = new org.jboss.search.suggestions.query.Search("");
+    this.search_ = new org.jboss.search.suggestions.query.model.Search("");
 
     /**
-     * @type {!Array.<org.jboss.search.suggestions.query.Suggestion>}
+     * @type {!Array.<org.jboss.search.suggestions.query.model.Suggestion>}
      * @private
      */
     this.suggestions_ = [];
 };
 
 /**
- * Return {@link org.jboss.search.suggestions.query.Search}.
- * @see org.jboss.search.suggestions.query.Search
+ * Return {@link org.jboss.search.suggestions.query.model.Search}.
+ * @see org.jboss.search.suggestions.query.model.Search
  *
- * @return {org.jboss.search.suggestions.query.Search}
+ * @return {org.jboss.search.suggestions.query.model.Search}
  */
-org.jboss.search.suggestions.query.Model.prototype.getSearch = function() {
+org.jboss.search.suggestions.query.model.Model.prototype.getSearch = function() {
     return this.search_;
 };
 
 /**
- * Return array of {@link org.jboss.search.suggestions.query.Suggestion}s.
- * @see org.jboss.search.suggestions.query.Suggestion
+ * Return array of {@link org.jboss.search.suggestions.query.model.Suggestion}s.
+ * @see org.jboss.search.suggestions.query.model.Suggestion
  *
- * @return {!Array.<org.jboss.search.suggestions.query.Suggestion>}
+ * @return {!Array.<org.jboss.search.suggestions.query.model.Suggestion>}
  */
-org.jboss.search.suggestions.query.Model.prototype.getSuggestions = function() {
+org.jboss.search.suggestions.query.model.Model.prototype.getSuggestions = function() {
     return this.suggestions_;
 };
 
@@ -91,7 +91,7 @@ org.jboss.search.suggestions.query.Model.prototype.getSuggestions = function() {
  * Update model.
  * @param {!Object} source
  */
-org.jboss.search.suggestions.query.Model.prototype.parse = function(source) {
+org.jboss.search.suggestions.query.model.Model.prototype.parse = function(source) {
 
     var search = /** @type {!Object} */ (goog.object.get(source, "search", {}));
 
@@ -117,7 +117,7 @@ org.jboss.search.suggestions.query.Model.prototype.parse = function(source) {
  * @param {string=} opt_default default value of query if not provided
  * @return {(string|undefined)}
  */
-org.jboss.search.suggestions.query.Model.prototype.getQueryString = function(search, opt_default) {
+org.jboss.search.suggestions.query.model.Model.prototype.getQueryString = function(search, opt_default) {
     var value = /** @type {!string} */ goog.object.getValueByKeys(search, "search", "query");
     return value ? value : opt_default;
 };
@@ -125,12 +125,12 @@ org.jboss.search.suggestions.query.Model.prototype.getQueryString = function(sea
 /**
  * @private
  * @param {!Array.<!Object>} suggestions
- * @return {!Array.<!org.jboss.search.suggestions.query.Suggestion>}
+ * @return {!Array.<!org.jboss.search.suggestions.query.model.Suggestion>}
  */
-org.jboss.search.suggestions.query.Model.prototype.getQuerySuggestions = function(suggestions) {
+org.jboss.search.suggestions.query.model.Model.prototype.getQuerySuggestions = function(suggestions) {
     var result = [];
     goog.array.forEach(suggestions, function(item){
-        var suggestion = new org.jboss.search.suggestions.query.Suggestion(
+        var suggestion = new org.jboss.search.suggestions.query.model.Suggestion(
             /** @type {!string} */ (goog.object.getValueByKeys(item, "search", "query")),
             /** @type {!string} */ (goog.object.getValueByKeys(item, "suggestion", "value"))
         );

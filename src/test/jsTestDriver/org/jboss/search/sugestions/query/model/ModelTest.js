@@ -16,11 +16,11 @@
     limitations under the License.
 */
 
-goog.provide("test.org.jboss.search.suggestions.query.ModelTest");
+goog.provide("test.org.jboss.search.suggestions.query.model.ModelTest");
 
-goog.require('org.jboss.search.suggestions.query.Model');
-goog.require('org.jboss.search.suggestions.query.Search');
-goog.require('org.jboss.search.suggestions.query.Suggestion');
+goog.require('org.jboss.search.suggestions.query.model.Model');
+goog.require('org.jboss.search.suggestions.query.model.Search');
+goog.require('org.jboss.search.suggestions.query.model.Suggestion');
 
 TestCase('ModelTest', {
 
@@ -30,7 +30,7 @@ TestCase('ModelTest', {
     testSearchModel: function() {
 
         // query is empty string after initialization
-        var model = new org.jboss.search.suggestions.query.Model();
+        var model = new org.jboss.search.suggestions.query.model.Model();
 
         assertEquals("Should be empty", "", model.getSearch().query_string);
 
@@ -57,7 +57,7 @@ TestCase('ModelTest', {
     testSuggestionModel: function() {
 
         // suggestions section in empty array after initialization
-        var model = new org.jboss.search.suggestions.query.Model();
+        var model = new org.jboss.search.suggestions.query.model.Model();
 
         assertEquals("Should be empty array", [], model.getSuggestions());
 
