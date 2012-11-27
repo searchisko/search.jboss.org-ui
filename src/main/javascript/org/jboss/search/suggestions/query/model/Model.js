@@ -49,7 +49,7 @@ org.jboss.search.suggestions.query.model.Suggestion = function(value, query_stri
 };
 
 /**
- * Representation of whole query suggestions model.
+ * Representation of query suggestions model.
  * @constructor
  */
 org.jboss.search.suggestions.query.model.Model = function() {

@@ -113,6 +113,7 @@
 }
 
 /* hovered option */
+/*
 .suggestions_section > div.selectable:hover {
     background-color: rgba(27, 87, 247, 0.95);
 }
@@ -124,6 +125,7 @@
 .suggestions_section > div.selectable:hover > div.option {
     color: white;
 }
+*/
 
 .suggestions_section > div.suggestion_section_last {
     clear: left;

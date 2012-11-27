@@ -20,8 +20,7 @@
 goog.provide('Init');
 
 goog.require('org.jboss.search.SearchFieldHandler');
-goog.require('org.jboss.search.suggestions.templates');
-//goog.require('org.jboss.search.client.Client');
+goog.require('org.jboss.search.suggestions.query.view.View');
 
 goog.require('goog.array');
 
@@ -55,12 +54,25 @@ goog.require('goog.net.XhrLite');
 {
     var log = goog.debug.Logger.getLogger('init');
 
+    log.info("Starting...");
+
+    // ================================================================
+    // Constants
+    // ================================================================
+
     /**
      * Used as an identified to abort or/and send the search suggestions request.
      * @type {string}
      * @const
      */
-    var SEARCH_SUGGESTION_REQUEST_ID = "1";
+    var SEARCH_SUGGESTIONS_REQUEST_ID = "1";
+
+    /**
+     * Priority of search suggestions requests. If should be higher then search requests.
+     * @type {number}
+     * @const
+     */
+    var SEARCH_SUGGESTIONS_REQUEST_PRIORITY = 10;
 
     /**
      * Used as an identified to abort or/and send the search results request.
@@ -69,53 +81,40 @@ goog.require('goog.net.XhrLite');
      */
     var SEARCH_RESULTS_REQUEST_ID = "2";
 
+    // ================================================================
+    // Get necessary HTML elements
+    // ================================================================
+
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
     var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
-    /** @type {boolean} */
-    var query_suggestions_shown = false;
-    var query_suggestions_model = {};
 
-    /** @type {number} */
-    var selected_option = -1;
+    // ================================================================
+    // Define internal variables and objects
+    // ================================================================
+
+    var query_suggestions_view = new org.jboss.search.suggestions.query.view.View(query_suggestions_div);
+    var query_suggestions_model = {};
 
     /** @type {goog.net.XhrManager} */
     var xhrManager = new goog.net.XhrManager();
-
-//    var client = new org.jboss.search.client.Client();
 
     /**
      * Hide and clean suggestions element and empty the model.
      */
     var hideAndCleanSuggestionsElementAndModel = function() {
-        xhrManager.abort(SEARCH_SUGGESTION_REQUEST_ID);
-        goog.dom.classes.add(query_suggestions_div, 'hidden');
-        query_suggestions_div.innerHTML = "";
+        xhrManager.abort(SEARCH_SUGGESTIONS_REQUEST_ID);
+        query_suggestions_view.hide();
         query_suggestions_model = {};
-        query_suggestions_shown = false;
-        selected_option = -1;
     };
 
     /**
-     *
+     * TODO: TBD
      * @param {!Object} model
      * @return {!Object}
      */
     var parseQuerySuggestionsModel = function(model) {
         return model;
     }
-
-    /**
-     * Generate HTML for given query suggestions
-     * @param {!Object} view
-     * @return {!String}
-     */
-    var generateQuerySuggestionsHTML = function(view) {
-        var html = "";
-        goog.array.forEach(goog.object.getValues(view), function(view_section) {
-            html += org.jboss.search.suggestions.templates.suggestions_section(view_section);
-        });
-        return html;
-    };
 
     var callback = function(query_string) {
 
@@ -126,19 +125,19 @@ goog.require('goog.net.XhrLite');
         } else {
 
             xhrManager.send(
-                SEARCH_SUGGESTION_REQUEST_ID,
+                SEARCH_SUGGESTIONS_REQUEST_ID,
                 "../../test/resources/suggestions_response.json",
                 "GET",
                 "", // post_data
                 {}, // headers_map
-                10, // priority
+                SEARCH_SUGGESTIONS_REQUEST_PRIORITY,
 
                 // callback, The only param is the event object from the COMPLETE event.
                 function(e) {
                     var event = /** @type goog.net.XhrManager.Event */ e;
                     var response = event.target.getResponseJson();
 
-                    // for now replace token with actual query string
+                    // TODO: temporary - for now replace token with actual query string
                     response.view.search.options[0] = query_string;
                     response.model.search.search.query = query_string;
 
@@ -147,16 +146,10 @@ goog.require('goog.net.XhrLite');
 
                     if (goog.object.containsKey(response, "view")) {
                         var view = /** @type {!Object} */ (goog.object.get(response, "view", {}));
-                        query_suggestions_div.innerHTML = generateQuerySuggestionsHTML(view);
 
-                        var selectable_elements = goog.dom.getElementsByClass('selectable', query_suggestions_div);
-                        if (selectable_elements.length > 0) {
-                            selected_option = 0;
-                            goog.dom.classes.add(selectable_elements[selected_option], 'selected');
-                        }
+                        query_suggestions_view.update(view);
+                        query_suggestions_view.show();
 
-                        goog.dom.classes.remove(query_suggestions_div, 'hidden');
-                        query_suggestions_shown = true;
                     } else {
                         hideAndCleanSuggestionsElementAndModel();
                     }
@@ -181,13 +174,8 @@ goog.require('goog.net.XhrLite');
      */
     var keyCodeDownHandler = function(event, delay) {
         event.preventDefault();
-        if (query_suggestions_shown) {
-            var selectable_elements = goog.dom.getElementsByClass('selectable', query_suggestions_div);
-            if (selected_option < (selectable_elements.length-1)) {
-                if (selected_option > -1) goog.dom.classes.remove(selectable_elements[selected_option], 'selected');
-                selected_option += 1;
-                goog.dom.classes.add(selectable_elements[selected_option], 'selected');
-            }
+        if (query_suggestions_view.isVisible()) {
+            query_suggestions_view.selectNext();
         }
     };
 
@@ -197,17 +185,13 @@ goog.require('goog.net.XhrLite');
      */
     var keyCodeUpHandler = function(event, delay) {
         event.preventDefault();
-        if (query_suggestions_shown) {
-            var selectable_elements = goog.dom.getElementsByClass('selectable', query_suggestions_div);
-            if (selected_option > 0) {
-                goog.dom.classes.remove(selectable_elements[selected_option], 'selected');
-                selected_option -= 1;
-                goog.dom.classes.add(selectable_elements[selected_option], 'selected');
-            }
+        if (query_suggestions_view.isVisible()) {
+            query_suggestions_view.selectPrevious();
         }
     };
 
     /**
+     * Just generic key handler placeholder.
      * @param {goog.events.KeyEvent} event
      * @param {goog.async.Delay} delay
      */
@@ -256,9 +240,20 @@ goog.require('goog.net.XhrLite');
     keyHandlers[goog.events.KeyCodes.TAB] = keyCodeTabHandler;
 
     var blurHandler = function() {
-        hideAndCleanSuggestionsElementAndModel();
+//        hideAndCleanSuggestionsElementAndModel();
     };
 
+    // Catch click to the top most element
+    // TODO: unlisten
+    this.documentClickListenerId_ = goog.events.listen(
+        goog.getObjectByName('document'),
+        goog.events.EventType.CLICK,
+        function(/** @type {goog.events.Event} */ e) {
+//            log.info("Document clicked: " + goog.debug.expose(e));
+            hideAndCleanSuggestionsElementAndModel();
+        });
+
+    // TODO: dispose
     var fieldHandled = new org.jboss.search.SearchFieldHandler(query_field, 600, callback, blurHandler, keyHandlers);
 
     // quick hack to hide suggestions when clicked away

@@ -69,8 +69,26 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, o
     /** @private */ this.keyHandlers_ = keyHandlers;
 
     /** @private */ this.keyListenerId_;
-    /** @private */ this.changeListenerId_;
-    /** @private */ this.blurListenerId_;
+
+    /**
+     * Listen to changes on search field.
+     * @type {?number}
+     * @private
+     */
+    this.changeListenerId_;
+
+    /**
+     * @type {?number}
+     * @private
+     */
+    this.blurListenerId_;
+
+    /**
+     * Listen to clicks into search field.
+     * @type {?number}
+     * @private
+     */
+    this.clickListenerId_;
 
     /** @private */ this.delay_ =  new goog.async.Delay(
         function() { callback(field.value); },
@@ -78,7 +96,8 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, o
     );
     var delay = this.delay_;
 
-    /** @private */ this.keyHandler_ =  new goog.events.KeyHandler(this.field_);
+    /** @private */
+    this.keyHandler_ =  new goog.events.KeyHandler(this.field_);
     var keyHandler = this.keyHandler_;
 
     var userKeyHandlers = goog.isDef(this.keyHandlers_) ? this.keyHandlers_ : {};
@@ -113,17 +132,25 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, o
         );
     }
 
-    /** @private */ this.inputHandler_ = new goog.events.InputHandler(this.field_);
+    /** @private */
+    this.inputHandler_ = new goog.events.InputHandler(this.field_);
     var inputHandler = this.inputHandler_;
 
-    // listen to content changes
     this.changeListenerId_ = goog.events.listen(inputHandler,
         goog.events.EventType.INPUT,
-        function(e) {
+        function(/** @type {goog.events.Event} */ e) {
 //            log.info("Field suddenly changed to: " + goog.debug.expose(e));
             delay.start();
 
         });
+
+    this.clickListenerId_ = goog.events.listen(
+        this.field_,
+        goog.events.EventType.CLICK,
+        function(/** @type {goog.events.Event} */ e) {
+            e.stopPropagation();
+        }
+    );
 };
 goog.inherits(org.jboss.search.SearchFieldHandler, goog.Disposable);
 
@@ -142,6 +169,7 @@ org.jboss.search.SearchFieldHandler.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.keyListenerId_);
     goog.events.unlistenByKey(this.blurListenerId_);
     goog.events.unlistenByKey(this.changeListenerId_);
+    goog.events.unlistenByKey(this.clickListenerId_);
 
     // Remove references to COM objects.
 

@@ -5,11 +5,12 @@
  *
  * @param caption
  * @param options
+ * @param indexStart starting number of index
  */
 {template .suggestions_section}
     <div class="suggestions_section">
         {foreach $option in $options}
-        <div class="selectable">
+        <div class="selectable" index="{$indexStart + index($option)}">
             {if isFirst($option)}
             <div class="caption">{$caption}</div>
             {/if}

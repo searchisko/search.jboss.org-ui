@@ -16,6 +16,7 @@
   --namespace="org.jboss.search.suggestions.query.model.Model" \
   --namespace="org.jboss.search.suggestions.query.model.Search" \
   --namespace="org.jboss.search.suggestions.query.model.Suggestion" \
+  --namespace="org.jboss.search.suggestions.query.view.View" \
   --namespace="org.jboss.search.suggestions.templates" \
   --output_mode='script' \
   --output_file=./src/main/webapp/testing-only.js

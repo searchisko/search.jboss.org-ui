@@ -18,6 +18,7 @@
   --namespace="org.jboss.search.suggestions.query.model.Model" \
   --namespace="org.jboss.search.suggestions.query.model.Search" \
   --namespace="org.jboss.search.suggestions.query.model.Suggestion" \
+  --namespace="org.jboss.search.suggestions.query.view.View" \
   --namespace="org.jboss.search.suggestions.templates" \
   \
   --namespace="test.org.jboss.search.SearchFieldHandlerAsyncTest" \

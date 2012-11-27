@@ -20,7 +20,7 @@ org.jboss.search.suggestions.templates.suggestions_section = function(opt_data, 
   var optionListLen4 = optionList4.length;
   for (var optionIndex4 = 0; optionIndex4 < optionListLen4; optionIndex4++) {
     var optionData4 = optionList4[optionIndex4];
-    output.append('<div class="selectable">', (optionIndex4 == 0) ? '<div class="caption">' + soy.$$escapeHtml(opt_data.caption) + '</div>' : '', '<div class="option">', optionData4, '</div></div>');
+    output.append('<div class="selectable" index="', soy.$$escapeHtml(opt_data.indexStart + optionIndex4), '">', (optionIndex4 == 0) ? '<div class="caption">' + soy.$$escapeHtml(opt_data.caption) + '</div>' : '', '<div class="option">', optionData4, '</div></div>');
   }
   output.append('<div class="suggestion_section_last"></div></div>');
   return opt_sb ? '' : output.toString();
