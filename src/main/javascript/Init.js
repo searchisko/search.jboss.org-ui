@@ -42,8 +42,9 @@ goog.require('goog.net.XhrManager.Request');
 
 goog.require('goog.debug.Logger');
 
-// Added to get rid of advanced compilation errors - Closure dependencies are broken ?
 goog.require('goog.Uri');
+
+// Added to get rid of advanced compilation errors - Closure dependencies are broken ?
 goog.require('goog.net.XhrLite');
 
 /**
@@ -116,6 +117,13 @@ goog.require('goog.net.XhrLite');
         return model;
     }
 
+    // URL of Apiary Mock Server
+    var query_url = "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string";
+    /**
+     * @type {goog.Uri}
+     */
+    var suggestionsUri = goog.Uri.parse(query_url);
+
     var callback = function(query_string) {
 
         if (goog.string.isEmptySafe(query_string)) {
@@ -126,7 +134,9 @@ goog.require('goog.net.XhrLite');
 
             xhrManager.send(
                 SEARCH_SUGGESTIONS_REQUEST_ID,
-                "../../test/resources/suggestions_response.json",
+//                "../../test/resources/suggestions_response.json",
+                // setting the parameter value clears previously set value (that is what we want!)
+                suggestionsUri.setParameterValue("q",query_string).toString(),
                 "GET",
                 "", // post_data
                 {}, // headers_map
