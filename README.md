@@ -4,6 +4,8 @@ Web UI for (the new) [search.jboss.org](http://search.jboss.org/)
 
 !!! WORK IN PROGRESS !!!
 
+Built on top of [DCP API](https://github.com/jbossorg/dcp-api) (API Documentation and Mock server can be found here: <http://docs.jbossorg.apiary.io>).
+
 ## Setup for Development Stack
 
 The implementation is based on the following technologies:
