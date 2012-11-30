@@ -1,0 +1,14 @@
+/* Use only for testing */
+/* hovered option */
+
+.suggestions_section > div.selectable:hover {
+    background-color: rgba(27, 87, 247, 0.95);
+}
+
+.suggestions_section > div.selectable:hover > div.caption {
+    color: white;
+}
+
+.suggestions_section > div.selectable:hover > div.option {
+    color: white;
+}
