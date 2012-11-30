@@ -35,7 +35,8 @@ goog.require('goog.debug.ErrorHandler');
 /**
  * @fileoverview This enables a standalone logging window.
  *
- * To use this, all you have to do is to add the following line into devClosureDepsBuilder.sh
+ * To use this, all you have to do is to add the following line into buildForTesting.sh
+ * or use buildForTestingWithLogging.sh
  *
  *   --namespace="LoggingWindow"
  *

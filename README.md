@@ -60,18 +60,22 @@ load:
 
 #### Keep jsTestDriver.conf Updated
 
-To get updated list of required Closure library code for the `jsTestDriver.conf` just execute the `testClosureDepsBuilder.sh`.
+To get updated list of required Closure library code for the `jsTestDriver.conf` just execute the `printClosureDependencies.sh`.
 
 The script will print out list of JS scripts in correct order. Just copy and paste this list into `jsTestDriver.conf` into _load:_ section. If you are using other third-party js libraries
 (like jQuery for instance) then make sure you add them manually.
 
 #### Testing Manually in Browser
 
-If you want to load the application into browser and test/play with it manually then you will find `devClosureDepsBuilder.sh` script useful. When executed it builds `testing-only.js` which is referenced from `index.html`. 
+If you want to load the application into browser and test/play with it manually then use `buildForTesting.sh` or `buildForTestingWithLogging.sh` script.
+When executed it builds `testing-only.js` which is referenced from `index.html`.
+
+The only difference between `buildForTesting.sh` and `buildForTestingWithLogging.sh` is that the later makes use of Closure logging (by including
+`src/main/javascript/LoggingWindow.js`).
 
 ### Soy Templates
 
-To build [Soy templates](https://developers.google.com/closure/templates/) run `devClosureTemplatesBuilder.sh`.
+To compile [Soy templates](https://developers.google.com/closure/templates/) into JavaScript run `compileClosureTemplates.sh`.
 
 It grabs all soy templates from `/src/main/soy_templates` folder and compile them into `src/main/javascript/generated_templates/` folder which makes them available for Maven plugin (the Maven plugin requires all JS sources to be located under `javascript` folder).
 

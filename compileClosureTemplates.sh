@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # ----------------------------------------------------------------------------
-# A script to generate Javascript from soy templates.
+# A script to compile Soy Templates into JavaScript.
 #
 # Author: Lukas Vlcek (lvlcek@redhat.com)
 # ----------------------------------------------------------------------------

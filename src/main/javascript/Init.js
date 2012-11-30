@@ -264,7 +264,7 @@ goog.require('goog.net.XhrLite');
         });
 
     // TODO: dispose
-    var fieldHandled = new org.jboss.search.SearchFieldHandler(query_field, 600, callback, blurHandler, keyHandlers);
+    var fieldHandled = new org.jboss.search.SearchFieldHandler(query_field, 300, callback, blurHandler, keyHandlers);
 
     // quick hack to hide suggestions when clicked away
 //    goog.events.listen(document, goog.events.EventType.CLICK, function(e){
