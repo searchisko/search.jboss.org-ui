@@ -103,10 +103,17 @@ goog.require('goog.net.XhrLite');
      * Hide and clean suggestions element and empty the model.
      */
     var hideAndCleanSuggestionsElementAndModel = function() {
-        xhrManager.abort(SEARCH_SUGGESTIONS_REQUEST_ID);
+        xhrManager.abort(SEARCH_SUGGESTIONS_REQUEST_ID, true);
         query_suggestions_view.hide();
         query_suggestions_model = {};
     };
+
+    query_suggestions_view.setClickCallbackFunction(
+        function() {
+            hideAndCleanSuggestionsElementAndModel();
+            query_field.focus();
+        }
+    );
 
     /**
      * TODO: TBD
@@ -132,6 +139,7 @@ goog.require('goog.net.XhrLite');
 
         } else {
 
+            xhrManager.abort(SEARCH_SUGGESTIONS_REQUEST_ID, true);
             xhrManager.send(
                 SEARCH_SUGGESTIONS_REQUEST_ID,
 //                "../../test/resources/suggestions_response.json",

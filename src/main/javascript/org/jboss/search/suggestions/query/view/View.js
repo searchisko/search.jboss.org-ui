@@ -71,6 +71,12 @@ org.jboss.search.suggestions.query.view.View = function(div) {
      */
     this.selectedIndex = -1;
 
+    /**
+     * @type {Function}
+     * @private
+     */
+    this.clickCallbackFunction_;
+
     // make it hidden
     goog.dom.classes.add(this.div_, 'hidden');
 
@@ -84,6 +90,10 @@ org.jboss.search.suggestions.query.view.View = function(div) {
             // There might be some listener that hides suggestions in the top level (for example at the document level)
             // thus we must stop propagation of clicks in order to prevent such collision.
             event.stopPropagation();
+            // now call callback function is there is any defined for the click
+            if (goog.isFunction(_thiz.clickCallbackFunction_)) {
+                _thiz.clickCallbackFunction_();
+            }
         });
 
     /**
@@ -244,6 +254,22 @@ org.jboss.search.suggestions.query.view.View.prototype.setSelectedIndex = functi
     this.selectedIndex = number;
 };
 
+/**
+ * Set callback function that is called when option is clicked.
+ * @param {Function|null} fn
+ */
+org.jboss.search.suggestions.query.view.View.prototype.setClickCallbackFunction = function(fn) {
+    this.clickCallbackFunction_ = fn;
+};
+
+/**
+ * Get callback function that is called when option is clicked.
+ * @return {Function|undefined|null}
+ */
+org.jboss.search.suggestions.query.view.View.prototype.getClickCallbackFunction = function() {
+    return this.clickCallbackFunction_;
+};
+
 /** @inheritDoc */
 org.jboss.search.suggestions.query.view.View.prototype.disposeInternal = function() {
 
@@ -261,5 +287,6 @@ org.jboss.search.suggestions.query.view.View.prototype.disposeInternal = functio
     // Remove references to DOM nodes, which are COM objects in IE.
     delete this.div_;
     delete this.selectable_elements_;
+    delete this.clickCallbackFunction_;
 
 };
