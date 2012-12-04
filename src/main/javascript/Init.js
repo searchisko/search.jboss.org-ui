@@ -305,7 +305,7 @@ goog.require('goog.net.XhrLite');
 
     var dateClickListenerId_ = goog.events.listen(date_filter_div,
         goog.events.EventType.CLICK,
-        function(/** @type {goog.events.Event} */ e) {
+        function() {
             if (goog.dom.classes.has(date_filter_tab_div, 'hidden')) {
                 goog.dom.classes.remove(date_filter_tab_div, 'hidden');
             } else {
@@ -320,7 +320,7 @@ goog.require('goog.net.XhrLite');
 
     var authorClickListenerId_ = goog.events.listen(author_filter_div,
         goog.events.EventType.CLICK,
-        function(/** @type {goog.events.Event} */ e) {
+        function() {
             if (goog.dom.classes.has(author_filter_tab_div, 'hidden')) {
                 goog.dom.classes.remove(author_filter_tab_div, 'hidden');
             } else {
@@ -335,7 +335,7 @@ goog.require('goog.net.XhrLite');
 
     var projectClickListenerId_ = goog.events.listen(project_filter_div,
         goog.events.EventType.CLICK,
-        function(/** @type {goog.events.Event} */ e) {
+        function() {
             if (goog.dom.classes.has(project_filter_tab_div, 'hidden')) {
                 goog.dom.classes.remove(project_filter_tab_div, 'hidden');
             } else {
