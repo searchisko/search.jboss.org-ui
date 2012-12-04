@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/search_field.css">
     <link rel="stylesheet" href="css/search_suggestions.css">
     <!--<link rel="stylesheet" href="css/search_suggestions_override.css">-->
+    <link rel="stylesheet" href="css/search_filter_tab.css">
     <link rel="stylesheet" href="css/search_results.css">
 
     <title>Search JBoss Community</title>
@@ -27,7 +28,7 @@
             <img class="jcs_logo" src="image/jcs_logo_bree.png">
         </div>
         <div>
-            <form method="get" id="searchform" action="#">
+            <form method="GET" id="searchform" action="#">
                 <!--<label for="query_field">Search : </label>-->
                 <!--The 'input' and 'change' events apply.-->
                 <input
@@ -39,6 +40,8 @@
         </div>
     </div>
 
+    <!-- Filters
+    ======================================================= -->
     <div id="search_filters">
         <div id="first_filters_row">
             <div class="content caption">Content</div>
@@ -57,6 +60,44 @@
         </div>
     </div>
 
+    <!-- Filter tabs
+    ======================================================= -->
+    <div id="date_filter" class="filter_tab date hidden">
+        <div class="filter_tab_content">
+            <div>Hello #1</div>
+            <div>Hello #2</div>
+            <div>Hello #3</div>
+        </div>
+    </div>
+
+    <div id="project_filter" class="filter_tab project hidden">
+        <div class="filter_tab_content">
+            <div>Hello #1</div>
+            <div>Hello #2</div>
+            <div>Hello #3</div>
+        </div>
+    </div>
+
+    <div id="author_filter" class="filter_tab author hidden">
+        <div class="filter_tab_content">
+
+            <form method="GET" id="author_filter_form" action="#">
+                <input
+                        id="author_query" type="text"
+                        placeholder="Search author"
+                        autocomplete="off"
+                        autofocus="true" >
+            </form>
+
+            <div>Hello #1</div>
+            <div>Hello #2</div>
+            <div>Hello #3</div>
+
+        </div>
+    </div>
+
+    <!-- Active filter badges
+    ======================================================= -->
     <div id="active_search_filters"></div>
 
     <div id="search_suggestions" class="hidden"></div>

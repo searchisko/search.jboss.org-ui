@@ -39,6 +39,8 @@ h1 {
 
 #search_filters {
     background-color: rgb(198, 199, 199);
+    position: relative;
+    z-index: 30;
 }
 
 #search_filters > div {

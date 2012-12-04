@@ -1,0 +1,39 @@
+.filter_tab {
+
+    background-color: rgb(224, 224, 224);
+    color: rgb(56, 56, 56);
+
+    z-index: 20;
+
+    position: absolute;
+    /* TODO: DYNAMIC ? */
+    top: 125px;
+
+    left: 50%;
+    margin-left: -240px;
+
+    width: 480px;
+
+    font-size: 12px;
+
+    -moz-box-shadow: 1px 1px 7px rgb(120, 120, 120);
+    -webkit-box-shadow: 1px 1px 7px rgb(120, 120, 120);
+    box-shadow: 1px 1px 7px rgb(120, 120, 120);
+
+    -moz-border-bottom-left-radius:  5px;
+    -moz-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius:  5px;
+    -webkit-border-bottom-right-radius: 5px;
+    border-bottom-left-radius:  5px;
+    border-bottom-right-radius: 5px;
+}
+
+.filter_tab.hidden {
+    display: none;
+}
+
+.filter_tab_content {
+
+    padding: 10px;
+
+}
