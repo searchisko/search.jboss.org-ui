@@ -16,9 +16,9 @@
     limitations under the License.
 */
 
-input:focus {outline: none; }
+#search_top input:focus { outline: none; }
 
-input[type=text] {
+#search_top input[type=text] {
     /*border: 1px solid #6E93A9;*/
     -moz-border-radius: 15px;
     border-radius: 15px;

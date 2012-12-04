@@ -53,9 +53,9 @@
         </div>
         <div id="second_filters_row">
             <div class="filter caption">Filters</div>
-            <div class="filter option">Date</div>
-            <div class="filter option">Project</div>
-            <div class="filter option">Author</div>
+            <div class="filter option date">Date</div>
+            <div class="filter option project">Project</div>
+            <div class="filter option author">Author</div>
             <div class="filter_clear"></div>
         </div>
     </div>
@@ -64,17 +64,30 @@
     ======================================================= -->
     <div id="date_filter" class="filter_tab date hidden">
         <div class="filter_tab_content">
-            <div>Hello #1</div>
-            <div>Hello #2</div>
-            <div>Hello #3</div>
+            <div style="height: 100px; width: 100%; background-color: rgb(150,150,150);"></div>
         </div>
     </div>
 
     <div id="project_filter" class="filter_tab project hidden">
         <div class="filter_tab_content">
-            <div>Hello #1</div>
-            <div>Hello #2</div>
-            <div>Hello #3</div>
+
+            <form method="GET" id="project_filter_form" action="#">
+                <input
+                        id="project_filter_query_field" type="text"
+                        placeholder="Filter project"
+                        autocomplete="off"
+                        autofocus="true" >
+            </form>
+
+            <div id="project_filter_items">
+                <div>AeroGear</div>
+                <div>BeanValidation</div>
+                <div>CDI</div>
+                <div>DNA</div>
+                <div>EmbJOPR</div>
+                <div>Errai</div>
+            </div>
+
         </div>
     </div>
 
@@ -83,15 +96,17 @@
 
             <form method="GET" id="author_filter_form" action="#">
                 <input
-                        id="author_query" type="text"
-                        placeholder="Search author"
+                        id="author_filter_query_field" type="text"
+                        placeholder="Filter author"
                         autocomplete="off"
                         autofocus="true" >
             </form>
 
-            <div>Hello #1</div>
-            <div>Hello #2</div>
-            <div>Hello #3</div>
+            <div id="author_filter_items">
+                <div>Sanne Grinovero</div>
+                <div>Emmanuel Bernard</div>
+                <div>Dan Allen</div>
+            </div>
 
         </div>
     </div>

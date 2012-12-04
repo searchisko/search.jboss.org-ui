@@ -1,3 +1,58 @@
+/*
+    JBoss, Home of Professional Open Source
+    Copyright 2012 Red Hat Inc. and/or its affiliates and other contributors
+    as indicated by the @authors tag. All rights reserved.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+.filter_tab input:focus { outline: none; }
+
+.filter_tab input[type=text] {
+    /*border: 1px solid #6E93A9;*/
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    width: 180px;
+    /*color: #999;*/
+    font-weight: normal;
+
+    font-size: 13px;
+    height: 19px;
+
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+
+    border: 0px;
+    padding: 2px 10px 1px 10px;
+}
+
+/* Some interesting tips: */
+/* http://www.kirupa.com/html5/creating_an_awesome_search_box.htm */
+/* http://www.bloggermint.com/2011/06/css3-search-box-inspired-by-apple-com/ */
+/*
+.filter_tab input[type=text]:focus {
+
+    border: 1px #9f9f9f solid;
+    width: 240px;
+
+    -webkit-transition: all 0.7s ease 0s;
+    -moz-transition: all 0.7s ease 0s;
+    -o-transition: all 0.7s ease 0s;
+    transition: all 0.7s ease 0s;
+}
+*/
+
 .filter_tab {
 
     background-color: rgb(224, 224, 224);
@@ -33,7 +88,23 @@
 }
 
 .filter_tab_content {
+    margin: 30px 30px 30px 30px;
+}
 
-    padding: 10px;
+#author_filter_items {
+    margin-top: 18px;
+}
 
+#author_filter_items div {
+    margin-top: 6px;
+    margin-left: 10px;
+}
+
+#project_filter_items {
+    margin-top: 18px;
+}
+
+#project_filter_items div {
+    margin-top: 6px;
+    margin-left: 10px;
 }

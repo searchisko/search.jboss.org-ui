@@ -82,6 +82,13 @@ goog.require('goog.net.XhrLite');
      */
     var SEARCH_RESULTS_REQUEST_ID = "2";
 
+    /**
+     * Temporary: URL of Apiary Mock Server
+     * @type {string}
+     * @const
+     */
+    var API_URL_SUGGESTIONS_QUERY = "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string";
+
     // ================================================================
     // Get necessary HTML elements
     // ================================================================
@@ -89,9 +96,19 @@ goog.require('goog.net.XhrLite');
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
     var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
 
+    var date_filter_tab_div    = /** @type {!HTMLDivElement} */ goog.dom.getElement('date_filter');
+    var project_filter_tab_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('project_filter');
+    var author_filter_tab_div  = /** @type {!HTMLDivElement} */ goog.dom.getElement('author_filter');
+
+    var project_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('project_filter_query_field');
+    var author_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('author_filter_query_field');
+
     // ================================================================
     // Define internal variables and objects
     // ================================================================
+
+    /** @type {HTMLDivElement} */
+    var selected_filter_tab_div = null;
 
     var query_suggestions_view = new org.jboss.search.suggestions.query.view.View(query_suggestions_div);
     var query_suggestions_model = {};
@@ -124,12 +141,10 @@ goog.require('goog.net.XhrLite');
         return model;
     }
 
-    // URL of Apiary Mock Server
-    var query_url = "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string";
     /**
      * @type {goog.Uri}
      */
-    var suggestionsUri = goog.Uri.parse(query_url);
+    var suggestionsUri = goog.Uri.parse(API_URL_SUGGESTIONS_QUERY);
 
     var callback = function(query_string) {
 
@@ -280,4 +295,56 @@ goog.require('goog.net.XhrLite');
 //        goog.dom.classes.add(query_suggestions, 'hidden');
 //    });
 
+
+    // TODO: move to different part of the code
+    var second_filters_row_div = goog.dom.getElement('second_filters_row');
+
+    var date_filter_div = goog.dom.getElementByClass('date', second_filters_row_div);
+    var author_filter_div = goog.dom.getElementByClass('author', second_filters_row_div);
+    var project_filter_div = goog.dom.getElementByClass('project', second_filters_row_div);
+
+    var dateClickListenerId_ = goog.events.listen(date_filter_div,
+        goog.events.EventType.CLICK,
+        function(/** @type {goog.events.Event} */ e) {
+            if (goog.dom.classes.has(date_filter_tab_div, 'hidden')) {
+                goog.dom.classes.remove(date_filter_tab_div, 'hidden');
+            } else {
+                goog.dom.classes.add(date_filter_tab_div, 'hidden');
+            }
+            goog.dom.classes.add(author_filter_tab_div, 'hidden');
+            goog.dom.classes.add(project_filter_tab_div, 'hidden');
+            project_filter_query_field.blur();
+            author_filter_query_field.blur();
+        }
+    );
+
+    var authorClickListenerId_ = goog.events.listen(author_filter_div,
+        goog.events.EventType.CLICK,
+        function(/** @type {goog.events.Event} */ e) {
+            if (goog.dom.classes.has(author_filter_tab_div, 'hidden')) {
+                goog.dom.classes.remove(author_filter_tab_div, 'hidden');
+            } else {
+                goog.dom.classes.add(author_filter_tab_div, 'hidden');
+            }
+            goog.dom.classes.add(date_filter_tab_div, 'hidden');
+            goog.dom.classes.add(project_filter_tab_div, 'hidden');
+            project_filter_query_field.blur();
+            author_filter_query_field.focus();
+        }
+    );
+
+    var projectClickListenerId_ = goog.events.listen(project_filter_div,
+        goog.events.EventType.CLICK,
+        function(/** @type {goog.events.Event} */ e) {
+            if (goog.dom.classes.has(project_filter_tab_div, 'hidden')) {
+                goog.dom.classes.remove(project_filter_tab_div, 'hidden');
+            } else {
+                goog.dom.classes.add(project_filter_tab_div, 'hidden');
+            }
+            goog.dom.classes.add(date_filter_tab_div, 'hidden');
+            goog.dom.classes.add(author_filter_tab_div, 'hidden');
+            project_filter_query_field.focus();
+            author_filter_query_field.blur();
+        }
+    );
 }
