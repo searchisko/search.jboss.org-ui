@@ -89,6 +89,12 @@ goog.require('goog.net.XhrLite');
     var HIDDEN = "hidden";
 
     /**
+     * @type {string}
+     * @const
+     */
+    var SELECTED = "selected";
+
+    /**
      * Temporary: URL of Apiary Mock Server
      * @type {string}
      * @const
@@ -314,6 +320,7 @@ goog.require('goog.net.XhrLite');
     var author_filter_tab_div = goog.dom.getElementByClass('author', second_filters_row_div);
     var project_filter_tab_div = goog.dom.getElementByClass('project', second_filters_row_div);
 
+    // TODO: dispose
     var dateClickListenerId_ = goog.events.listen(date_filter_tab_div,
         goog.events.EventType.CLICK,
         function() {
@@ -321,6 +328,7 @@ goog.require('goog.net.XhrLite');
         }
     );
 
+    // TODO: dispose
     var authorClickListenerId_ = goog.events.listen(author_filter_tab_div,
         goog.events.EventType.CLICK,
         function() {
@@ -328,6 +336,7 @@ goog.require('goog.net.XhrLite');
         }
     );
 
+    // TODO: dispose
     var projectClickListenerId_ = goog.events.listen(project_filter_tab_div,
         goog.events.EventType.CLICK,
         function() {
@@ -353,6 +362,10 @@ goog.require('goog.net.XhrLite');
     /** @private */
     var showDateFilter = function() {
 
+        goog.dom.classes.add(date_filter_tab_div, SELECTED);
+        goog.dom.classes.remove(project_filter_tab_div, SELECTED);
+        goog.dom.classes.remove(author_filter_tab_div, SELECTED);
+
         goog.dom.classes.remove(date_filter_body_div, HIDDEN);
         goog.dom.classes.add(project_filter_body_div, HIDDEN);
         goog.dom.classes.add(author_filter_body_div, HIDDEN);
@@ -364,6 +377,10 @@ goog.require('goog.net.XhrLite');
 
     /** @private */
     var showAuthorFilter = function() {
+
+        goog.dom.classes.remove(date_filter_tab_div, SELECTED);
+        goog.dom.classes.remove(project_filter_tab_div, SELECTED);
+        goog.dom.classes.add(author_filter_tab_div, SELECTED);
 
         goog.dom.classes.add(date_filter_body_div, HIDDEN);
         goog.dom.classes.add(project_filter_body_div, HIDDEN);
@@ -377,6 +394,10 @@ goog.require('goog.net.XhrLite');
     /** @private */
     var showProjectFilter = function() {
 
+        goog.dom.classes.remove(date_filter_tab_div, SELECTED);
+        goog.dom.classes.add(project_filter_tab_div, SELECTED);
+        goog.dom.classes.remove(author_filter_tab_div, SELECTED);
+
         goog.dom.classes.remove(project_filter_body_div, HIDDEN);
         goog.dom.classes.add(date_filter_body_div, HIDDEN);
         goog.dom.classes.add(author_filter_body_div, HIDDEN);
@@ -388,18 +409,21 @@ goog.require('goog.net.XhrLite');
 
     /** @private */
     var hideDateFilter = function() {
+        goog.dom.classes.remove(date_filter_tab_div, SELECTED);
         goog.dom.classes.add(date_filter_body_div, HIDDEN);
         // blur not needed now
     };
 
     /** @private */
     var hideProjectFilter = function() {
+        goog.dom.classes.remove(project_filter_tab_div, SELECTED);
         goog.dom.classes.add(project_filter_body_div, HIDDEN);
         project_filter_query_field.blur();
     };
 
     /** @private */
     var hideAuthorFilter = function() {
+        goog.dom.classes.remove(author_filter_tab_div, SELECTED);
         goog.dom.classes.add(author_filter_body_div, HIDDEN);
         author_filter_query_field.blur();
     };

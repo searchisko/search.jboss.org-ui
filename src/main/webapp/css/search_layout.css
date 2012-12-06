@@ -96,13 +96,19 @@ h1 {
 }
 
 #first_filters_row > div.option:hover {
-    background-color: rgb(138, 139, 139);
+    /*background-color: rgb(138, 139, 139);*/
+    background-color: rgb(178, 179, 179);
     color: rgb(56, 56, 56);
 }
 
 #second_filters_row > div.option:hover {
-    background-color: rgb(224, 224, 224);
+    /*background-color: rgb(138, 139, 139);*/
+    background-color: rgb(178, 179, 179);
     color: rgb(56, 56, 56);
+}
+
+#second_filters_row > div.option.selected {
+    background-color: rgb(224, 224, 224);
 }
 
 
