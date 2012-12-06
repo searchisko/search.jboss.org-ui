@@ -17,6 +17,19 @@
 */
 
 /*
+    ======================================================================
+    The basic layout of web page.
+
+    Logo style.
+
+    The top part of the screen:
+        - div with the logo and search filed (search field has its own
+          more detailed style in search_field.css)
+        - filters part (Content and Filters)
+    ======================================================================
+*/
+
+/*
 h1 {
     font-family: 'PT Sans', sans-serif;
     font-weight: 400;

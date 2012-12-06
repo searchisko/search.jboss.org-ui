@@ -16,6 +16,12 @@
     limitations under the License.
 */
 
+/*
+    ======================================================================
+    Detailed styling of the search field.
+    ======================================================================
+*/
+
 #search_top input:focus { outline: none; }
 
 #search_top input[type=text] {

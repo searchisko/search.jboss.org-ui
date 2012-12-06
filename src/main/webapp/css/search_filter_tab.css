@@ -16,6 +16,12 @@
     limitations under the License.
 */
 
+/*
+    ======================================================================
+    Filter tab (body).
+    ======================================================================
+*/
+
 .filter_tab input:focus { outline: none; }
 
 .filter_tab input[type=text] {

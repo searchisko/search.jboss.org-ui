@@ -17,8 +17,12 @@
 */
 
 /*
+    ======================================================================
+    Override some style in original Meyer's CSS reset.
+
     Why this? See link below:
     http://stackoverflow.com/questions/6813750/any-ideas-why-strong-tag-doesnt-work-but-css-does
+    ======================================================================
 */
 
 strong, b {
