@@ -83,6 +83,12 @@ goog.require('goog.net.XhrLite');
     var SEARCH_RESULTS_REQUEST_ID = "2";
 
     /**
+     * @type {string}
+     * @const
+     */
+    var HIDDEN = "hidden";
+
+    /**
      * Temporary: URL of Apiary Mock Server
      * @type {string}
      * @const
@@ -96,12 +102,12 @@ goog.require('goog.net.XhrLite');
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
     var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
 
-    var date_filter_tab_div    = /** @type {!HTMLDivElement} */ goog.dom.getElement('date_filter');
-    var project_filter_tab_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('project_filter');
-    var author_filter_tab_div  = /** @type {!HTMLDivElement} */ goog.dom.getElement('author_filter');
+    var date_filter_body_div    = /** @type {!HTMLDivElement} */ goog.dom.getElement('date_filter');
+    var project_filter_body_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('project_filter');
+    var author_filter_body_div  = /** @type {!HTMLDivElement} */ goog.dom.getElement('author_filter');
 
     var project_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('project_filter_query_field');
-    var author_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('author_filter_query_field');
+    var author_filter_query_field  = /** @type {!HTMLInputElement} */ goog.dom.getElement('author_filter_query_field');
 
     // ================================================================
     // Define internal variables and objects
@@ -224,15 +230,6 @@ goog.require('goog.net.XhrLite');
     };
 
     /**
-     * Just generic key handler placeholder.
-     * @param {goog.events.KeyEvent} event
-     * @param {goog.async.Delay} delay
-     */
-//    var keyCodePreventDefaultHandler = function(event, delay) {
-//        event.preventDefault();
-//    };
-
-    /**
      * @param {goog.events.KeyEvent} event
      * @param {goog.async.Delay} delay
      */
@@ -272,79 +269,138 @@ goog.require('goog.net.XhrLite');
     // thus we have to handle it
     keyHandlers[goog.events.KeyCodes.TAB] = keyCodeTabHandler;
 
-    var blurHandler = function() {
-//        hideAndCleanSuggestionsElementAndModel();
-    };
-
-    // Catch click to the top most element
-    // TODO: unlisten
+    // Catch click at the level of the top most element
+    // TODO: dispose
     this.documentClickListenerId_ = goog.events.listen(
         goog.getObjectByName('document'),
         goog.events.EventType.CLICK,
         function(/** @type {goog.events.Event} */ e) {
+
 //            log.info("Document clicked: " + goog.debug.expose(e));
-            hideAndCleanSuggestionsElementAndModel();
+
+            // if search field is clicked then do not hide search suggestions
+            if (e.target !== query_field) {
+                hideAndCleanSuggestionsElementAndModel();
+            }
+
+            // if date filter (sub)element is clicked do not hide date filter
+            if (e.target !== date_filter_tab_div &&
+                !goog.dom.contains(date_filter_body_div, e.target)) {
+                hideDateFilter();
+            }
+
+            // if project filter (sub)element is clicked do not hide project filter
+            if (e.target !== project_filter_tab_div &&
+                !goog.dom.contains(project_filter_body_div, e.target)) {
+                hideProjectFilter();
+            }
+
+            // if author filter (sub)element is clicked do not hide author filter
+            if (e.target !== author_filter_tab_div &&
+                !goog.dom.contains(author_filter_body_div, e.target)) {
+                hideAuthorFilter();
+            }
+
         });
 
     // TODO: dispose
-    var fieldHandled = new org.jboss.search.SearchFieldHandler(query_field, 300, callback, blurHandler, keyHandlers);
-
-    // quick hack to hide suggestions when clicked away
-//    goog.events.listen(document, goog.events.EventType.CLICK, function(e){
-//        log.info("document was clicked");
-//        goog.dom.classes.add(query_suggestions, 'hidden');
-//    });
+    var fieldHandled = new org.jboss.search.SearchFieldHandler(query_field, 100, callback, null, keyHandlers);
 
 
     // TODO: move to different part of the code
     var second_filters_row_div = goog.dom.getElement('second_filters_row');
 
-    var date_filter_div = goog.dom.getElementByClass('date', second_filters_row_div);
-    var author_filter_div = goog.dom.getElementByClass('author', second_filters_row_div);
-    var project_filter_div = goog.dom.getElementByClass('project', second_filters_row_div);
+    var date_filter_tab_div = goog.dom.getElementByClass('date', second_filters_row_div);
+    var author_filter_tab_div = goog.dom.getElementByClass('author', second_filters_row_div);
+    var project_filter_tab_div = goog.dom.getElementByClass('project', second_filters_row_div);
 
-    var dateClickListenerId_ = goog.events.listen(date_filter_div,
+    var dateClickListenerId_ = goog.events.listen(date_filter_tab_div,
         goog.events.EventType.CLICK,
         function() {
-            if (goog.dom.classes.has(date_filter_tab_div, 'hidden')) {
-                goog.dom.classes.remove(date_filter_tab_div, 'hidden');
-            } else {
-                goog.dom.classes.add(date_filter_tab_div, 'hidden');
-            }
-            goog.dom.classes.add(author_filter_tab_div, 'hidden');
-            goog.dom.classes.add(project_filter_tab_div, 'hidden');
-            project_filter_query_field.blur();
-            author_filter_query_field.blur();
+            isDateFilterVisible() ? hideDateFilter() : showDateFilter()
         }
     );
 
-    var authorClickListenerId_ = goog.events.listen(author_filter_div,
+    var authorClickListenerId_ = goog.events.listen(author_filter_tab_div,
         goog.events.EventType.CLICK,
         function() {
-            if (goog.dom.classes.has(author_filter_tab_div, 'hidden')) {
-                goog.dom.classes.remove(author_filter_tab_div, 'hidden');
-            } else {
-                goog.dom.classes.add(author_filter_tab_div, 'hidden');
-            }
-            goog.dom.classes.add(date_filter_tab_div, 'hidden');
-            goog.dom.classes.add(project_filter_tab_div, 'hidden');
-            project_filter_query_field.blur();
-            author_filter_query_field.focus();
+            isAuthorFilterVisible() ? hideAuthorFilter() : showAuthorFilter()
         }
     );
 
-    var projectClickListenerId_ = goog.events.listen(project_filter_div,
+    var projectClickListenerId_ = goog.events.listen(project_filter_tab_div,
         goog.events.EventType.CLICK,
         function() {
-            if (goog.dom.classes.has(project_filter_tab_div, 'hidden')) {
-                goog.dom.classes.remove(project_filter_tab_div, 'hidden');
-            } else {
-                goog.dom.classes.add(project_filter_tab_div, 'hidden');
-            }
-            goog.dom.classes.add(date_filter_tab_div, 'hidden');
-            goog.dom.classes.add(author_filter_tab_div, 'hidden');
-            project_filter_query_field.focus();
-            author_filter_query_field.blur();
+            isProjectFilterVisible() ? hideProjectFilter() : showProjectFilter()
         }
     );
+
+    /** @private */
+    var isDateFilterVisible = function() {
+        return !goog.dom.classes.has(date_filter_body_div, HIDDEN);
+    };
+
+    /** @private */
+    var isProjectFilterVisible = function() {
+        return !goog.dom.classes.has(project_filter_body_div, HIDDEN);
+    };
+
+    /** @private */
+    var isAuthorFilterVisible = function() {
+        return !goog.dom.classes.has(author_filter_body_div, HIDDEN);
+    };
+
+    /** @private */
+    var showDateFilter = function() {
+
+        goog.dom.classes.remove(date_filter_body_div, HIDDEN);
+        goog.dom.classes.add(project_filter_body_div, HIDDEN);
+        goog.dom.classes.add(author_filter_body_div, HIDDEN);
+
+        project_filter_query_field.blur();
+        author_filter_query_field.blur();
+
+    };
+
+    /** @private */
+    var showAuthorFilter = function() {
+
+        goog.dom.classes.add(date_filter_body_div, HIDDEN);
+        goog.dom.classes.add(project_filter_body_div, HIDDEN);
+        goog.dom.classes.remove(author_filter_body_div, HIDDEN);
+
+        project_filter_query_field.blur();
+        author_filter_query_field.focus();
+
+    };
+
+    /** @private */
+    var showProjectFilter = function() {
+
+        goog.dom.classes.remove(project_filter_body_div, HIDDEN);
+        goog.dom.classes.add(date_filter_body_div, HIDDEN);
+        goog.dom.classes.add(author_filter_body_div, HIDDEN);
+
+        project_filter_query_field.focus();
+        author_filter_query_field.blur();
+
+    };
+
+    /** @private */
+    var hideDateFilter = function() {
+        goog.dom.classes.add(date_filter_body_div, HIDDEN);
+        // blur not needed now
+    };
+
+    /** @private */
+    var hideProjectFilter = function() {
+        goog.dom.classes.add(project_filter_body_div, HIDDEN);
+        project_filter_query_field.blur();
+    };
+
+    /** @private */
+    var hideAuthorFilter = function() {
+        goog.dom.classes.add(author_filter_body_div, HIDDEN);
+        author_filter_query_field.blur();
+    };
 }

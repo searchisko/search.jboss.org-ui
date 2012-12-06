@@ -89,6 +89,7 @@ org.jboss.search.suggestions.query.view.View = function(div) {
         function(/** @type {goog.events.BrowserEvent} */ event) {
             // There might be some listener that hides suggestions in the top level (for example at the document level)
             // thus we must stop propagation of clicks in order to prevent such collision.
+            // If needed we could fire custom event.
             event.stopPropagation();
             // now call callback function is there is any defined for the click
             if (goog.isFunction(_thiz.clickCallbackFunction_)) {

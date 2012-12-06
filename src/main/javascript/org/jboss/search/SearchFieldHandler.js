@@ -115,13 +115,12 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, o
             }
             else if (goog.events.KeyCodes.isTextModifyingKeyEvent(/** @type {goog.events.BrowserEvent} */ (e))) {
                 delay.start();
-//                e.stopPropagation();
             } else {
                 // ignore...
             }
         });
 
-    if (goog.isDef(this.blurHandler_)) {
+    if (goog.isFunction(this.blurHandler_)) {
         var blurHandler = this.blurHandler_;
 
         this.blurListenerId_ = goog.events.listen(this.field_,
@@ -141,16 +140,7 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, o
         function(/** @type {goog.events.Event} */ e) {
 //            log.info("Field suddenly changed to: " + goog.debug.expose(e));
             delay.start();
-
         });
-
-    this.clickListenerId_ = goog.events.listen(
-        this.field_,
-        goog.events.EventType.CLICK,
-        function(/** @type {goog.events.Event} */ e) {
-            e.stopPropagation();
-        }
-    );
 };
 goog.inherits(org.jboss.search.SearchFieldHandler, goog.Disposable);
 
@@ -169,7 +159,6 @@ org.jboss.search.SearchFieldHandler.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.keyListenerId_);
     goog.events.unlistenByKey(this.blurListenerId_);
     goog.events.unlistenByKey(this.changeListenerId_);
-    goog.events.unlistenByKey(this.clickListenerId_);
 
     // Remove references to COM objects.
 
