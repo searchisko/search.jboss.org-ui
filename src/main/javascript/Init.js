@@ -109,6 +109,8 @@ goog.require('goog.net.XhrLite');
     var project_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('project_filter_query_field');
     var author_filter_query_field  = /** @type {!HTMLInputElement} */ goog.dom.getElement('author_filter_query_field');
 
+    var second_filters_row_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('second_filters_row');
+
     // ================================================================
     // Define internal variables and objects
     // ================================================================
@@ -308,8 +310,6 @@ goog.require('goog.net.XhrLite');
 
 
     // TODO: move to different part of the code
-    var second_filters_row_div = goog.dom.getElement('second_filters_row');
-
     var date_filter_tab_div = goog.dom.getElementByClass('date', second_filters_row_div);
     var author_filter_tab_div = goog.dom.getElementByClass('author', second_filters_row_div);
     var project_filter_tab_div = goog.dom.getElementByClass('project', second_filters_row_div);
