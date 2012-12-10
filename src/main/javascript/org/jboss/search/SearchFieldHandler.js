@@ -51,12 +51,12 @@ goog.require('goog.debug.Logger');
  * @param {!HTMLInputElement} field Input field
  * @param {number} callbackDelay Delay in ms to call the callback
  * @param {!Function} callback what should happen after the delay
- * @param {!Function=} opt_blurHandler what should happen on BLUR event
+ * @param {?Function} blurHandler what should happen on BLUR event
  * @param {Object.<(goog.events.KeyCodes|number), function(goog.events.KeyEvent, goog.async.Delay)>=} keyHandlers user defined functions per keyCode
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, opt_blurHandler, keyHandlers) {
+org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, blurHandler, keyHandlers) {
 
     goog.Disposable.call(this);
 
@@ -65,7 +65,7 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, o
     /** @private */ this.field_ = field;
     /** @private */ this.callbackDelay_ = callbackDelay;
     /** @private */ this.callback_ = callback;
-    /** @private */ this.blurHandler_ = opt_blurHandler;
+    /** @private */ this.blurHandler_ = blurHandler;
     /** @private */ this.keyHandlers_ = keyHandlers;
 
     /** @private */ this.keyListenerId_;
@@ -121,12 +121,12 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, o
         });
 
     if (goog.isFunction(this.blurHandler_)) {
-        var blurHandler = this.blurHandler_;
+        var blurHndl = this.blurHandler_;
 
         this.blurListenerId_ = goog.events.listen(this.field_,
             goog.events.EventType.BLUR,
             function(/** @type {goog.events.Event} */ e) {
-                blurHandler();
+                blurHndl();
             }
         );
     }
