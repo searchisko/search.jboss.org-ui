@@ -19,6 +19,8 @@
 
 goog.provide('Init');
 
+goog.require('org.jboss.search.Constants');
+
 goog.require('org.jboss.search.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.query.view.View');
 
@@ -58,48 +60,9 @@ goog.require('goog.net.XhrLite');
     log.info("Starting...");
 
     // ================================================================
-    // Constants
+    // A shortcut
     // ================================================================
-
-    /**
-     * Used as an identified to abort or/and send the search suggestions request.
-     * @type {string}
-     * @const
-     */
-    var SEARCH_SUGGESTIONS_REQUEST_ID = "1";
-
-    /**
-     * Priority of search suggestions requests. If should be higher then search requests.
-     * @type {number}
-     * @const
-     */
-    var SEARCH_SUGGESTIONS_REQUEST_PRIORITY = 10;
-
-    /**
-     * Used as an identified to abort or/and send the search results request.
-     * @type {string}
-     * @const
-     */
-    var SEARCH_RESULTS_REQUEST_ID = "2";
-
-    /**
-     * @type {string}
-     * @const
-     */
-    var HIDDEN = "hidden";
-
-    /**
-     * @type {string}
-     * @const
-     */
-    var SELECTED = "selected";
-
-    /**
-     * Temporary: URL of Apiary Mock Server
-     * @type {string}
-     * @const
-     */
-    var API_URL_SUGGESTIONS_QUERY = "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string";
+    var const_ = org.jboss.search.Constants;
 
     // ================================================================
     // Get necessary HTML elements
@@ -134,7 +97,7 @@ goog.require('goog.net.XhrLite');
      * Hide and clean suggestions element and empty the model.
      */
     var hideAndCleanSuggestionsElementAndModel = function() {
-        xhrManager.abort(SEARCH_SUGGESTIONS_REQUEST_ID, true);
+        xhrManager.abort(const_.SEARCH_SUGGESTIONS_REQUEST_ID, true);
         query_suggestions_view.hide();
         query_suggestions_model = {};
     };
@@ -158,7 +121,7 @@ goog.require('goog.net.XhrLite');
     /**
      * @type {goog.Uri}
      */
-    var suggestionsUri = goog.Uri.parse(API_URL_SUGGESTIONS_QUERY);
+    var suggestionsUri = goog.Uri.parse(const_.API_URL_SUGGESTIONS_QUERY);
 
     var callback = function(query_string) {
 
@@ -168,16 +131,16 @@ goog.require('goog.net.XhrLite');
 
         } else {
 
-            xhrManager.abort(SEARCH_SUGGESTIONS_REQUEST_ID, true);
+            xhrManager.abort(const_.SEARCH_SUGGESTIONS_REQUEST_ID, true);
             xhrManager.send(
-                SEARCH_SUGGESTIONS_REQUEST_ID,
+                const_.SEARCH_SUGGESTIONS_REQUEST_ID,
 //                "../../test/resources/suggestions_response.json",
                 // setting the parameter value clears previously set value (that is what we want!)
                 suggestionsUri.setParameterValue("q",query_string).toString(),
-                "GET",
+                const_.GET,
                 "", // post_data
                 {}, // headers_map
-                SEARCH_SUGGESTIONS_REQUEST_PRIORITY,
+                const_.SEARCH_SUGGESTIONS_REQUEST_PRIORITY,
 
                 // callback, The only param is the event object from the COMPLETE event.
                 function(e) {
@@ -346,29 +309,29 @@ goog.require('goog.net.XhrLite');
 
     /** @private */
     var isDateFilterVisible = function() {
-        return !goog.dom.classes.has(date_filter_body_div, HIDDEN);
+        return !goog.dom.classes.has(date_filter_body_div, const_.HIDDEN);
     };
 
     /** @private */
     var isProjectFilterVisible = function() {
-        return !goog.dom.classes.has(project_filter_body_div, HIDDEN);
+        return !goog.dom.classes.has(project_filter_body_div, const_.HIDDEN);
     };
 
     /** @private */
     var isAuthorFilterVisible = function() {
-        return !goog.dom.classes.has(author_filter_body_div, HIDDEN);
+        return !goog.dom.classes.has(author_filter_body_div, const_.HIDDEN);
     };
 
     /** @private */
     var showDateFilter = function() {
 
-        goog.dom.classes.add(date_filter_tab_div, SELECTED);
-        goog.dom.classes.remove(project_filter_tab_div, SELECTED);
-        goog.dom.classes.remove(author_filter_tab_div, SELECTED);
+        goog.dom.classes.add(date_filter_tab_div, const_.SELECTED);
+        goog.dom.classes.remove(project_filter_tab_div, const_.SELECTED);
+        goog.dom.classes.remove(author_filter_tab_div, const_.SELECTED);
 
-        goog.dom.classes.remove(date_filter_body_div, HIDDEN);
-        goog.dom.classes.add(project_filter_body_div, HIDDEN);
-        goog.dom.classes.add(author_filter_body_div, HIDDEN);
+        goog.dom.classes.remove(date_filter_body_div, const_.HIDDEN);
+        goog.dom.classes.add(project_filter_body_div, const_.HIDDEN);
+        goog.dom.classes.add(author_filter_body_div, const_.HIDDEN);
 
         project_filter_query_field.blur();
         author_filter_query_field.blur();
@@ -378,13 +341,13 @@ goog.require('goog.net.XhrLite');
     /** @private */
     var showAuthorFilter = function() {
 
-        goog.dom.classes.remove(date_filter_tab_div, SELECTED);
-        goog.dom.classes.remove(project_filter_tab_div, SELECTED);
-        goog.dom.classes.add(author_filter_tab_div, SELECTED);
+        goog.dom.classes.remove(date_filter_tab_div, const_.SELECTED);
+        goog.dom.classes.remove(project_filter_tab_div, const_.SELECTED);
+        goog.dom.classes.add(author_filter_tab_div, const_.SELECTED);
 
-        goog.dom.classes.add(date_filter_body_div, HIDDEN);
-        goog.dom.classes.add(project_filter_body_div, HIDDEN);
-        goog.dom.classes.remove(author_filter_body_div, HIDDEN);
+        goog.dom.classes.add(date_filter_body_div, const_.HIDDEN);
+        goog.dom.classes.add(project_filter_body_div, const_.HIDDEN);
+        goog.dom.classes.remove(author_filter_body_div, const_.HIDDEN);
 
         project_filter_query_field.blur();
         author_filter_query_field.focus();
@@ -394,13 +357,13 @@ goog.require('goog.net.XhrLite');
     /** @private */
     var showProjectFilter = function() {
 
-        goog.dom.classes.remove(date_filter_tab_div, SELECTED);
-        goog.dom.classes.add(project_filter_tab_div, SELECTED);
-        goog.dom.classes.remove(author_filter_tab_div, SELECTED);
+        goog.dom.classes.remove(date_filter_tab_div, const_.SELECTED);
+        goog.dom.classes.add(project_filter_tab_div, const_.SELECTED);
+        goog.dom.classes.remove(author_filter_tab_div, const_.SELECTED);
 
-        goog.dom.classes.remove(project_filter_body_div, HIDDEN);
-        goog.dom.classes.add(date_filter_body_div, HIDDEN);
-        goog.dom.classes.add(author_filter_body_div, HIDDEN);
+        goog.dom.classes.remove(project_filter_body_div, const_.HIDDEN);
+        goog.dom.classes.add(date_filter_body_div, const_.HIDDEN);
+        goog.dom.classes.add(author_filter_body_div, const_.HIDDEN);
 
         project_filter_query_field.focus();
         author_filter_query_field.blur();
@@ -409,22 +372,22 @@ goog.require('goog.net.XhrLite');
 
     /** @private */
     var hideDateFilter = function() {
-        goog.dom.classes.remove(date_filter_tab_div, SELECTED);
-        goog.dom.classes.add(date_filter_body_div, HIDDEN);
+        goog.dom.classes.remove(date_filter_tab_div, const_.SELECTED);
+        goog.dom.classes.add(date_filter_body_div, const_.HIDDEN);
         // blur not needed now
     };
 
     /** @private */
     var hideProjectFilter = function() {
-        goog.dom.classes.remove(project_filter_tab_div, SELECTED);
-        goog.dom.classes.add(project_filter_body_div, HIDDEN);
+        goog.dom.classes.remove(project_filter_tab_div, const_.SELECTED);
+        goog.dom.classes.add(project_filter_body_div, const_.HIDDEN);
         project_filter_query_field.blur();
     };
 
     /** @private */
     var hideAuthorFilter = function() {
-        goog.dom.classes.remove(author_filter_tab_div, SELECTED);
-        goog.dom.classes.add(author_filter_body_div, HIDDEN);
+        goog.dom.classes.remove(author_filter_tab_div, const_.SELECTED);
+        goog.dom.classes.add(author_filter_body_div, const_.HIDDEN);
         author_filter_query_field.blur();
     };
 }

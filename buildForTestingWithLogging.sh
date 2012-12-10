@@ -12,6 +12,7 @@
   --root=./src/main/javascript \
   --namespace="LoggingWindow" \
   --namespace="Init" \
+  --namespace="org.jboss.search.Constants" \
   --namespace="org.jboss.search.SearchFieldHandler" \
   --namespace="org.jboss.search.suggestions.query.model.Model" \
   --namespace="org.jboss.search.suggestions.query.model.Search" \
