@@ -21,6 +21,7 @@
   --namespace="org.jboss.search.suggestions.query.model.Suggestion" \
   --namespace="org.jboss.search.suggestions.query.view.View" \
   --namespace="org.jboss.search.suggestions.templates" \
+  --namespace="org.jboss.search.page.SearchPage" \
   \
   --namespace="test.org.jboss.search.SearchFieldHandlerAsyncTest" \
   --namespace="test.org.jboss.search.suggestions.query.model.ModelTest" \
