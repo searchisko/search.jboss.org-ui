@@ -240,8 +240,8 @@ org.jboss.search.suggestions.query.view.View.prototype.selectPrevious = function
 };
 
 /**
+ * Get index of selected option (starting from 0).
  * @return {number}
- * @private
  */
 org.jboss.search.suggestions.query.view.View.prototype.getSelectedIndex = function() {
     return this.selectedIndex;
