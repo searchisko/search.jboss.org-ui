@@ -20,6 +20,7 @@
 goog.provide('Init');
 
 goog.require('org.jboss.search.page.SearchPage');
+goog.require('org.jboss.search.util.FragmentParser');
 
 goog.require('goog.dom');
 
@@ -31,6 +32,8 @@ goog.require('goog.debug.Logger');
 
 // Added to get rid of advanced compilation errors - Closure dependencies are broken ?
 goog.require('goog.net.XhrLite');
+
+goog.require('goog.History');
 
 /**
  * @fileoverview Initialization of the Search UI.
@@ -71,17 +74,45 @@ goog.require('goog.net.XhrLite');
     // Define internal variables and objects
     // ================================================================
 
+    // get our window
+    var window_ = window || goog.dom.getWindow(goog.dom.getOwnerDocument(query_field));
+    var history = new goog.History();
+
+    var fp = new org.jboss.search.util.FragmentParser();
+
     /** @type {!goog.net.XhrManager} */
     var xhrManager = new goog.net.XhrManager();
     var context = goog.getObjectByName('document');
 
+    /**
+     * Sets given query string to URL fragment. Is assumes the value is not URL encoded.
+     * @param query_string
+     */
+    var updateFragment = function(query_string) {
+        history.setToken("q=" + goog.string.urlEncode(query_string));
+    };
+
     var searchPage = new org.jboss.search.page.SearchPage(
         xhrManager,
         context,
+        updateFragment,
         query_field, query_suggestions_div,
         date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
         project_filter_query_field, author_filter_query_field
     );
+
+    // navigation controller
+    var navigationController = function (e) {
+        // e.isNavigate (true if value in browser address bar is changed manually)
+        log.info('Navigated to state "' + e.token + '"');
+        var query = fp.getUserQuery(e.token);
+        searchPage.runSearch(query);
+
+    };
+
+    // activate URL History manager
+    var historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
+    history.setEnabled(true);
 
 }

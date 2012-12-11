@@ -48,10 +48,13 @@ goog.require('goog.string');
 
 goog.require('goog.Uri');
 
+goog.require('goog.debug.Logger');
+
 /**
  * @param {!goog.net.XhrManager} xhrManager
  * @param {EventTarget|goog.events.EventTarget} context element to catch click events and control behaviour of the UI. Typically, this is the document.
  * @param {!HTMLInputElement} query_field
+ * @param {!function(string)} querySelected Once a query is selected then call this function to notify outer controller.
  * @param {!HTMLDivElement} query_suggestions_div
  * @param {!HTMLDivElement} date_filter_tab_div
  * @param {!HTMLDivElement} author_filter_tab_div
@@ -67,6 +70,7 @@ goog.require('goog.Uri');
 org.jboss.search.page.SearchPage = function(
         xhrManager,
         context,
+        querySelected,
         query_field, query_suggestions_div,
         date_filter_tab_div, author_filter_tab_div, project_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
@@ -77,7 +81,11 @@ org.jboss.search.page.SearchPage = function(
 
     var thiz_ = this;
 
+    /** @private */ this.log = goog.debug.Logger.getLogger('SearchPage');
+
     /** @private */ this.xhrManager = xhrManager;
+    /** @private */ this.context = context;
+    /** @private */ this.querySelected = querySelected;
 
     /** @private */ this.query_field = query_field;
     /** @private */ this.query_suggestions_div = query_suggestions_div;
@@ -104,8 +112,15 @@ org.jboss.search.page.SearchPage = function(
 
     this.query_suggestions_view.setClickCallbackFunction(
         function() {
+            var selectedIndex = thiz_.query_suggestions_view.getSelectedIndex();
             thiz_.hideAndCleanSuggestionsElementAndModel();
             thiz_.query_field.focus();
+
+            (function(selectedIndex) {
+                // TODO get query_string from model at the selectedIndex position
+                thiz_.querySelected("option was selected by pointer (index: "+selectedIndex+")");
+
+            })(selectedIndex);
         }
     );
 
@@ -180,7 +195,7 @@ org.jboss.search.page.SearchPage = function(
     );
 
     this.contextClickListenerId_ = goog.events.listen(
-        context,
+        thiz_.context,
         goog.events.EventType.CLICK,
         function(/** @type {goog.events.Event} */ e) {
 
@@ -237,7 +252,11 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     // Remove references to COM objects.
 
     // Remove references to DOM nodes, which are COM objects in IE.
+    delete this.log;
+
     delete this.xhrManager;
+    delete this.context;
+    delete this.querySelected;
 
     delete this.query_field;
     delete this.query_suggestions_div;
@@ -257,6 +276,33 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
 
     delete this.query_suggestions_model;
 
+};
+
+/**
+ * Set value of query field.
+ * @param {?string} query
+ */
+org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
+
+    var newValue = "";
+    if (!goog.string.isEmptySafe(query)) {
+        newValue = query.trim();
+    }
+
+    this.query_field.value = newValue;
+
+};
+
+/**
+ * Set user query and execute the query.
+ * @param {?string} query
+ */
+org.jboss.search.page.SearchPage.prototype.runSearch = function(query) {
+
+    this.setUserQuery(query);
+
+    // TODO run the search...
+    this.log.info("Run search for [" + query + "]");
 };
 
 /**
@@ -320,9 +366,15 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
      * @param {goog.async.Delay} delay
      */
     var keyCodeEnterHandler = function(event, delay) {
-//        just fake for now...
+        var selectedIndex = thiz_.query_suggestions_view.getSelectedIndex();
         thiz_.hideAndCleanSuggestionsElementAndModel();
         event.preventDefault();
+
+        (function(selectedIndex) {
+            // TODO get query_string from model at the selectedIndex position
+            thiz_.querySelected("option was selected by keys (index: "+selectedIndex+")");
+
+        })(selectedIndex);
     };
 
     // prepare keyHandlers for the main search field
