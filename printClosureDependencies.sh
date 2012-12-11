@@ -22,6 +22,7 @@
   --namespace="org.jboss.search.suggestions.query.view.View" \
   --namespace="org.jboss.search.suggestions.templates" \
   --namespace="org.jboss.search.page.SearchPage" \
+  --namespace="org.jboss.search.util.FragmentParser" \
   \
   --namespace="test.org.jboss.search.SearchFieldHandlerAsyncTest" \
   --namespace="test.org.jboss.search.suggestions.query.model.ModelTest" \
