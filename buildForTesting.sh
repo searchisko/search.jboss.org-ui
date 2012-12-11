@@ -8,8 +8,10 @@
 # ----------------------------------------------------------------------------
 
 ./closure-library-r2180/closure/bin/build/closurebuilder.py \
+  \
   --root=./closure-library-r2180 \
   --root=./src/main/javascript \
+  \
   --namespace="Init" \
   --namespace="org.jboss.search.Constants" \
   --namespace="org.jboss.search.SearchFieldHandler" \
@@ -19,6 +21,8 @@
   --namespace="org.jboss.search.suggestions.query.view.View" \
   --namespace="org.jboss.search.suggestions.templates" \
   --namespace="org.jboss.search.page.SearchPage" \
+  --namespace="org.jboss.search.util.FragmentParser" \
+  \
   --output_mode='script' \
   --output_file=./src/main/webapp/testing-only.js
 
