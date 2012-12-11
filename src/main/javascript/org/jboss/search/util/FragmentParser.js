@@ -27,6 +27,10 @@ goog.provide('org.jboss.search.util.FragmentParser');
 goog.require('goog.array');
 goog.require('goog.string');
 
+/**
+ *
+ * @constructor
+ */
 org.jboss.search.util.FragmentParser = function() {
 
 };
