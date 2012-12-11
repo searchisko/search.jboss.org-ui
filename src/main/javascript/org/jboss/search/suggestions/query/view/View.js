@@ -91,9 +91,9 @@ org.jboss.search.suggestions.query.view.View = function(div) {
             // thus we must stop propagation of clicks in order to prevent such collision.
             // If needed we could fire custom event.
             event.stopPropagation();
-            // now call callback function is there is any defined for the click
+            // now call callback function if there is any defined for the click
             if (goog.isFunction(_thiz.clickCallbackFunction_)) {
-                _thiz.clickCallbackFunction_();
+                _thiz.clickCallbackFunction_(_thiz.getSelectedIndex());
             }
         });
 
@@ -110,7 +110,7 @@ org.jboss.search.suggestions.query.view.View = function(div) {
                 // I was not able to get JSDoc right on the following two lines!
                 // Also I had to remove JSDoc annotation for getIndexValue @param.
                 var t_ =  e.target;
-                var index = getIndexValue(t_);
+                var index = getIndexValue_(t_);
                 if (goog.isNumber(index)) {
                     if (index != _thiz.getSelectedIndex()) {
                         _thiz.select(index);
@@ -127,7 +127,7 @@ org.jboss.search.suggestions.query.view.View = function(div) {
      * @return {number|null}
      * @private
      */
-    var getIndexValue = function(element) {
+    var getIndexValue_ = function(element) {
         var index = element.getAttribute("index");
         if (goog.isDefAndNotNull(index)) {
             return goog.string.toNumber(index);
@@ -256,8 +256,10 @@ org.jboss.search.suggestions.query.view.View.prototype.setSelectedIndex = functi
 };
 
 /**
- * Set callback function that is called when option is clicked.
- * @param {Function|null} fn
+ * Set callback function that is called when option is clicked. The argument to the function
+ * is an index of selected option.
+ *
+ * @param {function(number)|null} fn
  */
 org.jboss.search.suggestions.query.view.View.prototype.setClickCallbackFunction = function(fn) {
     this.clickCallbackFunction_ = fn;
