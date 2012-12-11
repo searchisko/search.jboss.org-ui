@@ -32,6 +32,10 @@ TestCase('FragmentParserTest', {
         assertEquals("Takes the first 'q' value", "first", fp.getUserQuery("1&2&3&x=foo&q=first&q=second"));
         assertEquals("Case insensitive 'Q' value", "first", fp.getUserQuery("1&2&3&x=foo&Q=first&q=second"));
 
+        // let's test just spaces and question marks, testing diacritics is possible once
+        // http://code.google.com/p/js-test-driver/issues/detail?id=85 is fixed in jsTestDriver
+        assertEquals("Value is encoded", "? ? ?", fp.getUserQuery("q=%3F%20%3F%20%3F"));
+
     }
 
 });

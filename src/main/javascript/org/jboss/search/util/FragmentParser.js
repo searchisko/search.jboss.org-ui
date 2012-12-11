@@ -32,6 +32,7 @@ org.jboss.search.util.FragmentParser = function() {
 };
 
 /**
+ * Returns value of 'q' parameter from URL fragment. Value is URL decoded.
  *
  * @param {string|null|undefined} fragment
  * @return {!string}
@@ -48,7 +49,7 @@ org.jboss.search.util.FragmentParser.prototype.getUserQuery = function(fragment)
         if ( i >= 0) {
             var p = parts[i].trim();
             //remove "q=" at the beginning
-            return goog.string.removeAt(p, 0, 2);
+            return goog.string.urlDecode(goog.string.removeAt(p, 0, 2));
         }
     }
 
