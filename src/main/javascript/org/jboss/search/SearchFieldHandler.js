@@ -135,6 +135,7 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, b
     this.inputHandler_ = new goog.events.InputHandler(this.field_);
     var inputHandler = this.inputHandler_;
 
+    // this listener can catch cut & paste in search field
     this.changeListenerId_ = goog.events.listen(inputHandler,
         goog.events.EventType.INPUT,
         function(/** @type {goog.events.Event} */ e) {

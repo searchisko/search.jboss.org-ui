@@ -105,10 +105,35 @@ h1 {
     /*background-color: rgb(138, 139, 139);*/
     background-color: rgb(178, 179, 179);
     color: rgb(56, 56, 56);
+
+    /* added to make keep text centered when icon is added to :before element */
+    padding: 0 16px 0 0;
+}
+
+#second_filters_row > div.option:hover:before {
+    content: url(../image/icons/arrow_sans_down_16_717171.png);
+    position: relative;
+    float: left;
+    left: 4px;
+    top: 4px;
+    border: 0;
+    margin: 0;
+    padding: 0;
 }
 
 #second_filters_row > div.option.selected {
     background-color: rgb(224, 224, 224);
+}
+
+#second_filters_row > div.option.selected:hover:before {
+    content: url(../image/icons/arrow_sans_up_16_717171.png);
+    position: relative;
+    float: left;
+    left: 4px;
+    top: 4px;
+    border: 0;
+    margin: 0;
+    padding: 0;
 }
 
 

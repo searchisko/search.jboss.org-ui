@@ -42,7 +42,40 @@
     -moz-box-sizing: border-box;
 
     border: 0;
-    padding: 2px 10px 1px 10px;
+    /*padding: 2px 10px 1px 10px;*/
+
+    /* changed to make enough room for icons (spinning wheel and zoom) */
+    padding: 2px 24px 1px 6px;
 
     /* http://christophzillgens.com/en/articles/equal-height-input-and-button-elements-in-firefox-and-safari */
+}
+
+#search_top input[type=text]:before {
+    content: url(../image/icons/toolbar_find.png);
+    width: 16px;
+    height: 16px;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    float: left;
+    top: 0px;
+    /*left: -6px;*/
+    left: -2px;
+    position: relative;
+}
+
+#search_top input[type=text]:after {
+    content: url(../image/icons/wait16trans.gif);
+    width: 16px;
+    height: 16px;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    float: right;
+    top: -16px;
+    /*right: -7px;*/
+    right: -18px;
+    position: relative;
+
+    display: none;
 }
