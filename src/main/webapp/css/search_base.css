@@ -29,6 +29,10 @@
 }
 
 body {
+
+    /* TODO: need to update when on smaller screen (mobile devices...) */
+    min-width: 640px;
+
     background-color: #eee;
     font-size: 100%;
     /* Try to use Lucida Grande if possible */
