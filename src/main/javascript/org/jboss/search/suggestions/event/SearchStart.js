@@ -26,7 +26,6 @@ goog.provide('org.jboss.search.suggestions.event.SearchStart');
 
 goog.require('org.jboss.search.suggestions.event.EventType');
 
-goog.require('goog.events');
 goog.require('goog.events.Event');
 
 /**

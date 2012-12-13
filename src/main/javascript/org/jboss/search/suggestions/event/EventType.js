@@ -24,6 +24,8 @@
 
 goog.provide('org.jboss.search.suggestions.event.EventType');
 
+goog.require('goog.events');
+
 /** @enum {string} */
 org.jboss.search.suggestions.event.EventType = {
     SEARCH_START  : goog.events.getUniqueId('search_start'),
