@@ -53,8 +53,8 @@ goog.require('goog.debug.Logger');
 /**
  * @param {!goog.net.XhrManager} xhrManager
  * @param {EventTarget|goog.events.EventTarget} context element to catch click events and control behaviour of the UI. Typically, this is the document.
- * @param {!HTMLInputElement} query_field
  * @param {!function(string)} querySelected Once a query is selected then call this function to notify outer controller.
+ * @param {!HTMLInputElement} query_field
  * @param {!HTMLDivElement} query_suggestions_div
  * @param {!HTMLDivElement} date_filter_tab_div
  * @param {!HTMLDivElement} author_filter_tab_div
@@ -194,12 +194,13 @@ org.jboss.search.page.SearchPage = function(
         }
     );
 
+    /** @private */
     this.contextClickListenerId_ = goog.events.listen(
         thiz_.context,
         goog.events.EventType.CLICK,
         function(/** @type {goog.events.Event} */ e) {
 
-//            log.info("Document clicked: " + goog.debug.expose(e));
+//            log.info("Context clicked: " + goog.debug.expose(e));
 
             // if search field is clicked then do not hide search suggestions
             if (e.target !== thiz_.query_field) {
