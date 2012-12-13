@@ -54,6 +54,19 @@ h1 {
     background-color: rgb(198, 199, 199);
     position: relative;
     z-index: 30;
+
+    /*
+        Disable text selection in filter "buttons".
+        This is to prevent text highlighting when
+        user clicks the element fast (& double clicks).
+    */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 #search_filters > div {
