@@ -22,9 +22,16 @@
     ======================================================================
 */
 
-#search_top input:focus { outline: none; }
+#query_field_div {
+    white-space:nowrap;
+    width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-#search_top input[type=text] {
+#query_field_div input:focus { outline: none; }
+
+#query_field_div input[type=text] {
     /*border: 1px solid #6E93A9;*/
     -moz-border-radius: 15px;
     border-radius: 15px;
@@ -43,6 +50,9 @@
 
     border: 0;
 
+    position: relative;
+    z-index: 110;
+
     /*padding: 2px 10px 1px 10px;*/
     /* Changed to make enough room for icons (spinning wheel and zoom). */
     padding: 2px 24px 1px 24px;
@@ -50,32 +60,41 @@
     /* http://christophzillgens.com/en/articles/equal-height-input-and-button-elements-in-firefox-and-safari */
 }
 
-#span_query_field {
-    white-space:nowrap;
-}
+#query_field_div_magnifier {
+    background: url(../image/icons/toolbar_find.png) no-repeat;
 
-#span_query_field:before {
-    content: url(../image/icons/toolbar_find.png);
     width: 16px;
     height: 16px;
     border: 0;
     margin: 0;
     padding: 0;
-    top: 3px;
-    left: 26px;
-    position: relative;
+
+    position: absolute;
+    z-index: 120;
+
+    margin-top: 5px;
+    margin-left: 4px;
+
 }
 
-#span_query_field:after {
-    content: url(../image/icons/wait16trans.gif);
+#query_field_div_spinner {
+    background: url(../image/icons/wait16trans.gif) no-repeat;
+
     width: 16px;
     height: 16px;
     border: 0;
     margin: 0;
     padding: 0;
-    top: 3px;
-    right: 26px;
-    position: relative;
+
+    position: absolute;
+    z-index: 130;
+
+    margin-top: 5px;
+    margin-left: 420px; /* 440 - 4 - 16 */
 
     /*display: none;*/
+}
+
+#query_field_div_clear {
+    clear: both;
 }
