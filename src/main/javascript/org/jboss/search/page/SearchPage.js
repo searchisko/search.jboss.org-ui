@@ -24,11 +24,10 @@
 
 goog.provide('org.jboss.search.page.SearchPage');
 
-goog.require("goog.Disposable");
-
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.query.view.View');
+goog.require('org.jboss.search.suggestions.event.EventType');
 
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
@@ -37,6 +36,7 @@ goog.require('goog.events');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyEvent');
 goog.require('goog.events.EventType');
+goog.require('goog.events.EventTarget');
 
 goog.require('goog.net.XhrManager');
 goog.require('goog.net.XhrManager.Event');
@@ -67,7 +67,7 @@ goog.require('goog.debug.Logger');
  * @param {!HTMLInputElement} project_filter_query_field
  * @param {!HTMLInputElement} author_filter_query_field
  * @constructor
- * @extends {goog.Disposable}
+ * @extends {goog.events.EventTarget}
  */
 org.jboss.search.page.SearchPage = function(
         xhrManager,
@@ -79,7 +79,7 @@ org.jboss.search.page.SearchPage = function(
         project_filter_query_field, author_filter_query_field
     ) {
 
-    goog.Disposable.call(this);
+    goog.events.EventTarget.call(this);
 
     var thiz_ = this;
 
@@ -114,6 +114,26 @@ org.jboss.search.page.SearchPage = function(
      */
     this.suggestionsUri = goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_QUERY);
 
+    /** @private */
+    this.xhrReadyListenerId_ = goog.events.listen(this.xhrManager, goog.net.EventType.READY, function(e) {
+        thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_START);
+    });
+
+    /** @private */
+    this.xhrCompleteListenerId_ = goog.events.listen(this.xhrManager, goog.net.EventType.COMPLETE, function(e) {
+        thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
+    });
+
+    /** @private */
+    this.xhrErrorListenerId_ = goog.events.listen(this.xhrManager, goog.net.EventType.ERROR, function(e) {
+        thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
+    });
+
+    /** @private */
+    this.xhrAbortListenerId_ = goog.events.listen(this.xhrManager, goog.net.EventType.ABORT, function(e) {
+        thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
+    });
+
     this.query_suggestions_view.setClickCallbackFunction(
         function() {
             var selectedIndex = thiz_.query_suggestions_view.getSelectedIndex();
@@ -136,8 +156,10 @@ org.jboss.search.page.SearchPage = function(
 
         } else {
 
+            // Abort does not send any event (because of the 'true')
+            // so technically, we should fire our own SEARCH_FINISH event but because
+            // we are immediately starting a new search we do not do it.
             thiz_.xhrManager.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
-            // TODO: fire stop suggestion event
             thiz_.xhrManager.send(
                 org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID,
 //                "../../test/resources/suggestions_response.json",
@@ -237,7 +259,7 @@ org.jboss.search.page.SearchPage = function(
 
 };
 
-goog.inherits(org.jboss.search.page.SearchPage, goog.Disposable);
+goog.inherits(org.jboss.search.page.SearchPage, goog.events.EventTarget);
 
 /** @inheritDoc */
 org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
@@ -254,6 +276,10 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.projectClickListenerId_);
     goog.events.unlistenByKey(this.authorClickListenerId_);
     goog.events.unlistenByKey(this.contextClickListenerId_);
+    goog.events.unlistenByKey(this.xhrReadyListenerId_);
+    goog.events.unlistenByKey(this.xhrCompleteListenerId_);
+    goog.events.unlistenByKey(this.xhrErrorListenerId_);
+    goog.events.unlistenByKey(this.xhrAbortListenerId_);
 
     // Remove references to COM objects.
 
@@ -406,8 +432,11 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.hideAndCleanSuggestionsElementAndModel = function() {
+
     this.xhrManager.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
-    // TODO: fire suggestion stop event
+    // abort with 'true' does not fire any event, thus we have to fire our own event
+    this.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
+
     this.query_suggestions_view.hide();
     this.query_suggestions_model = {};
 };

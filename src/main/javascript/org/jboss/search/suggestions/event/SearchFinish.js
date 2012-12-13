@@ -18,6 +18,7 @@
 
 /**
  *  @fileoverview Event to represent 'search suggestions' search request has finished.
+ *  The finish in this case means success, error, abort or timeout.
  *
  *  @author Lukas Vlcek (lvlcek@redhat.com)
  */

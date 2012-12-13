@@ -21,6 +21,7 @@ goog.provide('Init');
 
 goog.require('org.jboss.search.page.SearchPage');
 goog.require('org.jboss.search.util.FragmentParser');
+goog.require('org.jboss.search.suggestions.event.EventType');
 
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
@@ -32,10 +33,11 @@ goog.require('goog.net.XhrManager.Request');
 
 goog.require('goog.debug.Logger');
 
+goog.require('goog.History');
+
 // Added to get rid of advanced compilation errors - Closure dependencies are broken ?
 goog.require('goog.net.XhrLite');
 
-goog.require('goog.History');
 
 /**
  * @fileoverview Initialization of the Search UI.
@@ -120,11 +122,11 @@ goog.require('goog.History');
     history.setEnabled(true);
 
     // TODO experiment
-    var xhrCompleteListenerId_ = goog.events.listen(xhrManager, goog.net.EventType.COMPLETE, function(e){
+    var finish_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, function(e){
         goog.dom.classes.add(spinner_div, org.jboss.search.Constants.HIDDEN);
     });
 
-    var xhrReadyListenerId_ = goog.events.listen(xhrManager, goog.net.EventType.READY, function(e){
+    var start_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_START, function(e){
         goog.dom.classes.remove(spinner_div, org.jboss.search.Constants.HIDDEN);
     });
 
