@@ -36,7 +36,7 @@ goog.require('goog.events.Event');
  */
 org.jboss.search.suggestions.event.SearchStart = function(query_string) {
 
-    goog.events.Event.call(this, org.jboss.search.suggestions.event.EventType.SEARCH_START, "");
+    goog.events.Event.call(this, org.jboss.search.suggestions.event.EventType.SEARCH_START);
 
     /**
      * @type {string}

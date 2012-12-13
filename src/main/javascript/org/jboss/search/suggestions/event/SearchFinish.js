@@ -34,6 +34,6 @@ goog.require('goog.events.Event');
  * @extends {goog.events.Event}
  */
 org.jboss.search.suggestions.event.SearchFinish = function() {
-    goog.events.Event.call(this, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, "");
+    goog.events.Event.call(this, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
 };
 goog.inherits(org.jboss.search.suggestions.event.SearchFinish, goog.events.Event);
