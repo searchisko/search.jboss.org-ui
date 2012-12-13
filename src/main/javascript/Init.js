@@ -57,8 +57,8 @@ goog.require('goog.History');
     // ================================================================
 
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
-    var spinner_div = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field_div_spinner');
-    var clear_query_div = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field_div_x');
+    var spinner_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('query_field_div_spinner');
+    var clear_query_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('query_field_div_x');
     var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
 
     var date_filter_body_div    = /** @type {!HTMLDivElement} */ goog.dom.getElement('date_filter');
@@ -121,7 +121,6 @@ goog.require('goog.History');
 
     // TODO experiment
     var xhrCompleteListenerId_ = goog.events.listen(xhrManager, goog.net.EventType.COMPLETE, function(e){
-        console.log("...stop", e);
         goog.dom.classes.add(spinner_div, org.jboss.search.Constants.HIDDEN);
     });
 
