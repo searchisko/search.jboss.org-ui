@@ -55,6 +55,8 @@ goog.require('goog.debug.Logger');
  * @param {EventTarget|goog.events.EventTarget} context element to catch click events and control behaviour of the UI. Typically, this is the document.
  * @param {!function(string)} querySelected Once a query is selected then call this function to notify outer controller.
  * @param {!HTMLInputElement} query_field
+ * @param {!HTMLDivElement} spinner_div
+ * @param {!HTMLDivElement} clear_query_div
  * @param {!HTMLDivElement} query_suggestions_div
  * @param {!HTMLDivElement} date_filter_tab_div
  * @param {!HTMLDivElement} author_filter_tab_div
@@ -71,7 +73,7 @@ org.jboss.search.page.SearchPage = function(
         xhrManager,
         context,
         querySelected,
-        query_field, query_suggestions_div,
+        query_field, spinner_div, clear_query_div, query_suggestions_div,
         date_filter_tab_div, author_filter_tab_div, project_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
         project_filter_query_field, author_filter_query_field
@@ -88,6 +90,8 @@ org.jboss.search.page.SearchPage = function(
     /** @private */ this.querySelected = querySelected;
 
     /** @private */ this.query_field = query_field;
+    /** @private */ this.spinner_div = spinner_div;
+    /** @private */ this.clear_query_div = clear_query_div;
     /** @private */ this.query_suggestions_div = query_suggestions_div;
 
     /** @private */ this.date_filter_body_div = date_filter_body_div;
@@ -133,6 +137,7 @@ org.jboss.search.page.SearchPage = function(
         } else {
 
             thiz_.xhrManager.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
+            // TODO: fire stop suggestion event
             thiz_.xhrManager.send(
                 org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID,
 //                "../../test/resources/suggestions_response.json",
@@ -260,6 +265,8 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     delete this.querySelected;
 
     delete this.query_field;
+    delete this.spinner_div;
+    delete this.clear_query_div;
     delete this.query_suggestions_div;
 
     delete this.date_filter_body_div;
@@ -400,6 +407,7 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
  */
 org.jboss.search.page.SearchPage.prototype.hideAndCleanSuggestionsElementAndModel = function() {
     this.xhrManager.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
+    // TODO: fire suggestion stop event
     this.query_suggestions_view.hide();
     this.query_suggestions_model = {};
 };

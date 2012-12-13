@@ -23,6 +23,8 @@ goog.require('org.jboss.search.page.SearchPage');
 goog.require('org.jboss.search.util.FragmentParser');
 
 goog.require('goog.dom');
+goog.require('goog.dom.classes');
+goog.require('org.jboss.search.Constants');
 
 goog.require('goog.net.XhrManager');
 goog.require('goog.net.XhrManager.Event');
@@ -55,6 +57,8 @@ goog.require('goog.History');
     // ================================================================
 
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
+    var spinner_div = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field_div_spinner');
+    var clear_query_div = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field_div_x');
     var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
 
     var date_filter_body_div    = /** @type {!HTMLDivElement} */ goog.dom.getElement('date_filter');
@@ -88,15 +92,15 @@ goog.require('goog.History');
      * Sets given query string to URL fragment. Is assumes the value is not URL encoded.
      * @param query_string
      */
-    var updateFragment = function(query_string) {
+    var urlSetFragmentFunction = function(query_string) {
         history.setToken("q=" + goog.string.urlEncode(query_string));
     };
 
     var searchPage = new org.jboss.search.page.SearchPage(
         xhrManager,
         context,
-        updateFragment,
-        query_field, query_suggestions_div,
+        urlSetFragmentFunction,
+        query_field, spinner_div, clear_query_div, query_suggestions_div,
         date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
         project_filter_query_field, author_filter_query_field
@@ -114,5 +118,15 @@ goog.require('goog.History');
     // activate URL History manager
     var historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
     history.setEnabled(true);
+
+    // TODO experiment
+    var xhrCompleteListenerId_ = goog.events.listen(xhrManager, goog.net.EventType.COMPLETE, function(e){
+        console.log("...stop", e);
+        goog.dom.classes.add(spinner_div, org.jboss.search.Constants.HIDDEN);
+    });
+
+    var xhrReadyListenerId_ = goog.events.listen(xhrManager, goog.net.EventType.READY, function(e){
+        goog.dom.classes.remove(spinner_div, org.jboss.search.Constants.HIDDEN);
+    });
 
 }
