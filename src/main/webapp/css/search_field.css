@@ -29,6 +29,10 @@
     margin-right: auto;
 }
 
+#query_field_div .hidden {
+    display: none;
+}
+
 #query_field_div input:focus { outline: none; }
 
 #query_field_div input[type=text] {
@@ -66,15 +70,11 @@
     width: 16px;
     height: 16px;
     border: 0;
-    margin: 0;
+    margin: 5px 0 0 4px;
     padding: 0;
 
     position: absolute;
     z-index: 120;
-
-    margin-top: 5px;
-    margin-left: 4px;
-
 }
 
 #query_field_div_spinner {
@@ -83,16 +83,23 @@
     width: 16px;
     height: 16px;
     border: 0;
-    margin: 0;
+    margin: 5px 0 0 420px; /* 440 - 4 - 16 */
     padding: 0;
 
     position: absolute;
     z-index: 130;
+}
 
-    margin-top: 5px;
-    margin-left: 420px; /* 440 - 4 - 16 */
+#query_field_div_x {
 
-    /*display: none;*/
+    width: 16px;
+    height: 16px;
+    border: 0;
+    margin: 5px 0 0 420px; /* 440 - 4 - 16 */
+    padding: 0;
+
+    position: absolute;
+    z-index: 140;
 }
 
 #query_field_div_clear {
