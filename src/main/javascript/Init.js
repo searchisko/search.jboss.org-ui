@@ -38,6 +38,17 @@ goog.require('goog.History');
 // Added to get rid of advanced compilation errors - Closure dependencies are broken ?
 goog.require('goog.net.XhrLite');
 
+/*
+ If LoggingWindow.js is not included in the compilation then
+ the following require() is used to get rid of compilation error
+ [Goog.ERROR]: JSC_TYPE_PARSE_ERROR. Bad type annotation. Unknown type goog.debug.ErrorHandle ...
+ ... closure-library/closure/goog/events/events.js line 896 : 11
+
+ Correct solution is described here:
+ http://code.google.com/p/closure-library/wiki/FrequentlyAskedQuestions
+ */
+goog.require('goog.debug.ErrorHandler');
+
 
 /**
  * @fileoverview Initialization of the Search UI.

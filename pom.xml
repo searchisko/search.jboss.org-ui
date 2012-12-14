@@ -39,7 +39,7 @@
         <jstd.plugin.version>1.3.2.5</jstd.plugin.version>
 
         <closure.library.version>r2180</closure.library.version>
-        <!-- Set in profile -->
+        <!-- Compilation level is set in profile -->
         <!--<closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>-->
 
     </properties>
@@ -194,6 +194,7 @@
     </build>
 
     <profiles>
+
         <profile>
             <id>default</id>
             <activation>
@@ -203,11 +204,125 @@
                 <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>
             </properties>
         </profile>
+
+        <!-- You should try advanced compilation before each commit into public repo. -->
         <profile>
             <id>advanced</id>
             <properties>
                 <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
             </properties>
+        </profile>
+
+        <!--
+            ==========================================================
+            Used in Jenkins build. It allow to test the application
+            directly from the Jenkins [public] folder after the build
+            is finished.
+            ==========================================================
+        -->
+        <profile>
+            <id>jenkins</id>
+            <properties>
+                <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
+                <!--<closure.compiler.level>SIMPLE_OPTIMIZATIONS</closure.compiler.level>-->
+                <!--<closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>-->
+            </properties>
+            <build>
+                <plugins>
+
+                    <plugin>
+
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>2.6</version>
+
+                        <executions>
+
+                            <!--
+                            ==========================================================
+                            Copy final compiled/minified js into root of the exploded
+                            webapp. This way we can run it directly from the Jenkins.
+                            ==========================================================
+                            -->
+                            <execution>
+                                <id>copy-resources</id>
+                                <!-- here the phase you need -->
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <encoding>UTF-8</encoding>
+                                    <outputDirectory>${basedir}/target/search.jboss.org.web-ui/</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${basedir}/target/search.jboss.org.web-ui/javascript/compiled</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+
+                    </plugin>
+
+                    <plugin>
+
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+
+                        <executions>
+
+                            <!--
+                            ==========================================================
+                            Exclude LoggingWindow.js from the compilation/minification
+                            ==========================================================
+                            -->
+                            <execution>
+                                <id>remove-logging</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <exec dir="${basedir}/target/javascriptFramework/output/debugSource/" executable="rm">
+                                            <arg line=" -vf LoggingWindow.js"/>
+                                        </exec>
+                                        <!--<exec dir="${basedir}/target/javascriptFramework/output/assertionSource/" executable="rm">-->
+                                            <!--<arg line=" -vf LoggingWindow.js"/>-->
+                                        <!--</exec>-->
+                                    </tasks>
+                                </configuration>
+                            </execution>
+
+                            <!--
+                            ==========================================================
+                            Rename the final js file to the name that is used for the
+                            local testing. This way we do not have to change the code
+                            much. Going forward we need to do this more general.
+                            ==========================================================
+                            -->
+                            <execution>
+                                <id>rename-compiled-js-file</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <exec dir="${basedir}/target/search.jboss.org.web-ui/" executable="mv">
+                                            <arg line=" -vf search.jboss.org.web-ui-min.js testing-only.js"/>
+                                        </exec>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+
+                        </executions>
+
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
