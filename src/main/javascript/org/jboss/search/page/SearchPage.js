@@ -175,9 +175,10 @@ org.jboss.search.page.SearchPage = function(
                     var event = /** @type goog.net.XhrManager.Event */ e;
                     var response = event.target.getResponseJson();
 
-                    // TODO: temporary - for now replace token with actual query string
-                    response.view.search.options[0] = query_string;
-                    response.model.search.search.query = query_string;
+                    // We are taking the response from the mock server for now,
+                    // just replace the token with an actual query string.
+                    response['view']['search']['options'] = [query_string];
+                    response['model']['search']['search']['query'] = query_string;
 
                     var model = /** @type {!Object} */ (goog.object.get(response, "model", {}));
                     thiz_.query_suggestions_model = thiz_.parseQuerySuggestionsModel(model);
