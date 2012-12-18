@@ -253,10 +253,10 @@
                                 </goals>
                                 <configuration>
                                     <encoding>UTF-8</encoding>
-                                    <outputDirectory>${basedir}/target/search.jboss.org.web-ui/</outputDirectory>
+                                    <outputDirectory>${build.directory}/${build.finalName}/</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${basedir}/target/search.jboss.org.web-ui/javascript/compiled</directory>
+                                            <directory>${build.directory}/${build.finalName}/javascript/compiled</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
@@ -286,10 +286,10 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <exec dir="${basedir}/target/javascriptFramework/output/debugSource/" executable="rm">
+                                        <exec dir="${build.directory}/javascriptFramework/output/debugSource/" executable="rm">
                                             <arg line=" -vf LoggingWindow.js"/>
                                         </exec>
-                                        <!--<exec dir="${basedir}/target/javascriptFramework/output/assertionSource/" executable="rm">-->
+                                        <!--<exec dir="${build.directory}/javascriptFramework/output/assertionSource/" executable="rm">-->
                                             <!--<arg line=" -vf LoggingWindow.js"/>-->
                                         <!--</exec>-->
                                     </tasks>
@@ -311,8 +311,8 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <exec dir="${basedir}/target/search.jboss.org.web-ui/" executable="mv">
-                                            <arg line=" -vf search.jboss.org.web-ui-min.js testing-only.js"/>
+                                        <exec dir="${build.directory}/${build.finalName}/" executable="mv">
+                                            <arg line=" -vf ${build.finalName}-min.js testing-only.js"/>
                                         </exec>
                                     </tasks>
                                 </configuration>
