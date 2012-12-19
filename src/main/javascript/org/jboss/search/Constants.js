@@ -40,18 +40,25 @@ org.jboss.search.Constants = {
     SEARCH_SUGGESTIONS_REQUEST_ID: "1",
 
     /**
-     * Used as an identified to abort or/and send the search results request.
+     * Used as an identified to abort or/and send the query search request.
      * @type {string}
      * @const
      */
-    SEARCH_RESULTS_REQUEST_ID: "2",
+    SEARCH_QUERY_REQUEST_ID: "2",
 
     /**
-     * Priority of search suggestions requests. If should be higher then search requests.
+     * Priority of search suggestions requests. (It should be higher then query search requests.)
      * @type {number}
      * @const
      */
     SEARCH_SUGGESTIONS_REQUEST_PRIORITY: 10,
+
+    /**
+     * Priority of query search requests. (It should be lower then search suggestions requests.)
+     * @type {number}
+     * @const
+     */
+    SEARCH_QUERY_REQUEST_PRIORITY: 20,
 
     /**
      * Used in CSS.
@@ -69,9 +76,18 @@ org.jboss.search.Constants = {
 
     /**
      * Temporary: URL of Apiary Mock Server
+     * @see http://docs.jbossorg.apiary.io/#searchapi
      * @type {string}
      * @const
      */
-    API_URL_SUGGESTIONS_QUERY: "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string"
+    API_URL_SUGGESTIONS_QUERY: "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string",
+
+    /**
+     * Temporary: URL of Apiary Mock Server
+     * @see http://docs.jbossorg.apiary.io/#searchapi
+     * @type {string}
+     * @const
+     */
+    API_URL_SEARCH_QUERY: "http://private-5ebf-jbossorg.apiary.io/v1/rest/search"
 
 };

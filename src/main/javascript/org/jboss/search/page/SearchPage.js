@@ -108,11 +108,6 @@ org.jboss.search.page.SearchPage = function(
     /** @private */ this.query_suggestions_view = new org.jboss.search.suggestions.query.view.View(this.query_suggestions_div);
     /** @private */ this.query_suggestions_model = {};
 
-    /**
-     * @private
-     * @type {goog.Uri}
-     */
-    this.suggestionsUri = goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_QUERY);
 
     /** @private */
     this.xhrReadyListenerId_ = goog.events.listen(this.xhrManager, goog.net.EventType.READY, function(e) {
@@ -164,7 +159,7 @@ org.jboss.search.page.SearchPage = function(
                 org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID,
 //                "../../test/resources/suggestions_response.json",
                 // setting the parameter value clears previously set value (that is what we want!)
-                thiz_.suggestionsUri.setParameterValue("q",query_string).toString(),
+                thiz_.getSuggestionsUri().setParameterValue("q",query_string).toString(),
                 org.jboss.search.Constants.GET,
                 "", // post_data
                 {}, // headers_map
@@ -307,11 +302,42 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     delete this.project_filter_query_field;
     delete this.author_filter_query_field;
 
-    delete this.suggestionsUri;
-
     delete this.query_suggestions_model;
 
 };
+
+
+/**
+ * Prototype URI
+ * @private
+ * @type {goog.Uri}
+ * @const
+ */
+org.jboss.search.page.SearchPage.prototype.SUGGESTIONS_URI = goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_QUERY);
+
+/**
+ * @return {goog.Uri} Search Suggestions Service URI
+ */
+org.jboss.search.page.SearchPage.prototype.getSuggestionsUri = function() {
+    return this.SUGGESTIONS_URI.clone();
+}
+
+/**
+ * @private
+ * @type {goog.Uri}
+ * @const
+ */
+org.jboss.search.page.SearchPage.prototype.SEARCH_URI = goog.Uri.parse(org.jboss.search.Constants.API_URL_SEARCH_QUERY);
+
+/**
+ * Prototype URI
+ * @return {goog.Uri} Query Search Service URI
+ */
+org.jboss.search.page.SearchPage.prototype.getSearchUri = function() {
+    return this.SEARCH_URI.clone();
+}
+// current: http://search.jboss.org/search?query=Hibernate&filters%5Binterval%5D=month
+// upcoming: https://dcpapi-libor.rhcloud.com/v1/rest/search?type=jbossorg_blog&filters%5Bcount%5D=10&sortBy=new
 
 /**
  * Set value of query field.
@@ -330,14 +356,36 @@ org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
 
 /**
  * Set user query and execute the query.
- * @param {?string} query
+ * @param {?query_string} query
  */
-org.jboss.search.page.SearchPage.prototype.runSearch = function(query) {
+org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
 
-    this.setUserQuery(query);
+    this.setUserQuery(query_string);
 
     // TODO run the search...
-    this.log.info("Run search for [" + query + "]");
+    this.log.info("Run search for [" + query_string + "]");
+
+    this.xhrManager.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
+    this.xhrManager.send(
+        org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
+//                "../../test/resources/suggestions_response.json",
+        // setting the parameter value clears previously set value (that is what we want!)
+        this.getSearchUri().setParameterValue("q",query_string).toString(),
+        org.jboss.search.Constants.GET,
+        "", // post_data
+        {}, // headers_map
+        org.jboss.search.Constants.SEARCH_QUERY_REQUEST_PRIORITY,
+
+        // callback, The only param is the event object from the COMPLETE event.
+        function(e) {
+            var event = /** @type goog.net.XhrManager.Event */ e;
+            var response = event.target.getResponseJson();
+
+            // Render search results
+            //this.log.info(response);
+
+        }
+    );
 };
 
 /**

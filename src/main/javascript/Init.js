@@ -127,7 +127,9 @@ goog.require('goog.debug.ErrorHandler');
         // e.isNavigate (true if value in browser address bar is changed manually)
         log.info('Navigated to state "' + e.token + '"');
         var query = fp.getUserQuery(e.token);
-        searchPage.runSearch(query);
+        if (goog.isDef(query)) {
+            searchPage.runSearch(query);
+        }
 
     };
 
