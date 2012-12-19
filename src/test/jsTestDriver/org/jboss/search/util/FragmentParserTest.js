@@ -26,9 +26,9 @@ TestCase('FragmentParserTest', {
 
         var fp = new org.jboss.search.util.FragmentParser();
 
-        assertEquals("Works for undefined", "", fp.getUserQuery());
-        assertEquals("Works for null", "", fp.getUserQuery(null));
-        assertEquals("Query part not present", "", fp.getUserQuery("1&2&3&x=foo"));
+        assertEquals("Works for undefined", undefined, fp.getUserQuery());
+        assertEquals("Works for null", undefined, fp.getUserQuery(null));
+        assertEquals("Query part not present", undefined, fp.getUserQuery("1&2&3&x=foo"));
         assertEquals("Takes the first 'q' value", "first", fp.getUserQuery("1&2&3&x=foo&q=first&q=second"));
         assertEquals("Case insensitive 'Q' value", "first", fp.getUserQuery("1&2&3&x=foo&Q=first&q=second"));
 

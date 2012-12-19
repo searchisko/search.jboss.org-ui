@@ -36,14 +36,14 @@ org.jboss.search.util.FragmentParser = function() {
 };
 
 /**
- * Returns value of 'q' parameter from URL fragment. Value is URL decoded.
+ * Returns value of 'q' parameter from URL fragment or undefined. Value is URL decoded.
  *
  * @param {string|null|undefined} fragment
- * @return {!string}
+ * @return {string|undefined}
  */
 org.jboss.search.util.FragmentParser.prototype.getUserQuery = function(fragment) {
 
-    var query = "";
+    var query = undefined;
 
     if (!goog.string.isEmptySafe(fragment)) {
         var parts = fragment.trim().split('&');
