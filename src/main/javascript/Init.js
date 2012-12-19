@@ -102,8 +102,11 @@ goog.require('goog.debug.ErrorHandler');
     var context = goog.getObjectByName('document');
 
     /**
-     * Sets given query string to URL fragment. Is assumes the value is not URL encoded.
-     * @param query_string
+     * Sets given query string to URL fragment.
+     * Basically, this function is called by the search page; whenever user selects or input search query this function
+     * gets called. It changes URL fragment and thus calls navigatorController.
+     *
+     * @param query_string value to be set to URL fragment, the value is encoded first!
      */
     var urlSetFragmentFunction = function(query_string) {
         history.setToken("q=" + goog.string.urlEncode(query_string));
