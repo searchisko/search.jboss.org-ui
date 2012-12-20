@@ -356,7 +356,7 @@ org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
 
 /**
  * Set user query and execute the query.
- * @param {?query_string} query
+ * @param {?string} query_string
  */
 org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
 
