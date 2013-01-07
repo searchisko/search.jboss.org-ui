@@ -59,8 +59,8 @@ goog.require('goog.debug.Logger');
  * @param {!HTMLDivElement} clear_query_div
  * @param {!HTMLDivElement} query_suggestions_div
  * @param {!HTMLDivElement} date_filter_tab_div
- * @param {!HTMLDivElement} author_filter_tab_div
  * @param {!HTMLDivElement} project_filter_tab_div
+ * @param {!HTMLDivElement} author_filter_tab_div
  * @param {!HTMLDivElement} date_filter_body_div
  * @param {!HTMLDivElement} project_filter_body_div
  * @param {!HTMLDivElement} author_filter_body_div
@@ -74,7 +74,7 @@ org.jboss.search.page.SearchPage = function(
         context,
         querySelected,
         query_field, spinner_div, clear_query_div, query_suggestions_div,
-        date_filter_tab_div, author_filter_tab_div, project_filter_tab_div,
+        date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
         project_filter_query_field, author_filter_query_field
     ) {
