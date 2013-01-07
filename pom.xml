@@ -8,6 +8,7 @@
     <packaging>war</packaging>
 
     <name>search.jboss.org Web UI</name>
+    <description/>
     <url>http://search.jboss.org/</url>
 
     <licenses>
@@ -25,6 +26,11 @@
             <email>lvlcek@redhat.com</email>
         </developer>
     </developers>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/jbossorg/search-web-ui/issues</url>
+    </issueManagement>
 
     <properties>
 
@@ -79,6 +85,51 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <!--
+                        ==========================================================
+                        Delete also src/main/javascript
+                        ==========================================================
+                    -->
+                    <execution>
+                        <id>clean-javascript</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <!--<excludeDefaultDirectories>true</excludeDefaultDirectories>-->
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/src/main/javascript</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clean-after-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/src/main/javascript</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
@@ -86,6 +137,37 @@
                     <target>${maven.compiler.target}</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/main/javascript</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/javascript_source</directory>
+                                    <!--<filtering>true</filtering>-->
+                                </resource>
+                                <resource>
+                                    <directory>src/test/javascript_source</directory>
+                                    <!--<excludes>-->
+                                    <!--<exclude>**/*_test.js</exclude>-->
+                                    <!--<exclude>**/*.md</exclude>-->
+                                    <!--</excludes>-->
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -245,7 +327,7 @@
                             ==========================================================
                             -->
                             <execution>
-                                <id>copy-resources</id>
+                                <id>copy-compiled-js-file</id>
                                 <!-- here the phase you need -->
                                 <phase>package</phase>
                                 <goals>
@@ -253,10 +335,10 @@
                                 </goals>
                                 <configuration>
                                     <encoding>UTF-8</encoding>
-                                    <outputDirectory>${build.directory}/${build.finalName}/</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${build.directory}/${build.finalName}/javascript/compiled</directory>
+                                            <directory>${project.build.directory}/${project.build.finalName}/javascript/compiled</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
@@ -286,10 +368,10 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <exec dir="${build.directory}/javascriptFramework/output/debugSource/" executable="rm">
+                                        <exec dir="${project.build.directory}/javascriptFramework/output/debugSource/" executable="rm">
                                             <arg line=" -vf LoggingWindow.js"/>
                                         </exec>
-                                        <!--<exec dir="${build.directory}/javascriptFramework/output/assertionSource/" executable="rm">-->
+                                        <!--<exec dir="${project.build.directory}/javascriptFramework/output/assertionSource/" executable="rm">-->
                                             <!--<arg line=" -vf LoggingWindow.js"/>-->
                                         <!--</exec>-->
                                     </tasks>
@@ -311,8 +393,8 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <exec dir="${build.directory}/${build.finalName}/" executable="mv">
-                                            <arg line=" -vf ${build.finalName}-min.js testing-only.js"/>
+                                        <exec dir="${project.build.directory}/${project.build.finalName}/" executable="mv">
+                                            <arg line=" -vf ${project.build.finalName}-min.js testing-only.js"/>
                                         </exec>
                                     </tasks>
                                 </configuration>

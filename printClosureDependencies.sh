@@ -8,7 +8,7 @@
 
 ./closure-library-r2180/closure/bin/build/closurebuilder.py \
   --root=./closure-library-r2180 \
-  --root=./src/main/javascript \
+  --root=./src/main/javascript_source \
   --root=./src/test/jsTestDriver \
   \
   --output_mode='list' \
