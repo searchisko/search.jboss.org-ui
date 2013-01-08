@@ -119,6 +119,10 @@ goog.require('goog.debug.ErrorHandler');
         project_filter_query_field, author_filter_query_field
     );
 
+    if (!searchPageElements.isValid()) {
+        throw new Error('Missing some HTML elements!');
+    }
+
     var searchPage = new org.jboss.search.page.SearchPage(
         xhrManager,
         context,

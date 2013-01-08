@@ -85,6 +85,25 @@ org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() 
     delete this.author_filter_query_field;
 };
 
+/**
+ * Object is valid if all the html elements are defined and not null.
+ * @return {boolean}
+ */
+org.jboss.search.page.SearchPageElements.prototype.isValid = function() {
+    return goog.isDefAndNotNull(this.query_field)
+        && goog.isDefAndNotNull(this.spinner_div)
+        && goog.isDefAndNotNull(this.clear_query_div)
+        && goog.isDefAndNotNull(this.query_suggestions_div)
+        && goog.isDefAndNotNull(this.date_filter_tab_div)
+        && goog.isDefAndNotNull(this.project_filter_tab_div)
+        && goog.isDefAndNotNull(this.author_filter_tab_div)
+        && goog.isDefAndNotNull(this.date_filter_body_div)
+        && goog.isDefAndNotNull(this.project_filter_body_div)
+        && goog.isDefAndNotNull(this.author_filter_body_div)
+        && goog.isDefAndNotNull(this.project_filter_query_field)
+        && goog.isDefAndNotNull(this.author_filter_query_field)
+};
+
 /** @return {!HTMLInputElement} */
 org.jboss.search.page.SearchPageElements.prototype.getQuery_field = function() {
     return this.query_field;
