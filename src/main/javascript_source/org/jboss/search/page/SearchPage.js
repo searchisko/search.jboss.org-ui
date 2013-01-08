@@ -24,6 +24,8 @@
 
 goog.provide('org.jboss.search.page.SearchPage');
 
+goog.require('org.jboss.search.page.SearchPageElements');
+
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.query.view.View');
@@ -54,18 +56,7 @@ goog.require('goog.debug.Logger');
  * @param {!goog.net.XhrManager} xhrManager
  * @param {EventTarget|goog.events.EventTarget} context element to catch click events and control behaviour of the UI. Typically, this is the document.
  * @param {!function(string)} querySelected Once a query is selected then call this function to notify outer controller.
- * @param {!HTMLInputElement} query_field
- * @param {!HTMLDivElement} spinner_div
- * @param {!HTMLDivElement} clear_query_div
- * @param {!HTMLDivElement} query_suggestions_div
- * @param {!HTMLDivElement} date_filter_tab_div
- * @param {!HTMLDivElement} project_filter_tab_div
- * @param {!HTMLDivElement} author_filter_tab_div
- * @param {!HTMLDivElement} date_filter_body_div
- * @param {!HTMLDivElement} project_filter_body_div
- * @param {!HTMLDivElement} author_filter_body_div
- * @param {!HTMLInputElement} project_filter_query_field
- * @param {!HTMLInputElement} author_filter_query_field
+ * @param {!org.jboss.search.page.SearchPageElements} elements HTML elements required by the search page
  * @constructor
  * @extends {goog.events.EventTarget}
  */
@@ -73,10 +64,7 @@ org.jboss.search.page.SearchPage = function(
         xhrManager,
         context,
         querySelected,
-        query_field, spinner_div, clear_query_div, query_suggestions_div,
-        date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
-        date_filter_body_div, project_filter_body_div, author_filter_body_div,
-        project_filter_query_field, author_filter_query_field
+        elements
     ) {
 
     goog.events.EventTarget.call(this);
@@ -85,27 +73,16 @@ org.jboss.search.page.SearchPage = function(
 
     /** @private */ this.log = goog.debug.Logger.getLogger('SearchPage');
 
+    /**
+     * @private
+     * @type {org.jboss.search.page.SearchPageElements}
+     */ this.elements = elements
+
     /** @private */ this.xhrManager = xhrManager;
     /** @private */ this.context = context;
     /** @private */ this.querySelected = querySelected;
 
-    /** @private */ this.query_field = query_field;
-    /** @private */ this.spinner_div = spinner_div;
-    /** @private */ this.clear_query_div = clear_query_div;
-    /** @private */ this.query_suggestions_div = query_suggestions_div;
-
-    /** @private */ this.date_filter_body_div = date_filter_body_div;
-    /** @private */ this.project_filter_body_div = project_filter_body_div;
-    /** @private */ this.author_filter_body_div = author_filter_body_div;
-
-    /** @private */ this.date_filter_tab_div = date_filter_tab_div;
-    /** @private */ this.author_filter_tab_div = author_filter_tab_div;
-    /** @private */ this.project_filter_tab_div = project_filter_tab_div;
-
-    /** @private */ this.project_filter_query_field = project_filter_query_field;
-    /** @private */ this.author_filter_query_field = author_filter_query_field;
-
-    /** @private */ this.query_suggestions_view = new org.jboss.search.suggestions.query.view.View(this.query_suggestions_div);
+    /** @private */ this.query_suggestions_view = new org.jboss.search.suggestions.query.view.View(this.elements.getQuery_suggestions_div());
     /** @private */ this.query_suggestions_model = {};
 
 
@@ -133,7 +110,7 @@ org.jboss.search.page.SearchPage = function(
         function() {
             var selectedIndex = thiz_.query_suggestions_view.getSelectedIndex();
             thiz_.hideAndCleanSuggestionsElementAndModel();
-            thiz_.query_field.focus();
+            thiz_.elements.getQuery_field().focus();
 
             (function(selectedIndex) {
                 // TODO get query_string from model at the selectedIndex position
@@ -194,7 +171,7 @@ org.jboss.search.page.SearchPage = function(
     };
 
     /** @private */
-    this.dateClickListenerId_ = goog.events.listen(this.date_filter_tab_div,
+    this.dateClickListenerId_ = goog.events.listen(this.elements.getDate_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
             thiz_.isDateFilterVisible() ? thiz_.hideDateFilter() : thiz_.showDateFilter()
@@ -202,7 +179,7 @@ org.jboss.search.page.SearchPage = function(
     );
 
     /** @private */
-    this.projectClickListenerId_ = goog.events.listen(this.project_filter_tab_div,
+    this.projectClickListenerId_ = goog.events.listen(this.elements.getProject_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
             thiz_.isProjectFilterVisible() ? thiz_.hideProjectFilter() : thiz_.showProjectFilter()
@@ -210,7 +187,7 @@ org.jboss.search.page.SearchPage = function(
     );
 
     /** @private */
-    this.authorClickListenerId_ = goog.events.listen(this.author_filter_tab_div,
+    this.authorClickListenerId_ = goog.events.listen(this.elements.getAuthor_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
             thiz_.isAuthorFilterVisible() ? thiz_.hideAuthorFilter() : thiz_.showAuthorFilter()
@@ -226,35 +203,40 @@ org.jboss.search.page.SearchPage = function(
 //            log.info("Context clicked: " + goog.debug.expose(e));
 
             // if search field is clicked then do not hide search suggestions
-            if (e.target !== thiz_.query_field) {
+            if (e.target !== thiz_.elements.getQuery_field()) {
                 thiz_.hideAndCleanSuggestionsElementAndModel();
             }
 
             // if date filter (sub)element is clicked do not hide date filter
-            if (e.target !== thiz_.date_filter_tab_div &&
-                !goog.dom.contains(thiz_.date_filter_body_div, e.target)) {
+            if (e.target !== thiz_.elements.getDate_filter_tab_div() &&
+                !goog.dom.contains(thiz_.elements.getDate_filter_body_div(), e.target)) {
                 thiz_.hideDateFilter();
             }
 
             // if project filter (sub)element is clicked do not hide project filter
-            if (e.target !== thiz_.project_filter_tab_div &&
-                !goog.dom.contains(thiz_.project_filter_body_div, e.target)) {
+            if (e.target !== thiz_.elements.getProject_filter_tab_div() &&
+                !goog.dom.contains(thiz_.elements.getProject_filter_body_div(), e.target)) {
                 thiz_.hideProjectFilter();
             }
 
             // if author filter (sub)element is clicked do not hide author filter
-            if (e.target !== thiz_.author_filter_tab_div &&
-                !goog.dom.contains(thiz_.author_filter_body_div, e.target)) {
+            if (e.target !== thiz_.elements.getAuthor_filter_tab_div() &&
+                !goog.dom.contains(thiz_.elements.getAuthor_filter_body_div(), e.target)) {
                 thiz_.hideAuthorFilter();
             }
 
         });
 
     /** @private */
-    this.userQuerySearchField = new org.jboss.search.SearchFieldHandler(query_field, 100, callback, null, this.getPresetKeyHandlers());
+    this.userQuerySearchField = new org.jboss.search.SearchFieldHandler(
+        this.elements.getQuery_field(),
+        100,
+        callback,
+        null,
+        this.getPresetKeyHandlers()
+    );
 
 };
-
 goog.inherits(org.jboss.search.page.SearchPage, goog.events.EventTarget);
 
 /** @inheritDoc */
@@ -264,6 +246,7 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     org.jboss.search.page.SearchPage.superClass_.disposeInternal.call(this);
 
     // Dispose of all Disposable objects owned by this class.
+    goog.dispose(this.elements);
     goog.dispose(this.userQuerySearchField);
     goog.dispose(this.query_suggestions_view);
 
@@ -285,22 +268,6 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     delete this.xhrManager;
     delete this.context;
     delete this.querySelected;
-
-    delete this.query_field;
-    delete this.spinner_div;
-    delete this.clear_query_div;
-    delete this.query_suggestions_div;
-
-    delete this.date_filter_body_div;
-    delete this.project_filter_body_div;
-    delete this.author_filter_body_div;
-
-    delete this.date_filter_tab_div;
-    delete this.author_filter_tab_div;
-    delete this.project_filter_tab_div;
-
-    delete this.project_filter_query_field;
-    delete this.author_filter_query_field;
 
     delete this.query_suggestions_model;
 
@@ -350,7 +317,7 @@ org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
         newValue = query.trim();
     }
 
-    this.query_field.value = newValue;
+    this.elements.getQuery_field().value = newValue;
 
 };
 
@@ -505,7 +472,7 @@ org.jboss.search.page.SearchPage.prototype.parseQuerySuggestionsModel = function
  * @return {boolean}
  */
 org.jboss.search.page.SearchPage.prototype.isDateFilterVisible = function() {
-    return !goog.dom.classes.has(this.date_filter_body_div, org.jboss.search.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
 /**
@@ -513,7 +480,7 @@ org.jboss.search.page.SearchPage.prototype.isDateFilterVisible = function() {
  * @return {boolean}
  */
 org.jboss.search.page.SearchPage.prototype.isProjectFilterVisible = function() {
-    return !goog.dom.classes.has(this.project_filter_body_div, org.jboss.search.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
 /**
@@ -521,7 +488,7 @@ org.jboss.search.page.SearchPage.prototype.isProjectFilterVisible = function() {
  * @return {boolean}
  */
 org.jboss.search.page.SearchPage.prototype.isAuthorFilterVisible = function() {
-    return !goog.dom.classes.has(this.author_filter_body_div, org.jboss.search.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
 /**
@@ -529,16 +496,16 @@ org.jboss.search.page.SearchPage.prototype.isAuthorFilterVisible = function() {
  */
 org.jboss.search.page.SearchPage.prototype.showDateFilter = function() {
 
-    goog.dom.classes.add(this.date_filter_tab_div, org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.remove(this.project_filter_tab_div, org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.remove(this.author_filter_tab_div, org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.add(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.remove(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
 
-    goog.dom.classes.remove(this.date_filter_body_div, org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.project_filter_body_div, org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.author_filter_body_div, org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.remove(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.add(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.add(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 
-    this.project_filter_query_field.blur();
-    this.author_filter_query_field.blur();
+    this.elements.getProject_filter_query_field().blur();
+    this.elements.getAuthor_filter_query_field().blur();
 
 };
 
@@ -547,16 +514,16 @@ org.jboss.search.page.SearchPage.prototype.showDateFilter = function() {
  */
 org.jboss.search.page.SearchPage.prototype.showAuthorFilter = function() {
 
-    goog.dom.classes.remove(this.date_filter_tab_div, org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.remove(this.project_filter_tab_div, org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.author_filter_tab_div, org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.add(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
 
-    goog.dom.classes.add(this.date_filter_body_div, org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.project_filter_body_div, org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.remove(this.author_filter_body_div, org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.add(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.add(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.remove(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 
-    this.project_filter_query_field.blur();
-    this.author_filter_query_field.focus();
+    this.elements.getProject_filter_query_field().blur();
+    this.elements.getAuthor_filter_query_field().focus();
 
 };
 
@@ -565,16 +532,16 @@ org.jboss.search.page.SearchPage.prototype.showAuthorFilter = function() {
  */
 org.jboss.search.page.SearchPage.prototype.showProjectFilter = function() {
 
-    goog.dom.classes.remove(this.date_filter_tab_div, org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.project_filter_tab_div, org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.remove(this.author_filter_tab_div, org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.add(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.remove(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
 
-    goog.dom.classes.remove(this.project_filter_body_div, org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.date_filter_body_div, org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.author_filter_body_div, org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.remove(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.add(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.add(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 
-    this.project_filter_query_field.focus();
-    this.author_filter_query_field.blur();
+    this.elements.getProject_filter_query_field().focus();
+    this.elements.getAuthor_filter_query_field().blur();
 
 };
 
@@ -583,8 +550,8 @@ org.jboss.search.page.SearchPage.prototype.showProjectFilter = function() {
  */
 org.jboss.search.page.SearchPage.prototype.hideDateFilter = function() {
 
-    goog.dom.classes.remove(this.date_filter_tab_div, org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.date_filter_body_div, org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.add(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
     // blur not needed now
 };
 
@@ -593,9 +560,9 @@ org.jboss.search.page.SearchPage.prototype.hideDateFilter = function() {
  */
 org.jboss.search.page.SearchPage.prototype.hideProjectFilter = function() {
 
-    goog.dom.classes.remove(this.project_filter_tab_div, org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.project_filter_body_div, org.jboss.search.Constants.HIDDEN);
-    this.project_filter_query_field.blur();
+    goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.add(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    this.elements.getProject_filter_query_field().blur();
 
 };
 
@@ -604,8 +571,8 @@ org.jboss.search.page.SearchPage.prototype.hideProjectFilter = function() {
  */
 org.jboss.search.page.SearchPage.prototype.hideAuthorFilter = function() {
 
-    goog.dom.classes.remove(this.author_filter_tab_div, org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.author_filter_body_div, org.jboss.search.Constants.HIDDEN);
-    this.author_filter_query_field.blur();
+    goog.dom.classes.remove(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+    goog.dom.classes.add(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    this.elements.getAuthor_filter_query_field().blur();
 
 };

@@ -112,14 +112,18 @@ goog.require('goog.debug.ErrorHandler');
         history.setToken("q=" + goog.string.urlEncode(query_string));
     };
 
-    var searchPage = new org.jboss.search.page.SearchPage(
-        xhrManager,
-        context,
-        urlSetFragmentFunction,
+    var searchPageElements = new org.jboss.search.page.SearchPageElements(
         query_field, spinner_div, clear_query_div, query_suggestions_div,
         date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
         project_filter_query_field, author_filter_query_field
+    );
+
+    var searchPage = new org.jboss.search.page.SearchPage(
+        xhrManager,
+        context,
+        urlSetFragmentFunction,
+        searchPageElements
     );
 
     // navigation controller
