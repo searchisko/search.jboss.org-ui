@@ -18,7 +18,7 @@ When `mvm clean test` is run, then all these tests are executed. As of now I am 
 
 ## html
 
-Contains wrappers that allow execution of individual tests from `javascript` package (see above). Each test requires three files:
+Contains wrappers that allow execution of individual tests from `src/test/javascript` package (see above). Each test requires three files:
 
 1. HTML page
 2. shell script to generate dependencies script
@@ -26,13 +26,13 @@ Contains wrappers that allow execution of individual tests from `javascript` pac
 
 Both HTML page and the shell script needs to be maintained manually, but that is not a big deal.
 
-Execution of individual test is as simple as opening the HTML page in web browser. Just not that this executes the original javascript code (no compilation and no minification).
+Execution of individual test is as simple as opening the HTML page in web browser. Just note that this executes the original javascript code (no compilation and no minification).
 
 ## jsTestDriver
 
 Tests implemented using Google [JsTestDriver](http://code.google.com/p/js-test-driver/).
 
-When `mvm clean test` is run, then all these tests are executed in web browser. Some IDE support jsTestDriver as well, for example intelliJ IDEA do so it is easy to run these tests (just note that some configuration of maven pom.xml was required).
+When `mvm clean test` (or `mvn clean jstd:test`) is run, then all these tests are executed in web browser. Some IDE support jsTestDriver as well, for example IntelliJ IDEA do (just note that some configuration of maven pom.xml was required to support both manual execution of these tests as well as execution driven by IDE).
 
 These tests are driven by configuration file called [`jsTestDriver.conf`](https://github.com/jbossorg/search-web-ui/blob/master/jsTestDriver.conf) and dependency list in this configuration file can be generated/updated using [`printClosureDependencies.sh`](https://github.com/jbossorg/search-web-ui/blob/master/printClosureDependencies.sh) script.
 
