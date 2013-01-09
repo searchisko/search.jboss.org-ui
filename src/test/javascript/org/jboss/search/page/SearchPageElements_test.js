@@ -29,7 +29,7 @@ var testInvalidObject = function () {
 
 };
 
-var testInvalidParameter = function () {
+var testIncompleteParameters = function () {
 
     var query_field = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
 
