@@ -18,6 +18,8 @@
 
 goog.require('org.jboss.search.page.SearchPageElements');
 
+goog.require('goog.dom');
+
 goog.require('goog.testing.jsunit');
 
 var testInvalidObject = function () {
@@ -26,3 +28,43 @@ var testInvalidObject = function () {
     assertFalse(elements.isValid());
 
 };
+
+var testInvalidParameter = function () {
+
+    var query_field = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
+
+    var elements = new org.jboss.search.page.SearchPageElements(query_field);
+    assertFalse(elements.isValid());
+
+};
+
+/**
+ * SearchPageElements.isValid() return true only if all the parameters are passed.
+ */
+var testValidParameters = function() {
+
+    var query_field = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
+    var spinner_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var clear_query_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+
+    var date_filter_body_div    = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var project_filter_body_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var author_filter_body_div  = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+
+    var project_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
+    var author_filter_query_field  = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
+
+    var date_filter_tab_div    = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var author_filter_tab_div  = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var project_filter_tab_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+
+    var elements = new org.jboss.search.page.SearchPageElements(
+        query_field, spinner_div, clear_query_div, query_suggestions_div,
+        date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
+        date_filter_body_div, project_filter_body_div, author_filter_body_div,
+        project_filter_query_field, author_filter_query_field
+    );
+    assertTrue(elements.isValid());
+
+}
