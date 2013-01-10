@@ -24,6 +24,8 @@
 
 goog.provide('org.jboss.search.page.SearchPage');
 
+goog.require('org.jboss.search.page.templates');
+
 goog.require('org.jboss.search.page.SearchPageElements');
 
 goog.require('org.jboss.search.Constants');
@@ -366,12 +368,20 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
             var event = /** @type goog.net.XhrManager.Event */ e;
             var response = event.target.getResponseJson();
 
-            // console.log(response);
+            // TODO normalize response
+            response["user_query"] = query_string;
+            response["hits"]["hits"]= [{},{},{},{},{}];
+
+            try {
+                var html = org.jboss.search.page.templates.search_results(response);
+                thiz_.elements.getSearch_results_div().innerHTML = html;
+            } catch(error) {
+                // something went wrong...
+                // TODO fire event (with error)
+                thiz_.log.severe("Something went wrong",error);
+            }
 
             thiz_.enableSearchResults();
-
-            // Render search results
-            //thiz_.log.info(response);
 
         }
     );
