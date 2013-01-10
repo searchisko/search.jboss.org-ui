@@ -227,6 +227,19 @@ org.jboss.search.page.SearchPage = function(
 
         });
 
+    /**
+     * This listener can catch events when the user navigates to the query field by other means then clicking,
+     * for example by TAB key or by selecting text in the field by cursor (does not fire click event).
+     * We want to hide filter tabs in such case.
+     * @private
+     */
+    this.query_field_focus_id_ = goog.events.listen(this.elements.getQuery_field(),
+        goog.events.EventType.INPUT,
+        function(){
+            thiz_.hideAllFilters();
+        }
+    );
+
     /** @private */
     this.userQuerySearchField = new org.jboss.search.SearchFieldHandler(
         this.elements.getQuery_field(),
@@ -259,6 +272,7 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.xhrCompleteListenerId_);
     goog.events.unlistenByKey(this.xhrErrorListenerId_);
     goog.events.unlistenByKey(this.xhrAbortListenerId_);
+    goog.events.unlistenByKey(this.query_field_focus_id_);
 
     // Remove references to COM objects.
 
@@ -329,15 +343,16 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
 
     this.setUserQuery(query_string);
 
-    // TODO run the search...
     this.log.info("Run search for [" + query_string + "]");
 
     this.xhrManager.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
     this.xhrManager.send(
         org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
-//                "../../test/resources/suggestions_response.json",
         // setting the parameter value clears previously set value (that is what we want!)
-        this.getSearchUri().setParameterValue("q",query_string).toString(),
+        this.getSearchUri()
+            .setParameterValue("query", query_string)
+            .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_dcp_type_counts","tag_cloud"])
+            .toString(),
         org.jboss.search.Constants.GET,
         "", // post_data
         {}, // headers_map
@@ -347,6 +362,8 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
         function(e) {
             var event = /** @type goog.net.XhrManager.Event */ e;
             var response = event.target.getResponseJson();
+
+            // console.log(response);
 
             // Render search results
             //this.log.info(response);
@@ -575,4 +592,14 @@ org.jboss.search.page.SearchPage.prototype.hideAuthorFilter = function() {
     goog.dom.classes.add(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
     this.elements.getAuthor_filter_query_field().blur();
 
+};
+
+/**
+ * Hide all filter tabs.
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.hideAllFilters = function() {
+    if (this.isAuthorFilterVisible()) this.hideAuthorFilter();
+    if (this.isProjectFilterVisible()) this.hideProjectFilter();
+    if (this.isDateFilterVisible()) this.hideDateFilter();
 };
