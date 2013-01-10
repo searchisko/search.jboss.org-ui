@@ -87,6 +87,8 @@ goog.require('goog.debug.ErrorHandler');
     var author_filter_tab_div  = /** @type {!HTMLDivElement} */ goog.dom.getElementByClass('author', second_filters_row_div);
     var project_filter_tab_div = /** @type {!HTMLDivElement} */ goog.dom.getElementByClass('project', second_filters_row_div);
 
+    var search_results_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_results');
+
     // ================================================================
     // Define internal variables and objects
     // ================================================================
@@ -116,7 +118,8 @@ goog.require('goog.debug.ErrorHandler');
         query_field, spinner_div, clear_query_div, query_suggestions_div,
         date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
-        project_filter_query_field, author_filter_query_field
+        project_filter_query_field, author_filter_query_field,
+        search_results_div
     );
 
     if (!searchPageElements.isValid()) {

@@ -72,7 +72,14 @@ org.jboss.search.Constants = {
      * @type {string}
      * @const
      */
-    SELECTED:"selected",
+    SELECTED: "selected",
+
+    /**
+     * Used in CSS.
+     * @type {string}
+     * @const
+     */
+    DISABLED: "disabled",
 
     /**
      * Temporary: URL of Apiary Mock Server

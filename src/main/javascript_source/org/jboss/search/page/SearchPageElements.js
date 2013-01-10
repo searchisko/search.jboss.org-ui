@@ -41,6 +41,7 @@ goog.require('goog.Disposable');
  * @param {!HTMLDivElement}   author_filter_body_div
  * @param {!HTMLInputElement} project_filter_query_field
  * @param {!HTMLInputElement} author_filter_query_field
+ * @param {!HTMLDivElement}   search_results_div
  * @constructor
  * @extends {goog.Disposable}
  */
@@ -48,7 +49,8 @@ org.jboss.search.page.SearchPageElements = function(
     query_field, spinner_div, clear_query_div, query_suggestions_div,
     date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
     date_filter_body_div, project_filter_body_div, author_filter_body_div,
-    project_filter_query_field, author_filter_query_field
+    project_filter_query_field, author_filter_query_field,
+    search_results_div
     ) {
 
     goog.Disposable.call(this);
@@ -65,6 +67,7 @@ org.jboss.search.page.SearchPageElements = function(
     /** @type {!HTMLDivElement}   */ this.author_filter_body_div = author_filter_body_div;
     /** @type {!HTMLInputElement} */ this.project_filter_query_field = project_filter_query_field;
     /** @type {!HTMLInputElement} */ this.author_filter_query_field = author_filter_query_field;
+    /** @type {!HTMLDivElement}   */ this.search_results_div = search_results_div;
 
 }
 goog.inherits(org.jboss.search.page.SearchPageElements, goog.Disposable);
@@ -83,6 +86,7 @@ org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() 
     delete this.author_filter_body_div;
     delete this.project_filter_query_field;
     delete this.author_filter_query_field;
+    delete this.search_results_div;
 };
 
 /**
@@ -102,6 +106,7 @@ org.jboss.search.page.SearchPageElements.prototype.isValid = function() {
         && goog.isDefAndNotNull(this.author_filter_body_div)
         && goog.isDefAndNotNull(this.project_filter_query_field)
         && goog.isDefAndNotNull(this.author_filter_query_field)
+        && goog.isDefAndNotNull(this.search_results_div)
 };
 
 /** @return {!HTMLInputElement} */
@@ -162,4 +167,9 @@ org.jboss.search.page.SearchPageElements.prototype.getProject_filter_query_field
 /** @return {!HTMLInputElement} */
 org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_query_field = function() {
     return this.author_filter_query_field;
+};
+
+/** @return {!HTMLDivElement} */
+org.jboss.search.page.SearchPageElements.prototype.getSearch_results_div = function() {
+    return this.search_results_div;
 };

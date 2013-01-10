@@ -41,6 +41,11 @@
     margin-right: auto;
 }
 
+/* Used while search results are processed. */
+#search_results.disabled {
+    opacity: 0.2;
+}
+
 .statistics {
     margin: 20px 0 20px 60px;
     color: gray;

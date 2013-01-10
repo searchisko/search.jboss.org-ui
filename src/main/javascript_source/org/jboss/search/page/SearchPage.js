@@ -341,15 +341,18 @@ org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
  */
 org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
 
-    this.setUserQuery(query_string);
+    var thiz_ = this;
 
-    this.log.info("Run search for [" + query_string + "]");
+    thiz_.setUserQuery(query_string);
 
-    this.xhrManager.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
-    this.xhrManager.send(
+    thiz_.log.info("Run search for [" + query_string + "]");
+
+    thiz_.xhrManager.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
+    thiz_.disableSearchResults();
+    thiz_.xhrManager.send(
         org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
         // setting the parameter value clears previously set value (that is what we want!)
-        this.getSearchUri()
+        thiz_.getSearchUri()
             .setParameterValue("query", query_string)
             .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_dcp_type_counts","tag_cloud"])
             .toString(),
@@ -365,12 +368,28 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
 
             // console.log(response);
 
+            thiz_.enableSearchResults();
+
             // Render search results
-            //this.log.info(response);
+            //thiz_.log.info(response);
 
         }
     );
 };
+
+/**
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.disableSearchResults = function () {
+    goog.dom.classes.add(this.elements.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
+}
+
+/**
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.enableSearchResults = function () {
+    goog.dom.classes.remove(this.elements.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
+}
 
 /**
  * @private
