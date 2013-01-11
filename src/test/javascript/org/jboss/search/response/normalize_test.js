@@ -36,3 +36,30 @@ var testNormalizer = function() {
     assertTrue('', goog.isDefAndNotNull(data['hits']));
     assertTrue('', goog.isDefAndNotNull(data['hits']['hits']));
 };
+
+var testGravatarEmailHash = function() {
+
+    assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.search.response.gravatarEmailHash('LKRZYZAN@redhat.com'));
+    assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.search.response.gravatarEmailHash('lkrzyzan@redhat.com'));
+    assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.search.response.gravatarEmailHash('  <lkrzyzan@redhat.com>'));
+    assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.search.response.gravatarEmailHash('Libor Krzyzanek <lkrzyzan@redhat.com>'));
+
+};
+
+var testGravatarURI = function() {
+
+    var url;
+
+    url = org.jboss.search.response.gravatarURI('lkrzyzan@redhat.com');
+    assertEquals('Should be equal', 'http://www.gravatar.com/avatar/6029b8a70a9e305525aa8f750d2a01c4?s=40', url);
+    assertTrue('By default the image size is 40', goog.string.caseInsensitiveEndsWith(url,'40'));
+
+    url = org.jboss.search.response.gravatarURI('lkrzyzan@redhat.com', 100);
+    assertEquals('Should be equal', 'http://www.gravatar.com/avatar/6029b8a70a9e305525aa8f750d2a01c4?s=100', url);
+    assertTrue('By default the image size is 100', goog.string.caseInsensitiveEndsWith(url,'100'));
+
+    // if the opt_size is not a number, still return the default value
+    url = org.jboss.search.response.gravatarURI('lkrzyzan@redhat.com', 'xx');
+    assertEquals('Should be equal', 'http://www.gravatar.com/avatar/6029b8a70a9e305525aa8f750d2a01c4?s=40', url);
+    assertTrue('By default the image size is 40', goog.string.caseInsensitiveEndsWith(url,'40'));
+};

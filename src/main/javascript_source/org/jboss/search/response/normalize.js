@@ -23,6 +23,10 @@
 goog.provide('org.jboss.search.response');
 
 goog.require('goog.object');
+goog.require('goog.string');
+goog.require('goog.format.EmailAddress');
+goog.require('goog.crypt');
+goog.require('goog.crypt.Md5');
 
 /**
  * It returns normalized and sanitized response.
@@ -46,4 +50,92 @@ org.jboss.search.response.normalize = function(response, query) {
 
     return output;
 
+};
+
+/**
+ * TODO temporary only! Remove once we have better data in DCP.
+ * @private
+ * @return {*}
+ */
+org.jboss.search.response.getDummyHits = function() {
+
+
+    var hit1 = {
+        dcp_type: '',
+        dcp_project: 'Hibernate',
+        dcp_contributors: [],
+        dcp_tags: [],
+        dcp_title: '',
+        dcp_url_view: '',
+        dcp_description: '',
+        dcp_activity_dates: []
+    };
+    var hit2 = {};
+    var hit3 = {};
+    var hit4 = {};
+
+    var source = [hit1, hit2, hit3, hit4];
+
+    var hits = [];
+
+    for (var i = 0; i < 10; i++) {
+        hits[i] = source[Math.floor(Math.random() * source.length) + 1];
+    }
+
+    return hits;
+
+};
+
+/**
+ * @private
+ * @type {goog.crypt.Md5}
+ */
+org.jboss.search.response.md5 = new goog.crypt.Md5();
+
+/**
+ * Implements Gravatar HASH function.
+ * {@see https://en.gravatar.com/site/implement/hash/}
+ * @param {string} email
+ * @return {string}
+ */
+org.jboss.search.response.gravatarEmailHash = function(email) {
+
+    var email_ = goog.isDefAndNotNull(email) ? email : "";
+    if (goog.isFunction(email.toLowerCase)) { email_ = email_.toLowerCase() }
+    var e = goog.format.EmailAddress.parse(email_).getAddress();
+
+    this.md5.reset();
+    this.md5.update(e);
+    e = goog.crypt.byteArrayToHex(this.md5.digest());
+
+    return e;
+};
+
+/**
+ * Return complete URL link to the Gravatar image.
+ * {@see https://en.gravatar.com/site/implement/images/}
+ * @param {string} email
+ * @param {number=} opt_size defaults to 40px
+ * @return {string}
+ */
+org.jboss.search.response.gravatarURI = function(email, opt_size) {
+
+    var size = opt_size;
+    if (!goog.isNumber(size)) {
+        size = 40;
+    }
+    var hash = org.jboss.search.response.gravatarEmailHash(email);
+    return "http://www.gravatar.com/avatar/"+hash+"?s="+size;
+};
+
+/**
+ * TODO consider implementing SBS avatars as well.
+ * {@see https://docspace.corp.redhat.com/docs/DOC-55303}
+ * @param {string} email
+ * @param {number=} opt_size
+ * @return {string}
+ */
+org.jboss.search.response.sbsGravatarURI = function(email, opt_size) {
+
+    return "";
 };
