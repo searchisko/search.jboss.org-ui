@@ -24,10 +24,9 @@
 
 goog.provide('org.jboss.search.page.SearchPage');
 
+goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.page.templates');
-
 goog.require('org.jboss.search.page.SearchPageElements');
-
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.query.view.View');
@@ -368,15 +367,12 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
             var event = /** @type goog.net.XhrManager.Event */ e;
             var response = event.target.getResponseJson();
 
-            // TODO normalize response
-            response["user_query"] = query_string;
-            response["hits"]["hits"]= [{},{},{},{},{}];
+            var data = org.jboss.search.response.normalize(response, query_string);
 
             try {
-                var html = org.jboss.search.page.templates.search_results(response);
+                var html = org.jboss.search.page.templates.search_results(data);
                 thiz_.elements.getSearch_results_div().innerHTML = html;
             } catch(error) {
-                // something went wrong...
                 // TODO fire event (with error)
                 thiz_.log.severe("Something went wrong",error);
             }
