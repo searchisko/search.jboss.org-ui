@@ -27,14 +27,14 @@ goog.require('goog.object');
 /**
  * It returns normalized and sanitized response.
  * @param {!Object} response raw response from DCP search API.
- * @param {!string} query related user query
+ * @param {?string} query related user query
  * @return {!Object}
  */
 org.jboss.search.response.normalize = function(response, query) {
 
     var output = {};
 
-    output['user_query'] = query;
+    output['user_query'] = goog.isDefAndNotNull(query) ? query : "";
 
     if (goog.object.containsKey(response,'hits')) {
         output['hits'] = response['hits'];
