@@ -11,6 +11,33 @@
     <div class="statistics">Found {$hits.total} results for "{$user_query}".</div>
 
     {foreach $hit in $hits.hits}
+
+        {call .hit data="$hit" /}
+        <div class="hit_spacer"></div>
+
+    {/foreach}
+
+        <div class="pagination">
+            <span>&#9668;</span>
+            <span> 3</span>
+            <span> 4</span>
+            <span> 5</span>
+            <span> 6</span>
+            <span> 7</span>
+            <span> 8</span>
+            <span> 9</span>
+            <span> 10</span>
+            <span> 11</span>
+            <span> &#9654;</span>
+        </div>
+
+{/template}
+
+/**
+ * Individual search hit DIV.
+ */
+{template .hit}
+
         <div class="hit">
             <div class="left">
                 <p class="avatar">
@@ -25,23 +52,6 @@
                     Snippet&nbsp;&hellip;
                 </div>
             </div>
-        </div>
-
-        <div class="hit_spacer"></div>
-    {/foreach}
-
-        <div class="pagination">
-            &#9668;
-            <span>3</span>
-            <span>4</span>
-            <span>5</span>
-            <span>6</span>
-            <span>7</span>
-            <span>8</span>
-            <span>9</span>
-            <span>10</span>
-            <span>11</span>
-            &#9654;
         </div>
 
 {/template}
