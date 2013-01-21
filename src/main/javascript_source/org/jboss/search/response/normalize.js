@@ -27,6 +27,7 @@ goog.require('goog.string');
 goog.require('goog.format.EmailAddress');
 goog.require('goog.crypt');
 goog.require('goog.crypt.Md5');
+goog.require('goog.memoize');
 
 /**
  * It returns normalized and sanitized response.
@@ -116,7 +117,7 @@ org.jboss.search.response.gravatarEmailHash = function(email) {
  * {@see https://en.gravatar.com/site/implement/images/}
  * @param {string} email
  * @param {number=} opt_size defaults to 40px
- * @return {string}
+ * @return {String}
  */
 org.jboss.search.response.gravatarURI = function(email, opt_size) {
 
@@ -125,8 +126,14 @@ org.jboss.search.response.gravatarURI = function(email, opt_size) {
         size = 40;
     }
     var hash = org.jboss.search.response.gravatarEmailHash(email);
-    return "http://www.gravatar.com/avatar/"+hash+"?s="+size;
+    return new String("http://www.gravatar.com/avatar/"+hash+"?s="+size);
 };
+
+/**
+ * Memoized version of {@see gravatarURI}.
+ * @type {*|!Function(string, number=):String}
+ */
+org.jboss.search.response.gravatarURI_Memo = goog.memoize(org.jboss.search.response.gravatarURI);
 
 /**
  * TODO consider implementing SBS avatars as well.
