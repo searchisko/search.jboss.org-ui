@@ -131,7 +131,7 @@ org.jboss.search.response.gravatarURI = function(email, opt_size) {
 
 /**
  * Memoized version of {@see gravatarURI}.
- * @type {*|!Function(string, number=):String}
+ * @type {function(string, number=): String}
  */
 org.jboss.search.response.gravatarURI_Memo = goog.memoize(org.jboss.search.response.gravatarURI);
 
