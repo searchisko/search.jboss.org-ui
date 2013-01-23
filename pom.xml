@@ -325,6 +325,12 @@
                 <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
                 <!--<closure.compiler.level>SIMPLE_OPTIMIZATIONS</closure.compiler.level>-->
                 <!--<closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>-->
+                <profile.prologue><![CDATA[
+                <script>
+                    goog.require('goog.testing.ContinuationTestCase');
+                    goog.require('goog.testing.jsunit');
+                </script>
+                ]]></profile.prologue>
             </properties>
             <build>
                 <plugins>
