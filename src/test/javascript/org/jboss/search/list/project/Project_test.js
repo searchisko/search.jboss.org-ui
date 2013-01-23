@@ -39,6 +39,7 @@ function testProject() {
 
     project
         .addCallback(function(){
+            var console = console || { log: function(){} };
             console.log('data available', project.getMap());
         });
 
