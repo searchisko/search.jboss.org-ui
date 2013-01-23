@@ -235,6 +235,9 @@
                 <groupId>com.github.jlgrock.javascript-framework</groupId>
                 <artifactId>closure-testing-maven-plugin</artifactId>
                 <version>${jsframework.version}</version>
+                <configuration>
+                    <prologue>${profile.prologue}</prologue>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -278,12 +281,26 @@
     <profiles>
 
         <profile>
-            <id>default</id>
+            <id>test-sync</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
                 <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>
+                <profile.prologue></profile.prologue>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test-async</id>
+            <properties>
+                <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>
+                <profile.prologue><![CDATA[
+                <script>
+                    goog.require('goog.testing.ContinuationTestCase');
+                    goog.require('goog.testing.jsunit');
+                </script>
+                ]]></profile.prologue>
             </properties>
         </profile>
 
