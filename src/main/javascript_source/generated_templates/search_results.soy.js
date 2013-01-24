@@ -23,7 +23,7 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_sb) {
     org.jboss.search.page.templates.hit(hitData8, output);
     output.append('<div class="hit_spacer"></div>');
   }
-  output.append('<div class="pagination"><span> &#9668;</span><span> 3</span><span> 4</span><span> 5</span><span> 6</span><span> 7</span><span> 8</span><span> 9</span><span> 10</span><span> 11</span><span> &#9654;</span></div>');
+  output.append('<div class="pagination"><span>&#9668;</span><span> 3</span><span> 4</span><span> 5</span><span> 6</span><span> 7</span><span> 8</span><span> 9</span><span> 10</span><span> 11</span><span> &#9654;</span></div>');
   return opt_sb ? '' : output.toString();
 };
 
@@ -36,6 +36,6 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_sb) {
  */
 org.jboss.search.page.templates.hit = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="hit"><div class="left"><p class="avatar"><img src="image/test/sanne.png"></p></div><div class="main"><div class="title">Title</div><div class="link"><a href="#">#</a></div><div class="snippet"><span class="date">DD/MMM/YYYY - </span>Snippet&nbsp;&hellip;</div></div></div>');
+  output.append('<div class="hit"><div class="left"><p class="avatar"><img src="', soy.$$escapeHtml(opt_data.fields.contributor_gravatar), '"></p></div><div class="main"><div class="title">', soy.$$escapeHtml(opt_data.fields.dcp_title), '</div><div class="link"><a href="', soy.$$escapeHtml(opt_data.fields.dcp_url_view), '">#</a></div><div class="snippet"><span class="date">', soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date), ' - </span>', soy.$$escapeHtml(opt_data.fields.dcp_description), '&nbsp;&hellip;</div></div></div>');
   return opt_sb ? '' : output.toString();
 };

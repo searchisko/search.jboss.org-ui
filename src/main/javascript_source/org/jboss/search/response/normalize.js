@@ -22,6 +22,7 @@
  */
 goog.provide('org.jboss.search.response');
 
+goog.require('goog.date.UtcDateTime');
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('goog.format.EmailAddress');
@@ -43,11 +44,41 @@ org.jboss.search.response.normalize = function(response, query) {
 
     if (goog.object.containsKey(response,'hits')) {
         output['hits'] = response['hits'];
+        output['hits']['hits'] = this.getDummyHits();
     }
 
     if (goog.object.containsKey(response,'timed_out')) {
         output['timed_out'] = response['timed_out'];
     }
+
+    var hits = /** @type {Array} */  goog.object.getValueByKeys(output, ["hits", "hits"]);
+    if (goog.isDefAndNotNull(hits)) {
+        goog.array.forEach(hits, function(hit){
+
+            var fields = hit['fields'];
+
+            // Contributors
+            if (goog.object.containsKey(fields,'dcp_contributors')) {
+                var conts = fields['dcp_contributors'];
+                if (goog.isDef(conts)) {
+                    var cont = (goog.isArray(conts) ? conts[0] : conts).valueOf();
+                    if (goog.isDef(cont)) {
+                        fields['contributor_gravatar'] = this.gravatarURI(cont).valueOf();
+                    }
+                }
+            }
+
+            // Date
+            if (goog.object.containsKey(fields,'dcp_last_activity_date')) {
+                var d_ = fields['dcp_last_activity_date'];
+                var date = goog.date.UtcDateTime.fromIsoString(d_);
+//                console.log(d_, date, date.getFullYear(), date.getMonth(), date.getDay());
+            }
+
+        }, this)
+    };
+
+//    console.log(output);
 
     return output;
 
@@ -62,25 +93,72 @@ org.jboss.search.response.getDummyHits = function() {
 
 
     var hit1 = {
-        dcp_type: '',
-        dcp_project: 'Hibernate',
-        dcp_contributors: [],
-        dcp_tags: [],
-        dcp_title: '',
-        dcp_url_view: '',
-        dcp_description: '',
-        dcp_activity_dates: []
+        _id: 'n/a',
+        fields: {
+            dcp_type: 'mailing-list',
+            dcp_project: 'hibernate',
+            dcp_project_name: 'Hibernate',
+            dcp_contributors: ['Max R. Andersen <max.andersen@redhat.com>','Libor Krzyzanek <lkrzyzan@redhat.com>'],
+            dcp_tags: ["Content_tag1", "tag2", "tag3", "user_defined_additional_tag"],
+            dcp_title: 'Hibernate test #1',
+            dcp_url_view: 'http://#',
+            dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
+        },
+        highlight: {}
     };
-    var hit2 = {};
-    var hit3 = {};
-    var hit4 = {};
+    var hit2 = {
+        _id: 'n/a',
+        fields: {
+            dcp_type: 'issue',
+            dcp_project: 'as7',
+            dcp_project_name: 'JBoss AS7',
+            dcp_contributors: ['Emmanuel Bernadr <emmanuel@hibernate.org>','Pat Mat <pat@mat.org>'],
+            dcp_tags: ["Content_tag1", "tag2"],
+            dcp_title: 'JBoss AS7 test #1',
+            dcp_url_view: 'http://#',
+            dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
+        },
+        highlight: {}
+    };
+    var hit3 = {
+        _id: 'n/a',
+        fields: {
+            dcp_type: 'mailing-list',
+            dcp_project: 'jbpm',
+            dcp_project_name: 'jBPM',
+            dcp_contributors: ['Sanne Grinovero <sanne.grinovero@gmail.com>','Lukas Vlcek <lukas.vlcek@gmail.com>'],
+            dcp_tags: ["Content_tag1", "tag2"],
+            dcp_title: 'Dummy Title',
+            dcp_url_view: 'http://#',
+            dcp_description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights.',
+            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
+        },
+        highlight: {}
+    };
+    var hit4 = {
+        _id: 'n/a',
+        fields: {
+            dcp_type: 'issue',
+            dcp_project: 'as7',
+            dcp_project_name: 'JBoss AS7',
+            dcp_contributors: ['Dan Allen <dan.j.allen@gmail.com>','Pat Mat <pat@mat.org>'],
+            dcp_tags: ["Content_tag1", "tag2"],
+            dcp_title: 'JBoss AS7 test #1',
+            dcp_url_view: 'http://#',
+            dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights',
+            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
+        },
+        highlight: {}
+    };
 
     var source = [hit1, hit2, hit3, hit4];
 
     var hits = [];
 
     for (var i = 0; i < 10; i++) {
-        hits[i] = source[Math.floor(Math.random() * source.length) + 1];
+        hits[i] = source[Math.floor(Math.random() * source.length)];
     }
 
     return hits;

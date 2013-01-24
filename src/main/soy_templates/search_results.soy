@@ -35,21 +35,22 @@
 
 /**
  * Individual search hit DIV.
+ * @param fields
  */
 {template .hit}
 
         <div class="hit">
             <div class="left">
                 <p class="avatar">
-                    <img src="image/test/sanne.png">
+                    <img src="{$fields.contributor_gravatar}">
                 </p>
             </div>
             <div class="main">
-                <div class="title">Title</div>
-                <div class="link"><a href="#">#</a></div>
+                <div class="title">{$fields.dcp_title}</div>
+                <div class="link"><a href="{$fields.dcp_url_view}">#</a></div>
                 <div class="snippet">
-                    <span class="date">DD/MMM/YYYY - </span>
-                    Snippet&nbsp;&hellip;
+                    <span class="date">{$fields.dcp_last_activity_date} - </span>
+                    {$fields.dcp_description}&nbsp;&hellip;
                 </div>
             </div>
         </div>
