@@ -142,15 +142,15 @@ org.jboss.search.App = function() {
     };
 
     // activate URL History manager
-    var historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
+    this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
     history.setEnabled(true);
 
     // TODO experiment
-    var finish_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, function(e){
+    this.finish_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, function(){
         goog.dom.classes.add(spinner_div, const_.HIDDEN);
     });
 
-    var start_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_START, function(e){
+    this.start_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_START, function(){
         goog.dom.classes.remove(spinner_div, const_.HIDDEN);
     });
 };
@@ -158,5 +158,8 @@ goog.inherits(org.jboss.search.App, goog.Disposable);
 
 /** @inheritDoc */
 org.jboss.search.App.prototype.disposeInternal = function() {
-
+    org.jboss.search.App.superClass_.disposeInternal.call(this);
+    goog.events.unlistenByKey(this.historyListenerId_);
+    goog.events.unlistenByKey(this.finish_);
+    goog.events.unlistenByKey(this.start_);
 };
