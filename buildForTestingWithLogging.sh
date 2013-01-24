@@ -16,7 +16,9 @@
   \
   --namespace="LoggingWindow" \
   \
-  --namespace="Init" \
+  --namespace="init" \
+  \
+  --namespace="org.jboss.search.App" \
   --namespace="org.jboss.search.Constants" \
   --namespace="org.jboss.search.SearchFieldHandler" \
   \
