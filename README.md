@@ -73,16 +73,36 @@ When executed it builds `testing-only.js` which is referenced from `index.html`.
 The only difference between `buildForTesting.sh` and `buildForTestingWithLogging.sh` is that the later makes use of Closure logging (by including
 `src/main/javascript/LoggingWindow.js`).
 
-### Soy Templates
+### Closure Templates
 
-To compile [Soy templates](https://developers.google.com/closure/templates/) into JavaScript run `compileClosureTemplates.sh`.
+To compile [Closure templates](https://developers.google.com/closure/templates/) (aka Soy Templates) into JavaScript run `compileClosureTemplates.sh`.
 
-It grabs all soy templates from `/src/main/soy_templates` folder and compile them into `src/main/javascript/generated_templates/` folder which makes them available for Maven plugin (the Maven plugin requires all JS sources to be located under `javascript` folder).
+It grabs all templates from `/src/main/soy_templates` folder and compile them into
+`src/main/javascript_source/generated_templates/` folder which makes them available
+for Maven plugin (the Maven plugin requires all JS sources to be located under `javascript` folder).
 
-Note the `soyutils_usegoog.js` script in `src/main/javascript/soyutils_slink`. It is a symbolic to `closure-templates-2011-22-12/soyutils_usegoog.js`. This script is actually required by compiled Soy templates so we had to mirror it under `javascript` folder to make sure:
+Note the `soyutils_usegoog.js` script in `src/main/javascript_source/soyutils_slink`.
+It is a symbolic to `closure-templates-2011-22-12/soyutils_usegoog.js`. This script is actually required by
+compiled templates so we had to mirror it under `javascript_source` folder to make sure:
 
 1. Maven plugin can find it during javascript compilation.
 2. Configuration of `closurebuilder.py` `--root` argument in shell scripts is kept simple.
+
+#### Updating Closure Templates
+
+Important, before you start, verify if upgraded version of Closure library is also needed!
+
+- Go <http://code.google.com/p/closure-templates/downloads/list> and see if new version has been released. We are interested in `closure-templates-for-javascript-*.zip` files.
+- Extract to `src/closure-template-YYYY-MM-DD` folder.
+- Update `src/main/javascript_source/soyutils_slink` to point to the new `closure-templates-YYYY-MM-DD/soyutils_usegoog.js` (see example below).
+- Finally, update `compileClosureTemplates.sh`.
+
+For example:
+```
+    cd src/main/javascript_source
+    rm -rf soyutils_usegoog.js
+    ln -s ../../../closure-templates-2012-12-21/soyutils_usegoog.js soyutils_usegoog.js
+```
 
 ### TODO - Automatic Building of Soy Templates 
 
