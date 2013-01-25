@@ -1,7 +1,7 @@
 #!/bin/sh
 
-../../../../../../../closure-library-r2180/closure/bin/calcdeps.py \
---dep ./../../../../../../../closure-library-r2180 \
+../../../../../../../closure-library-r2388/closure/bin/calcdeps.py \
+--dep ./../../../../../../../closure-library-r2388 \
 --path ./../../../../../../main/javascript_source/org/jboss/search \
 --path ./../../../../../javascript/org/jboss/search/page \
 --output_mode deps \

@@ -7,9 +7,9 @@
 # Author: Lukas Vlcek (lvlcek@redhat.com)
 # ----------------------------------------------------------------------------
 
-./closure-library-r2180/closure/bin/build/closurebuilder.py \
+./closure-library-r2388/closure/bin/build/closurebuilder.py \
   \
-  --root=./closure-library-r2180 \
+  --root=./closure-library-r2388 \
   --root=./src/main/javascript_source \
   \
   \

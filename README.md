@@ -23,7 +23,7 @@ Google Closure, Soy templates and jsTestDriver are all very interesting and powe
 
 ### Building the application
 
-- **Production:** When building production artefact, it is all automated and driven by Maven only (including automated javascript tests).
+- **Production:** When building production artifact, it is all automated and driven by Maven only (including automated javascript tests).
 - **Local development:** When you need to quickly open the application without compilation then all you have to do is to execute one or two shell scripts and then you can open `index.html` in browser.
 
 ### Google Closure Version
@@ -44,17 +44,17 @@ We need to use ClosureJavascriptFramework version `1.14.0` or newer.
 Tests are implemented using [jsTestDriver](http://code.google.com/p/js-test-driver/). These tests are pure JavaScript executed in (captured) browser so we need to make sure
 browser can load needed parts of Closure library code. But Closure library is not released as a zip file, so the only option is to checkout source code directly from Closure library SVN using particular release (revision) number.
 
-For example is we use revision **r2180**:
+For example is we use revision **r2388**:
 
 ```
-svn export -r r2180 http://closure-library.googlecode.com/svn/trunk/ closure-library-r2180
+svn export -r r2388 http://closure-library.googlecode.com/svn/trunk/ closure-library-r2388
 ```
 
 then it is important to make sure correct paths are used in `jsTestDriver.conf`:
 
 ```
 load:
-  - closure-library-r2180/closure/goog/base.js
+  - closure-library-r2388/closure/goog/base.js
   - ... etc
 ```
 

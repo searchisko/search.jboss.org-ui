@@ -8,11 +8,11 @@
 
    This product includes the following software:
 
-   - Closure compiler & library (r2180)
+   - Closure compiler & library (r2388)
      https://developers.google.com/closure/
      License: Apache License 2.0
      
-   - Closure templates (2011-22-12)
+   - Closure templates (2012-12-21)
      https://code.google.com/p/closure-templates/
      License: Apache License 2.0
 
