@@ -44,7 +44,7 @@ org.jboss.search.response.normalize = function(response, query) {
 
     if (goog.object.containsKey(response,'hits')) {
         output['hits'] = response['hits'];
-        output['hits']['hits'] = this.getDummyHits();
+        output['hits']['hits'] = org.jboss.search.response.getDummyHits();
     }
 
     if (goog.object.containsKey(response,'timed_out')) {
@@ -63,7 +63,7 @@ org.jboss.search.response.normalize = function(response, query) {
                 if (goog.isDef(conts)) {
                     var cont = (goog.isArray(conts) ? conts[0] : conts).valueOf();
                     if (goog.isDef(cont)) {
-                        fields['contributor_gravatar'] = this.gravatarURI(cont).valueOf();
+                        fields['contributor_gravatar'] = org.jboss.search.response.gravatarURI(cont).valueOf();
                     }
                 }
             }
@@ -95,8 +95,8 @@ org.jboss.search.response.normalize = function(response, query) {
 //                console.log(d_, date, date.getFullYear(), date.getMonth(), date.getDay());
             }
 
-        }, this)
-    };
+        })
+    }
 
 //    console.log(output);
 
@@ -203,9 +203,10 @@ org.jboss.search.response.gravatarEmailHash = function(email) {
     if (goog.isFunction(email.toLowerCase)) { email_ = email_.toLowerCase() }
     var e = goog.format.EmailAddress.parse(email_).getAddress();
 
-    this.md5.reset();
-    this.md5.update(e);
-    e = goog.crypt.byteArrayToHex(this.md5.digest());
+    var md5 = org.jboss.search.response.md5;
+    md5.reset();
+    md5.update(e);
+    e = goog.crypt.byteArrayToHex(md5.digest());
 
     return e;
 };
