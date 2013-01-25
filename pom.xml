@@ -280,10 +280,11 @@
 
     <profiles>
 
+        <!-- Do not use this profile for now -->
         <profile>
             <id>test-sync</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>
@@ -293,6 +294,9 @@
 
         <profile>
             <id>test-async</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>
                 <profile.prologue><![CDATA[
@@ -309,6 +313,12 @@
             <id>advanced</id>
             <properties>
                 <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
+                <profile.prologue><![CDATA[
+                <script>
+                    goog.require('goog.testing.ContinuationTestCase');
+                    goog.require('goog.testing.jsunit');
+                </script>
+                ]]></profile.prologue>
             </properties>
         </profile>
 
@@ -361,7 +371,10 @@
                                     <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.build.directory}/${project.build.finalName}/javascript/compiled</directory>
+                                            <directory>${project.build.directory}/javascriptFramework/output/compiled</directory>
+                                            <includes>
+                                                <include>${project.build.finalName}-min.js</include>
+                                            </includes>
                                         </resource>
                                     </resources>
                                 </configuration>
