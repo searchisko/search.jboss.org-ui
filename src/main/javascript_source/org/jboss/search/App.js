@@ -67,25 +67,25 @@ org.jboss.search.App = function() {
     // Get necessary HTML elements
     // ================================================================
 
-    var query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('query_field');
-    var spinner_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('query_field_div_spinner');
-    var clear_query_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('query_field_div_x');
-    var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_suggestions');
+    var query_field = /** @type {!HTMLInputElement} */ (goog.dom.getElement('query_field'));
+    var spinner_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('query_field_div_spinner'));
+    var clear_query_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('query_field_div_x'));
+    var query_suggestions_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('search_suggestions'));
 
-    var date_filter_body_div    = /** @type {!HTMLDivElement} */ goog.dom.getElement('date_filter');
-    var project_filter_body_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('project_filter');
-    var author_filter_body_div  = /** @type {!HTMLDivElement} */ goog.dom.getElement('author_filter');
+    var date_filter_body_div    = /** @type {!HTMLDivElement} */ (goog.dom.getElement('date_filter'));
+    var project_filter_body_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('project_filter'));
+    var author_filter_body_div  = /** @type {!HTMLDivElement} */ (goog.dom.getElement('author_filter'));
 
-    var project_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.getElement('project_filter_query_field');
-    var author_filter_query_field  = /** @type {!HTMLInputElement} */ goog.dom.getElement('author_filter_query_field');
+    var project_filter_query_field = /** @type {!HTMLInputElement} */ (goog.dom.getElement('project_filter_query_field'));
+    var author_filter_query_field  = /** @type {!HTMLInputElement} */ (goog.dom.getElement('author_filter_query_field'));
 
-    var second_filters_row_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('second_filters_row');
+    var second_filters_row_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('second_filters_row'));
 
-    var date_filter_tab_div    = /** @type {!HTMLDivElement} */ goog.dom.getElementByClass('date', second_filters_row_div);
-    var author_filter_tab_div  = /** @type {!HTMLDivElement} */ goog.dom.getElementByClass('author', second_filters_row_div);
-    var project_filter_tab_div = /** @type {!HTMLDivElement} */ goog.dom.getElementByClass('project', second_filters_row_div);
+    var date_filter_tab_div    = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('date', second_filters_row_div));
+    var author_filter_tab_div  = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('author', second_filters_row_div));
+    var project_filter_tab_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('project', second_filters_row_div));
 
-    var search_results_div = /** @type {!HTMLDivElement} */ goog.dom.getElement('search_results');
+    var search_results_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('search_results'));
 
     // ================================================================
     // Define internal variables and objects

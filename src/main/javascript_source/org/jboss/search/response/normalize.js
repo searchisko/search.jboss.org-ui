@@ -51,7 +51,7 @@ org.jboss.search.response.normalize = function(response, query) {
         output['timed_out'] = response['timed_out'];
     }
 
-    var hits = /** @type {Array} */  goog.object.getValueByKeys(output, ["hits", "hits"]);
+    var hits = /** @type {Array} */ (goog.object.getValueByKeys(output, ["hits", "hits"]));
     if (goog.isDefAndNotNull(hits)) {
         goog.array.forEach(hits, function(hit){
 

@@ -145,7 +145,7 @@ org.jboss.search.page.SearchPage = function(
 
                 // callback, The only param is the event object from the COMPLETE event.
                 function(e) {
-                    var event = /** @type goog.net.XhrManager.Event */ e;
+                    var event = /** @type goog.net.XhrManager.Event */ (e);
                     var response = event.target.getResponseJson();
 
                     // We are taking the response from the mock server for now,
@@ -364,7 +364,7 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
 
         // callback, The only param is the event object from the COMPLETE event.
         function(e) {
-            var event = /** @type goog.net.XhrManager.Event */ e;
+            var event = /** @type goog.net.XhrManager.Event */ (e);
             var response = event.target.getResponseJson();
 
             var data = org.jboss.search.response.normalize(response, query_string);

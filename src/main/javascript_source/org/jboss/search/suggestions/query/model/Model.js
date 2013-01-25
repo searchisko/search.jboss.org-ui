@@ -118,7 +118,7 @@ org.jboss.search.suggestions.query.model.Model.prototype.parse = function(source
  * @return {(string|undefined)}
  */
 org.jboss.search.suggestions.query.model.Model.prototype.getQueryString = function(search, opt_default) {
-    var value = /** @type {!string} */ goog.object.getValueByKeys(search, "search", "query");
+    var value = /** @type {!string} */ (goog.object.getValueByKeys(search, "search", "query"));
     return value ? value : opt_default;
 };
 
