@@ -37,8 +37,6 @@ By Closure compiler version we mean **release** number as defined for Maven use:
 
 [ClosureJavascriptFramework](https://github.com/jlgrock/ClosureJavascriptFramework) Maven plugin is used to compile javascript source code. Specific version of Closure compiler used by this Maven plugin is set in `pom.xml` in property `${closure.library.version}`.
 
-We need to use ClosureJavascriptFramework version `1.14.0` or newer.
-
 #### Unit Testing via jsTestDriver
 
 Tests are implemented using [jsTestDriver](http://code.google.com/p/js-test-driver/). These tests are pure JavaScript executed in (captured) browser so we need to make sure
@@ -99,9 +97,9 @@ Important, before you start, verify if upgraded version of Closure library is al
 
 For example:
 ```
-    cd src/main/javascript_source
-    rm -rf soyutils_usegoog.js
-    ln -s ../../../closure-templates-2012-12-21/soyutils_usegoog.js soyutils_usegoog.js
+cd src/main/javascript_source
+rm -rf soyutils_usegoog.js
+ln -s ../../../closure-templates-2012-12-21/soyutils_usegoog.js soyutils_usegoog.js
 ```
 
 ### TODO - Automatic Building of Soy Templates 
