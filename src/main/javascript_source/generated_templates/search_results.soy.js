@@ -36,6 +36,6 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_sb) {
  */
 org.jboss.search.page.templates.hit = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="hit"><div class="left"><p class="avatar"><img src="', soy.$$escapeHtml(opt_data.fields.contributor_gravatar), '"></p></div><div class="main"><div class="title">', soy.$$escapeHtml(opt_data.fields.dcp_title), '</div><div class="link"><a href="', soy.$$escapeHtml(opt_data.fields.dcp_url_view), '">#</a></div><div class="snippet"><span class="date">', soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date), ' - </span>', soy.$$escapeHtml(opt_data.fields.dcp_description), '&nbsp;&hellip;</div></div></div>');
+  output.append('<div class="hit"><div class="left"><p class="avatar"><img src="', soy.$$escapeHtml(opt_data.fields.contributor_gravatar), '"></p></div><div class="main"><div class="title">', soy.$$escapeHtml(opt_data.fields.dcp_title), '</div><div class="link"><a href="', soy.$$escapeHtml(opt_data.fields.dcp_url_view), '">', soy.$$escapeHtml(opt_data.fields.dcp_url_view_tr), '</a></div><div class="snippet"><span class="date">', soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date), ' - </span>', soy.$$escapeHtml(opt_data.fields.dcp_description_tr), '</div></div></div>');
   return opt_sb ? '' : output.toString();
 };

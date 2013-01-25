@@ -68,6 +68,26 @@ org.jboss.search.response.normalize = function(response, query) {
                 }
             }
 
+            // URL truncate
+            if (goog.object.containsKey(fields,'dcp_url_view')) {
+                var url = fields['dcp_url_view'];
+                if (goog.isDef(url)) {
+                    var url_tr = goog.string.truncateMiddle(url, 60, true);
+                    fields['dcp_url_view_tr'] = url_tr;
+                }
+            }
+
+            // Description truncate
+            if (goog.object.containsKey(fields,'dcp_description')) {
+                var desc = fields['dcp_description'];
+                if (goog.isDef(desc)) {
+                    // ideal length of line 60
+                    // max 3 lines = 180
+                    var desc_tr = goog.string.truncate(desc, 180, true);
+                    fields['dcp_description_tr'] = desc_tr;
+                }
+            }
+
             // Date
             if (goog.object.containsKey(fields,'dcp_last_activity_date')) {
                 var d_ = fields['dcp_last_activity_date'];
@@ -101,7 +121,7 @@ org.jboss.search.response.getDummyHits = function() {
             dcp_contributors: ['Max R. Andersen <max.andersen@redhat.com>','Libor Krzyzanek <lkrzyzan@redhat.com>'],
             dcp_tags: ["Content_tag1", "tag2", "tag3", "user_defined_additional_tag"],
             dcp_title: 'Hibernate test #1',
-            dcp_url_view: 'http://#',
+            dcp_url_view: 'http://www.jboss.org/hibernate',
             dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
             dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
         },
@@ -116,7 +136,7 @@ org.jboss.search.response.getDummyHits = function() {
             dcp_contributors: ['Emmanuel Bernadr <emmanuel@hibernate.org>','Pat Mat <pat@mat.org>'],
             dcp_tags: ["Content_tag1", "tag2"],
             dcp_title: 'JBoss AS7 test #1',
-            dcp_url_view: 'http://#',
+            dcp_url_view: 'http://www.cnn.com/2013/01/24/opinion/jones-sports-writers/index.html?iid=article_sidebar',
             dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
         },
@@ -131,7 +151,7 @@ org.jboss.search.response.getDummyHits = function() {
             dcp_contributors: ['Sanne Grinovero <sanne.grinovero@gmail.com>','Lukas Vlcek <lukas.vlcek@gmail.com>'],
             dcp_tags: ["Content_tag1", "tag2"],
             dcp_title: 'Dummy Title',
-            dcp_url_view: 'http://#',
+            dcp_url_view: 'http://news.cnet.com/8301-17938_105-57565529-1/pixar-artist-stays-inspired-by-drawing-superheroes/',
             dcp_description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights.',
             dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
         },
@@ -146,7 +166,7 @@ org.jboss.search.response.getDummyHits = function() {
             dcp_contributors: ['Dan Allen <dan.j.allen@gmail.com>','Pat Mat <pat@mat.org>'],
             dcp_tags: ["Content_tag1", "tag2"],
             dcp_title: 'JBoss AS7 test #1',
-            dcp_url_view: 'http://#',
+            dcp_url_view: 'http://www.cnn.com/2013/01/24/opinion/caplan-neanderthal-baby/index.html?hpt=hp_c3',
             dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights',
             dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
         },

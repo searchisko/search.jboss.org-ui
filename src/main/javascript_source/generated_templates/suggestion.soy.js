@@ -16,11 +16,11 @@ goog.require('soy.StringBuilder');
 org.jboss.search.suggestions.templates.suggestions_section = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
   output.append('<div class="suggestions_section">');
-  var optionList28 = opt_data.options;
-  var optionListLen28 = optionList28.length;
-  for (var optionIndex28 = 0; optionIndex28 < optionListLen28; optionIndex28++) {
-    var optionData28 = optionList28[optionIndex28];
-    output.append('<div class="selectable" index="', soy.$$escapeHtml(opt_data.indexStart + optionIndex28), '">', (optionIndex28 == 0) ? '<div class="caption">' + soy.$$escapeHtml(opt_data.caption) + '</div>' : '', '<div class="option">', optionData28, '</div></div>');
+  var optionList30 = opt_data.options;
+  var optionListLen30 = optionList30.length;
+  for (var optionIndex30 = 0; optionIndex30 < optionListLen30; optionIndex30++) {
+    var optionData30 = optionList30[optionIndex30];
+    output.append('<div class="selectable" index="', soy.$$escapeHtml(opt_data.indexStart + optionIndex30), '">', (optionIndex30 == 0) ? '<div class="caption">' + soy.$$escapeHtml(opt_data.caption) + '</div>' : '', '<div class="option">', optionData30, '</div></div>');
   }
   output.append('<div class="suggestion_section_last"></div></div>');
   return opt_sb ? '' : output.toString();
