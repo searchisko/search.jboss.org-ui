@@ -112,66 +112,61 @@ org.jboss.search.response.normalize = function(response, query) {
 org.jboss.search.response.getDummyHits = function() {
 
 
-    var hit1 = {
-        _id: 'n/a',
-        fields: {
-            dcp_type: 'mailing-list',
-            dcp_project: 'hibernate',
-            dcp_project_name: 'Hibernate',
-            dcp_contributors: ['Max R. Andersen <max.andersen@redhat.com>','Libor Krzyzanek <lkrzyzan@redhat.com>'],
-            dcp_tags: ["Content_tag1", "tag2", "tag3", "user_defined_additional_tag"],
-            dcp_title: 'Hibernate test #1',
-            dcp_url_view: 'http://www.jboss.org/hibernate',
-            dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
-        },
-        highlight: {}
-    };
-    var hit2 = {
-        _id: 'n/a',
-        fields: {
-            dcp_type: 'issue',
-            dcp_project: 'as7',
-            dcp_project_name: 'JBoss AS7',
-            dcp_contributors: ['Emmanuel Bernadr <emmanuel@hibernate.org>','Pat Mat <pat@mat.org>'],
-            dcp_tags: ["Content_tag1", "tag2"],
-            dcp_title: 'JBoss AS7 test #1',
-            dcp_url_view: 'http://www.cnn.com/2013/01/24/opinion/jones-sports-writers/index.html?iid=article_sidebar',
-            dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
-        },
-        highlight: {}
-    };
-    var hit3 = {
-        _id: 'n/a',
-        fields: {
-            dcp_type: 'mailing-list',
-            dcp_project: 'jbpm',
-            dcp_project_name: 'jBPM',
-            dcp_contributors: ['Sanne Grinovero <sanne.grinovero@gmail.com>','Lukas Vlcek <lukas.vlcek@gmail.com>'],
-            dcp_tags: ["Content_tag1", "tag2"],
-            dcp_title: 'Dummy Title',
-            dcp_url_view: 'http://news.cnet.com/8301-17938_105-57565529-1/pixar-artist-stays-inspired-by-drawing-superheroes/',
-            dcp_description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights.',
-            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
-        },
-        highlight: {}
-    };
-    var hit4 = {
-        _id: 'n/a',
-        fields: {
-            dcp_type: 'issue',
-            dcp_project: 'as7',
-            dcp_project_name: 'JBoss AS7',
-            dcp_contributors: ['Dan Allen <dan.j.allen@gmail.com>','Pat Mat <pat@mat.org>'],
-            dcp_tags: ["Content_tag1", "tag2"],
-            dcp_title: 'JBoss AS7 test #1',
-            dcp_url_view: 'http://www.cnn.com/2013/01/24/opinion/caplan-neanderthal-baby/index.html?hpt=hp_c3',
-            dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights',
-            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
-        },
-        highlight: {}
-    };
+    var hit1 = {};
+    hit1['_id'] = 'n/a';
+    hit1['highlight'] = {};
+    hit1['fields'] = {};
+    hit1['fields']['dcp_type'] = 'mailling-list';
+    hit1['fields']['dcp_project'] = 'hibernate';
+    hit1['fields']['dcp_project_name'] = 'Hibernate';
+    hit1['fields']['dcp_contributors'] = ['Max R. Andersen <max.andersen@redhat.com>','Libor Krzyzanek <lkrzyzan@redhat.com>'];
+    hit1['fields']['dcp_tags'] = ["Content_tag1", "tag2", "tag3", "user_defined_additional_tag"];
+    hit1['fields']['dcp_title'] = 'Hibernate test #1';
+    hit1['fields']['dcp_url_view'] = 'http://www.jboss.org/hibernate';
+    hit1['fields']['dcp_description'] = 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
+    hit1['fields']['dcp_last_activity_date'] = '2012-12-06T06:34:55.000Z';
+
+    var hit2 = {};
+    hit2['_id'] = 'n/a';
+    hit2['highlight'] = {};
+    hit2['fields'] = {};
+    hit2['fields']['dcp_type'] = 'issue';
+    hit2['fields']['dcp_project'] = 'as7';
+    hit2['fields']['dcp_project_name'] = 'JBoss AS7';
+    hit2['fields']['dcp_contributors'] = ['Emmanuel Bernadr <emmanuel@hibernate.org>','Pat Mat <pat@mat.org>'];
+    hit2['fields']['dcp_tags'] = ["Content_tag1", "tag2"];
+    hit2['fields']['dcp_title'] = 'JBoss AS7 test #1';
+    hit2['fields']['dcp_url_view'] = 'http://www.cnn.com/2013/01/24/opinion/jones-sports-writers/index.html?iid=article_sidebar';
+    hit2['fields']['dcp_description'] = 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+    hit2['fields']['dcp_last_activity_date'] = '2012-12-06T06:34:55.000Z';
+
+    var hit3 = {};
+    hit3['_id'] = 'n/a';
+    hit3['highlight'] = {};
+    hit3['fields'] = {};
+    hit3['fields']['dcp_type'] = 'mailing-list';
+    hit3['fields']['dcp_project'] = 'jbpm';
+    hit3['fields']['dcp_project_name'] = 'jBPM';
+    hit3['fields']['dcp_contributors'] = ['Sanne Grinovero <sanne.grinovero@gmail.com>','Lukas Vlcek <lukas.vlcek@gmail.com>'];
+    hit3['fields']['dcp_tags'] = ["Content_tag1", "tag2"];
+    hit3['fields']['dcp_title'] = 'Dummy Title';
+    hit3['fields']['dcp_url_view'] = 'http://news.cnet.com/8301-17938_105-57565529-1/pixar-artist-stays-inspired-by-drawing-superheroes/';
+    hit3['fields']['dcp_description'] = 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights.';
+    hit3['fields']['dcp_last_activity_date'] = '2012-12-06T06:34:55.000Z';
+
+    var hit4 = {};
+    hit4['_id'] = 'n/a';
+    hit4['highlight'] = {};
+    hit4['fields'] = {};
+    hit4['fields']['dcp_type'] = 'issue';
+    hit4['fields']['dcp_project'] = 'as7';
+    hit4['fields']['dcp_project_name'] = 'JBoss AS7';
+    hit4['fields']['dcp_contributors'] = ['Dan Allen <dan.j.allen@gmail.com>','Pat Mat <pat@mat.org>'];
+    hit4['fields']['dcp_tags'] = ["Content_tag1", "tag2"];
+    hit4['fields']['dcp_title'] = 'JBoss AS7 test #1';
+    hit4['fields']['dcp_url_view'] = 'http://www.cnn.com/2013/01/24/opinion/caplan-neanderthal-baby/index.html?hpt=hp_c3';
+    hit4['fields']['dcp_description'] = 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights';
+    hit4['fields']['dcp_last_activity_date'] = '2012-12-06T06:34:55.000Z';
 
     var source = [hit1, hit2, hit3, hit4];
 
