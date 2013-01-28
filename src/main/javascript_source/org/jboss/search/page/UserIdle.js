@@ -58,6 +58,8 @@ goog.inherits(org.jboss.search.page.UserIdle, goog.Disposable);
 /** @inheritDoc */
 org.jboss.search.page.UserIdle.prototype.disposeInternal = function() {
     org.jboss.search.page.UserIdle.superClass_.disposeInternal.call(this);
+    delete this.xhrManager_;
+    delete this.element_;
 };
 
 org.jboss.search.page.UserIdle.prototype.start = function() {

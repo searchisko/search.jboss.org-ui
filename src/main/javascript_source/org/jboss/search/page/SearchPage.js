@@ -124,9 +124,7 @@ org.jboss.search.page.SearchPage = function(
         }
     );
 
-    var callback = function(query_string) {
-
-        thiz_.userIdleDelay.stop();
+    var suggestionsCallback = function(query_string) {
 
         if (goog.string.isEmptySafe(query_string)) {
 
@@ -250,7 +248,7 @@ org.jboss.search.page.SearchPage = function(
     this.userQuerySearchField = new org.jboss.search.SearchFieldHandler(
         this.elements.getQuery_field(),
         100,
-        callback,
+        suggestionsCallback,
         null,
         this.getPresetKeyHandlers()
     );
@@ -316,7 +314,15 @@ org.jboss.search.page.SearchPage.prototype.SUGGESTIONS_URI = goog.Uri.parse(org.
  */
 org.jboss.search.page.SearchPage.prototype.getSuggestionsUri = function() {
     return this.SUGGESTIONS_URI.clone();
-}
+};
+
+/**
+ * Stop and release (dispose) all resources related to user entertainment.
+ */
+org.jboss.search.page.SearchPage.prototype.disposeUserEntertainment = function() {
+    this.userIdleDelay.stop();
+    goog.dispose(this.userIdle);
+};
 
 /**
  * @private
@@ -340,14 +346,11 @@ org.jboss.search.page.SearchPage.prototype.getSearchUri = function() {
  * @param {?string} query
  */
 org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
-
     var newValue = "";
     if (!goog.string.isEmptySafe(query)) {
         newValue = query.trim();
     }
-
     this.elements.getQuery_field().value = newValue;
-
 };
 
 /**
@@ -358,6 +361,7 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
 
     var thiz_ = this;
 
+    thiz_.disposeUserEntertainment();
     thiz_.setUserQuery(query_string);
 
     thiz_.log.info("Run search for [" + query_string + "]");
