@@ -102,6 +102,6 @@ org.jboss.search.Constants = {
      * @type {number}
      * @const
      */
-    USER_IDLE_INTERVAL: 5000
+    USER_IDLE_INTERVAL: 4000
 
 };
