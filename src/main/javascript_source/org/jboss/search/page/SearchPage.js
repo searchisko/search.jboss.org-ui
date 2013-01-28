@@ -27,10 +27,13 @@ goog.provide('org.jboss.search.page.SearchPage');
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.page.SearchPageElements');
+goog.require('org.jboss.search.page.UserIdle');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.query.view.View');
 goog.require('org.jboss.search.suggestions.event.EventType');
+
+goog.require('goog.async.Delay');
 
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
@@ -76,8 +79,8 @@ org.jboss.search.page.SearchPage = function(
 
     /**
      * @private
-     * @type {org.jboss.search.page.SearchPageElements}
-     */ this.elements = elements
+     * @type {org.jboss.search.page.SearchPageElements} */
+    this.elements = elements
 
     /** @private */ this.xhrManager = xhrManager;
     /** @private */ this.context = context;
@@ -122,6 +125,8 @@ org.jboss.search.page.SearchPage = function(
     );
 
     var callback = function(query_string) {
+
+        thiz_.userIdleDelay.stop();
 
         if (goog.string.isEmptySafe(query_string)) {
 
@@ -250,6 +255,13 @@ org.jboss.search.page.SearchPage = function(
         this.getPresetKeyHandlers()
     );
 
+    this.userIdle = new org.jboss.search.page.UserIdle(xhrManager, elements.getSearch_results_div());
+    this.userIdleDelay = new goog.async.Delay(
+        goog.bind(this.userIdle.start,this.userIdle),
+        org.jboss.search.Constants.USER_IDLE_INTERVAL
+    );
+    this.userIdleDelay.start();
+
 };
 goog.inherits(org.jboss.search.page.SearchPage, goog.events.EventTarget);
 
@@ -263,6 +275,8 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.dispose(this.elements);
     goog.dispose(this.userQuerySearchField);
     goog.dispose(this.query_suggestions_view);
+    goog.dispose(this.userIdle);
+    goog.dispose(this.userIdleDelay);
 
     // Remove listeners added by this class.
     goog.events.unlistenByKey(this.dateClickListenerId_);

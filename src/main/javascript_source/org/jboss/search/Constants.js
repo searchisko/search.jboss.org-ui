@@ -95,6 +95,13 @@ org.jboss.search.Constants = {
      * @type {string}
      * @const
      */
-    API_URL_SEARCH_QUERY: "http://private-5ebf-jbossorg.apiary.io/rest/search"
+    API_URL_SEARCH_QUERY: "http://private-5ebf-jbossorg.apiary.io/rest/search",
+
+    /**
+     * Interval in ms. When user has been idle for this time then we can fire some 'entertaining' action.
+     * @type {number}
+     * @const
+     */
+    USER_IDLE_INTERVAL: 5000
 
 };
