@@ -87,7 +87,7 @@ org.jboss.search.Constants = {
      * @type {string}
      * @const
      */
-    API_URL_SUGGESTIONS_QUERY: "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string",
+    API_URL_SUGGESTIONS_QUERY: "http://private-5ebf-jbossorg.apiary.io/rest/suggestions/query_string",
 
     /**
      * Temporary: URL of Apiary Mock Server
@@ -95,6 +95,6 @@ org.jboss.search.Constants = {
      * @type {string}
      * @const
      */
-    API_URL_SEARCH_QUERY: "http://private-5ebf-jbossorg.apiary.io/v1/rest/search"
+    API_URL_SEARCH_QUERY: "http://private-5ebf-jbossorg.apiary.io/rest/search"
 
 };
