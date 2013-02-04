@@ -50,6 +50,56 @@ d3.selectAll = function(selector) {};
  */
 d3.data = function(opt_value, opt_key) {};
 
+// quick hacks
 d3.enter = function() {};
+d3.exit = function() {};
+
 d3.append = function() {};
+d3.remove = function() {};
 d3.text = function() {};
+d3.attr = function() {};
+
+d3.scale = function() {};
+d3.scale.category20 = function() {};
+
+d3.layout = function() {};
+d3.layout.pie = function() {};
+d3.layout.pie.sort = function() {};
+
+d3.svg = function() {};
+d3.svg.arc = function() {};
+d3.svg.arc.innerRadius = function() {};
+d3.svg.arc.outerRadius = function() {};
+
+d3.html = function() {};
+d3.style = function() {};
+
+/**
+ * @see https://github.com/mbostock/d3/wiki/Transitions#wiki-d3_transition
+ * @param {Array.<HTMLElement>} opt_selection
+ * @return {Array.<HTMLElement>}
+ */
+d3.transition = function(opt_selection) {};
+
+/**
+ * Transition.
+ * @interface */
+function transition() {};
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-delay
+transition.prototype.delay;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-duration
+transition.prototype.duration;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-ease
+transition.prototype.ease;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-attr
+transition.prototype.attr;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-attrTween
+transition.prototype.attrTween;
+
+// @see https://github.com/mbostock/d3/wiki/Transitions#wiki-each
+transition.prototype.each;
