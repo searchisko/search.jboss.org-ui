@@ -92,6 +92,11 @@
     display: inline-block;
 }
 
+.hit > .main > .title > a {
+    text-decoration: none;
+    color: inherit;
+}
+
 /* project icons could be done this way? */
 /*
 .hit > .main > .link:before {
