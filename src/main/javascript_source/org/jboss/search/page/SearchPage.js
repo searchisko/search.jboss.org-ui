@@ -481,9 +481,20 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
         event.preventDefault();
 
         (function(selectedIndex) {
-            // TODO get query_string from model at the selectedIndex position
-            thiz_.querySelected("option was selected by keys (index: "+selectedIndex+")");
-
+            delay.stop();
+            if (selectedIndex < 0) {
+                // user hit enter and no suggestions are displayed (yet) use content of query field
+                var query = thiz_.elements.getQuery_field().value;
+                thiz_.querySelected(query);
+            } else if (selectedIndex == 0) {
+                // suggestions are displayed, user selected the first one (use what is in query field)
+                var query = thiz_.elements.getQuery_field().value;
+                thiz_.querySelected(query);
+            } else if (selectedIndex > 0) {
+                // user selected from suggestions, use what is in model
+                // TODO get query_string from model at the selectedIndex position
+                thiz_.querySelected("option was selected by keys (index: "+selectedIndex+")");
+            }
         })(selectedIndex);
     };
 
