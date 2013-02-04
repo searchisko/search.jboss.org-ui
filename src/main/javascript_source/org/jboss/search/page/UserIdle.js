@@ -29,7 +29,6 @@ goog.provide('org.jboss.search.page.UserIdle');
 goog.require('goog.Disposable');
 
 goog.require('goog.dom');
-goog.require('goog.dom.classes');
 
 goog.require('goog.net.XhrManager');
 goog.require('goog.net.XhrManager.Event');
@@ -63,8 +62,65 @@ org.jboss.search.page.UserIdle.prototype.disposeInternal = function() {
 };
 
 org.jboss.search.page.UserIdle.prototype.start = function() {
-    d3.select(this.element_).selectAll("div")
-        .data(["Go, search for something...!"])
-        .enter().append("div")
-        .text(function(d) { return d; });
+
+    var postAction = function(d, i) {
+        // 'this' refers to particular 'div' element
+        if (i == 1) {
+            var stats_div = d3.select(this).append('div').attr('id','entertain_chart');
+            createDonutChart(stats_div);
+        }
+        if (i == 2) {
+            var recent_data_div = d3.select(this).append('div').attr('id','entertain_recently_indexed');
+            createRecentDataPreview();
+        }
+    };
+
+    var createDonutChart = function(selection) {
+        // example of donut chart see http://bl.ocks.org/1346410
+        var width = 300,
+            height = 200,
+            radius = Math.min(width, height) / 2;
+        var color = d3.scale.category20();
+        var pie = d3.layout.pie().sort(null);
+        var arc = d3.svg.arc()
+            .innerRadius(radius - 60)
+            .outerRadius(radius - 20);
+        var svg = selection.append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        var path = svg.selectAll("path").data(pie([1,3,5]));
+
+            path.enter().append("path")
+                .attr("fill", function(d, i) { return color(i) })
+                .attr("d", arc)
+//                .attr("class", "arc")
+            ;
+
+            path.exit().remove();
+    };
+
+    var createRecentDataPreview = function() {
+        var d = goog.dom.getElement('entertain_recently_indexed');
+        goog.dom.setTextContent(d, '/Some details of recent documents.../');
+    };
+
+    // excellent read on D3 transitions see http://bost.ocks.org/mike/transition/
+    var content = d3.select(this.element_).selectAll("div")
+        .data([
+            {'c': 'Go, search for something...'},
+            {'c': 'There\'s a lot of content for you to explore.<br>Check some statistics...'},
+            {'c': 'And still counting, check recently added documents:'},
+            {'c': 'Still don\'t know what to do? Read <a href="#">help</a>.'} // TODO missing link to help!
+        ]);
+
+    content.enter().append("div").attr('class','entertain_say');
+
+    content.transition().duration(500)
+        .delay(function(d,i){return i < 3 ? (i+1) * 7000 : 40000;})
+        .each('start',function(d,i) { d3.select(this).html(d['c']).style("color", "white"); })
+        .each('end',postAction)
+        .style("color","black");
 };
