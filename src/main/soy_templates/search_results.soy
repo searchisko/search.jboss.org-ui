@@ -52,6 +52,12 @@
                     <span class="date">{$fields.dcp_last_activity_date} - </span>
                     {$fields.dcp_description_tr}
                 </div>
+                {if isNonnull($fields.dcp_project)}
+                    <div class="dcp_project">{$fields.dcp_project}</div>
+                {/if}
+                {if isNonnull($fields.dcp_type)}
+                    <div class="dcp_type">{$fields.dcp_type}</div>
+                {/if}
             </div>
         </div>
 

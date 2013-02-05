@@ -138,6 +138,18 @@
     color: rgb(92, 116, 122);
 }
 
+.hit > .main > .dcp_project {
+    /* TBD */
+}
+
+.hit > .main > .dcp_project:after {
+    content: ' /';
+}
+
+.hit > .main > .dcp_type {
+    /* TBD */
+}
+
 .pagination {
     text-align: center;
     word-spacing: 1.5em;
