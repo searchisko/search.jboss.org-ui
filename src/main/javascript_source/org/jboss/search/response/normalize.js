@@ -44,7 +44,7 @@ org.jboss.search.response.normalize = function(response, query) {
 
     if (goog.object.containsKey(response,'hits')) {
         output['hits'] = response['hits'];
-        output['hits']['hits'] = org.jboss.search.response.getDummyHits();
+//        output['hits']['hits'] = org.jboss.search.response.getDummyHits();
     }
 
     if (goog.object.containsKey(response,'timed_out')) {
@@ -61,7 +61,7 @@ org.jboss.search.response.normalize = function(response, query) {
             if (goog.object.containsKey(fields,'dcp_contributors')) {
                 var conts = fields['dcp_contributors'];
                 if (goog.isDef(conts)) {
-                    var cont = (goog.isArray(conts) ? conts[0] : conts).valueOf();
+                    var cont = ((goog.isArray(conts) && conts.length > 0) ? conts[0] : conts).valueOf();
                     if (goog.isDef(cont)) {
                         fields['contributor_gravatar'] = org.jboss.search.response.gravatarURI(cont).valueOf();
                     }

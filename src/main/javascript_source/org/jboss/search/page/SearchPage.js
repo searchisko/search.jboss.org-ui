@@ -368,13 +368,17 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
 
     thiz_.xhrManager.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
     thiz_.disableSearchResults();
+    var query_url = thiz_.getSearchUri()
+        .setParameterValue("query", query_string)
+        .setParameterValues("field", ["dcp_type","dcp_id","dcp_title","dcp_contributors","dcp_project","dcp_project_name","dcp_description","dcp_tags","dcp_last_activity_date","dcp_url_view"])
+        .setParameterValues("query_highlight", "true")
+//            .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_dcp_type_counts","tag_cloud"])
+        .toString();
+//    console.log(query_url);
     thiz_.xhrManager.send(
         org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
         // setting the parameter value clears previously set value (that is what we want!)
-        thiz_.getSearchUri()
-            .setParameterValue("query", query_string)
-            .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_dcp_type_counts","tag_cloud"])
-            .toString(),
+        query_url,
         org.jboss.search.Constants.GET,
         "", // post_data
         {}, // headers_map
@@ -384,8 +388,10 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
         function(e) {
             var event = /** @type goog.net.XhrManager.Event */ (e);
             var response = event.target.getResponseJson();
+//            console.log(response);
 
             var data = org.jboss.search.response.normalize(response, query_string);
+//            console.log(data);
 
             try {
                 var html = org.jboss.search.page.templates.search_results(data);
