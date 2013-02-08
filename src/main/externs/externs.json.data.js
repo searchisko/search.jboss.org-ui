@@ -29,9 +29,13 @@
  * Search hits.
  * @interface */
 function SearchResults() {};
-SearchResults.prototype.user_query;
+SearchResults.prototype.user_query; // added by normalize.js
+SearchResults.prototype.time_out;
 SearchResults.prototype.hits;
+
 SearchResults.prototype.hits.total;
+SearchResults.prototype.hits.max_score;
+SearchResults.prototype.hits.pagination; // added by normalize.js
 SearchResults.prototype.hits.hits;
 
 /**
@@ -48,3 +52,6 @@ SearchHit.prototype.fields.dcp_description;
 SearchHit.prototype.fields.dcp_url_view_tr;
 SearchHit.prototype.fields.contributor_gravatar;
 SearchHit.prototype.fields.dcp_description_tr;
+
+SearchHit.prototype.highlight;
+SearchHit.prototype.highlight.comment_body;

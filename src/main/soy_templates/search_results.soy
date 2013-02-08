@@ -18,17 +18,13 @@
     {/foreach}
 
         <div class="pagination">
-            <span>&#9668;</span>
-            <span> 3</span>
-            <span> 4</span>
-            <span> 5</span>
-            <span> 6</span>
-            <span> 7</span>
-            <span> 8</span>
-            <span> 9</span>
-            <span> 10</span>
-            <span> 11</span>
-            <span> &#9654;</span>
+            {foreach $p in $hits.pagination}
+                {if (isFirst($p) and $p > 1)}<span>&#9668;</span>{/if}
+                <span> {$p}</span>
+                {if (isLast($p) and $hits.pagination.length == 10)}<span> &#9654;</span>{/if}
+            {ifempty}
+                /* skip */
+            {/foreach}
         </div>
 
 {/template}
@@ -36,6 +32,7 @@
 /**
  * Individual search hit DIV.
  * @param fields
+ * @param highlight
  */
 {template .hit}
 
@@ -46,14 +43,35 @@
                 </p>
             </div>
             <div class="main">
-                <div class="title"><a href="{$fields.dcp_url_view}">{$fields.dcp_title}</a></div>
+                {if isNonnull($highlight.dcp_title)}
+                    <div class="title"><a href="{$fields.dcp_url_view}">{$highlight.dcp_title|noAutoescape}</a></div>
+                {else}
+                    <div class="title"><a href="{$fields.dcp_url_view}">{$fields.dcp_title}</a></div>
+                {/if}
                 <div class="link"><a href="{$fields.dcp_url_view}">{$fields.dcp_url_view_tr}</a></div>
                 <div class="snippet">
                     <span class="date">{$fields.dcp_last_activity_date} - </span>
-                    {$fields.dcp_description_tr}
+                    {if isNonnull($highlight.dcp_description)}
+                        {$highlight.dcp_description|noAutoescape}
+                    {elseif isNonnull($fields.dcp_description_tr)}
+                        {$fields.dcp_description_tr|noAutoescape}
+                    {else}
+                        No description available &hellip;
+                    {/if}
+                    {if isNonnull($highlight.comment_body)}
+                        <div class="children comments">
+                        Comments:<ul>
+                        {foreach $comment in $highlight.comment_body}
+                            <li>{$comment|noAutoescape}&nbsp;&hellip;</li>
+                        {/foreach}
+                        </ul>
+                        </div>
+                    {/if}
                 </div>
                 {if isNonnull($fields.dcp_project)}
-                    <div class="dcp_project">{$fields.dcp_project}</div>
+                    <div class="dcp_project">{$fields.dcp_project}
+                    {if (isNonnull($fields.dcp_project) and isNonnull($fields.dcp_type))} / {/if}
+                    </div>
                 {/if}
                 {if isNonnull($fields.dcp_type)}
                     <div class="dcp_type">{$fields.dcp_type}</div>

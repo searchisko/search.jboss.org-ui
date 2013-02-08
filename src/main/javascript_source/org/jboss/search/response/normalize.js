@@ -22,6 +22,8 @@
  */
 goog.provide('org.jboss.search.response');
 
+goog.require('org.jboss.search.Constants');
+
 goog.require('goog.date.UtcDateTime');
 goog.require('goog.object');
 goog.require('goog.string');
@@ -40,22 +42,35 @@ org.jboss.search.response.normalize = function(response, query) {
 
     var output = {};
 
-    output['user_query'] = goog.isDefAndNotNull(query) ? query : "";
-
-    if (goog.object.containsKey(response,'hits')) {
-        output['hits'] = response['hits'];
-//        output['hits']['hits'] = org.jboss.search.response.getDummyHits();
-    }
+    output.user_query = goog.isDefAndNotNull(query) ? query : "";
 
     if (goog.object.containsKey(response,'timed_out')) {
-        output['timed_out'] = response['timed_out'];
+        output.timed_out = response.timed_out;
+    }
+
+    if (goog.object.containsKey(response,'hits')) {
+        output.hits = response.hits;
+//        output['hits']['hits'] = org.jboss.search.response.getDummyHits();
+    } else {
+        output.hits = [];
+    }
+
+    output.hits.pagination = [];
+    var total = /** @type {Number} */ (goog.object.getValueByKeys(output, ["hits", "total"]));
+    if (goog.isNumber(total) && total > 0) {
+        var hitsPerPage = org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE;
+        var maxItems = org.jboss.search.Constants.PAGINATION_MAX_ITEMS_COUNT;
+        for (var i_ = 0; (((i_+1)*hitsPerPage) <= total && (i_ < maxItems)); i_++) {
+            output.hits.pagination[i_] = (i_+ 1);
+        }
     }
 
     var hits = /** @type {Array} */ (goog.object.getValueByKeys(output, ["hits", "hits"]));
     if (goog.isDefAndNotNull(hits)) {
+
         goog.array.forEach(hits, function(hit){
 
-            var fields = hit['fields'];
+            var fields = hit.fields;
 
             // Contributors
             if (goog.object.containsKey(fields,'dcp_contributors')) {

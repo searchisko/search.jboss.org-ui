@@ -21,7 +21,17 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_ignored)
     var hitData8 = hitList8[hitIndex8];
     output += org.jboss.search.page.templates.hit(hitData8) + '<div class="hit_spacer"></div>';
   }
-  output += '<div class="pagination"><span>&#9668;</span><span> 3</span><span> 4</span><span> 5</span><span> 6</span><span> 7</span><span> 8</span><span> 9</span><span> 10</span><span> 11</span><span> &#9654;</span></div>';
+  output += '<div class="pagination">';
+  var pList13 = opt_data.hits.pagination;
+  var pListLen13 = pList13.length;
+  if (pListLen13 > 0) {
+    for (var pIndex13 = 0; pIndex13 < pListLen13; pIndex13++) {
+      var pData13 = pList13[pIndex13];
+      output += ((pIndex13 == 0 && pData13 > 1) ? '<span>&#9668;</span>' : '') + '<span> ' + soy.$$escapeHtml(pData13) + '</span>' + ((pIndex13 == pListLen13 - 1 && opt_data.hits.pagination.length == 10) ? '<span> &#9654;</span>' : '');
+    }
+  } else {
+  }
+  output += '</div>';
   return output;
 };
 
@@ -33,5 +43,17 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_ignored)
  * @notypecheck
  */
 org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
-  return '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(opt_data.fields.contributor_gravatar != null ? opt_data.fields.contributor_gravatar : 'image/test/generic.png') + '"></p></div><div class="main"><div class="title"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_title) + '</a></div><div class="link"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date) + ' - </span>' + soy.$$escapeHtml(opt_data.fields.dcp_description_tr) + '</div>' + ((opt_data.fields.dcp_project != null) ? '<div class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project) + '</div>' : '') + ((opt_data.fields.dcp_type != null) ? '<div class="dcp_type">' + soy.$$escapeHtml(opt_data.fields.dcp_type) + '</div>' : '') + '</div></div>';
+  var output = '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(opt_data.fields.contributor_gravatar != null ? opt_data.fields.contributor_gravatar : 'image/test/generic.png') + '"></p></div><div class="main">' + ((opt_data.highlight.dcp_title != null) ? '<div class="title"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$filterNoAutoescape(opt_data.highlight.dcp_title) + '</a></div>' : '<div class="title"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_title) + '</a></div>') + '<div class="link"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date) + ' - </span>' + ((opt_data.highlight.dcp_description != null) ? soy.$$filterNoAutoescape(opt_data.highlight.dcp_description) : (opt_data.fields.dcp_description_tr != null) ? soy.$$filterNoAutoescape(opt_data.fields.dcp_description_tr) : 'No description available &hellip;');
+  if (opt_data.highlight.comment_body != null) {
+    output += '<div class="children comments">Comments:<ul>';
+    var commentList63 = opt_data.highlight.comment_body;
+    var commentListLen63 = commentList63.length;
+    for (var commentIndex63 = 0; commentIndex63 < commentListLen63; commentIndex63++) {
+      var commentData63 = commentList63[commentIndex63];
+      output += '<li>' + soy.$$filterNoAutoescape(commentData63) + '&nbsp;&hellip;</li>';
+    }
+    output += '</ul></div>';
+  }
+  output += '</div>' + ((opt_data.fields.dcp_project != null) ? '<div class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project) + ((opt_data.fields.dcp_project != null && opt_data.fields.dcp_type != null) ? ' / ' : '') + '</div>' : '') + ((opt_data.fields.dcp_type != null) ? '<div class="dcp_type">' + soy.$$escapeHtml(opt_data.fields.dcp_type) + '</div>' : '') + '</div></div>';
+  return output;
 };

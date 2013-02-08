@@ -46,6 +46,10 @@
     opacity: 0.2;
 }
 
+#search_results .hlt {
+    font-weight: bold;
+}
+
 .statistics {
     margin: 20px 0 20px 60px;
     color: gray;
@@ -70,6 +74,15 @@
 
 .hit > .main {
     margin-left: 60px;
+}
+
+.hit > .main * {
+    word-wrap: break-word; /* force to break long string (like URLs) */
+    /* see http://www.impressivewebs.com/new-css3-text-wrap/ */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
 }
 
 .hit_spacer {
@@ -139,15 +152,29 @@
 }
 
 .hit > .main > .dcp_project {
-    /* TBD */
-}
-
-.hit > .main > .dcp_project:after {
-    content: ' /';
+    float: left;
 }
 
 .hit > .main > .dcp_type {
-    /* TBD */
+    float: left;
+}
+
+.hit > .main > .dcp_type:after {
+    content: '';
+    clear: left;
+}
+
+.snippet > div.children {
+    font-size: 80%;
+}
+
+.snippet > div.children > ul > li:before {
+    content: "- ";
+}
+
+.snippet > div.children > ul > li {
+    padding-left: 10px;
+    font-size: inherit;
 }
 
 .pagination {

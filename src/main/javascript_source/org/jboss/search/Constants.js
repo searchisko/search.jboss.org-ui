@@ -26,6 +26,20 @@ goog.provide('org.jboss.search.Constants');
 org.jboss.search.Constants = {
 
     /**
+     * Number of search results per page (is also used for pagination navigation calculations).
+     * @type {number}
+     * @const
+     */
+    SEARCH_RESULTS_PER_PAGE: 10,
+
+    /**
+     * When pagination navigation is generated then it has up to 'PAGINATION_MAX_ITEMS_COUNT' items.
+     * @type {number}
+     * @const
+     */
+    PAGINATION_MAX_ITEMS_COUNT: 10,
+
+    /**
      * HTTP GET request type.
      * @type {string}
      * @const
