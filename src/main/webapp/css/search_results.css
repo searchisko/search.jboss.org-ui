@@ -141,6 +141,15 @@
     margin-bottom: 4px;
 }
 
+.hit > .main > .contributors_list {
+    margin: 4px 0 0 0;
+}
+
+.hit > .main > .contributors_list img {
+    margin: 0 4px 0 0;
+    opacity: 0.3;
+}
+
 .hit > .main > .snippet {
     font-size: 12px;
     /*letter-spacing: 0.02em;*/
@@ -151,18 +160,18 @@
     color: rgb(92, 116, 122);
 }
 
-.hit > .main > .dcp_project {
-    float: left;
+.hit > .main > .snippet > .dcp_project {
+    /*float: left;*/
 }
 
-.hit > .main > .dcp_type {
-    float: left;
+.hit > .main > .snippet > .dcp_type {
+    /*float: left;*/
 }
 
-.hit > .main > .dcp_type:after {
-    content: '';
-    clear: left;
-}
+/*.hit > .main > .dcp_type:after {*/
+    /*content: '';*/
+    /*clear: left;*/
+/*}*/
 
 .snippet > div.children {
     font-size: 80%;

@@ -74,38 +74,49 @@ org.jboss.search.response.normalize = function(response, query) {
 
             // Contributors
             if (goog.object.containsKey(fields,'dcp_contributors')) {
-                var conts = fields['dcp_contributors'];
+                var conts = fields.dcp_contributors;
                 if (goog.isDef(conts)) {
-                    var cont = ((goog.isArray(conts) && conts.length > 0) ? conts[0] : conts).valueOf();
-                    if (goog.isDef(cont)) {
-                        fields['contributor_gravatar'] = org.jboss.search.response.gravatarURI(cont).valueOf();
+                    var cont_;
+                    if (goog.isArray(conts)) {
+                        cont_ = conts;
+                    } else {
+                        cont_ = [conts.valueOf()];
                     }
+                    fields.dcp_contributors_view = [];
+
+                    goog.array.forEach(cont_,function(c){
+                        // TODO optimize the code (parse email just once, and call Memo just once!)
+                        var name = org.jboss.search.response.extractNameFromMail(c).valueOf();
+                        var gravatarURL20 = org.jboss.search.response.gravatarURI_Memo(c,16).valueOf();
+                        var gravatarURL40 = org.jboss.search.response.gravatarURI_Memo(c,40).valueOf();
+                        fields.dcp_contributors_view.push({'name': name, 'gURL20': gravatarURL20, 'gURL40': gravatarURL40});
+                    });
                 }
             }
 
             // URL truncate
             if (goog.object.containsKey(fields,'dcp_url_view')) {
-                var url = fields['dcp_url_view'];
+                var url = fields.dcp_url_view;
                 if (goog.isDef(url)) {
                     var url_tr = goog.string.truncateMiddle(url, 60, true);
-                    fields['dcp_url_view_tr'] = url_tr;
+                    fields.dcp_url_view_tr = url_tr;
                 }
             }
 
             // Description truncate
             if (goog.object.containsKey(fields,'dcp_description')) {
-                var desc = fields['dcp_description'];
+                var desc = fields.dcp_description;
                 if (goog.isDef(desc)) {
                     // ideal length of line 60
                     // max 3 lines = 180
                     var desc_tr = goog.string.truncate(desc, 180, true);
-                    fields['dcp_description_tr'] = desc_tr;
+                    fields.dcp_description_tr = desc_tr;
                 }
             }
 
             // Date
             if (goog.object.containsKey(fields,'dcp_last_activity_date')) {
-                var d_ = fields['dcp_last_activity_date'];
+                var d_ = fields.dcp_last_activity_date;
                 var date = goog.date.UtcDateTime.fromIsoString(d_);
 //                console.log(d_, date, date.getFullYear(), date.getMonth(), date.getDay());
             }
@@ -209,22 +220,35 @@ org.jboss.search.response.getDummyHits = function() {
 org.jboss.search.response.md5 = new goog.crypt.Md5();
 
 /**
+ * Try to extract name from email address. If not possible return original email value.
+ * @param {string} email
+ * @return {string}
+ */
+org.jboss.search.response.extractNameFromMail = function(email) {
+    var email_ = goog.isDefAndNotNull(email) ? email : "";
+    var parsed = goog.format.EmailAddress.parse(email_);
+    var e = parsed.getName();
+    if (goog.string.isEmptySafe(e)) {
+        return parsed.getAddress();
+    } else {
+        return e;
+    }
+};
+
+/**
  * Implements Gravatar HASH function.
  * {@see https://en.gravatar.com/site/implement/hash/}
  * @param {string} email
  * @return {string}
  */
 org.jboss.search.response.gravatarEmailHash = function(email) {
-
     var email_ = goog.isDefAndNotNull(email) ? email : "";
     if (goog.isFunction(email.toLowerCase)) { email_ = email_.toLowerCase() }
     var e = goog.format.EmailAddress.parse(email_).getAddress();
-
     var md5 = org.jboss.search.response.md5;
     md5.reset();
     md5.update(e);
     e = goog.crypt.byteArrayToHex(md5.digest());
-
     return e;
 };
 

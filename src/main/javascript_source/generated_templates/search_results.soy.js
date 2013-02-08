@@ -43,17 +43,28 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_ignored)
  * @notypecheck
  */
 org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
-  var output = '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(opt_data.fields.contributor_gravatar != null ? opt_data.fields.contributor_gravatar : 'image/test/generic.png') + '"></p></div><div class="main">' + ((opt_data.highlight.dcp_title != null) ? '<div class="title"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$filterNoAutoescape(opt_data.highlight.dcp_title) + '</a></div>' : '<div class="title"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_title) + '</a></div>') + '<div class="link"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date) + ' - </span>' + ((opt_data.highlight.dcp_description != null) ? soy.$$filterNoAutoescape(opt_data.highlight.dcp_description) : (opt_data.fields.dcp_description_tr != null) ? soy.$$filterNoAutoescape(opt_data.fields.dcp_description_tr) : 'No description available &hellip;');
+  var output = '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(((opt_data.fields.dcp_contributors_view == null) ? null : (opt_data.fields.dcp_contributors_view[0] == null) ? null : opt_data.fields.dcp_contributors_view[0].gURL40) != null ? ((opt_data.fields.dcp_contributors_view == null) ? null : (opt_data.fields.dcp_contributors_view[0] == null) ? null : opt_data.fields.dcp_contributors_view[0].gURL40) : 'image/test/generic.png') + '"></p></div><div class="main">' + ((opt_data.highlight.dcp_title != null) ? '<div class="title"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$filterNoAutoescape(opt_data.highlight.dcp_title) + '</a></div>' : '<div class="title"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_title) + '</a></div>') + '<div class="link"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date) + ' - </span>' + ((opt_data.fields.dcp_project != null) ? '<span class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project) + ((opt_data.fields.dcp_project != null && opt_data.fields.dcp_type != null) ? ' / ' : '') + '</span>' : '') + ((opt_data.fields.dcp_type != null) ? '<span class="dcp_type">' + soy.$$escapeHtml(opt_data.fields.dcp_type) + '</span>' : '') + '<div>' + ((opt_data.highlight.dcp_description != null) ? soy.$$filterNoAutoescape(opt_data.highlight.dcp_description) : (opt_data.fields.dcp_description_tr != null) ? soy.$$filterNoAutoescape(opt_data.fields.dcp_description_tr) : 'No description available &hellip;') + '</div>';
   if (opt_data.highlight.comment_body != null) {
     output += '<div class="children comments">Comments:<ul>';
-    var commentList63 = opt_data.highlight.comment_body;
-    var commentListLen63 = commentList63.length;
-    for (var commentIndex63 = 0; commentIndex63 < commentListLen63; commentIndex63++) {
-      var commentData63 = commentList63[commentIndex63];
-      output += '<li>' + soy.$$filterNoAutoescape(commentData63) + '&nbsp;&hellip;</li>';
+    var commentList78 = opt_data.highlight.comment_body;
+    var commentListLen78 = commentList78.length;
+    for (var commentIndex78 = 0; commentIndex78 < commentListLen78; commentIndex78++) {
+      var commentData78 = commentList78[commentIndex78];
+      output += '<li>' + soy.$$filterNoAutoescape(commentData78) + '&nbsp;&hellip;</li>';
     }
     output += '</ul></div>';
   }
-  output += '</div>' + ((opt_data.fields.dcp_project != null) ? '<div class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project) + ((opt_data.fields.dcp_project != null && opt_data.fields.dcp_type != null) ? ' / ' : '') + '</div>' : '') + ((opt_data.fields.dcp_type != null) ? '<div class="dcp_type">' + soy.$$escapeHtml(opt_data.fields.dcp_type) + '</div>' : '') + '</div></div>';
+  output += '</div>';
+  if (opt_data.fields.dcp_contributors_view != null) {
+    output += '<div class="contributors_list">';
+    var cList89 = opt_data.fields.dcp_contributors_view;
+    var cListLen89 = cList89.length;
+    for (var cIndex89 = 0; cIndex89 < cListLen89; cIndex89++) {
+      var cData89 = cList89[cIndex89];
+      output += '<span><img src="' + soy.$$escapeHtml(cData89.gURL20) + '"></spam>';
+    }
+    output += '</div>';
+  }
+  output += '</div></div>';
   return output;
 };

@@ -43,7 +43,11 @@ var testGravatarEmailHash = function() {
     assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.search.response.gravatarEmailHash('lkrzyzan@redhat.com'));
     assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.search.response.gravatarEmailHash('  <lkrzyzan@redhat.com>'));
     assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.search.response.gravatarEmailHash('Libor Krzyzanek <lkrzyzan@redhat.com>'));
+};
 
+var testExtractNameFromEmail = function() {
+    assertEquals('', 'Libor Krzyzanek', org.jboss.search.response.extractNameFromMail('Libor Krzyzanek <lkrzyzan@redhat.com>'));
+    assertEquals('', 'lkrzyzan@redhat.com', org.jboss.search.response.extractNameFromMail('<lkrzyzan@redhat.com>'));
 };
 
 var testGravatarURI = function() {

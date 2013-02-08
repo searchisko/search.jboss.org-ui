@@ -39,7 +39,7 @@
         <div class="hit">
             <div class="left">
                 <p class="avatar">
-                    <img src="{$fields.contributor_gravatar ?: 'image/test/generic.png'}">
+                    <img src="{$fields.dcp_contributors_view?[0]?.gURL40 ?: 'image/test/generic.png'}">
                 </p>
             </div>
             <div class="main">
@@ -51,13 +51,23 @@
                 <div class="link"><a href="{$fields.dcp_url_view}">{$fields.dcp_url_view_tr}</a></div>
                 <div class="snippet">
                     <span class="date">{$fields.dcp_last_activity_date} - </span>
-                    {if isNonnull($highlight.dcp_description)}
-                        {$highlight.dcp_description|noAutoescape}
-                    {elseif isNonnull($fields.dcp_description_tr)}
-                        {$fields.dcp_description_tr|noAutoescape}
-                    {else}
-                        No description available &hellip;
+                    {if isNonnull($fields.dcp_project)}
+                        <span class="dcp_project">{$fields.dcp_project}
+                        {if (isNonnull($fields.dcp_project) and isNonnull($fields.dcp_type))} / {/if}
+                        </span>
                     {/if}
+                    {if isNonnull($fields.dcp_type)}
+                        <span class="dcp_type">{$fields.dcp_type}</span>
+                    {/if}
+                    <div>
+                        {if isNonnull($highlight.dcp_description)}
+                            {$highlight.dcp_description|noAutoescape}
+                        {elseif isNonnull($fields.dcp_description_tr)}
+                            {$fields.dcp_description_tr|noAutoescape}
+                        {else}
+                            No description available &hellip;
+                        {/if}
+                    </div>
                     {if isNonnull($highlight.comment_body)}
                         <div class="children comments">
                         Comments:<ul>
@@ -68,13 +78,12 @@
                         </div>
                     {/if}
                 </div>
-                {if isNonnull($fields.dcp_project)}
-                    <div class="dcp_project">{$fields.dcp_project}
-                    {if (isNonnull($fields.dcp_project) and isNonnull($fields.dcp_type))} / {/if}
-                    </div>
-                {/if}
-                {if isNonnull($fields.dcp_type)}
-                    <div class="dcp_type">{$fields.dcp_type}</div>
+                {if isNonnull($fields.dcp_contributors_view)}
+                <div class="contributors_list">
+                    {foreach $c in $fields.dcp_contributors_view}
+                    <span><img src="{$c.gURL20}"></spam>
+                    {/foreach}
+                </div>
                 {/if}
             </div>
         </div>
