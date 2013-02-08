@@ -14,7 +14,7 @@ The implementation is based on the following technologies:
 - Closure compiler
 - Closure library
 - Closure templates (aka Soy templates)
-- jQuery (mostly because it is required by third-party JS libraries)
+- D3.js visualization library
 - jsTestDriver
 
 The following sections explain how the dev-stack is setup and how you can build the project for _production_ or during _development_ (having fast way how to test javascript code in browser or manually is always good without need to compile whole code).
@@ -61,7 +61,7 @@ load:
 To get updated list of required Closure library code for the `jsTestDriver.conf` just execute the `printClosureDependencies.sh`.
 
 The script will print out list of JS scripts in correct order. Just copy and paste this list into `jsTestDriver.conf` into _load:_ section. If you are using other third-party js libraries
-(like jQuery for instance) then make sure you add them manually.
+(like D3.js for instance) then make sure you add them manually.
 
 #### Testing Manually in Browser
 

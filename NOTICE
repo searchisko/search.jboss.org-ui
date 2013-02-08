@@ -16,10 +16,10 @@
      https://code.google.com/p/closure-templates/
      License: Apache License 2.0
 
-   - jQuery 1.7.1
-     http://jquery.com
-     License: MIT, http://jquery.org/license/
-
    - Eric Meyer's Reset CSS v2.0
      http://meyerweb.com/eric/tools/css/reset/
      License: none (public domain)
+
+   - D3.js v3.0.4
+     http://d3js.org
+     License: BSD (http://opensource.org/licenses/BSD-3-Clause)
