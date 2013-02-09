@@ -47,6 +47,8 @@ SearchHit.prototype.fields.dcp_contributors;
 SearchHit.prototype.fields.dcp_title;
 SearchHit.prototype.fields.dcp_url_view;
 SearchHit.prototype.fields.dcp_last_activity_date;
+SearchHit.prototype.fields.dcp_project;
+SearchHit.prototype.fields.dcp_type;
 SearchHit.prototype.fields.dcp_description;
 // added by normalize.js
 SearchHit.prototype.fields.dcp_url_view_tr;
