@@ -142,12 +142,17 @@
 }
 
 .hit > .main > .contributors_list {
-    margin: 4px 0 0 0;
+    margin: 8px 0 0 0;
 }
 
 .hit > .main > .contributors_list img {
-    margin: 0 4px 0 0;
+    margin: 0 5px 0 0;
     opacity: 0.3;
+}
+
+.hit > .main > .contributors_list .selected_contributor_name {
+    font-size: 14px;
+    vertical-align: top;
 }
 
 .hit > .main > .snippet {
@@ -158,6 +163,10 @@
 
 .hit > .main > .snippet > .date {
     color: rgb(92, 116, 122);
+}
+
+.hit > .main > .snippet > .description {
+    padding: 6px 0 0 0;
 }
 
 .hit > .main > .snippet > .dcp_project {
