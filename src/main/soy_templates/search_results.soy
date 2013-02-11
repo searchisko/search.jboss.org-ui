@@ -34,7 +34,7 @@
  * @param fields
  * @param highlight
  */
-{template .hit}
+{template .hit private="true"}
 
         <div class="hit">
             <div class="left">
@@ -43,7 +43,7 @@
                 </p>
             </div>
             <div class="main">
-                {if isNonnull($highlight.dcp_title)}
+                {if isNonnull($highlight?.dcp_title)}
                     <div class="title"><a href="{$fields.dcp_url_view}">{$highlight.dcp_title|noAutoescape}</a></div>
                 {else}
                     <div class="title"><a href="{$fields.dcp_url_view}">{$fields.dcp_title}</a></div>
@@ -51,24 +51,24 @@
                 <div class="link"><a href="{$fields.dcp_url_view}">{$fields.dcp_url_view_tr}</a></div>
                 <div class="snippet">
                     <span class="date">{$fields.dcp_last_activity_date} - </span>
-                    {if isNonnull($fields.dcp_project)}
+                    {if isNonnull($fields?.dcp_project)}
                         <span class="dcp_project">{$fields.dcp_project}
-                        {if (isNonnull($fields.dcp_project) and isNonnull($fields.dcp_type))} / {/if}
+                        {if (isNonnull($fields?.dcp_project) and isNonnull($fields?.dcp_type))} / {/if}
                         </span>
                     {/if}
-                    {if isNonnull($fields.dcp_type)}
+                    {if isNonnull($fields?.dcp_type)}
                         <span class="dcp_type">{$fields.dcp_type}</span>
                     {/if}
-                    {if (isNonnull($highlight.dcp_description) or isNonnull($fields.dcp_description_tr))}
+                    {if (isNonnull($highlight?.dcp_description) or isNonnull($fields?.dcp_description_tr))}
                         <div class="description">
-                            {if isNonnull($highlight.dcp_description)}
+                            {if isNonnull($highlight?.dcp_description)}
                                 {$highlight.dcp_description|noAutoescape}
-                            {elseif isNonnull($fields.dcp_description_tr)}
+                            {elseif isNonnull($fields?.dcp_description_tr)}
                                 {$fields.dcp_description_tr|noAutoescape}
                             {/if}
                         </div>
                     {/if}
-                    {if isNonnull($highlight.comment_body)}
+                    {if isNonnull($highlight?.comment_body)}
                         <div class="children comments">
                         Comments:<ul>
                         {foreach $comment in $highlight.comment_body}
@@ -78,15 +78,15 @@
                         </div>
                     {/if}
                 </div>
-                {if isNonnull($fields.dcp_contributors_view)}
-                <div class="contributors_list">
-                    {foreach $c in $fields.dcp_contributors_view}
-                        <span><img src="{$c.gURL20}"></spam>
-                    {/foreach}
-                    {if $fields.dcp_contributors_view.length > 0}
-                        <span class="selected_contributor_name">~ {$fields.dcp_contributors_view[0].name}</span>
-                    {/if}
-                </div>
+                {if isNonnull($fields?.dcp_contributors_view)}
+                    <div class="contributors_list">
+                        {foreach $c in $fields.dcp_contributors_view}
+                            <span><img src="{$c.gURL20}"></spam>
+                        {/foreach}
+                        {if $fields?.dcp_contributors_view.length > 0}
+                            <span class="selected_contributor_name">~ {$fields.dcp_contributors_view[0].name}</span>
+                        {/if}
+                    </div>
                 {/if}
             </div>
         </div>
