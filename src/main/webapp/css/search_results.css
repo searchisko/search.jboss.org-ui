@@ -186,22 +186,12 @@
     /*float: left;*/
 }
 
-/*.hit > .main > .dcp_type:after {*/
-    /*content: '';*/
-    /*clear: left;*/
-/*}*/
-
 .snippet > div.children {
     margin-top: 4px;
     font-size: 80%;
 }
 
-/*.snippet > div.children > ul {*/
-    /*overflow: visible;*/
-/*}*/
-
 .snippet > div.children > ul > li {
-    /*padding-left: 10px;*/
     margin: 2px 0 2px 0;
 
     font-size: inherit;
