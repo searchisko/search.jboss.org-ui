@@ -104,13 +104,18 @@ org.jboss.search.Constants = {
     API_URL_SUGGESTIONS_QUERY: "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string",
 
     /**
-     * Temporary: URL of Apiary Mock Server
      * @see http://docs.jbossorg.apiary.io/#searchapi
      * @type {string}
      * @const
      */
-//    API_URL_SEARCH_QUERY: "http://private-5ebf-jbossorg.apiary.io/v1/rest/search",
-    API_URL_SEARCH_QUERY: "https://dcp-jbossorgdev.rhcloud.com/v1/rest/search",
+    API_URL_SEARCH_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search'].join(''),
+
+    /**
+     * @see http://docs.jbossorg.apiary.io/#managementapi%20-%20projects
+     * @type {string}
+     * @const
+     */
+    API_URL_PROJECT_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/project'].join(''),
 
     /**
      * Interval in ms. When user has been idle for this time then we can fire some 'entertaining' action.
