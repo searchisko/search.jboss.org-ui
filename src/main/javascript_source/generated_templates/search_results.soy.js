@@ -61,9 +61,9 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
     var cListLen89 = cList89.length;
     for (var cIndex89 = 0; cIndex89 < cListLen89; cIndex89++) {
       var cData89 = cList89[cIndex89];
-      output += '<span><img src="' + soy.$$escapeHtml(cData89.gURL20) + '"></spam>';
+      output += '<span><img src="' + soy.$$escapeHtml(cData89.gURL20) + '"></span>';
     }
-    output += ((((opt_data.fields == null) ? null : opt_data.fields.dcp_contributors_view.length) > 0) ? '<span class="selected_contributor_name">~ ' + soy.$$escapeHtml(opt_data.fields.dcp_contributors_view[0].name) + '</span>' : '') + '</div>';
+    output += ((((opt_data.fields == null) ? null : opt_data.fields.dcp_contributors_view.length) > 0) ? '<span class="selected_contributor_name">&#8212;&nbsp;<span class="value">' + soy.$$escapeHtml(opt_data.fields.dcp_contributors_view[0].name) + '</span></span>' : '') + '</div>';
   }
   output += '</div></div>';
   return output;
