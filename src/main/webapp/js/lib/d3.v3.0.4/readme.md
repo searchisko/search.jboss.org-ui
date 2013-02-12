@@ -1,8 +1,9 @@
-# D3.js Resources
+# D3.js Online Resources
 
 ## Web
 
-- Home page, Data-Driven Documents <http://d3js.org>
+- Home page, Data-Driven Documents, <http://d3js.org>
+- API Reference, <https://github.com/mbostock/d3/wiki/API-Reference>
 
 ## Books
 
