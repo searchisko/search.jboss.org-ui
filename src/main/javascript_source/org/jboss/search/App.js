@@ -18,12 +18,14 @@
 
 goog.provide('org.jboss.search.App');
 
+goog.require('org.jboss.search.list.project.Project');
 goog.require('org.jboss.search.page.element.Status');
 goog.require('org.jboss.search.page.SearchPage');
 goog.require('org.jboss.search.util.FragmentParser');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.Constants');
 
+goog.require('goog.async.Deferred');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.net.XhrManager');
@@ -31,6 +33,7 @@ goog.require('goog.net.XhrManager.Event');
 goog.require('goog.net.XhrManager.Request');
 goog.require('goog.Disposable');
 goog.require('goog.History');
+goog.require('goog.Uri');
 
 goog.require('goog.debug.Logger');
 
@@ -93,7 +96,7 @@ org.jboss.search.App = function() {
 
     var search_results_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('search_results'));
 
-    status.setProgressValue(0.3);
+    status.setProgressValue(0.5);
 
     // ================================================================
     // Define internal variables and objects
@@ -120,7 +123,7 @@ org.jboss.search.App = function() {
         history.setToken("q=" + goog.string.urlEncode(query_string));
     };
 
-    status.setProgressValue(0.6);
+    status.setProgressValue(0.8);
 
     var searchPageElements = new org.jboss.search.page.SearchPageElements(
         query_field, spinner_div, clear_query_div, query_suggestions_div,
@@ -141,8 +144,6 @@ org.jboss.search.App = function() {
         searchPageElements
     );
 
-    status.setProgressValue(0.9);
-
     // navigation controller
     var navigationController = function (e) {
         // e.isNavigate (true if value in browser address bar is changed manually)
@@ -157,7 +158,34 @@ org.jboss.search.App = function() {
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
     history.setEnabled(true);
 
-    status.setProgressValue(1);
+    var deferred = new goog.async.Deferred();
+    var projectList = new org.jboss.search.list.project.Project(deferred);
+    deferred.addCallback(function(){
+        status.setProgressValue(1);
+    }).addCallback(function(){
+        setTimeout(function(){
+            status.hide();
+            status.setProgressValue(0);
+        },200);
+    });
+
+    // load project list
+    xhrManager.send(
+        org.jboss.search.Constants.LOAD_PROJECT_LIST_REQUEST_ID,
+        goog.Uri.parse(org.jboss.search.Constants.API_URL_PROJECT_QUERY).toString(),
+        org.jboss.search.Constants.GET,
+        "", // post_data
+        {}, // headers_map
+        org.jboss.search.Constants.LOAD_LIST_PRIORITY,
+        // callback, The only param is the event object from the COMPLETE event.
+        function(e) {
+            var event = /** @type goog.net.XhrManager.Event */ (e);
+            var response = event.target.getResponseJson();
+            deferred.callback(response);
+        }
+    );
+
+
     // TODO experiment
     this.finish_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, function(){
         goog.dom.classes.add(spinner_div, const_.HIDDEN);
@@ -167,8 +195,6 @@ org.jboss.search.App = function() {
         goog.dom.classes.remove(spinner_div, const_.HIDDEN);
     });
 
-    status.hide();
-    status.setProgressValue(0);
 };
 goog.inherits(org.jboss.search.App, goog.Disposable);
 

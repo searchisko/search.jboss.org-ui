@@ -61,6 +61,20 @@ org.jboss.search.Constants = {
     SEARCH_QUERY_REQUEST_ID: "2",
 
     /**
+     * Used as an identified to abort or/and send the query search request.
+     * @type {string}
+     * @const
+     */
+    LOAD_PROJECT_LIST_REQUEST_ID: "3",
+
+    /**
+     * Priority of initialization.
+     * @type {number}
+     * @const
+     */
+    LOAD_LIST_PRIORITY: 5,
+
+    /**
      * Priority of search suggestions requests. (It should be higher then query search requests.)
      * @type {number}
      * @const
