@@ -25,6 +25,7 @@
 goog.provide('org.jboss.search.list.project.Project');
 
 goog.require('goog.object');
+goog.require('goog.array');
 goog.require('goog.async.Deferred');
 
 /**
@@ -52,24 +53,33 @@ org.jboss.search.list.project.Project = function(deferred, opt_canceller, opt_de
      */
     this.map = {};
 
-    // when deferred has the results, keep them in map and let the callee know.
+    // when deferred has the results, parse them, keep them in the map and let the callee know.
     this.deferred_.addCallback(function(data){
-        this.map = data;
+        this.map = this.parseProjectData(data);
         this.callback();
     }, this);
 };
 goog.inherits(org.jboss.search.list.project.Project, goog.async.Deferred);
 
 /**
- * Return Project DCP ID for given DCP Project Name.
- * @param {!string} dcpProjectName
- * @return {string|null}
+ * Knows how to parse response from http://docs.jbossorg.apiary.io/#managementapi%20-%20projects
+ * into simple map representation.
+ * @param {*} json
+ * @return {Object}
  */
-org.jboss.search.list.project.Project.prototype.getDcpId = function(dcpProjectName) {
-    if (goog.object.containsValue(this.map, dcpProjectName)) {
+org.jboss.search.list.project.Project.prototype.parseProjectData = function(json) {
+    var map_ = {};
+    if (goog.isDefAndNotNull(json.hits) && goog.isArray(json.hits)) {
 
+        goog.array.forEach(json.hits, function(item){
+            var id_ = item['id'];
+            var name_ = item['data']['name'];
+            if (goog.isDefAndNotNull(id_) && goog.isDefAndNotNull(name_)) {
+                map_[id_] = name_;
+            }
+        }, this);
     }
-    return "";
+    return map_
 };
 
 /**
