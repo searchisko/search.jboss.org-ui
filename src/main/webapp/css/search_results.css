@@ -91,7 +91,7 @@
 }
 
 .hit > .main > .title {
-    font-size: 16px;
+    font-size: 18px;
     /*text-decoration: underline;*/
     /*white-space: nowrap;*/
 
@@ -99,15 +99,21 @@
     color: rgb(40, 74, 128);
 
     /* experimental underline */
-    padding-bottom: 1px;
+    padding: 0 0 2px 0;
     /*padding-bottom: 2px;*/
     /*border-bottom: rgba(34, 56, 102, 0.45) solid 1px;*/
     display: inline-block;
+
+    position: relative;
+    top: -2px;
 }
 
 .hit > .main > .title > a {
+    font-family: "Georgia", "Times New Roman", Helvetica, Arial, sans-serif;
+    font-weight: normal;
     text-decoration: none;
     color: inherit;
+    line-height: 1.2;
 }
 
 /* project icons could be done this way? */
@@ -120,6 +126,12 @@
     display: inline-block;
 }
 */
+
+.hit > .main > .link {
+    /* leave a white space below the link */
+    margin: 0 0 4px 0;
+    vertical-align: top;
+}
 
 .hit > .main > .link > a {
     font-size: 11px;
@@ -134,11 +146,9 @@
     padding-bottom: 0px;
     border-bottom: rgba(105, 85, 43, 0.45) solid 1px;
     display: inline-block;
-}
 
-.hit > .main > .link {
-    /* leave a white space below the link */
-    margin-bottom: 4px;
+    position: relative;
+    top: -3px;
 }
 
 .hit > .main > .contributors_list {
@@ -151,12 +161,42 @@
 }
 
 .hit > .main > .contributors_list img {
-    opacity: 0.3;
     vertical-align: middle;
+    opacity: 0.3;
+
+    /* WebKit */
+    -webkit-transition-property: opacity;
+    -webkit-transition-duration: 0.1s;
+    -webkit-transition-timing-function: ease-out;
+
+    /* Opera 10.5+ */
+    -o-transition-property: opacity;
+    -o-transition-duration: 0.1s;
+    -o-transition-timing-function: ease-out;
+
+    /* Future */
+    transition-property: opacity;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-out;
 }
 
 .hit > .main > .contributors_list img:hover {
     opacity: 1;
+
+    /* WebKit */
+    -webkit-transition-property: opacity;
+    -webkit-transition-duration: 0.05s;
+    -webkit-transition-timing-function: ease-out;
+
+    /* Opera 10.5+ */
+    -o-transition-property: opacity;
+    -o-transition-duration: 0.05s;
+    -o-transition-timing-function: ease-out;
+
+    /* Future */
+    transition-property: opacity;
+    transition-duration: 0.05s;
+    transition-timing-function: ease-out;
 }
 
 .hit > .main > .contributors_list .selected_contributor_name {
@@ -192,15 +232,21 @@
 }
 
 .snippet > div.children > ul > li {
-    margin: 2px 0 2px 0;
+    margin: 3px 0 9px 0;
 
     font-size: inherit;
-    list-style-type: circle;
+    list-style-type: none;
 
-    background-image: url(../image/icons/icon_dot.gif);
-    background-repeat: no-repeat;
-    background-position: 5px 9px;
-    padding-left: 14px;
+    background-image: url(../image/comments.png);
+    background-repeat: repeat-y;
+    background-position: 7px;
+
+    padding-left: 21px;
+    line-height: 1.6;
+}
+
+.snippet > div.children > ul > li:last-child {
+    margin: 3px 0 6px 0;
 }
 
 .pagination {
