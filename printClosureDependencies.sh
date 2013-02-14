@@ -32,6 +32,8 @@
   --namespace="org.jboss.search.page.SearchPageElements" \
   --namespace="org.jboss.search.page.UserIdle" \
   \
+  --namespace="org.jboss.search.page.element.Status" \
+  \
   --namespace="org.jboss.search.response" \
   \
   --namespace="org.jboss.search.util.FragmentParser" \

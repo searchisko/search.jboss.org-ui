@@ -1,0 +1,80 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2012 Red Hat Inc. and/or its affiliates and other contributors
+ * as indicated by the @authors tag. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+    ======================================================================
+    Status window is displayed when the application is being loaded and
+    hasn't been fully initialized yet.
+    ======================================================================
+*/
+
+#status_window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+
+    width: 200px;
+    margin-left: -100px;
+
+    background-color: white;
+    color: black;
+
+    padding: 10px;
+    border: 1px solid rgb(198, 199, 199);
+
+    -moz-border-radius:  5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius:  5px;
+    -webkit-border-radius: 5px;
+    border-radius:  5px;
+    border-radius: 5px;
+
+    /*display: none;*/
+    display: block !important; /* will show the block once the CSS is loaded */
+}
+
+#status_window.hidden {
+    display: none !important;
+}
+
+#status_window .message {
+    text-align: center;
+}
+
+#status_window .progress_bar {
+    width: 0%;
+    background-color: rgb(198, 199, 199);
+    border: 0;
+    height: 5px;
+
+    /* WebKit */
+    -webkit-transition-property: width;
+    -webkit-transition-duration: 0.05s;
+    -webkit-transition-timing-function: linear;
+
+    /* Opera 10.5+ */
+    -o-transition-property: width;
+    -o-transition-duration: 0.05s;
+    -o-transition-timing-function: linear;
+
+    /* Future */
+    transition-property: width;
+    transition-duration: 0.05s;
+    transition-timing-function: linear;
+}

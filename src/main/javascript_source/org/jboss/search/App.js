@@ -18,6 +18,7 @@
 
 goog.provide('org.jboss.search.App');
 
+goog.require('org.jboss.search.page.element.Status');
 goog.require('org.jboss.search.page.SearchPage');
 goog.require('org.jboss.search.util.FragmentParser');
 goog.require('org.jboss.search.suggestions.event.EventType');
@@ -55,6 +56,11 @@ org.jboss.search.App = function() {
 
     goog.Disposable.call(this);
 
+    // init Status window (consider doing it earlier)
+    var status_window = /** @type {!HTMLDivElement} */ (goog.dom.getElement('status_window'))
+    var status = new org.jboss.search.page.element.Status(status_window);
+    status.show('Initialization...');
+
     var log = goog.debug.Logger.getLogger('org.jboss.search.App');
     log.info("Search App initialization...");
 
@@ -87,6 +93,8 @@ org.jboss.search.App = function() {
 
     var search_results_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('search_results'));
 
+    status.setProgressValue(0.3);
+
     // ================================================================
     // Define internal variables and objects
     // ================================================================
@@ -112,6 +120,8 @@ org.jboss.search.App = function() {
         history.setToken("q=" + goog.string.urlEncode(query_string));
     };
 
+    status.setProgressValue(0.6);
+
     var searchPageElements = new org.jboss.search.page.SearchPageElements(
         query_field, spinner_div, clear_query_div, query_suggestions_div,
         date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
@@ -131,6 +141,8 @@ org.jboss.search.App = function() {
         searchPageElements
     );
 
+    status.setProgressValue(0.9);
+
     // navigation controller
     var navigationController = function (e) {
         // e.isNavigate (true if value in browser address bar is changed manually)
@@ -145,6 +157,7 @@ org.jboss.search.App = function() {
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
     history.setEnabled(true);
 
+    status.setProgressValue(1);
     // TODO experiment
     this.finish_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, function(){
         goog.dom.classes.add(spinner_div, const_.HIDDEN);
@@ -153,6 +166,9 @@ org.jboss.search.App = function() {
     this.start_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_START, function(){
         goog.dom.classes.remove(spinner_div, const_.HIDDEN);
     });
+
+    status.hide();
+    status.setProgressValue(0);
 };
 goog.inherits(org.jboss.search.App, goog.Disposable);
 
