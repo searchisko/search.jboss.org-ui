@@ -102,13 +102,15 @@ org.jboss.search.list.project.Project.prototype.getMap = function() {
 
 /**
  * Return projects as an array.
+ * Returned array is sorted ascending by the 'name' value.
  * @return {!Array.<{name: string, code: string}>}
  */
 org.jboss.search.list.project.Project.prototype.getArray = function() {
-    /** @type {!Array.<{name: string, code: string}>} */ var result = [];
+    /** @type {!Array.<{name: string, code: string}>} */ var result = new Array();
     goog.object.forEach(this.map, function(value, key){
-        result.push({'name':value, 'code':key});
+        result.push({'name':value, 'code':key, 'sortBy': value.toLowerCase()});
     });
+    goog.array.sortObjectsByKey(result,'sortBy');
     return result;
 };
 
