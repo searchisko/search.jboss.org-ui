@@ -72,7 +72,8 @@ org.jboss.search.list.project.Project.prototype.parseProjectData = function(json
     if (goog.isDefAndNotNull(json.hits) && goog.isArray(json.hits)) {
 
         goog.array.forEach(json.hits, function(item){
-            var id_ = item['id'];
+            // TODO add more checks (item.data undefined?)
+            var id_ = item['data']['code'];
             var name_ = item['data']['name'];
             if (goog.isDefAndNotNull(id_) && goog.isDefAndNotNull(name_)) {
                 map_[id_] = name_;
