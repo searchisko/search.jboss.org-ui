@@ -1,0 +1,14 @@
+{namespace org.jboss.search.page.filter.templates}
+
+/**
+ * Search results DIV.
+ *
+ * @param items
+ */
+{template .project_filter_items}
+
+    {foreach $item in $items}
+        <div code='{$item.code}'>{$item.name}</div>
+    {/foreach}
+
+{/template}

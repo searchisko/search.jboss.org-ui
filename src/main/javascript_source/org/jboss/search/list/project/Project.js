@@ -93,7 +93,7 @@ org.jboss.search.list.project.Project.prototype.getDcpProjectName = function(dcp
 };
 
 /**
- * Return
+ * Return projects as a map.
  * @return {*}
  */
 org.jboss.search.list.project.Project.prototype.getMap = function() {
@@ -101,10 +101,11 @@ org.jboss.search.list.project.Project.prototype.getMap = function() {
 };
 
 /**
- * @return {!Array.<name: string, code: string>}
+ * Return projects as an array.
+ * @return {!Array.<{name: string, code: string}>}
  */
 org.jboss.search.list.project.Project.prototype.getArray = function() {
-    var result = /** @type {!Array.<name: string, code: string>} */ [];
+    /** @type {!Array.<{name: string, code: string}>} */ var result = [];
     goog.object.forEach(this.map, function(value, key){
         result.push({'name':value, 'code':key});
     });

@@ -97,20 +97,11 @@
     margin: 30px 30px 30px 30px;
 }
 
-#author_filter_items {
+.filter_items {
     margin-top: 18px;
 }
 
-#author_filter_items div {
-    margin-top: 6px;
-    margin-left: 10px;
-}
-
-#project_filter_items {
-    margin-top: 18px;
-}
-
-#project_filter_items div {
+.filter_items div {
     margin-top: 6px;
     margin-left: 10px;
 }

@@ -18,6 +18,7 @@
 
 goog.provide('org.jboss.search.App');
 
+goog.require('org.jboss.search.page.filter.ProjectFilter');
 goog.require('org.jboss.search.list.project.Project');
 goog.require('org.jboss.search.page.element.Status');
 goog.require('org.jboss.search.page.SearchPage');
@@ -154,6 +155,8 @@ org.jboss.search.App = function() {
         }
     };
 
+    var projectFilter;
+
     // activate URL History manager
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
     history.setEnabled(true);
@@ -165,7 +168,8 @@ org.jboss.search.App = function() {
             status.setProgressValue(1);
         })
         .addCallback(function(){
-            // TODO init project filter
+            projectFilter = new org.jboss.search.page.filter.ProjectFilter(searchPageElements.getProject_filter_body_div());
+            projectFilter.replaceItems(projectList.getArray());
         })
         .addCallback(function(){
             setTimeout(function(){

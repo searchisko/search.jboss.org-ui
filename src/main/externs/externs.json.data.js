@@ -60,3 +60,10 @@ SearchHit.prototype.fields.dcp_description_tr;
 
 SearchHit.prototype.highlight;
 SearchHit.prototype.highlight.comment_body;
+
+/**
+ * @interface */
+function filterItem() {};
+filterItem.items;
+filterItem.items.name;
+filterItem.items.code;
