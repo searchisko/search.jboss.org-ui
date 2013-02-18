@@ -99,9 +99,13 @@
 
 .filter_items {
     margin-top: 18px;
+    max-height: 300px;
+    overflow: auto;
+    border-top: 1px solid rgb(199, 199, 199);
+    border-bottom: 1px solid rgb(199, 199, 199);
 }
 
 .filter_items div {
-    margin-top: 6px;
+    line-height: 1.5;
     margin-left: 10px;
 }
