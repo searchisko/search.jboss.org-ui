@@ -160,14 +160,19 @@ org.jboss.search.App = function() {
 
     var deferred = new goog.async.Deferred();
     var projectList = new org.jboss.search.list.project.Project(deferred);
-    deferred.addCallback(function(){
-        status.setProgressValue(1);
-    }).addCallback(function(){
-        setTimeout(function(){
-            status.hide();
-            status.setProgressValue(0);
-        },200);
-    });
+    deferred
+        .addCallback(function(){
+            status.setProgressValue(1);
+        })
+        .addCallback(function(){
+            // TODO init project filter
+        })
+        .addCallback(function(){
+            setTimeout(function(){
+                status.hide();
+                status.setProgressValue(0);
+            },200);
+        });
 
     // load project list
     xhrManager.send(
