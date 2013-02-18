@@ -100,4 +100,15 @@ org.jboss.search.list.project.Project.prototype.getMap = function() {
     return this.map;
 };
 
+/**
+ * @return {!Array.<name: string, code: string>}
+ */
+org.jboss.search.list.project.Project.prototype.getArray = function() {
+    var result = /** @type {!Array.<name: string, code: string>} */ [];
+    goog.object.forEach(this.map, function(value, key){
+        result.push({'name':value, 'code':key});
+    });
+    return result;
+};
+
 

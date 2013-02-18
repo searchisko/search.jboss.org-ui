@@ -18,6 +18,7 @@
 
 goog.require('org.jboss.search.list.project.Project');
 
+goog.require('goog.array');
 goog.require('goog.json');
 goog.require('goog.async.Deferred');
 goog.require('goog.testing.ContinuationTestCase');
@@ -43,8 +44,23 @@ function testProject() {
 
     project
         .addCallback(function(){
-            // data available now, your logic goes here...
+
+            // data available now
             assertEquals('CDI', project.getDcpProjectName('cdi'));
+
+            // we can also get all the values as an array (used for initialization)
+            var array = project.getArray();
+            assertEquals(111, array.length);
+            assertTrue(
+                goog.array.some(array, function(element) {
+                    return (element.name == 'Aerogear' && element.code == 'aerogear') ? true : false;
+                })
+            );
+            assertTrue(
+                goog.array.some(array, function(element) {
+                    return (element.name == 'XNIO' && element.code == 'xnio') ? true : false;
+                })
+            );
         });
 
     setTimeout(function(){deferred.callback(json)}, 20);
