@@ -47,6 +47,7 @@ function testProject() {
 
             // data available now
             assertEquals('CDI', project.getDcpProjectName('cdi'));
+            assertEquals('jrunit does not have name', '', project.getDcpProjectName('jrunit'));
 
             // we can also get all the values as an array (used for initialization)
             var array = project.getArray();
@@ -59,6 +60,12 @@ function testProject() {
             assertTrue(
                 goog.array.some(array, function(element) {
                     return (element.name == 'XNIO' && element.code == 'xnio') ? true : false;
+                })
+            );
+            // when getArray() is used then entities with missing name value are sanitized
+            assertTrue(
+                goog.array.some(array, function(element) {
+                    return (element.name == 'jrunit' && element.code == 'jrunit') ? true : false;
                 })
             );
         });

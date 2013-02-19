@@ -24,6 +24,7 @@
 
 goog.provide('org.jboss.search.list.project.Project');
 
+goog.require('goog.string');
 goog.require('goog.object');
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
@@ -108,7 +109,8 @@ org.jboss.search.list.project.Project.prototype.getMap = function() {
 org.jboss.search.list.project.Project.prototype.getArray = function() {
     /** @type {!Array.<{name: string, code: string}>} */ var result = new Array();
     goog.object.forEach(this.map, function(value, key){
-        result.push({'name':value, 'code':key, 'sortBy': value.toLowerCase()});
+        var name = (goog.string.isEmptySafe(value) ? key : value);
+        result.push({'name':name, 'code':key, 'sortBy': name.toLowerCase()});
     });
     goog.array.sortObjectsByKey(result,'sortBy');
     return result;
