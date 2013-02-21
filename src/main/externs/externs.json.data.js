@@ -57,6 +57,7 @@ SearchHit.prototype.fields.dcp_contributors_view.name;
 SearchHit.prototype.fields.dcp_contributors_view.gURL20;
 SearchHit.prototype.fields.dcp_contributors_view.gURL40;
 SearchHit.prototype.fields.dcp_description_tr;
+SearchHit.prototype.fields.dcp_last_activity_date_parsed;
 
 SearchHit.prototype.highlight;
 SearchHit.prototype.highlight.comment_body;

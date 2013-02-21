@@ -17,14 +17,17 @@
  */
 
 /**
- * @fileoverview
+ * @fileoverview Static utilities to normalize raw DCP response to
+ * JSON that can be easily processed in Closure Template.
+ *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 goog.provide('org.jboss.search.response');
 
 goog.require('org.jboss.search.Constants');
 
-goog.require('goog.date.UtcDateTime');
+goog.require('goog.date');
+goog.require('goog.date.DateTime');
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('goog.format.EmailAddress');
@@ -114,11 +117,18 @@ org.jboss.search.response.normalize = function(response, query) {
                 }
             }
 
-            // Date
+            // Date parsing
             if (goog.object.containsKey(fields,'dcp_last_activity_date')) {
-                var d_ = fields.dcp_last_activity_date;
-                var date = goog.date.UtcDateTime.fromIsoString(d_);
-//                console.log(d_, date, date.getFullYear(), date.getMonth(), date.getDay());
+                try {
+                /** @type {goog.date.DateTime} */ var date = goog.date.fromIsoString(fields.dcp_last_activity_date);
+                fields.dcp_last_activity_date_parsed =
+                    [
+                        [date.getUTCFullYear(),date.getUTCMonth()+1,date.getUTCDate()].join('-'),
+                        date.toUsTimeString(false, true, true)
+                    ].join(', ');
+                } catch(e) {
+                    // date parsing probably failed
+                }
             }
 
         })

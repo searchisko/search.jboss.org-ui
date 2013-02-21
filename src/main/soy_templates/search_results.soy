@@ -50,7 +50,7 @@
                 {/if}
                 <div class="link"><a href="{$fields.dcp_url_view}">{$fields.dcp_url_view_tr}</a></div>
                 <div class="snippet">
-                    <span class="date">{$fields.dcp_last_activity_date} - </span>
+                    <span class="date">{$fields.dcp_last_activity_date_parsed} - </span>
                     {if isNonnull($fields?.dcp_project)}
                         <span class="dcp_project">{$fields.dcp_project}
                         {if (isNonnull($fields?.dcp_project) and isNonnull($fields?.dcp_type))} / {/if}
