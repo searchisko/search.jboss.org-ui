@@ -161,6 +161,7 @@
 }
 
 .hit > .main > .contributors_list img {
+    cursor: pointer;
     vertical-align: middle;
     opacity: 0.3;
 
