@@ -159,7 +159,6 @@ org.jboss.search.App = function() {
 
     // activate URL History manager
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
-    history.setEnabled(true);
 
     var deferred = new goog.async.Deferred();
     var projectList = new org.jboss.search.list.project.Project(deferred);
@@ -176,6 +175,10 @@ org.jboss.search.App = function() {
                 status.hide();
                 status.setProgressValue(0);
             },200);
+        })
+        .addCallback(function(){
+            // start history pooling loop after initialization of lists is finished
+            history.setEnabled(true);
         });
 
     // load project list
