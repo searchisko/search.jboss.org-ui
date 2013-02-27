@@ -52,7 +52,11 @@
                 <div class="snippet">
                     <span class="date">{$fields.dcp_last_activity_date_parsed} - </span>
                     {if isNonnull($fields?.dcp_project)}
-                        <span class="dcp_project">{$fields.dcp_project}
+                        {if isNonnull($fields?.dcp_project_full_name)}
+                            <span class="dcp_project">{$fields.dcp_project_full_name}
+                        {else}
+                            <span class="dcp_project">{$fields.dcp_project}
+                        {/if}
                         {if (isNonnull($fields?.dcp_project) and isNonnull($fields?.dcp_type))} / {/if}
                         </span>
                     {/if}

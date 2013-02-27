@@ -26,6 +26,7 @@ goog.provide('org.jboss.search.response');
 
 goog.require('org.jboss.search.Constants');
 
+goog.require('org.jboss.search.LookUp');
 goog.require('goog.date');
 goog.require('goog.date.DateTime');
 goog.require('goog.object');
@@ -71,6 +72,8 @@ org.jboss.search.response.normalize = function(response, query) {
     var hits = /** @type {Array} */ (goog.object.getValueByKeys(output, ["hits", "hits"]));
     if (goog.isDefAndNotNull(hits)) {
 
+        var projectMap = org.jboss.search.LookUp.getInstance().getProjectMap();
+
         goog.array.forEach(hits, function(hit){
 
             var fields = hit.fields;
@@ -95,6 +98,19 @@ org.jboss.search.response.normalize = function(response, query) {
                         fields.dcp_contributors_view.push({'name': name, 'gURL20': gravatarURL20, 'gURL40': gravatarURL40});
                     });
                 }
+            }
+
+            // project id -> project name translation
+            if (goog.object.containsKey(fields,'dcp_project')) {
+                var projectId = fields.dcp_project;
+                if (goog.object.containsKey(projectMap, projectId)){
+                    fields.dcp_project_full_name = projectMap[projectId];
+                }
+            }
+
+            // Capitalize first letter of dcp_type
+            if (goog.object.containsKey(fields,'dcp_type')) {
+                fields.dcp_type = goog.string.toTitleCase(fields.dcp_type);
             }
 
             // URL truncate

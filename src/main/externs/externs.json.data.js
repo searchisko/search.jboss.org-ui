@@ -50,12 +50,13 @@ SearchHit.prototype.fields.dcp_last_activity_date;
 SearchHit.prototype.fields.dcp_project;
 SearchHit.prototype.fields.dcp_type;
 SearchHit.prototype.fields.dcp_description;
-// added by normalize.js
+// added or modified by normalize.js
 SearchHit.prototype.fields.dcp_url_view_tr;
 SearchHit.prototype.fields.dcp_contributors_view;
 SearchHit.prototype.fields.dcp_contributors_view.name;
 SearchHit.prototype.fields.dcp_contributors_view.gURL20;
 SearchHit.prototype.fields.dcp_contributors_view.gURL40;
+SearchHit.prototype.fields.dcp_project_full_name;
 SearchHit.prototype.fields.dcp_description_tr;
 SearchHit.prototype.fields.dcp_last_activity_date_parsed;
 

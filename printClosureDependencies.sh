@@ -14,6 +14,7 @@
   --output_mode='list' \
   --output_file=./rawlist \
   \
+  --namespace="org.jboss.search.LookUp" \
   --namespace="org.jboss.search.Constants" \
   --namespace="org.jboss.search.SearchFieldHandler" \
   \

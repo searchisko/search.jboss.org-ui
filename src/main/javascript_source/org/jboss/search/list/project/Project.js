@@ -49,6 +49,12 @@ org.jboss.search.list.project.Project = function(deferred, opt_canceller, opt_de
     this.deferred_ = deferred;
 
     /**
+     * {
+     *     project_id: project_name,
+     *     ...
+     *     'hibernatesearch': 'Hibernate Search'
+     * }
+     *
      * @type {Object}
      * @private
      */
@@ -97,7 +103,7 @@ org.jboss.search.list.project.Project.prototype.getDcpProjectName = function(dcp
 
 /**
  * Return projects as a map.
- * @return {*}
+ * @return {Object}
  */
 org.jboss.search.list.project.Project.prototype.getMap = function() {
     return this.map;
@@ -117,5 +123,3 @@ org.jboss.search.list.project.Project.prototype.getArray = function() {
     goog.array.sortObjectsByKey(result,'sortBy');
     return result;
 };
-
-

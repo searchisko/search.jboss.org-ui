@@ -18,6 +18,7 @@
 
 goog.provide('org.jboss.search.App');
 
+goog.require('org.jboss.search.LookUp');
 goog.require('org.jboss.search.page.filter.ProjectFilter');
 goog.require('org.jboss.search.list.project.Project');
 goog.require('org.jboss.search.page.element.Status');
@@ -72,6 +73,11 @@ org.jboss.search.App = function() {
     // A shortcut
     // ================================================================
     var const_ = org.jboss.search.Constants;
+
+    // ================================================================
+    // LookUp instance
+    // ================================================================
+    var lookup_ = org.jboss.search.LookUp.getInstance();
 
     // ================================================================
     // Get necessary HTML elements
@@ -155,29 +161,38 @@ org.jboss.search.App = function() {
         }
     };
 
-    var projectFilter;
-
     // activate URL History manager
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
 
+    // Initialization of lists.
+    // projectList will be initialized at some point in the future (it is deferred type)
+    // once it is initialized it calls the deferred that is passed as an argument
     var deferred = new goog.async.Deferred();
     var projectList = new org.jboss.search.list.project.Project(deferred);
+
     deferred
+        // keep project map in the lookup (so it can be easily used by other objects in the application)
+        .addCallback(function() {
+            lookup_.setProjectMap(projectList.getMap());
+        })
         .addCallback(function(){
             status.setProgressValue(1);
         })
+        // initialize project filter
         .addCallback(function(){
+            var projectFilter;
             projectFilter = new org.jboss.search.page.filter.ProjectFilter(searchPageElements.getProject_filter_body_div());
             projectFilter.replaceItems(projectList.getArray());
         })
+        // this is just an effect to hide status window as it is not needed now
         .addCallback(function(){
             setTimeout(function(){
                 status.hide();
                 status.setProgressValue(0);
             },200);
         })
+        // start history pooling loop after initialization of lists is finished
         .addCallback(function(){
-            // start history pooling loop after initialization of lists is finished
             history.setEnabled(true);
         });
 
