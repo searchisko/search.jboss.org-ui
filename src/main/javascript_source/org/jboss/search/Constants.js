@@ -125,11 +125,11 @@ org.jboss.search.Constants = {
     API_URL_SEARCH_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search'].join(''),
 
     /**
-     * @see http://docs.jbossorg.apiary.io/#managementapi%20-%20projects
+     * Pull project_info from DCP @see http://docs.jbossorg.apiary.io/#searchapi
      * @type {string}
      * @const
      */
-    API_URL_PROJECT_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/project'].join(''),
+    API_URL_PROJECT_LIST_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search?dcp_type=project_info&size=300'].join(''),
 
     /**
      * Interval in ms. When user has been idle for this time then we can fire some 'entertaining' action.

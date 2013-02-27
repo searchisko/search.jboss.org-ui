@@ -63,21 +63,23 @@ org.jboss.search.list.project.Project = function(deferred, opt_canceller, opt_de
 goog.inherits(org.jboss.search.list.project.Project, goog.async.Deferred);
 
 /**
- * Knows how to parse response from http://docs.jbossorg.apiary.io/#managementapi%20-%20projects
+ * Knows how to parse response from {@see Constants.API_URL_PROJECT_LIST_QUERY}
  * into simple map representation.
- * @param {*} json
+ * @param {!Object} json
  * @return {Object}
  */
 org.jboss.search.list.project.Project.prototype.parseProjectData = function(json) {
     var map_ = {};
-    if (goog.isDefAndNotNull(json.hits) && goog.isArray(json.hits)) {
-
-        goog.array.forEach(json.hits, function(item){
-            // TODO add more checks (item.data undefined?)
-            var id_ = item['data']['code'];
-            var name_ = item['data']['name'];
-            if (goog.isDefAndNotNull(id_) && goog.isDefAndNotNull(name_)) {
-                map_[id_] = name_;
+    var hits = goog.object.getValueByKeys(json, "hits", "hits");
+    if (goog.isDef(hits) && goog.isArray(hits)) {
+        goog.array.forEach(hits, function(hit){
+            var fields = goog.object.getValueByKeys(hit, "fields");
+            if (goog.isObject(fields)) {
+                var id_ = goog.object.getValueByKeys(fields, "dcp_project");
+                var name_ = goog.object.getValueByKeys(fields, "dcp_project_name");
+                if (goog.isDefAndNotNull(id_) && goog.isDefAndNotNull(name_)) {
+                    map_[id_] = name_;
+                }
             }
         }, this);
     }

@@ -184,7 +184,7 @@ org.jboss.search.App = function() {
     // load project list
     xhrManager.send(
         org.jboss.search.Constants.LOAD_PROJECT_LIST_REQUEST_ID,
-        goog.Uri.parse(org.jboss.search.Constants.API_URL_PROJECT_QUERY).toString(),
+        goog.Uri.parse(org.jboss.search.Constants.API_URL_PROJECT_LIST_QUERY).toString(),
         org.jboss.search.Constants.GET,
         "", // post_data
         {}, // headers_map
