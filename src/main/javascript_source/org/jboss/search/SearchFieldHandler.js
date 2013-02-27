@@ -18,6 +18,7 @@
 
 /**
  * @fileoverview Encapsulates functionality around the search field.
+ * TODO: move this class into some reasonable package namespace...
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
