@@ -207,8 +207,13 @@ org.jboss.search.App = function() {
         // callback, The only param is the event object from the COMPLETE event.
         function(e) {
             var event = /** @type goog.net.XhrManager.Event */ (e);
-            var response = event.target.getResponseJson();
-            deferred.callback(response);
+            if (event.target.isSuccess()) {
+                var response = event.target.getResponseJson();
+                deferred.callback(response);
+            } else {
+                // Project info failed to load.
+                deferred.callback({});
+            }
         }
     );
 

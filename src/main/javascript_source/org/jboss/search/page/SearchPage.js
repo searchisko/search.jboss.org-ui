@@ -151,21 +151,26 @@ org.jboss.search.page.SearchPage = function(
                     var event = /** @type goog.net.XhrManager.Event */ (e);
                     var response = event.target.getResponseJson();
 
-                    // We are taking the response from the mock server for now,
-                    // just replace the token with an actual query string.
-                    response['view']['search']['options'] = [query_string];
-                    response['model']['search']['search']['query'] = query_string;
+                    if (event.target.isSuccess()) {
+                        // We are taking the response from the mock server for now,
+                        // just replace the token with an actual query string.
+                        response['view']['search']['options'] = [query_string];
+                        response['model']['search']['search']['query'] = query_string;
 
-                    var model = /** @type {!Object} */ (goog.object.get(response, "model", {}));
-                    thiz_.query_suggestions_model = thiz_.parseQuerySuggestionsModel(model);
+                        var model = /** @type {!Object} */ (goog.object.get(response, "model", {}));
+                        thiz_.query_suggestions_model = thiz_.parseQuerySuggestionsModel(model);
 
-                    if (goog.object.containsKey(response, "view")) {
-                        var view = /** @type {!Object} */ (goog.object.get(response, "view", {}));
+                        if (goog.object.containsKey(response, "view")) {
+                            var view = /** @type {!Object} */ (goog.object.get(response, "view", {}));
 
-                        thiz_.query_suggestions_view.update(view);
-                        thiz_.query_suggestions_view.show();
+                            thiz_.query_suggestions_view.update(view);
+                            thiz_.query_suggestions_view.show();
 
+                        } else {
+                            thiz_.hideAndCleanSuggestionsElementAndModel();
+                        }
                     } else {
+                        // We failed getting query suggestions
                         thiz_.hideAndCleanSuggestionsElementAndModel();
                     }
 
@@ -359,23 +364,22 @@ org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
  */
 org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
 
-    var thiz_ = this;
+    this.disposeUserEntertainment();
+    this.setUserQuery(query_string);
 
-    thiz_.disposeUserEntertainment();
-    thiz_.setUserQuery(query_string);
+    this.log.info("Run search for [" + query_string + "]");
 
-    thiz_.log.info("Run search for [" + query_string + "]");
-
-    thiz_.xhrManager.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
-    thiz_.disableSearchResults();
-    var query_url = thiz_.getSearchUri()
+    this.xhrManager.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
+    this.disableSearchResults();
+    var query_url = this.getSearchUri()
         .setParameterValue("query", query_string)
         .setParameterValues("field", ["dcp_type","dcp_id","dcp_title","dcp_contributors","dcp_project","dcp_project_name","dcp_description","dcp_tags","dcp_last_activity_date","dcp_url_view"])
         .setParameterValues("query_highlight", "true")
 //            .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_dcp_type_counts","tag_cloud"])
         .toString();
 //    console.log(query_url);
-    thiz_.xhrManager.send(
+
+    this.xhrManager.send(
         org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
         // setting the parameter value clears previously set value (that is what we want!)
         query_url,
@@ -385,25 +389,29 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
         org.jboss.search.Constants.SEARCH_QUERY_REQUEST_PRIORITY,
 
         // callback, The only param is the event object from the COMPLETE event.
-        function(e) {
-            var event = /** @type goog.net.XhrManager.Event */ (e);
-            var response = event.target.getResponseJson();
-//            console.log(response);
-
-            var data = org.jboss.search.response.normalize(response, query_string);
-//            console.log(data);
-
-            try {
-                var html = org.jboss.search.page.templates.search_results(data);
-                thiz_.elements.getSearch_results_div().innerHTML = html;
-            } catch(error) {
-                // TODO fire event (with error)
-                thiz_.log.severe("Something went wrong",error);
-            }
-
-            thiz_.enableSearchResults();
-
-        }
+        goog.bind(
+            function(e) {
+                var event = /** @type goog.net.XhrManager.Event */ (e);
+                var response = event.target.getResponseJson();
+    //            console.log(response);
+                if (event.target.isSuccess()) {
+                    var data = org.jboss.search.response.normalize(response, query_string);
+        //            console.log(data);
+                    try {
+                        var html = org.jboss.search.page.templates.search_results(data);
+                        this.elements.getSearch_results_div().innerHTML = html;
+                    } catch(error) {
+                        // Something went wrong when generating search results
+                        // TODO fire event (with error)
+                        this.log.severe("Something went wrong",error);
+                    }
+                } else {
+                    // We failed getting search results data
+                    this.elements.getSearch_results_div().innerHTML = '';
+                }
+                this.enableSearchResults();
+            },
+        this)
     );
 };
 
@@ -583,7 +591,6 @@ org.jboss.search.page.SearchPage.prototype.expandDateFilter = function () {
 
     this.elements.getProject_filter_query_field().blur();
     this.elements.getAuthor_filter_query_field().blur();
-
 };
 
 /**
@@ -601,7 +608,6 @@ org.jboss.search.page.SearchPage.prototype.expandAuthorFilter = function () {
 
     this.elements.getProject_filter_query_field().blur();
     this.elements.getAuthor_filter_query_field().focus();
-
 };
 
 /**
@@ -619,14 +625,12 @@ org.jboss.search.page.SearchPage.prototype.expandProjectFilter = function () {
 
     this.elements.getProject_filter_query_field().focus();
     this.elements.getAuthor_filter_query_field().blur();
-
 };
 
 /**
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.collapseDateFilter = function () {
-
     goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
     goog.dom.classes.add(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
     // blur not needed now
@@ -636,22 +640,18 @@ org.jboss.search.page.SearchPage.prototype.collapseDateFilter = function () {
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.collapseProjectFilter = function () {
-
     goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
     goog.dom.classes.add(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
     this.elements.getProject_filter_query_field().blur();
-
 };
 
 /**
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.collapseAuthorFilter = function () {
-
     goog.dom.classes.remove(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
     goog.dom.classes.add(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
     this.elements.getAuthor_filter_query_field().blur();
-
 };
 
 /**
