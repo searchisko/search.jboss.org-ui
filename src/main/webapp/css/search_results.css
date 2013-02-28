@@ -265,3 +265,10 @@
     display: inline-table;
 }
 */
+
+.response-error {
+    text-align: center;
+    margin: 20px 0 0 0;
+    color: rgb(70,70,70);
+    line-height: 1.7;
+}

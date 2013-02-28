@@ -1,6 +1,23 @@
 {namespace org.jboss.search.page.templates}
 
 /**
+ * Error page when search request fails.
+ *
+ * @param user_query
+ * @param error
+ */
+{template .request_error}
+
+    <div class="response-error">Oops - something went wrong!</div>
+
+    <div class="response-error">
+        We are sorry but we were unable to get response to your
+        query for "{$user_query}": {$error}
+    </div>
+
+{/template}
+
+/**
  * Search results DIV.
  *
  * @param user_query

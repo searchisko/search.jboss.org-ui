@@ -149,9 +149,8 @@ org.jboss.search.page.SearchPage = function(
                 // callback, The only param is the event object from the COMPLETE event.
                 function(e) {
                     var event = /** @type goog.net.XhrManager.Event */ (e);
-                    var response = event.target.getResponseJson();
-
                     if (event.target.isSuccess()) {
+                        var response = event.target.getResponseJson();
                         // We are taking the response from the mock server for now,
                         // just replace the token with an actual query string.
                         response['view']['search']['options'] = [query_string];
@@ -392,9 +391,9 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
         goog.bind(
             function(e) {
                 var event = /** @type goog.net.XhrManager.Event */ (e);
-                var response = event.target.getResponseJson();
-    //            console.log(response);
                 if (event.target.isSuccess()) {
+                    var response = event.target.getResponseJson();
+//                    console.log(response);
                     var data = org.jboss.search.response.normalize(response, query_string);
         //            console.log(data);
                     try {
@@ -407,7 +406,11 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
                     }
                 } else {
                     // We failed getting search results data
-                    this.elements.getSearch_results_div().innerHTML = '';
+                    var html = org.jboss.search.page.templates.request_error({
+                        'user_query':query_string,
+                        'error':event.target.getLastError()
+                    });
+                    this.elements.getSearch_results_div().innerHTML = html;
                 }
                 this.enableSearchResults();
             },
