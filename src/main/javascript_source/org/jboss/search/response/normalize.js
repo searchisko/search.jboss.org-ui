@@ -39,34 +39,108 @@ goog.require('goog.memoize');
 /**
  * It returns normalized and sanitized response.
  * @param {!Object} response raw response from DCP search API.
- * @param {?string} query related user query
+ * @param {string=} opt_query related user query
+ * @param {number=} opt_page search results page number [1..x]
  * @return {!Object}
  */
-org.jboss.search.response.normalize = function(response, query) {
+org.jboss.search.response.normalize = function(response, opt_query, opt_page) {
 
     var output = {};
 
-    output.user_query = goog.isDefAndNotNull(query) ? query : "";
+    // ==========================================
+    // Actual page
+    // ==========================================
+    var actualPage = opt_page || 1;
+    if (actualPage < 1) { actualPage = 1 }
+    output.actual_page = actualPage;
 
+    // ==========================================
+    // User query
+    // ==========================================
+    var query = opt_query || "";
+    query = goog.string.trim(query);
+    output.user_query = query;
+
+    // ==========================================
+    // Time out
+    // ==========================================
     if (goog.object.containsKey(response,'timed_out')) {
         output.timed_out = response.timed_out;
     }
 
+    // ==========================================
+    // Hits
+    // ==========================================
     if (goog.object.containsKey(response,'hits')) {
         output.hits = response.hits;
 //        output['hits']['hits'] = org.jboss.search.response.getDummyHits();
     } else {
         output.hits = [];
     }
-
-    output.hits.pagination = [];
+    // ==========================================
+    // Pagination
+    // ==========================================
+    output.pagination = [];
     var total = /** @type {Number} */ (goog.object.getValueByKeys(output, ["hits", "total"]));
     if (goog.isNumber(total) && total > 0) {
         var hitsPerPage = org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE;
         var maxItems = org.jboss.search.Constants.PAGINATION_MAX_ITEMS_COUNT;
-        for (var i_ = 0; (((i_+1)*hitsPerPage) <= total && (i_ < maxItems)); i_++) {
-            output.hits.pagination[i_] = (i_+ 1);
+        var maxItemValue = Math.ceil(total/hitsPerPage);
+        output.total_pages = maxItemValue;
+
+        var push = false;
+        while (
+                output.pagination.length < maxItems &&
+                output.pagination.length < maxItemValue
+        ) {
+            // assume sorted array
+            var max = (output.pagination.length > 0 ? output.pagination[output.pagination.length-1].page : (actualPage > maxItemValue ? maxItemValue : actualPage));
+            var min = (output.pagination.length > 0 ? output.pagination[0].page : (actualPage > maxItemValue ? maxItemValue : actualPage));
+            if (push) {
+                // can we add next page?
+                if (max < maxItemValue) {
+                    var page = (output.pagination.length > 0 ? max + 1 : max);
+                    output.pagination.push({
+                        'page'   : page,
+                        'symbol' : page.toString(10),
+                        'url'    : [['#q=',query].join(''),["page=",page].join('')].join('&')
+                    });
+                }
+                push = !push;
+            } else {
+                // can we add previous page?
+                if (min > 1) {
+                    var page = (output.pagination.length > 0 ? min - 1 : min);
+                    output.pagination.unshift({
+                        'page'   : page,
+                        'symbol' : page.toString(10),
+                        'url'    : [['#q=',query].join(''),["page=",page].join('')].join('&')
+                    });
+                }
+                push = !push;
+            }
+
         }
+
+        /*
+        if (actualPage > 1) {
+            output.pagination.unshift({
+                'page'   : actualPage -1,
+                'symbol' : "&#9668;",  // <
+                'url'    : [['#q=',query].join(''),["page=",actualPage-1].join('')].join('&')
+            });
+        }
+        if (false) {
+            output.pagination.push({
+                'page'   : actualPage +1,
+                'symbol' : "&#9654;",  // >
+                'url'    : [['#q=',query].join(''),["page=",actualPage+1].join('')].join('&')
+            });
+        }
+        */
+    }
+    if (!goog.isDefAndNotNull(output.total_pages)) {
+        output.total_pages = "na";
     }
 
     var hits = /** @type {Array} */ (goog.object.getValueByKeys(output, ["hits", "hits"]));
@@ -78,7 +152,9 @@ org.jboss.search.response.normalize = function(response, query) {
 
             var fields = hit.fields;
 
+            // ==========================================
             // Contributors
+            // ==========================================
             if (goog.object.containsKey(fields,'dcp_contributors')) {
                 var conts = fields.dcp_contributors;
                 if (goog.isDef(conts)) {
@@ -100,7 +176,9 @@ org.jboss.search.response.normalize = function(response, query) {
                 }
             }
 
-            // project id -> project name translation
+            // ==========================================
+            // Try to translate project id -> project name
+            // ==========================================
             if (goog.object.containsKey(fields,'dcp_project')) {
                 var projectId = fields.dcp_project;
                 if (goog.object.containsKey(projectMap, projectId)){
@@ -108,12 +186,16 @@ org.jboss.search.response.normalize = function(response, query) {
                 }
             }
 
+            // ==========================================
             // Capitalize first letter of dcp_type
+            // ==========================================
             if (goog.object.containsKey(fields,'dcp_type')) {
                 fields.dcp_type = goog.string.toTitleCase(fields.dcp_type);
             }
 
+            // ==========================================
             // URL truncate
+            // ==========================================
             if (goog.object.containsKey(fields,'dcp_url_view')) {
                 var url = fields.dcp_url_view;
                 if (goog.isDef(url)) {
@@ -122,7 +204,9 @@ org.jboss.search.response.normalize = function(response, query) {
                 }
             }
 
+            // ==========================================
             // Description truncate
+            // ==========================================
             if (goog.object.containsKey(fields,'dcp_description')) {
                 var desc = fields.dcp_description;
                 if (goog.isDef(desc)) {
@@ -133,7 +217,9 @@ org.jboss.search.response.normalize = function(response, query) {
                 }
             }
 
+            // ==========================================
             // Date parsing
+            // ==========================================
             if (goog.object.containsKey(fields,'dcp_last_activity_date')) {
                 try {
                 /** @type {goog.date.DateTime} */ var date = goog.date.fromIsoString(fields.dcp_last_activity_date);
@@ -146,12 +232,9 @@ org.jboss.search.response.normalize = function(response, query) {
                     // date parsing probably failed
                 }
             }
-
         })
     }
-
 //    console.log(output);
-
     return output;
 
 };

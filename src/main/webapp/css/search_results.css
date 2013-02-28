@@ -258,6 +258,15 @@
     color: gray;
 }
 
+.pagination a {
+    text-decoration: none;
+    color: gray;
+}
+
+.pagination a.actual {
+    text-decoration: underline;
+}
+
 /*
 .pagination span {
     width: 30px;

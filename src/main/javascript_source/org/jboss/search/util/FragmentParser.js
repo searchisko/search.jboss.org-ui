@@ -40,6 +40,7 @@ org.jboss.search.util.FragmentParser = function() {
  *
  * @param {string|null|undefined} fragment
  * @return {string|undefined}
+ * @deprecated use {@link #parse} instead
  */
 org.jboss.search.util.FragmentParser.prototype.getUserQuery = function(fragment) {
 
@@ -58,4 +59,42 @@ org.jboss.search.util.FragmentParser.prototype.getUserQuery = function(fragment)
     }
 
     return query;
+};
+
+/**
+ *
+ * @param {String=} opt_fragment
+ * @return {!Object}
+ */
+org.jboss.search.util.FragmentParser.prototype.parse = function(opt_fragment) {
+
+    var parsed = {};
+
+    if (goog.isDef(opt_fragment) && !goog.string.isEmptySafe(opt_fragment)) {
+        var parts = opt_fragment.trim().split('&');
+
+        goog.array.forEach(parts, function(part){
+            var token = "q=";
+            if (goog.string.caseInsensitiveStartsWith(part, token)) {
+                parsed['query'] = goog.string.urlDecode(goog.string.trim(goog.string.removeAt(part, 0, token.length)))
+            }
+
+            token = "page=";
+            if (goog.string.caseInsensitiveStartsWith(part, token)) {
+                try {
+                    parsed['page'] =
+                        parseInt(
+                            goog.string.urlDecode(
+                                goog.string.trim(
+                                    goog.string.removeAt(part, 0, token.length)
+                                )
+                            )
+                        ,10)
+                } catch (e) {
+                    // TODO add logging
+                }
+            }
+        });
+    }
+    return parsed;
 };

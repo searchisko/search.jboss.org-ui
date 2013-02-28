@@ -42,6 +42,7 @@
   \
   --namespace="org.jboss.search.response" \
   \
+  --namespace="org.jboss.search.util.urlGenerator" \
   --namespace="org.jboss.search.util.FragmentParser" \
   \
   \

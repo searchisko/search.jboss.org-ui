@@ -24,6 +24,7 @@
 
 goog.provide('org.jboss.search.page.SearchPage');
 
+goog.require('org.jboss.search.util.urlGenerator');
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.page.SearchPageElements');
@@ -359,63 +360,61 @@ org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
 
 /**
  * Set user query and execute the query.
- * @param {?string} query_string
+ * @param {!string} query_string
+ * @param {number=} opt_page
  */
-org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string) {
+org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, opt_page) {
 
     this.disposeUserEntertainment();
     this.setUserQuery(query_string);
 
-    this.log.info("Run search for [" + query_string + "]");
+    this.log.info("User query [" + query_string + "]");
 
     this.xhrManager.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
     this.disableSearchResults();
-    var query_url = this.getSearchUri()
-        .setParameterValue("query", query_string)
-        .setParameterValues("field", ["dcp_type","dcp_id","dcp_title","dcp_contributors","dcp_project","dcp_project_name","dcp_description","dcp_tags","dcp_last_activity_date","dcp_url_view"])
-        .setParameterValues("query_highlight", "true")
-//            .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_dcp_type_counts","tag_cloud"])
-        .toString();
-//    console.log(query_url);
 
-    this.xhrManager.send(
-        org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
-        // setting the parameter value clears previously set value (that is what we want!)
-        query_url,
-        org.jboss.search.Constants.GET,
-        "", // post_data
-        {}, // headers_map
-        org.jboss.search.Constants.SEARCH_QUERY_REQUEST_PRIORITY,
+    var query_url_string = org.jboss.search.util.urlGenerator.searchUrl(this.getSearchUri(), query_string, undefined, undefined, opt_page);
 
-        // callback, The only param is the event object from the COMPLETE event.
-        goog.bind(
-            function(e) {
-                var event = /** @type goog.net.XhrManager.Event */ (e);
-                if (event.target.isSuccess()) {
-                    var response = event.target.getResponseJson();
-//                    console.log(response);
-                    var data = org.jboss.search.response.normalize(response, query_string);
-        //            console.log(data);
-                    try {
-                        var html = org.jboss.search.page.templates.search_results(data);
+    if (query_url_string != null) {
+        this.xhrManager.send(
+            org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
+            // setting the parameter value clears previously set value (that is what we want!)
+            query_url_string,
+            org.jboss.search.Constants.GET,
+            "", // post_data
+            {}, // headers_map
+            org.jboss.search.Constants.SEARCH_QUERY_REQUEST_PRIORITY,
+
+            // callback, The only param is the event object from the COMPLETE event.
+            goog.bind(
+                function(e) {
+                    var event = /** @type goog.net.XhrManager.Event */ (e);
+                    if (event.target.isSuccess()) {
+                        var response = event.target.getResponseJson();
+    //                    console.log(response);
+                        var data = org.jboss.search.response.normalize(response, query_string, opt_page);
+            //            console.log(data);
+                        try {
+                            var html = org.jboss.search.page.templates.search_results(data);
+                            this.elements.getSearch_results_div().innerHTML = html;
+                        } catch(error) {
+                            // Something went wrong when generating search results
+                            // TODO fire event (with error)
+                            this.log.severe("Something went wrong",error);
+                        }
+                    } else {
+                        // We failed getting search results data
+                        var html = org.jboss.search.page.templates.request_error({
+                            'user_query':query_string,
+                            'error':event.target.getLastError()
+                        });
                         this.elements.getSearch_results_div().innerHTML = html;
-                    } catch(error) {
-                        // Something went wrong when generating search results
-                        // TODO fire event (with error)
-                        this.log.severe("Something went wrong",error);
                     }
-                } else {
-                    // We failed getting search results data
-                    var html = org.jboss.search.page.templates.request_error({
-                        'user_query':query_string,
-                        'error':event.target.getLastError()
-                    });
-                    this.elements.getSearch_results_div().innerHTML = html;
-                }
-                this.enableSearchResults();
-            },
-        this)
-    );
+                    this.enableSearchResults();
+                },
+            this)
+        );
+    }
 };
 
 /**

@@ -124,9 +124,10 @@ org.jboss.search.App = function() {
      * Basically, this function is called by the search page; whenever user selects or input search query this function
      * gets called. It changes URL fragment and thus calls navigatorController.
      *
-     * @param query_string value to be set to URL fragment, the value is encoded first!
+     * @param {!string} query_string value to be set to URL fragment, the value is encoded first!
+     * @param {number=} opt_page
      */
-    var urlSetFragmentFunction = function(query_string) {
+    var urlSetFragmentFunction = function(query_string, opt_page) {
         history.setToken("q=" + goog.string.urlEncode(query_string));
     };
 
@@ -154,10 +155,11 @@ org.jboss.search.App = function() {
     // navigation controller
     var navigationController = function (e) {
         // e.isNavigate (true if value in browser address bar is changed manually)
-        log.info('Navigated to state "' + e.token + '"');
-        var query = fragmentParser.getUserQuery(e.token);
-        if (goog.isDef(query)) {
-            searchPage.runSearch(query);
+        var parsedFragment = fragmentParser.parse(e.token);
+        var query = parsedFragment['query'];
+        var page = parsedFragment['page'];
+        if (goog.isDefAndNotNull(query)) {
+            searchPage.runSearch(query, page);
         }
     };
 

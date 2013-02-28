@@ -21,11 +21,14 @@
  * Search results DIV.
  *
  * @param user_query
+ * @param actual_page
+ * @param total_pages
  * @param hits
+ * @param pagination
  */
 {template .search_results}
 
-    <div class="statistics">Found {$hits.total} results for "{$user_query}".</div>
+    <div class="statistics">Found {$hits.total} results for "{$user_query}" -&nbsp;page&nbsp;{$actual_page}/{$total_pages}.</div>
 
     {foreach $hit in $hits.hits}
 
@@ -35,10 +38,8 @@
     {/foreach}
 
         <div class="pagination">
-            {foreach $p in $hits.pagination}
-                {if (isFirst($p) and $p > 1)}<span>&#9668;</span>{/if}
-                <span> {$p}</span>
-                {if (isLast($p) and $hits.pagination.length == 10)}<span> &#9654;</span>{/if}
+            {foreach $p in $pagination}
+                <span> <a {if $actual_page == $p.page}class="actual"{/if} href="{$p.url}">{$p.symbol|noAutoescape}</a></span>
             {ifempty}
                 /* skip */
             {/foreach}

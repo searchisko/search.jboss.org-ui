@@ -29,13 +29,18 @@
  * Search hits.
  * @interface */
 function SearchResults() {};
-SearchResults.prototype.user_query; // added by normalize.js
 SearchResults.prototype.time_out;
 SearchResults.prototype.hits;
+SearchResults.prototype.user_query;         // added by normalize.js
+SearchResults.prototype.actual_page;        // added by normalize.js
+SearchResults.prototype.total_pages;        // added by normalize.js
+SearchResults.prototype.pagination;         // added by normalize.js
+SearchResults.prototype.pagination.page;    // added by normalize.js
+SearchResults.prototype.pagination.symbol;  // added by normalize.js
+SearchResults.prototype.pagination.url;     // added by normalize.js
 
 SearchResults.prototype.hits.total;
 SearchResults.prototype.hits.max_score;
-SearchResults.prototype.hits.pagination; // added by normalize.js
 SearchResults.prototype.hits.hits;
 
 /**
@@ -50,15 +55,15 @@ SearchHit.prototype.fields.dcp_last_activity_date;
 SearchHit.prototype.fields.dcp_project;
 SearchHit.prototype.fields.dcp_type;
 SearchHit.prototype.fields.dcp_description;
-// added or modified by normalize.js
-SearchHit.prototype.fields.dcp_url_view_tr;
-SearchHit.prototype.fields.dcp_contributors_view;
-SearchHit.prototype.fields.dcp_contributors_view.name;
-SearchHit.prototype.fields.dcp_contributors_view.gURL20;
-SearchHit.prototype.fields.dcp_contributors_view.gURL40;
-SearchHit.prototype.fields.dcp_project_full_name;
-SearchHit.prototype.fields.dcp_description_tr;
-SearchHit.prototype.fields.dcp_last_activity_date_parsed;
+
+SearchHit.prototype.fields.dcp_url_view_tr;                 // added or modified by normalize.js
+SearchHit.prototype.fields.dcp_contributors_view;           // added or modified by normalize.js
+SearchHit.prototype.fields.dcp_contributors_view.name;      // added or modified by normalize.js
+SearchHit.prototype.fields.dcp_contributors_view.gURL20;    // added or modified by normalize.js
+SearchHit.prototype.fields.dcp_contributors_view.gURL40;    // added or modified by normalize.js
+SearchHit.prototype.fields.dcp_project_full_name;           // added or modified by normalize.js
+SearchHit.prototype.fields.dcp_description_tr;              // added or modified by normalize.js
+SearchHit.prototype.fields.dcp_last_activity_date_parsed;   // added or modified by normalize.js
 
 SearchHit.prototype.highlight;
 SearchHit.prototype.highlight.comment_body;
