@@ -33,11 +33,12 @@ SearchResults.prototype.time_out;
 SearchResults.prototype.hits;
 SearchResults.prototype.user_query;         // added by normalize.js
 SearchResults.prototype.actual_page;        // added by normalize.js
-SearchResults.prototype.total_pages;        // added by normalize.js
+
 SearchResults.prototype.pagination;         // added by normalize.js
-SearchResults.prototype.pagination.page;    // added by normalize.js
-SearchResults.prototype.pagination.symbol;  // added by normalize.js
-SearchResults.prototype.pagination.url;     // added by normalize.js
+SearchResults.prototype.pagination.total_pages;     // added by normalize.js
+SearchResults.prototype.pagination.array.page;      // added by normalize.js
+SearchResults.prototype.pagination.array.symbol;    // added by normalize.js
+SearchResults.prototype.pagination.array.fragment;  // added by normalize.js
 
 SearchResults.prototype.hits.total;
 SearchResults.prototype.hits.max_score;

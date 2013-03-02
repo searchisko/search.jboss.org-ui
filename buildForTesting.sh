@@ -40,8 +40,9 @@
   \
   --namespace="org.jboss.search.response" \
   \
-  --namespace="org.jboss.search.util.urlGenerator" \
   --namespace="org.jboss.search.util.FragmentParser" \
+  --namespace="org.jboss.search.util.paginationGenerator" \
+  --namespace="org.jboss.search.util.urlGenerator" \
   \
   \
   \

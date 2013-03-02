@@ -22,13 +22,15 @@
  *
  * @param user_query
  * @param actual_page
- * @param total_pages
  * @param hits
  * @param pagination
  */
 {template .search_results}
 
-    <div class="statistics">Found {$hits.total} results for "{$user_query}" -&nbsp;page&nbsp;{$actual_page}/{$total_pages}.</div>
+    <div class="statistics">
+        Found {$hits.total} results for "{$user_query}" -&nbsp;page&nbsp;{$actual_page}/
+        {if isNonnull($pagination)}{$pagination.total_pages}{else}na{/if}.
+    </div>
 
     {foreach $hit in $hits.hits}
 
@@ -38,11 +40,13 @@
     {/foreach}
 
         <div class="pagination">
-            {foreach $p in $pagination}
-                <span> <a {if $actual_page == $p.page}class="actual"{/if} href="{$p.url}">{$p.symbol|noAutoescape}</a></span>
-            {ifempty}
-                /* skip */
-            {/foreach}
+            {if isNonnull($pagination)}
+                {foreach $p in $pagination.array}
+                    <span> <a {if $actual_page == $p.page}class="actual"{/if} href="{$p.fragment}">{$p.symbol|noAutoescape}</a></span>
+                {ifempty}
+                    /* skip */
+                {/foreach}
+            {/if}
         </div>
 
 {/template}

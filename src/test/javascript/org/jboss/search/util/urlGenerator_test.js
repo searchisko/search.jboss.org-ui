@@ -17,8 +17,7 @@
  */
 
 goog.require('org.jboss.search.util.urlGenerator');
-
-goog.require('goog.Uri')
+goog.require('goog.Uri');
 goog.require('goog.testing.jsunit');
 
 var testUrlGenerator = function() {

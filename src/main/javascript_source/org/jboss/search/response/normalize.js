@@ -25,8 +25,9 @@
 goog.provide('org.jboss.search.response');
 
 goog.require('org.jboss.search.Constants');
-
+goog.require('org.jboss.search.util.paginationGenerator');
 goog.require('org.jboss.search.LookUp');
+
 goog.require('goog.date');
 goog.require('goog.date.DateTime');
 goog.require('goog.object');
@@ -80,67 +81,9 @@ org.jboss.search.response.normalize = function(response, opt_query, opt_page) {
     // ==========================================
     // Pagination
     // ==========================================
-    output.pagination = [];
-    var total = /** @type {Number} */ (goog.object.getValueByKeys(output, ["hits", "total"]));
-    if (goog.isNumber(total) && total > 0) {
-        var hitsPerPage = org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE;
-        var maxItems = org.jboss.search.Constants.PAGINATION_MAX_ITEMS_COUNT;
-        var maxItemValue = Math.ceil(total/hitsPerPage);
-        output.total_pages = maxItemValue;
-
-        var push = false;
-        while (
-                output.pagination.length < maxItems &&
-                output.pagination.length < maxItemValue
-        ) {
-            // assume sorted array
-            var max = (output.pagination.length > 0 ? output.pagination[output.pagination.length-1].page : (actualPage > maxItemValue ? maxItemValue : actualPage));
-            var min = (output.pagination.length > 0 ? output.pagination[0].page : (actualPage > maxItemValue ? maxItemValue : actualPage));
-            if (push) {
-                // can we add next page?
-                if (max < maxItemValue) {
-                    var page = (output.pagination.length > 0 ? max + 1 : max);
-                    output.pagination.push({
-                        'page'   : page,
-                        'symbol' : page.toString(10),
-                        'url'    : [['#q=',query].join(''),["page=",page].join('')].join('&')
-                    });
-                }
-                push = !push;
-            } else {
-                // can we add previous page?
-                if (min > 1) {
-                    var page = (output.pagination.length > 0 ? min - 1 : min);
-                    output.pagination.unshift({
-                        'page'   : page,
-                        'symbol' : page.toString(10),
-                        'url'    : [['#q=',query].join(''),["page=",page].join('')].join('&')
-                    });
-                }
-                push = !push;
-            }
-
-        }
-
-        /*
-        if (actualPage > 1) {
-            output.pagination.unshift({
-                'page'   : actualPage -1,
-                'symbol' : "&#9668;",  // <
-                'url'    : [['#q=',query].join(''),["page=",actualPage-1].join('')].join('&')
-            });
-        }
-        if (false) {
-            output.pagination.push({
-                'page'   : actualPage +1,
-                'symbol' : "&#9654;",  // >
-                'url'    : [['#q=',query].join(''),["page=",actualPage+1].join('')].join('&')
-            });
-        }
-        */
-    }
-    if (!goog.isDefAndNotNull(output.total_pages)) {
-        output.total_pages = "na";
+    var total = /** @type {number} */ (goog.object.getValueByKeys(output, ["hits", "total"]));
+    if (goog.isDefAndNotNull(total)) {
+        output.pagination = org.jboss.search.util.paginationGenerator.generate(query, actualPage, total);
     }
 
     var hits = /** @type {Array} */ (goog.object.getValueByKeys(output, ["hits", "hits"]));
