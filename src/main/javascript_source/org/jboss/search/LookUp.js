@@ -26,6 +26,10 @@
 
 goog.provide('org.jboss.search.LookUp');
 
+goog.require('goog.net.XhrManager');
+goog.require('goog.net.XhrManager.Event');
+goog.require('goog.net.XhrManager.Request');
+
 /**
  * @constructor
  */
@@ -37,15 +41,24 @@ org.jboss.search.LookUp = function() {
      */
     this.projectMap_;
 
+    /**
+     * @type {goog.net.XhrManager}
+     * @private
+     */
+    this.xhrManager_;
+
 };
 goog.addSingletonGetter(org.jboss.search.LookUp);
 
 /**
- *
  * @return {Object}
  */
 org.jboss.search.LookUp.prototype.getProjectMap = function() {
-    return this.projectMap_;
+    if (goog.isDefAndNotNull(this.projectMap_)){
+        return this.projectMap_;
+    } else {
+        throw new Error("ProjectMap hasn't been set yet!");
+    }
 };
 
 /**
@@ -53,4 +66,16 @@ org.jboss.search.LookUp.prototype.getProjectMap = function() {
  */
 org.jboss.search.LookUp.prototype.setProjectMap = function(projectMap) {
     this.projectMap_ = projectMap;
+};
+
+/**
+ * Return instance of XhrManager.
+ * It is a singleton instance at the application level.
+ * @return {!goog.net.XhrManager}
+ */
+org.jboss.search.LookUp.prototype.getXhrManager = function() {
+    if (!goog.isDefAndNotNull(this.xhrManager_)) {
+        this.xhrManager_ = new goog.net.XhrManager();
+    }
+    return this.xhrManager_;
 };

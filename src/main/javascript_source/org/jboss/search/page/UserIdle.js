@@ -26,27 +26,23 @@
 
 goog.provide('org.jboss.search.page.UserIdle');
 
-goog.require('goog.Disposable');
+goog.require('org.jboss.search.LookUp');
 
 goog.require('goog.dom');
-
-goog.require('goog.net.XhrManager');
-goog.require('goog.net.XhrManager.Event');
-goog.require('goog.net.XhrManager.Request');
+goog.require('goog.Disposable');
 
 /**
  *
- * @param {!goog.net.XhrManager} xhrManager
  * @param {!HTMLDivElement} element
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.page.UserIdle = function(xhrManager, element) {
+org.jboss.search.page.UserIdle = function(element) {
     goog.Disposable.call(this);
     /**
      * @private
      * @type {!goog.net.XhrManager} */
-    this.xhrManager_ = xhrManager;
+    this.xhrManager_ = org.jboss.search.LookUp.getInstance().getXhrManager();
     /**
      * @private
      * @type {!HTMLDivElement} */

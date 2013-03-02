@@ -30,9 +30,6 @@ goog.require('org.jboss.search.Constants');
 goog.require('goog.async.Deferred');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
-goog.require('goog.net.XhrManager');
-goog.require('goog.net.XhrManager.Event');
-goog.require('goog.net.XhrManager.Request');
 goog.require('goog.Disposable');
 goog.require('goog.History');
 goog.require('goog.Uri');
@@ -114,9 +111,6 @@ org.jboss.search.App = function() {
     var history = new goog.History();
 
     var fragmentParser = new org.jboss.search.util.FragmentParser();
-
-    /** @type {!goog.net.XhrManager} */
-    var xhrManager = new goog.net.XhrManager();
     var searchPageContext = goog.getObjectByName('document');
 
     /**
@@ -146,7 +140,6 @@ org.jboss.search.App = function() {
     }
 
     var searchPage = new org.jboss.search.page.SearchPage(
-        xhrManager,
         searchPageContext,
         urlSetFragmentFunction,
         searchPageElements
@@ -199,7 +192,7 @@ org.jboss.search.App = function() {
         });
 
     // load project list
-    xhrManager.send(
+    lookup_.getXhrManager().send(
         org.jboss.search.Constants.LOAD_PROJECT_LIST_REQUEST_ID,
         goog.Uri.parse(org.jboss.search.Constants.API_URL_PROJECT_LIST_QUERY).toString(),
         org.jboss.search.Constants.GET,

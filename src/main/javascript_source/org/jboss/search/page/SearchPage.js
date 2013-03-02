@@ -24,6 +24,7 @@
 
 goog.provide('org.jboss.search.page.SearchPage');
 
+goog.require('org.jboss.search.LookUp');
 goog.require('org.jboss.search.util.urlGenerator');
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.page.templates');
@@ -45,10 +46,6 @@ goog.require('goog.events.KeyEvent');
 goog.require('goog.events.EventType');
 goog.require('goog.events.EventTarget');
 
-goog.require('goog.net.XhrManager');
-goog.require('goog.net.XhrManager.Event');
-goog.require('goog.net.XhrManager.Request');
-
 goog.require('goog.object');
 
 goog.require('goog.string');
@@ -58,7 +55,6 @@ goog.require('goog.Uri');
 goog.require('goog.debug.Logger');
 
 /**
- * @param {!goog.net.XhrManager} xhrManager
  * @param {EventTarget|goog.events.EventTarget} context element to catch click events and control behaviour of the UI. Typically, this is the document.
  * @param {!function(string)} querySelected Once a query is selected then call this function to notify outer controller.
  * @param {!org.jboss.search.page.SearchPageElements} elements HTML elements required by the search page
@@ -66,7 +62,6 @@ goog.require('goog.debug.Logger');
  * @extends {goog.events.EventTarget}
  */
 org.jboss.search.page.SearchPage = function(
-        xhrManager,
         context,
         querySelected,
         elements
@@ -83,7 +78,11 @@ org.jboss.search.page.SearchPage = function(
      * @type {org.jboss.search.page.SearchPageElements} */
     this.elements = elements
 
-    /** @private */ this.xhrManager = xhrManager;
+    /**
+     * @private
+     * @type {!goog.net.XhrManager} */
+    this.xhrManager_ = org.jboss.search.LookUp.getInstance().getXhrManager();
+
     /** @private */ this.context = context;
     /** @private */ this.querySelected = querySelected;
 
@@ -92,22 +91,22 @@ org.jboss.search.page.SearchPage = function(
 
 
     /** @private */
-    this.xhrReadyListenerId_ = goog.events.listen(this.xhrManager, goog.net.EventType.READY, function(e) {
+    this.xhrReadyListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.READY, function(e) {
         thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_START);
     });
 
     /** @private */
-    this.xhrCompleteListenerId_ = goog.events.listen(this.xhrManager, goog.net.EventType.COMPLETE, function(e) {
+    this.xhrCompleteListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.COMPLETE, function(e) {
         thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
     });
 
     /** @private */
-    this.xhrErrorListenerId_ = goog.events.listen(this.xhrManager, goog.net.EventType.ERROR, function(e) {
+    this.xhrErrorListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ERROR, function(e) {
         thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
     });
 
     /** @private */
-    this.xhrAbortListenerId_ = goog.events.listen(this.xhrManager, goog.net.EventType.ABORT, function(e) {
+    this.xhrAbortListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ABORT, function(e) {
         thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
     });
 
@@ -136,8 +135,8 @@ org.jboss.search.page.SearchPage = function(
             // Abort does not send any event (because of the 'true')
             // so technically, we should fire our own SEARCH_FINISH event but because
             // we are immediately starting a new search we do not do it.
-            thiz_.xhrManager.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
-            thiz_.xhrManager.send(
+            thiz_.xhrManager_.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
+            thiz_.xhrManager_.send(
                 org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID,
 //                "../../test/resources/suggestions_response.json",
                 // setting the parameter value clears previously set value (that is what we want!)
@@ -258,7 +257,7 @@ org.jboss.search.page.SearchPage = function(
         this.getPresetKeyHandlers()
     );
 
-    this.userIdle = new org.jboss.search.page.UserIdle(xhrManager, elements.getSearch_results_div());
+    this.userIdle = new org.jboss.search.page.UserIdle(elements.getSearch_results_div());
     this.userIdleDelay = new goog.async.Delay(
         goog.bind(this.userIdle.start,this.userIdle),
         org.jboss.search.Constants.USER_IDLE_INTERVAL
@@ -297,7 +296,7 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     // Remove references to DOM nodes, which are COM objects in IE.
     delete this.log;
 
-    delete this.xhrManager;
+    delete this.xhrManager_;
     delete this.context;
     delete this.querySelected;
 
@@ -370,13 +369,13 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
 
     this.log.info("User query [" + query_string + "]");
 
-    this.xhrManager.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
+    this.xhrManager_.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
     this.disableSearchResults();
 
     var query_url_string = org.jboss.search.util.urlGenerator.searchUrl(this.getSearchUri(), query_string, undefined, undefined, opt_page);
 
     if (query_url_string != null) {
-        this.xhrManager.send(
+        this.xhrManager_.send(
             org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
             // setting the parameter value clears previously set value (that is what we want!)
             query_url_string,
@@ -536,7 +535,7 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
  */
 org.jboss.search.page.SearchPage.prototype.hideAndCleanSuggestionsElementAndModel = function() {
 
-    this.xhrManager.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
+    this.xhrManager_.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
     // abort with 'true' does not fire any event, thus we have to fire our own event
     this.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
 

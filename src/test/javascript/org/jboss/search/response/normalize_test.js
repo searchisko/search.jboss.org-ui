@@ -17,6 +17,7 @@
  */
 
 goog.require('org.jboss.search.response');
+goog.require('org.jboss.search.LookUp');
 
 goog.require('goog.testing.jsunit');
 
@@ -29,7 +30,14 @@ var testNormalizer = function() {
         }
     };
 
-    var data = org.jboss.search.response.normalize(response,'test');
+    var data;
+    try {
+        data = org.jboss.search.response.normalize(response,'test');
+        fail('normalize requires project map to be set first');
+    } catch (e) {
+        org.jboss.search.LookUp.getInstance().setProjectMap({});
+        data = org.jboss.search.response.normalize(response,'test');
+    }
 
     assertEquals('user_query = "test"', 'test', data['user_query']);
     assertFalse('', data['timed_out']);
