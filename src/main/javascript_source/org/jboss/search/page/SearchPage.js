@@ -383,16 +383,15 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
             "", // post_data
             {}, // headers_map
             org.jboss.search.Constants.SEARCH_QUERY_REQUEST_PRIORITY,
-
-            // callback, The only param is the event object from the COMPLETE event.
             goog.bind(
+                // callback, The only param is the event object from the COMPLETE event.
                 function(e) {
                     var event = /** @type goog.net.XhrManager.Event */ (e);
                     if (event.target.isSuccess()) {
                         var response = event.target.getResponseJson();
-    //                    console.log(response);
+//                        console.log(response);
                         var data = org.jboss.search.response.normalize(response, query_string, opt_page);
-            //            console.log(data);
+//                        console.log(data);
                         try {
                             var html = org.jboss.search.page.templates.search_results(data);
                             this.elements.getSearch_results_div().innerHTML = html;

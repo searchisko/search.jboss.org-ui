@@ -46,3 +46,18 @@ var testPaginationGenerator = function() {
     assertEquals(2, pagination.array[0].page);
     assertEquals(11, pagination.array[org.jboss.search.Constants.PAGINATION_MAX_ITEMS_COUNT-1].page);
 };
+
+var testPaginationGeneratorInfiniteLoop = function() {
+
+    if (org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE < 2) {
+        fail('Can not execute the test!');
+    }
+
+    var g_ = org.jboss.search.util.paginationGenerator;
+    var pagination;
+
+    pagination = g_.generate("test", 1, org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE);
+    assertEquals(1, pagination.total_pages);
+    assertEquals(0, pagination.array.length);
+
+};

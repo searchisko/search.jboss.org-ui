@@ -50,7 +50,8 @@ org.jboss.search.util.paginationGenerator.generate = function(user_query, actual
         var push = false;
         while (
                 result.array.length < pagination_size &&
-                result.array.length < total_pages
+                result.array.length < total_pages &&
+                total_pages > 1
             ) {
             // we assume the array is always sorted (thanks to the way it is created)
             var max = (result.array.length > 0 ? result.array[result.array.length-1].page : (actual_page > total_pages ? total_pages : actual_page));
