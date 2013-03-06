@@ -63,17 +63,17 @@ var testGravatarURI = function() {
     var url;
 
     url = org.jboss.search.response.gravatarURI('lkrzyzan@redhat.com');
-    assertEquals('Should be equal', 'http://www.gravatar.com/avatar/6029b8a70a9e305525aa8f750d2a01c4?s=40', url.toString());
-    assertTrue('By default the image size is 40', goog.string.caseInsensitiveEndsWith(url,'40'));
+    assertEquals('Should be equal', 'http://www.gravatar.com/avatar/6029b8a70a9e305525aa8f750d2a01c4?s=40&d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F6029b8a70a9e305525aa8f750d2a01c4%2F40.png', url.toString());
+    assertTrue('By default the image size is 40', goog.string.caseInsensitiveEndsWith(url,'40.png'));
 
     url = org.jboss.search.response.gravatarURI('lkrzyzan@redhat.com', 100);
-    assertEquals('Should be equal', 'http://www.gravatar.com/avatar/6029b8a70a9e305525aa8f750d2a01c4?s=100', url.toString());
-    assertTrue('By default the image size is 100', goog.string.caseInsensitiveEndsWith(url,'100'));
+    assertEquals('Should be equal', 'http://www.gravatar.com/avatar/6029b8a70a9e305525aa8f750d2a01c4?s=100&d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F6029b8a70a9e305525aa8f750d2a01c4%2F100.png', url.toString());
+    assertTrue('By default the image size is 100', goog.string.caseInsensitiveEndsWith(url,'100.png'));
 
     // if the opt_size is not a number, still return the default value
     url = org.jboss.search.response.gravatarURI('lkrzyzan@redhat.com', 'xx');
-    assertEquals('Should be equal', 'http://www.gravatar.com/avatar/6029b8a70a9e305525aa8f750d2a01c4?s=40', url.toString());
-    assertTrue('By default the image size is 40', goog.string.caseInsensitiveEndsWith(url,'40'));
+    assertEquals('Should be equal', 'http://www.gravatar.com/avatar/6029b8a70a9e305525aa8f750d2a01c4?s=40&d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F6029b8a70a9e305525aa8f750d2a01c4%2F40.png', url.toString());
+    assertTrue('By default the image size is 40', goog.string.caseInsensitiveEndsWith(url,'40.png'));
 };
 
 var testGravatarURI_Memoized = function() {

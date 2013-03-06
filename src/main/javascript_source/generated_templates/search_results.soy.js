@@ -74,7 +74,7 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
     var cListLen124 = cList124.length;
     for (var cIndex124 = 0; cIndex124 < cListLen124; cIndex124++) {
       var cData124 = cList124[cIndex124];
-      output += '<span><img src="' + soy.$$escapeHtml(cData124.gURL20) + '"></span>';
+      output += '<span><img src="' + soy.$$escapeHtml(cData124.gURL16) + '"></span>';
     }
     output += ((((opt_data.fields == null) ? null : opt_data.fields.dcp_contributors_view.length) > 0) ? '<span class="selected_contributor_name">&#8212;&nbsp;<span class="value">' + soy.$$escapeHtml(opt_data.fields.dcp_contributors_view[0].name) + '</span></span>' : '') + '</div>';
   }

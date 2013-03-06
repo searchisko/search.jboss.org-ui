@@ -110,11 +110,10 @@ org.jboss.search.response.normalize = function(response, opt_query, opt_page) {
                     fields.dcp_contributors_view = [];
 
                     goog.array.forEach(cont_,function(c){
-                        // TODO optimize the code (parse email just once, and call Memo just once!)
                         var name = org.jboss.search.response.extractNameFromMail(c).valueOf();
-                        var gravatarURL20 = org.jboss.search.response.gravatarURI_Memo(c,16).valueOf();
+                        var gravatarURL16 = org.jboss.search.response.gravatarURI_Memo(c,16).valueOf();
                         var gravatarURL40 = org.jboss.search.response.gravatarURI_Memo(c,40).valueOf();
-                        fields.dcp_contributors_view.push({'name': name, 'gURL20': gravatarURL20, 'gURL40': gravatarURL40});
+                        fields.dcp_contributors_view.push({'name': name, 'gURL16': gravatarURL16, 'gURL40': gravatarURL40});
                     });
                 }
             }
@@ -305,6 +304,12 @@ org.jboss.search.response.gravatarEmailHash = function(email) {
 };
 
 /**
+ * Memoized version of {@see gravatarEmailHash}.
+ * @type {function(string): string}
+ */
+org.jboss.search.response.gravatarEmailHash_Memo = goog.memoize(org.jboss.search.response.gravatarEmailHash);
+
+/**
  * Return complete URL link to the Gravatar image.
  * {@see https://en.gravatar.com/site/implement/images/}
  * @param {string} email
@@ -317,8 +322,13 @@ org.jboss.search.response.gravatarURI = function(email, opt_size) {
     if (!goog.isNumber(size)) {
         size = 40;
     }
-    var hash = org.jboss.search.response.gravatarEmailHash(email);
-    return new String("http://www.gravatar.com/avatar/"+hash+"?s="+size);
+    var hash = org.jboss.search.response.gravatarEmailHash_Memo(email);
+    return new String(
+        [
+            ["http://www.gravatar.com/avatar/",hash,"?s=",size].join(''),
+            ["d=",goog.string.urlEncode(["https://community.jboss.org/gravatar/",hash,"/",size,".png"].join(''))].join('')
+        ].join('&')
+    );
 };
 
 /**
@@ -326,15 +336,3 @@ org.jboss.search.response.gravatarURI = function(email, opt_size) {
  * @type {function(string, number=): String}
  */
 org.jboss.search.response.gravatarURI_Memo = goog.memoize(org.jboss.search.response.gravatarURI);
-
-/**
- * TODO consider implementing SBS avatars as well.
- * {@see https://docspace.corp.redhat.com/docs/DOC-55303}
- * @param {string} email
- * @param {number=} opt_size
- * @return {string}
- */
-org.jboss.search.response.sbsGravatarURI = function(email, opt_size) {
-
-    return "";
-};

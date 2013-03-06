@@ -60,7 +60,7 @@ SearchHit.prototype.fields.dcp_description;
 SearchHit.prototype.fields.dcp_url_view_tr;                 // added or modified by normalize.js
 SearchHit.prototype.fields.dcp_contributors_view;           // added or modified by normalize.js
 SearchHit.prototype.fields.dcp_contributors_view.name;      // added or modified by normalize.js
-SearchHit.prototype.fields.dcp_contributors_view.gURL20;    // added or modified by normalize.js
+SearchHit.prototype.fields.dcp_contributors_view.gURL16;    // added or modified by normalize.js
 SearchHit.prototype.fields.dcp_contributors_view.gURL40;    // added or modified by normalize.js
 SearchHit.prototype.fields.dcp_project_full_name;           // added or modified by normalize.js
 SearchHit.prototype.fields.dcp_description_tr;              // added or modified by normalize.js

@@ -107,7 +107,7 @@
                 {if isNonnull($fields?.dcp_contributors_view)}
                     <div class="contributors_list">
                         {foreach $c in $fields.dcp_contributors_view}
-                            <span><img src="{$c.gURL20}"></span>
+                            <span><img src="{$c.gURL16}"></span>
                         {/foreach}
                         {if $fields?.dcp_contributors_view.length > 0}
                             <span class="selected_contributor_name">&#8212;&nbsp;<span class="value">{$fields.dcp_contributors_view[0].name}</span></span>
