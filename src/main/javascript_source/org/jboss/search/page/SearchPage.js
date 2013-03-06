@@ -416,18 +416,26 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
 };
 
 /**
+ * Clear (remove) all search results from the screen.
+ */
+org.jboss.search.page.SearchPage.prototype.clearSearchResults = function() {
+    // TODO: check if we need stop any listeners
+    this.elements.getSearch_results_div().innerHTML = '';
+};
+
+/**
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.disableSearchResults = function () {
     goog.dom.classes.add(this.elements.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
-}
+};
 
 /**
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.enableSearchResults = function () {
     goog.dom.classes.remove(this.elements.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
-}
+};
 
 /**
  * @private

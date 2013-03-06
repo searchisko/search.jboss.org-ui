@@ -28,6 +28,8 @@ goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.Constants');
 
 goog.require('goog.async.Deferred');
+goog.require('goog.events');
+goog.require('goog.events.EventType');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.Disposable');
@@ -57,6 +59,10 @@ goog.require('goog.debug.ErrorHandler');
 org.jboss.search.App = function() {
 
     goog.Disposable.call(this);
+
+    // prevent page being cached by browser
+    // this ensures JavaScript is executed on browser BACK button
+    this.unloadId_ = goog.events.listen(goog.dom.getWindow(), goog.events.EventType.UNLOAD, goog.nullFunction);
 
     // init Status window (consider doing it earlier)
     var status_window = /** @type {!HTMLDivElement} */ (goog.dom.getElement('status_window'))
@@ -153,6 +159,8 @@ org.jboss.search.App = function() {
         var page = parsedFragment['page'];
         if (goog.isDefAndNotNull(query)) {
             searchPage.runSearch(query, page);
+        } else {
+            searchPage.clearSearchResults();
         }
     };
 
@@ -233,4 +241,5 @@ org.jboss.search.App.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.historyListenerId_);
     goog.events.unlistenByKey(this.finish_);
     goog.events.unlistenByKey(this.start_);
+    goog.events.unlistenByKey(this.unloadId_);
 };
