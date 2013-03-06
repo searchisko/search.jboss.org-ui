@@ -189,6 +189,8 @@ org.jboss.search.App = function() {
         // start history pooling loop after initialization of lists is finished
         .addCallback(function(){
             history.setEnabled(true);
+            query_field.placeholder="Search";
+            query_field.removeAttribute(org.jboss.search.Constants.DISABLED);
         });
 
     // load project list

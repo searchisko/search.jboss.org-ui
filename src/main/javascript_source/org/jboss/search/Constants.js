@@ -103,7 +103,7 @@ org.jboss.search.Constants = {
     SELECTED: "selected",
 
     /**
-     * Used in CSS.
+     * Used in CSS and as an input element attribute.
      * @type {string}
      * @const
      */
