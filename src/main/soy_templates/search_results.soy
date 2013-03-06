@@ -28,7 +28,7 @@
 {template .search_results}
 
     <div class="statistics">
-        Found {$hits.total} results for "{$user_query}" -&nbsp;page&nbsp;{$actual_page}/
+        Found {$hits.total} results for "{$user_query}" -&nbsp;page&nbsp;{if isNonnull($pagination) and $pagination.total_pages == 0}0{else}{$actual_page}{/if}/
         {if isNonnull($pagination)}{$pagination.total_pages}{else}na{/if}.
     </div>
 
