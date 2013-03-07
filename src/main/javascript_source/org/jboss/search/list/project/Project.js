@@ -17,8 +17,8 @@
  */
 
 /**
- * @fileoverview
- *
+ * @fileoverview Project list is collection of project entities.
+ * This collection is typically initiated at the application start and then used during application life cycle.
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 

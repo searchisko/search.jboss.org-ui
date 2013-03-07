@@ -54,18 +54,25 @@ org.jboss.search.Constants = {
     SEARCH_SUGGESTIONS_REQUEST_ID: "1",
 
     /**
-     * Used as an identified to abort or/and send the query search request.
+     * Used as an identified to abort or/and send the project suggestions request.
      * @type {string}
      * @const
      */
-    SEARCH_QUERY_REQUEST_ID: "2",
+    PROJECT_SUGGESTIONS_REQUEST_ID: "2",
 
     /**
      * Used as an identified to abort or/and send the query search request.
      * @type {string}
      * @const
      */
-    LOAD_PROJECT_LIST_REQUEST_ID: "3",
+    SEARCH_QUERY_REQUEST_ID: "3",
+
+    /**
+     * Used as an identified to abort or/and send the query search request.
+     * @type {string}
+     * @const
+     */
+    LOAD_PROJECT_LIST_REQUEST_ID: "4",
 
     /**
      * Priority of initialization.
@@ -80,6 +87,13 @@ org.jboss.search.Constants = {
      * @const
      */
     SEARCH_SUGGESTIONS_REQUEST_PRIORITY: 10,
+
+    /**
+     * Priority of project suggestions requests.
+     * @type {number}
+     * @const
+     */
+    PROJECT_SUGGESTIONS_REQUEST_PRIORITY: 10,
 
     /**
      * Priority of query search requests. (It should be lower then search suggestions requests.)
@@ -116,6 +130,13 @@ org.jboss.search.Constants = {
      * @const
      */
     API_URL_SUGGESTIONS_QUERY: "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string",
+
+    /**
+     * @see http://docs.jbossorg.apiary.io/#suggestionsapiproject
+     * @type {string}
+     * @const
+     */
+    API_URL_SUGGESTIONS_PROJECT: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/suggestions/project'].join(''),
 
     /**
      * @see http://docs.jbossorg.apiary.io/#searchapi

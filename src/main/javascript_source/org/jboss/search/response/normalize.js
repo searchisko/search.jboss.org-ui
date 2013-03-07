@@ -31,6 +31,7 @@ goog.require('org.jboss.search.LookUp');
 goog.require('goog.date');
 goog.require('goog.date.DateTime');
 goog.require('goog.object');
+goog.require('goog.array');
 goog.require('goog.string');
 goog.require('goog.format.EmailAddress');
 goog.require('goog.crypt');
@@ -38,13 +39,13 @@ goog.require('goog.crypt.Md5');
 goog.require('goog.memoize');
 
 /**
- * It returns normalized and sanitized response.
+ * It returns normalized and sanitized search response.
  * @param {!Object} response raw response from DCP search API.
  * @param {string=} opt_query related user query
  * @param {number=} opt_page search results page number [1..x]
  * @return {!Object}
  */
-org.jboss.search.response.normalize = function(response, opt_query, opt_page) {
+org.jboss.search.response.normalizeSearchResponse = function(response, opt_query, opt_page) {
 
     var output = {};
 
@@ -78,6 +79,16 @@ org.jboss.search.response.normalize = function(response, opt_query, opt_page) {
     } else {
         output.hits = [];
     }
+
+    // ==========================================
+    // Facets
+    // ==========================================
+    if (goog.object.containsKey(response,'facets')) {
+        output.facets = response.facets;
+    } else {
+        output.facets = [];
+    }
+
     // ==========================================
     // Pagination
     // ==========================================
@@ -178,7 +189,46 @@ org.jboss.search.response.normalize = function(response, opt_query, opt_page) {
     }
 //    console.log(output);
     return output;
+};
 
+/**
+ * It returns normalized and sanitized project name suggestions response.
+ * @param {{length: number}} ngrams raw response from DCP search API.
+ * @param {{length: number}} fuzzy raw response from DCP search API.
+ * @return {{ items: Array, did_you_mean_items: Array }}
+ */
+org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams, fuzzy) {
+
+    var items = [];
+    goog.array.forEach(ngrams, function(item) {
+        items.push({
+            'name': item.highlight['dcp_project_name.edgengram'] ? item.highlight['dcp_project_name.edgengram'] : item.highlight['dcp_project_name.ngram'],
+            'code': item.fields['dcp_project']
+        });
+    });
+
+    var did_you_mean_items = [];
+    goog.array.forEach(fuzzy, function(item) {
+        if (
+            goog.array.some(
+                items,
+                function(already_selected){
+                    return already_selected['code'] == item.fields['dcp_project'];
+                }
+            )
+        ) {
+            // filter out item if it is already present in 'items'
+        } else {
+            did_you_mean_items.push({
+                'name': item.fields['dcp_project_name'],
+                'code': item.fields['dcp_project']
+            });
+        }
+    });
+
+    var output = { 'items': items, 'did_you_mean_items': did_you_mean_items };
+
+    return output;
 };
 
 /**

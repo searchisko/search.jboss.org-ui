@@ -341,7 +341,7 @@ org.jboss.search.page.SearchPage.prototype.SEARCH_URI = goog.Uri.parse(org.jboss
  */
 org.jboss.search.page.SearchPage.prototype.getSearchUri = function() {
     return this.SEARCH_URI.clone();
-}
+};
 // current: http://search.jboss.org/search?query=Hibernate&filters%5Binterval%5D=month
 // upcoming: https://dcpapi-libor.rhcloud.com/v1/rest/search?type=jbossorg_blog&filters%5Bcount%5D=10&sortBy=new
 
@@ -389,9 +389,9 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
                     var event = /** @type goog.net.XhrManager.Event */ (e);
                     if (event.target.isSuccess()) {
                         var response = event.target.getResponseJson();
-//                        console.log(response);
-                        var data = org.jboss.search.response.normalize(response, query_string, opt_page);
-//                        console.log(data);
+//                        console.log("xhr response",response);
+                        var data = org.jboss.search.response.normalizeSearchResponse(response, query_string, opt_page);
+//                        console.log("normalized data",data);
                         try {
                             var html = org.jboss.search.page.templates.search_results(data);
                             this.elements.getSearch_results_div().innerHTML = html;

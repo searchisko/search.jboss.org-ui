@@ -70,8 +70,12 @@ SearchHit.prototype.highlight;
 SearchHit.prototype.highlight.comment_body;
 
 /**
+ * Project name suggestions
  * @interface */
 function filterItem() {};
 filterItem.items;
+filterItem.did_you_mean_items;
 filterItem.items.name;
 filterItem.items.code;
+filterItem.items.fields;
+filterItem.items.highlight;

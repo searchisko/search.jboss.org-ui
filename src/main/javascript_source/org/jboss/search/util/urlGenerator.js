@@ -23,12 +23,26 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 goog.provide('org.jboss.search.util.urlGenerator');
+goog.provide('org.jboss.search.util.urlGenerator.QueryParams');
 
 goog.require('goog.Uri');
 goog.require('org.jboss.search.Constants');
 
 /**
  *
+ * @enum {string}
+ */
+org.jboss.search.util.urlGenerator.QueryParams = {
+    QUERY: 'query',
+    FROM : 'from',
+    SIZE : 'size',
+    FACET: 'facet',
+    HIGHLIGHTS: 'query_highlight',
+    FIELD: 'field'
+};
+
+/**
+ * Generate URL that is used to get search results.
  * Note it directly modifies provided `rootUri` so you may want use clone.
  *
  * @param {goog.Uri|string} rootUri
@@ -46,26 +60,60 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, opt_query, opt_
         rootUri = new goog.Uri(rootUri)
     }
 
+    // shortcut
+    var params = org.jboss.search.util.urlGenerator.QueryParams;
+
     if (goog.isNull(opt_query) || !goog.isDef(opt_query)) { opt_query = '' }
-    rootUri.setParameterValue("query", opt_query);
+    rootUri.setParameterValue(params.QUERY, opt_query);
 
     if (goog.isDef(opt_fields) && goog.isArray(opt_fields)) {
-        rootUri.setParameterValues("field", opt_fields)
+        rootUri.setParameterValues(params.FIELD, opt_fields)
     } else {
-        rootUri.setParameterValues("field", ["dcp_type","dcp_id","dcp_title","dcp_contributors","dcp_project","dcp_project_name","dcp_description","dcp_tags","dcp_last_activity_date","dcp_url_view"])
+        rootUri.setParameterValues(params.FIELD, ["dcp_type","dcp_id","dcp_title","dcp_contributors","dcp_project","dcp_project_name","dcp_description","dcp_tags","dcp_last_activity_date","dcp_url_view"])
     }
 
     if (goog.isBoolean(opt_highlighting)) {
-        rootUri.setParameterValue("query_highlight", opt_highlighting)
+        rootUri.setParameterValue(params.HIGHLIGHTS, opt_highlighting)
     } else {
-        rootUri.setParameterValue("query_highlight", "true")
+        rootUri.setParameterValue(params.HIGHLIGHTS, "true")
     }
 //    .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_dcp_type_counts","tag_cloud"])
+    rootUri.setParameterValues(params.FACET, ["per_project_counts","per_dcp_type_counts"]);
 
     if (goog.isDef(opt_page) && goog.isNumber(opt_page)) {
         if (opt_page > 1) {
-            rootUri.setParameterValue("from",(Math.round(opt_page-1)*org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE))
+            rootUri.setParameterValue(params.FROM,(Math.round(opt_page-1)*org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE))
         }
+    }
+
+    return rootUri.toString();
+};
+
+/**
+ * Generate URL that is used to get project name suggestions.
+ * Note it directly modifies provided `rootUri` so you may want use clone.
+ *
+ * @param {goog.Uri|string} rootUri
+ * @param {string=} opt_query
+ * @param {number=} opt_size
+ * @return {string|null}
+ */
+org.jboss.search.util.urlGenerator.projectNameSuggestionsUrl = function(rootUri, opt_query, opt_size) {
+
+    if (goog.isNull(rootUri)) { return null }
+
+    if (goog.isString(rootUri)) {
+        rootUri = new goog.Uri(rootUri)
+    }
+
+    // shortcut
+    var params = org.jboss.search.util.urlGenerator.QueryParams;
+
+    if (goog.isNull(opt_query) || !goog.isDef(opt_query)) { opt_query = '' }
+    rootUri.setParameterValue(params.QUERY, opt_query);
+
+    if (goog.isNumber(opt_size)) {
+        rootUri.setParameterValue(params.SIZE, opt_size.toString(10));
     }
 
     return rootUri.toString();

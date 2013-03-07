@@ -4,11 +4,23 @@
  * Search results DIV.
  *
  * @param items
+ * @param did_you_mean_items
  */
 {template .project_filter_items}
 
     {foreach $item in $items}
-        <div code='{$item.code}'>{$item.name}</div>
+        <div code='{$item.code}'><span class="selectable">{$item.name|noAutoescape}</span></div>
     {/foreach}
+
+    {if isNonnull($did_you_mean_items) and $did_you_mean_items.length > 0}
+        <div class="did_you_mean">Did you mean?</div>
+        {foreach $item in $did_you_mean_items}
+            <div code='{$item.code}'><span class="selectable">{$item.name}</span></div>
+        {/foreach}
+    {/if}
+
+    {if isNonnull($did_you_mean_items) and isNonnull($items) and $did_you_mean_items.length == 0 and $items.length == 0}
+        <div>No matching projects...</div>
+    {/if}
 
 {/template}

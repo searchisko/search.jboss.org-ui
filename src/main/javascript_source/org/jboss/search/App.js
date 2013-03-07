@@ -77,7 +77,7 @@ org.jboss.search.App = function() {
     var const_ = org.jboss.search.Constants;
 
     // ================================================================
-    // LookUp instance
+    // Instantiate LookUp instance
     // ================================================================
     var lookup_ = org.jboss.search.LookUp.getInstance();
 
@@ -173,18 +173,19 @@ org.jboss.search.App = function() {
     var projectList = new org.jboss.search.list.project.Project(deferred);
 
     deferred
-        // keep project map in the lookup (so it can be easily used by other objects in the application)
+        // keep project list data in the lookup (so it can be easily used by other objects in the application)
         .addCallback(function() {
             lookup_.setProjectMap(projectList.getMap());
+            lookup_.setProjectArray(projectList.getArray());
         })
         .addCallback(function(){
             status.setProgressValue(1);
         })
-        // initialize project filter
+        // initialize project filter and keep reference in the lookup
         .addCallback(function(){
-            var projectFilter;
-            projectFilter = new org.jboss.search.page.filter.ProjectFilter(searchPageElements.getProject_filter_body_div());
-            projectFilter.replaceItems(projectList.getArray());
+            var projectFilter = new org.jboss.search.page.filter.ProjectFilter(searchPageElements.getProject_filter_body_div());
+            lookup_.setProjectFilter(projectFilter);
+            projectFilter.init();
         })
         // this is just an effect to hide status window as it is not needed now
         .addCallback(function(){
@@ -193,7 +194,7 @@ org.jboss.search.App = function() {
                 status.setProgressValue(0);
             },200);
         })
-        // start history pooling loop after initialization of lists is finished
+        // start history pooling loop after initialization is finished
         .addCallback(function(){
             history.setEnabled(true);
             query_field.placeholder="Search";

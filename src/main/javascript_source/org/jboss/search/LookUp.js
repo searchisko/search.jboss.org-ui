@@ -21,6 +21,9 @@
  * We do not want to pass those objects as parameters. So for now we are using this trivial implementation.
  * Be careful about what you put into LookUp (possible memory leaks!).
  *
+ * Going forward we might consider using more robust service locator. For example it might be worth looking at
+ * {@link https://github.com/rhysbrettbowen/Loader}.
+ *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
@@ -39,6 +42,18 @@ org.jboss.search.LookUp = function() {
      * @private
      */
     this.projectMap_;
+
+    /**
+     * @type {Array.<{name: string, code: string}>}
+     * @private
+     */
+    this.projectArray_;
+
+    /**
+     * @type {org.jboss.search.page.filter.ProjectFilter}
+     * @private
+     */
+    this.projectFilter_;
 
     /**
      * @type {goog.net.XhrManager}
@@ -74,6 +89,20 @@ org.jboss.search.LookUp.prototype.setProjectMap = function(projectMap) {
 };
 
 /**
+ * @return {Array.<{name: string, code: string}>}
+ */
+org.jboss.search.LookUp.prototype.getProjectArray = function() {
+    return this.projectArray_;
+};
+
+/**
+ * @param {Array.<{name: string, code: string}>} projectArray
+ */
+org.jboss.search.LookUp.prototype.setProjectArray = function(projectArray) {
+    this.projectArray_ = projectArray;
+};
+
+/**
  * Return instance of XhrManager.
  * It is a singleton instance at the application level.
  * @return {!goog.net.XhrManager}
@@ -95,4 +124,18 @@ org.jboss.search.LookUp.prototype.getHistory = function() {
         this.history_ = new goog.History();
     }
     return this.history_;
-}
+};
+
+/**
+ * @param {org.jboss.search.page.filter.ProjectFilter} filter
+ */
+org.jboss.search.LookUp.prototype.setProjectFilter = function(filter) {
+    this.projectFilter_ = filter;
+};
+
+/**
+ * @return {org.jboss.search.page.filter.ProjectFilter}
+ */
+org.jboss.search.LookUp.prototype.getProjectFilter = function() {
+    return this.projectFilter_;
+};

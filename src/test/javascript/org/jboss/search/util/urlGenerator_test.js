@@ -20,7 +20,7 @@ goog.require('org.jboss.search.util.urlGenerator');
 goog.require('goog.Uri');
 goog.require('goog.testing.jsunit');
 
-var testUrlGenerator = function() {
+var testSearchUrlGenerator = function() {
 
     var root = "http://localhost:1234";
     var url = new goog.Uri(root);
@@ -42,7 +42,8 @@ var testUrlGenerator = function() {
                 "query",
                 "field=dcp_type", "field=dcp_id", "field=dcp_title", "field=dcp_contributors", "field=dcp_project",
                 "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_url_view",
-                "query_highlight=true"
+                "query_highlight=true",
+                "facet=per_project_counts", "facet=per_dcp_type_counts"
             ].join('&')
         ].join('?'),
         urlString);
@@ -55,7 +56,8 @@ var testUrlGenerator = function() {
                 "query=%20",
                 "field=dcp_type", "field=dcp_id", "field=dcp_title", "field=dcp_contributors", "field=dcp_project",
                 "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_url_view",
-                "query_highlight=true"
+                "query_highlight=true",
+                "facet=per_project_counts", "facet=per_dcp_type_counts"
             ].join('&')
         ].join('?'),
         urlString);
@@ -68,7 +70,8 @@ var testUrlGenerator = function() {
                 "query=dummy",
                 "field=dcp_type", "field=dcp_id", "field=dcp_title", "field=dcp_contributors", "field=dcp_project",
                 "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_url_view",
-                "query_highlight=true"
+                "query_highlight=true",
+                "facet=per_project_counts", "facet=per_dcp_type_counts"
             ].join('&')
         ].join('?'),
         urlString);
@@ -82,6 +85,7 @@ var testUrlGenerator = function() {
                 "field=dcp_type", "field=dcp_id", "field=dcp_title", "field=dcp_contributors", "field=dcp_project",
                 "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_url_view",
                 "query_highlight=true",
+                "facet=per_project_counts", "facet=per_dcp_type_counts",
                 "from=190"
             ].join('&')
         ].join('?'),
@@ -94,7 +98,8 @@ var testUrlGenerator = function() {
             [
                 "query=dummy",
                 "field",
-                "query_highlight=false"
+                "query_highlight=false",
+                "facet=per_project_counts", "facet=per_dcp_type_counts"
             ].join('&')
         ].join('?'),
         urlString);
@@ -105,7 +110,8 @@ var testUrlGenerator = function() {
             root,
             [
                 "query=dummy",
-                "query_highlight=false"
+                "query_highlight=false",
+                "facet=per_project_counts", "facet=per_dcp_type_counts"
             ].join('&')
         ].join('?'),
         urlString);
@@ -116,8 +122,56 @@ var testUrlGenerator = function() {
             root,
             [
                 "query=dummy",
-                "query_highlight=true"
+                "query_highlight=true",
+                "facet=per_project_counts", "facet=per_dcp_type_counts"
             ].join('&')
         ].join('?'),
         urlString);
+};
+
+var testProjectSuggestionsUrlGenerator = function() {
+
+    var root = "http://localhost:1234";
+    var url = new goog.Uri(root);
+    var g_ = org.jboss.search.util.urlGenerator;
+
+
+    var urlString;
+
+    urlString = g_.projectNameSuggestionsUrl(null);
+    assertEquals(
+        null,
+        urlString);
+
+    urlString = g_.projectNameSuggestionsUrl(url.clone());
+    assertEquals(
+        [
+            root,
+            [
+                "query"
+            ].join('&')
+        ].join('?'),
+        urlString);
+
+    urlString = g_.projectNameSuggestionsUrl(url.clone(), "test");
+    assertEquals(
+        [
+            root,
+            [
+                "query=test"
+            ].join('&')
+        ].join('?'),
+        urlString);
+
+    urlString = g_.projectNameSuggestionsUrl(url.clone(), "test", 3);
+    assertEquals(
+        [
+            root,
+            [
+                "query=test",
+                "size=3"
+            ].join('&')
+        ].join('?'),
+        urlString);
+
 };

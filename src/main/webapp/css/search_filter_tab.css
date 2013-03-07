@@ -109,3 +109,19 @@
     line-height: 1.5;
     margin-left: 10px;
 }
+
+/*
+    ======================================================================
+    Specific to Project Filter.
+    ======================================================================
+*/
+
+#project_filter .filter_items em {
+    font-weight: bold;
+}
+
+#project_filter .filter_items .did_you_mean {
+    /*font-style: italic;*/
+    color: gray;
+    margin: 8px 0 5px 0;
+}

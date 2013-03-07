@@ -21,7 +21,7 @@ goog.require('org.jboss.search.LookUp');
 
 goog.require('goog.testing.jsunit');
 
-var testNormalizer = function() {
+var testNormalizeSearchResponse = function() {
 
     var response = {
         timed_out: false,
@@ -32,17 +32,49 @@ var testNormalizer = function() {
 
     var data;
     try {
-        data = org.jboss.search.response.normalize(response,'test');
+        data = org.jboss.search.response.normalizeSearchResponse(response,'test');
         fail('normalize requires project map to be set first');
     } catch (e) {
         org.jboss.search.LookUp.getInstance().setProjectMap({});
-        data = org.jboss.search.response.normalize(response,'test');
+        data = org.jboss.search.response.normalizeSearchResponse(response,'test');
     }
 
     assertEquals('user_query = "test"', 'test', data['user_query']);
     assertFalse('', data['timed_out']);
     assertTrue('', goog.isDefAndNotNull(data['hits']));
     assertTrue('', goog.isDefAndNotNull(data['hits']['hits']));
+};
+
+var testNormalizeProjectNameSuggestionResponse = function() {
+
+    var items = [];
+    var did_you_mean = [];
+    var result = org.jboss.search.response.normalizeProjectSuggestionsResponse(items, did_you_mean);
+
+    assertEquals(0, result.items.length);
+    assertEquals(0, result.did_you_mean_items.length);
+
+    items = [
+        { highlight: { dcp_project_name : { edgengram: 'A'}}, fields: { dcp_project: "1" }},
+        { highlight: { dcp_project_name : { edgengram: 'B'}}, fields: { dcp_project: "2" }},
+        { highlight: { dcp_project_name : { edgengram: 'C'}}, fields: { dcp_project: "3" }}
+    ];
+
+    did_you_mean = [
+        { fields: { dcp_project: "2", dcp_project_name: "B" }},
+        { fields: { dcp_project: "4", dcp_project_name: "D" }}
+    ];
+
+    result = org.jboss.search.response.normalizeProjectSuggestionsResponse(items, did_you_mean);
+
+    assertEquals(3, result.items.length);
+    assertEquals('1', result.items[0].code);
+    assertEquals('2', result.items[1].code);
+    assertEquals('3', result.items[2].code);
+
+    assertEquals(1, result.did_you_mean_items.length);
+    assertEquals('4', result.did_you_mean_items[0].code);
+
 };
 
 var testGravatarEmailHash = function() {
