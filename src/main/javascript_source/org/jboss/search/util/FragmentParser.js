@@ -62,7 +62,7 @@ org.jboss.search.util.FragmentParser.prototype.getUserQuery = function(fragment)
 };
 
 /**
- *
+ * Extract named parameters from URL fragment and return them as an object.
  * @param {String=} opt_fragment
  * @return {!Object}
  */
@@ -93,6 +93,12 @@ org.jboss.search.util.FragmentParser.prototype.parse = function(opt_fragment) {
                 } catch (e) {
                     // TODO add logging
                 }
+            }
+
+            // TODO use switch
+            token = "log=";
+            if (goog.string.caseInsensitiveStartsWith(part, token)) {
+                parsed['log'] = goog.string.urlDecode(goog.string.trim(goog.string.removeAt(part, 0, token.length)))
             }
         });
     }

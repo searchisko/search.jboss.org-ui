@@ -14,6 +14,8 @@
   \
   \
   \
+  --namespace="org.jboss.search.logging.Logging" \
+  \
   --namespace="init" \
   \
   --namespace="org.jboss.search.LookUp" \

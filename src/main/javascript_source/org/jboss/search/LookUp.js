@@ -26,9 +26,8 @@
 
 goog.provide('org.jboss.search.LookUp');
 
+goog.require('goog.History');
 goog.require('goog.net.XhrManager');
-goog.require('goog.net.XhrManager.Event');
-goog.require('goog.net.XhrManager.Request');
 
 /**
  * @constructor
@@ -46,6 +45,12 @@ org.jboss.search.LookUp = function() {
      * @private
      */
     this.xhrManager_;
+
+    /**
+     * @type {goog.History}
+     * @private
+     */
+    this.history_;
 
 };
 goog.addSingletonGetter(org.jboss.search.LookUp);
@@ -79,3 +84,15 @@ org.jboss.search.LookUp.prototype.getXhrManager = function() {
     }
     return this.xhrManager_;
 };
+
+/**
+ * Return instance of goog.History.
+ * It is a singleton instance at the application level.
+ * @return {goog.History}
+ */
+org.jboss.search.LookUp.prototype.getHistory = function() {
+    if (!goog.isDefAndNotNull(this.history_)) {
+        this.history_ = new goog.History();
+    }
+    return this.history_;
+}

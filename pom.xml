@@ -392,27 +392,28 @@
                         <executions>
 
                             <!--
+                            TODO: We can remove in the future...
                             ==========================================================
-                            Exclude LoggingWindow.js from the compilation/minification
+                            Exclude Logging.js from the compilation/minification
                             ==========================================================
                             -->
-                            <execution>
-                                <id>remove-logging</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                        <exec dir="${project.build.directory}/javascriptFramework/output/debugSource/" executable="rm">
-                                            <arg line=" -vf LoggingWindow.js"/>
-                                        </exec>
-                                        <!--<exec dir="${project.build.directory}/javascriptFramework/output/assertionSource/" executable="rm">-->
-                                            <!--<arg line=" -vf LoggingWindow.js"/>-->
+                            <!--<execution>-->
+                                <!--<id>remove-logging</id>-->
+                                <!--<phase>compile</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>run</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--<tasks>-->
+                                        <!--<exec dir="${project.build.directory}/javascriptFramework/output/debugSource/" executable="rm">-->
+                                            <!--<arg line=" -vf Logging.js"/>-->
                                         <!--</exec>-->
-                                    </tasks>
-                                </configuration>
-                            </execution>
+                                        <!--<exec dir="${project.build.directory}/javascriptFramework/output/assertionSource/" executable="rm">-->
+                                            <!--<arg line=" -vf Logging.js"/>-->
+                                        <!--</exec>-->
+                                    <!--</tasks>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
 
                             <!--
                             ==========================================================

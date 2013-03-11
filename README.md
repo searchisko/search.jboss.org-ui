@@ -65,11 +65,8 @@ The script will print out list of JS scripts in correct order. Just copy and pas
 
 #### Testing Manually in Browser
 
-If you want to load the application into browser and test/play with it manually then use `buildForTesting.sh` or `buildForTestingWithLogging.sh` script.
+If you want to load the application into browser and test/play with it manually then use `buildForTesting.sh` script.
 When executed it builds `testing-only.js` which is referenced from `index.html`.
-
-The only difference between `buildForTesting.sh` and `buildForTestingWithLogging.sh` is that the later makes use of Closure logging (by including
-`src/main/javascript/LoggingWindow.js`).
 
 ### Closure Templates
 

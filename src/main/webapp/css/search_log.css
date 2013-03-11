@@ -1,5 +1,4 @@
-/**
- * @preserve
+/*
  * JBoss, Home of Professional Open Source
  * Copyright 2012 Red Hat Inc. and/or its affiliates and other contributors
  * as indicated by the @authors tag. All rights reserved.
@@ -17,12 +16,12 @@
  * limitations under the License.
  */
 
-goog.provide('init');
+/*
+    ======================================================================
+    Logging window.
+    ======================================================================
+*/
 
-goog.require('org.jboss.search.logging.Logging');
-goog.require('org.jboss.search.App');
-
-{
-    new org.jboss.search.logging.Logging();
-    new org.jboss.search.App();
+#log {
+    display: none;
 }
