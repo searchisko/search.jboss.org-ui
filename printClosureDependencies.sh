@@ -18,6 +18,8 @@
   --namespace="org.jboss.search.Constants" \
   --namespace="org.jboss.search.SearchFieldHandler" \
   \
+  --namespace="org.jboss.search.logging.Logging" \
+  \
   --namespace="org.jboss.search.suggestions.event.EventType" \
   --namespace="org.jboss.search.suggestions.event.SearchStart" \
   --namespace="org.jboss.search.suggestions.event.SearchFinish" \
