@@ -23,7 +23,7 @@ goog.require('org.jboss.search.page.filter.ProjectFilter');
 goog.require('org.jboss.search.list.project.Project');
 goog.require('org.jboss.search.page.element.Status');
 goog.require('org.jboss.search.page.SearchPage');
-goog.require('org.jboss.search.util.FragmentParser');
+goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.Constants');
 
@@ -115,7 +115,6 @@ org.jboss.search.App = function() {
 //    var window_ = window || goog.dom.getWindow(goog.dom.getOwnerDocument(query_field));
     var history = org.jboss.search.LookUp.getInstance().getHistory();
 
-    var fragmentParser = new org.jboss.search.util.FragmentParser();
     var searchPageContext = goog.getObjectByName('document');
 
     /**
@@ -153,7 +152,7 @@ org.jboss.search.App = function() {
     // navigation controller
     var navigationController = function (e) {
         // e.isNavigate (true if value in browser address bar is changed manually)
-        var parsedFragment = fragmentParser.parse(e.token);
+        var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
         var query = parsedFragment['query'];
         var page = parsedFragment['page'];
         if (goog.isDefAndNotNull(query)) {

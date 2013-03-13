@@ -23,7 +23,7 @@
 
 goog.provide('org.jboss.search.logging.Logging');
 
-goog.require('org.jboss.search.util.FragmentParser');
+goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.LookUp');
 
 goog.require('goog.events');
@@ -42,9 +42,8 @@ goog.require('goog.debug.Logger');
  */
 org.jboss.search.logging.Logging = function() {
     goog.Disposable.call(this);
-    this.fragmentParser_ = new org.jboss.search.util.FragmentParser();
     this.navigationController_ = goog.bind(function (e) {
-        var parsedFragment = this.fragmentParser_.parse(e.token);
+        var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
         var log = parsedFragment['log'];
         this.initLogging(log);
     }, this);
@@ -57,7 +56,6 @@ goog.inherits(org.jboss.search.logging.Logging, goog.Disposable);
 org.jboss.search.logging.Logging.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.historyListenerId_);
     delete this.navigationController_;
-    delete this.fragmentParser_;
 };
 
 /**

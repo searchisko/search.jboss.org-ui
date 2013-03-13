@@ -39,14 +39,15 @@
   \
   --namespace="org.jboss.search.response" \
   \
-  --namespace="org.jboss.search.util.FragmentParser" \
+  --namespace="org.jboss.search.util.fragmentParser" \
+  --namespace="org.jboss.search.util.fragmentParser.UI_param" \
+  --namespace="org.jboss.search.util.fragmentParser.INTERNAL_param" \
   --namespace="org.jboss.search.util.paginationGenerator" \
   --namespace="org.jboss.search.util.urlGenerator" \
   \
   \
   \
   --namespace="test.org.jboss.search.SearchFieldHandlerAsyncTest" \
-  --namespace="test.org.jboss.search.util.FragmentParserTest" \
   --namespace="test.org.jboss.search.suggestions.query.model.ModelTest" \
 
 # prepare the output for the jsTestDriver.conf format
