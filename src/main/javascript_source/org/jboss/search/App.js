@@ -24,6 +24,7 @@ goog.require('org.jboss.search.list.project.Project');
 goog.require('org.jboss.search.page.element.Status');
 goog.require('org.jboss.search.page.SearchPage');
 goog.require('org.jboss.search.util.fragmentParser');
+goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.Constants');
 
@@ -153,8 +154,8 @@ org.jboss.search.App = function() {
     var navigationController = function (e) {
         // e.isNavigate (true if value in browser address bar is changed manually)
         var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
-        var query = parsedFragment['query'];
-        var page = parsedFragment['page'];
+        var query = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.QUERY];
+        var page = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.PAGE];
         if (goog.isDefAndNotNull(query)) {
             searchPage.runSearch(query, page);
         } else {

@@ -17,13 +17,16 @@
  */
 
 /**
- * @fileoverview
+ * @fileoverview Logging for the search web UI application. It allows to start/stop capturing
+ * logs into customized logging window based on URL fragment parameters.
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
 goog.provide('org.jboss.search.logging.Logging');
+goog.provide('org.jboss.search.logging.Logging.Type');
 
 goog.require('org.jboss.search.util.fragmentParser');
+goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.search.LookUp');
 
 goog.require('goog.events');
@@ -36,7 +39,9 @@ goog.require('goog.debug.FancyWindow');
 goog.require('goog.debug.Logger');
 
 /**
- *
+ * Create a new instance of Logging.
+ * It listens on history objects for NAVIGATE event and checks if 'log' URL fragment parameter is provided.
+ * If yes then it creates appropriate logging window and starts capturing on it.
  * @constructor
  * @extends {goog.Disposable}
  */
@@ -44,47 +49,121 @@ org.jboss.search.logging.Logging = function() {
     goog.Disposable.call(this);
     this.navigationController_ = goog.bind(function (e) {
         var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
-        var log = parsedFragment['log'];
-        this.initLogging(log);
+        var log = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.LOG];
+        if (goog.isDef(log)) {
+            this.startLogging(log);
+        } else {
+            this.stopLogging();
+        }
     }, this);
     var history = org.jboss.search.LookUp.getInstance().getHistory();
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, this.navigationController_);
+
+    /**
+     * @private
+     */
+    this.fancyWindow_;
 };
 goog.inherits(org.jboss.search.logging.Logging, goog.Disposable);
 
 /** @inheritDoc */
 org.jboss.search.logging.Logging.prototype.disposeInternal = function() {
+    this.stopLogging();
     goog.events.unlistenByKey(this.historyListenerId_);
     delete this.navigationController_;
 };
 
 /**
- *
- * @param {string} name
+ * Start capturing logs into specific logging window type.
+ * Currently supported types:
+ * <ul>
+ *     <li> console - use built in console if browser supports it
+ *     <li> fancyWindow - full features logging console in a new browser window
+ * </ul>
+ * @param {string} type
+ * @see {org.jboss.search.logging.Logging.Type}
  */
-org.jboss.search.logging.Logging.prototype.initLogging = function(name) {
-    switch (name) {
-        case 'console' :
-            /* var consoleWindow = */ goog.debug.Console.autoInstall();
-            if (goog.debug.Console.instance) {
-                goog.debug.Console.instance.setCapturing(true);
-            }
+org.jboss.search.logging.Logging.prototype.startLogging = function(type) {
+    switch (type) {
+
+        case org.jboss.search.logging.Logging.Type.CONSOLE :
+            this.disableFancyWindow_();
+            this.enableConsole_();
             break;
-        case 'divConsole' :
+//        case 'divConsole' :
             // var log_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('log'));
-            break;
-        case 'debugWindow' :
-            break;
-        case 'fancyWindow' :
-            var debugWindow = new goog.debug.FancyWindow('');
-            debugWindow.setEnabled(true);
-            debugWindow.init();
+//            break;
+//        case 'debugWindow' :
+//            break;
+        case org.jboss.search.logging.Logging.Type.FANCY_WINDOW :
+            this.disableConsole_();
+            this.enableFancyWindow_();
             break;
         default :
-            // close any existing Logging window
-            if (goog.debug.Console.instance) {
-                goog.debug.Console.instance.setCapturing(false);
-//                goog.debug.Console.instance = null;
-            }
+            this.stopLogging();
     }
+};
+
+/**
+ * Stops logging in any capturing logging window.
+ */
+org.jboss.search.logging.Logging.prototype.stopLogging = function() {
+    this.disableConsole_();
+    this.disableFancyWindow_();
+};
+
+/**
+ * Disables capturing for console.
+ * @private
+ */
+org.jboss.search.logging.Logging.prototype.disableConsole_ = function() {
+    if (!goog.isDefAndNotNull(goog.debug.Console.instance)) {
+        goog.debug.Console.instance.setCapturing(false);
+    }
+};
+
+/**
+ * Enables console and makes it capturing.
+ * @private
+ */
+org.jboss.search.logging.Logging.prototype.enableConsole_ = function() {
+    if (!goog.isDefAndNotNull(goog.debug.Console.instance)) {
+        goog.debug.Console.autoInstall();
+    }
+    goog.debug.Console.instance.setCapturing(true);
+};
+
+/**
+ * Disables capturing for fancyWindow and disables it.
+ * @private
+ */
+org.jboss.search.logging.Logging.prototype.disableFancyWindow_ = function() {
+    if (goog.isDefAndNotNull(this.fancyWindow_)) {
+        this.fancyWindow_.setCapturing(false);
+        this.fancyWindow_.setEnabled(false);
+    }
+};
+
+/**
+ * Makes fancyWindow capturing, enabled and opened.
+ * @private
+ */
+org.jboss.search.logging.Logging.prototype.enableFancyWindow_ = function() {
+    if (!goog.isDefAndNotNull(this.fancyWindow_)) {
+        this.fancyWindow_ = new goog.debug.FancyWindow('');
+    }
+    if (!this.fancyWindow_.isCapturing()) {
+        this.fancyWindow_.setCapturing(true);
+    }
+    this.fancyWindow_.setEnabled(true);
+    this.fancyWindow_.init();
+};
+
+/**
+ * Supported logging windows types.
+ * @enum {string}
+ */
+org.jboss.search.logging.Logging.Type = {
+    CONSOLE      : 'console',
+    FANCY_WINDOW : 'fancyWindow'
 };
