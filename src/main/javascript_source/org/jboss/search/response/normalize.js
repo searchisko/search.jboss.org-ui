@@ -43,9 +43,10 @@ goog.require('goog.memoize');
  * @param {!Object} response raw response from DCP search API.
  * @param {string=} opt_query related user query
  * @param {number=} opt_page search results page number [1..x]
+ * @param {string=} opt_log type of logging windows is used
  * @return {!Object}
  */
-org.jboss.search.response.normalizeSearchResponse = function(response, opt_query, opt_page) {
+org.jboss.search.response.normalizeSearchResponse = function(response, opt_query, opt_page, opt_log) {
 
     var output = {};
 
@@ -94,7 +95,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, opt_query
     // ==========================================
     var total = /** @type {number} */ (goog.object.getValueByKeys(output, ["hits", "total"]));
     if (goog.isDefAndNotNull(total)) {
-        output.pagination = org.jboss.search.util.paginationGenerator.generate(query, actualPage, total);
+        output.pagination = org.jboss.search.util.paginationGenerator.generate(query, actualPage, total, opt_log);
     }
 
     var hits = /** @type {Array} */ (goog.object.getValueByKeys(output, ["hits", "hits"]));

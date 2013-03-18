@@ -28,10 +28,11 @@ goog.require('goog.events.Event');
 
 /**
  * @param {string} query
+ * @param {string=} opt_page
  * @constructor
  * @extends {goog.events.Event}
  */
-org.jboss.search.page.event.QuerySubmitted = function(query) {
+org.jboss.search.page.event.QuerySubmitted = function(query, opt_page) {
     goog.events.Event.call(this, org.jboss.search.page.event.EventType.QUERY_SUBMITTED);
 
     /**
@@ -39,6 +40,12 @@ org.jboss.search.page.event.QuerySubmitted = function(query) {
      * @private
      */
     this.query_ = query || '';
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.page_ = opt_page || '1';
 };
 goog.inherits(org.jboss.search.page.event.QuerySubmitted, goog.events.Event);
 
@@ -47,4 +54,11 @@ goog.inherits(org.jboss.search.page.event.QuerySubmitted, goog.events.Event);
  */
 org.jboss.search.page.event.QuerySubmitted.prototype.getQuery = function() {
     return this.query_;
+};
+
+/**
+ * @return {string}
+ */
+org.jboss.search.page.event.QuerySubmitted.prototype.getPage = function() {
+    return this.page_;
 };

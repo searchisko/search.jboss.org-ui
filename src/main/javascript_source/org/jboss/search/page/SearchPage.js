@@ -354,8 +354,9 @@ org.jboss.search.page.SearchPage.prototype.setUserQuery_ = function(query) {
  * Set user query and execute the query.
  * @param {!string} query_string
  * @param {number=} opt_page
+ * @param {string=} opt_log
  */
-org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, opt_page) {
+org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, opt_page, opt_log) {
 
     this.disposeUserEntertainment_();
     this.setUserQuery_(query_string);
@@ -383,7 +384,7 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
                     if (event.target.isSuccess()) {
                         var response = event.target.getResponseJson();
 //                        console.log("xhr response",response);
-                        var data = org.jboss.search.response.normalizeSearchResponse(response, query_string, opt_page);
+                        var data = org.jboss.search.response.normalizeSearchResponse(response, query_string, opt_page, opt_log);
 //                        console.log("normalized data",data);
                         try {
                             var html = org.jboss.search.page.templates.search_results(data);

@@ -59,5 +59,17 @@ var testPaginationGeneratorInfiniteLoop = function() {
     pagination = g_.generate("test", 1, org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE);
     assertEquals(1, pagination.total_pages);
     assertEquals(0, pagination.array.length);
+};
 
+var testPaginationGeneratorLogParameter = function() {
+
+    var g_ = org.jboss.search.util.paginationGenerator;
+    var pagination;
+
+    // make sure pagination is generated, thus SEARCH_RESULTS_PER_PAGE + 1
+    pagination = g_.generate("test", 1, org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE + 1, "console");
+    assertEquals(2, pagination.total_pages);
+    assertEquals(2, pagination.array.length);
+
+    assertEquals("#q=test&page=1&log=console", pagination.array[0].fragment);
 };

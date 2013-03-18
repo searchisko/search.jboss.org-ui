@@ -32,13 +32,27 @@ goog.require('org.jboss.search.Constants');
  * @param {string} user_query
  * @param {number} actual_page
  * @param {number} search_total_hits
+ * @param {string=} opt_log
  * @return {{total_pages: number, array: !Array.<{page: number, symbol: string, fragment: string}>}}
  */
-org.jboss.search.util.paginationGenerator.generate = function(user_query, actual_page, search_total_hits) {
+org.jboss.search.util.paginationGenerator.generate = function(user_query, actual_page, search_total_hits, opt_log) {
     var array = [];
     var result = { total_pages: 0, array: array};
 
     if (goog.isNumber(search_total_hits) && search_total_hits > 0) {
+
+        var generateItem_ = function(page, user_query, opt_log) {
+            var arr_ = [['#q=',user_query].join(''),["page=",page].join('')];
+            if (goog.isDefAndNotNull(opt_log)) {
+                arr_.push(["log=",opt_log].join(''));
+            }
+            return {
+                'page'     : page,
+                'symbol'   : page.toString(10),
+                'fragment' : arr_.join('&')
+            }
+        };
+
         var hits_per_page = org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE;
         var pagination_size = org.jboss.search.Constants.PAGINATION_MAX_ITEMS_COUNT;
         var total_pages = Math.ceil(search_total_hits/hits_per_page);
@@ -60,22 +74,14 @@ org.jboss.search.util.paginationGenerator.generate = function(user_query, actual
                 // can we add next page?
                 if (max < total_pages) {
                     var page = (result.array.length > 0 ? max + 1 : max);
-                    result.array.push({
-                        'page'     : page,
-                        'symbol'   : page.toString(10),
-                        'fragment' : [['#q=',user_query].join(''),["page=",page].join('')].join('&')
-                    });
+                    result.array.push(generateItem_(page, user_query, opt_log));
                 }
                 push = !push;
             } else {
                 // can we add previous page?
                 if (min > 1) {
                     var page = (result.array.length > 0 ? min - 1 : min);
-                    result.array.unshift({
-                        'page'     : page,
-                        'symbol'   : page.toString(10),
-                        'fragment' : [['#q=',user_query].join(''),["page=",page].join('')].join('&')
-                    });
+                    result.array.unshift(generateItem_(page, user_query, opt_log));
                 }
                 push = !push;
             }

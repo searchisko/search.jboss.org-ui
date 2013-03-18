@@ -23,6 +23,7 @@
 
 goog.provide('org.jboss.search.util.fragmentParser');
 goog.provide('org.jboss.search.util.fragmentParser.UI_param');
+goog.provide('org.jboss.search.util.fragmentParser.UI_param_suffix');
 goog.provide('org.jboss.search.util.fragmentParser.INTERNAL_param');
 
 goog.require('goog.array');
@@ -49,10 +50,10 @@ org.jboss.search.util.fragmentParser.UI_param = {
 };
 
 /**
+ * URL fragment parameters used in the web UI with '=' suffix
  * @enum {string}
- * @private
  */
-org.jboss.search.util.fragmentParser.paramPrefix = {
+org.jboss.search.util.fragmentParser.UI_param_suffix = {
     QUERY: org.jboss.search.util.fragmentParser.UI_param.QUERY+"=",
     LOG  : org.jboss.search.util.fragmentParser.UI_param.LOG+"=",
     PAGE : org.jboss.search.util.fragmentParser.UI_param.PAGE+"="
@@ -60,7 +61,7 @@ org.jboss.search.util.fragmentParser.paramPrefix = {
 
 /**
  * Extract named parameters from URL fragment and return them as an object.
- * @param {String=} opt_fragment
+ * @param {string=} opt_fragment
  * @return {!Object}
  */
 org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
@@ -69,7 +70,7 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
 
     if (goog.isDef(opt_fragment) && !goog.string.isEmptySafe(opt_fragment)) {
         var parts = goog.string.trim(/** @type {string} */ (opt_fragment)).split('&');
-        var p_ = org.jboss.search.util.fragmentParser.paramPrefix;
+        var p_ = org.jboss.search.util.fragmentParser.UI_param_suffix;
         var intp_ = org.jboss.search.util.fragmentParser.INTERNAL_param;
 
         goog.array.forEach(parts, function(part){

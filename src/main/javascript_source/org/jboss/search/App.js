@@ -25,6 +25,7 @@ goog.require('org.jboss.search.page.element.Status');
 goog.require('org.jboss.search.page.SearchPage');
 goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
+goog.require('org.jboss.search.util.fragmentParser.UI_param_suffix');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.Constants');
 
@@ -124,10 +125,27 @@ org.jboss.search.App = function() {
      * gets called. It changes URL fragment and thus calls navigatorController.
      *
      * @param {!string} query_string value to be set to URL fragment, the value is encoded first!
-     * @param {number=} opt_page
+     * @param {string=} opt_page
      */
     var urlSetFragmentFunction = function(query_string, opt_page) {
-        history.setToken("q=" + goog.string.urlEncode(query_string));
+        var p_ = org.jboss.search.util.fragmentParser.UI_param_suffix;
+
+        // always use query
+        var token = [[p_.QUERY,goog.string.urlEncode(query_string)].join('')];
+
+        // use page is provided
+        if (goog.isDefAndNotNull(opt_page)) {
+            token.push([p_.PAGE,goog.string.urlEncode(opt_page)].join(''));
+        }
+
+        // is log was used in previous call, keep it
+        var parsedFragment = org.jboss.search.util.fragmentParser.parse(history.getToken());
+        var log = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.LOG];
+        if (goog.isDefAndNotNull(log) && !goog.string.isEmpty(log)) {
+            token.push([p_.LOG,goog.string.urlEncode(log)].join(''));
+        }
+
+        history.setToken(token.join('&'));
     };
 
     status.setProgressValue(0.8);
@@ -154,7 +172,6 @@ org.jboss.search.App = function() {
         function (e) {
             var event = /** @type {org.jboss.search.page.event.QuerySubmitted} */ (e);
             var q_ = event.getQuery();
-//            var p_ = event.getPage();
             urlSetFragmentFunction(q_);
         }
     );
@@ -165,8 +182,9 @@ org.jboss.search.App = function() {
         var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
         var query = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.QUERY];
         var page = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.PAGE];
+        var log = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.LOG];
         if (goog.isDefAndNotNull(query)) {
-            this.searchPage.runSearch(query, page);
+            this.searchPage.runSearch(query, page, log);
         } else {
             this.searchPage.clearSearchResults();
         }
