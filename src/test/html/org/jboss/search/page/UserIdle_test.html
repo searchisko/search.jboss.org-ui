@@ -35,10 +35,8 @@
 <script src="../../../../../../main/webapp/js/lib/d3.v3.0.4/d3.v3.min.js"></script>
 <script src="../../../../../../../closure-library-r2388/closure/goog/base.js"></script>
 <script src="UserIdle_test_deps.js"></script>
-<!--<script src="../../../../../javascript/org/jboss/search/page/SearchPageElements_test.js"></script>-->
 <script type="text/javascript">
     goog.require('org.jboss.search.page.UserIdle');
-    goog.require('goog.net.XhrManager');
     goog.require('goog.dom');
 </script>
 
@@ -48,10 +46,9 @@
 
 <script type="text/javascript">
 
-    var xhrManager = new goog.net.XhrManager();
     var element = goog.dom.getElement('content');
 
-    var userIdle = new org.jboss.search.page.UserIdle(xhrManager, element);
+    var userIdle = new org.jboss.search.page.UserIdle(element);
     userIdle.start();
 
 </script>

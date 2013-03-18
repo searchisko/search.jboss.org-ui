@@ -47,14 +47,26 @@ org.jboss.search.page.UserIdle = function(element) {
      * @private
      * @type {!HTMLDivElement} */
     this.element_ = element;
+
+    /**
+     * @private
+     */
+    this.selection_;
 };
 goog.inherits(org.jboss.search.page.UserIdle, goog.Disposable);
 
 /** @inheritDoc */
 org.jboss.search.page.UserIdle.prototype.disposeInternal = function() {
     org.jboss.search.page.UserIdle.superClass_.disposeInternal.call(this);
-    // TODO: clear transition listeners
+
+    // delete transition delay and generated div elements
+    // http://xaedes.de/dev/transitions/
+    if (this.selection_ != null) {
+        this.selection_.transition().duration(0).remove();
+    }
+
     delete this.xhrManager_;
+    delete this.selection_;
     delete this.element_;
 };
 
@@ -105,7 +117,7 @@ org.jboss.search.page.UserIdle.prototype.start = function() {
     };
 
     // excellent read on D3 transitions see http://bost.ocks.org/mike/transition/
-    var content = d3.select(this.element_).selectAll("div")
+    this.selection_ = d3.select(this.element_).selectAll("div")
         .data([
             {'c': 'Go, search for something...'},
             {'c': 'There\'s a lot of content for you to explore.<br>Check some statistics...'},
@@ -113,9 +125,9 @@ org.jboss.search.page.UserIdle.prototype.start = function() {
             {'c': 'Still don\'t know what to do? Read <a href="#">help</a>.'} // TODO missing link to help!
         ]);
 
-    content.enter().append("div").attr('class','entertain_say');
+    this.selection_.enter().append("div").attr('class','entertain_say');
 
-    content.transition().duration(500)
+    this.selection_.transition().duration(500)
         .delay(function(d,i){return i < 3 ? (i+1) * 7000 : 40000;})
         .each('start',function(d,i) { d3.select(this).html(d['c']).style("color", "white"); })
         .each('end',postAction)
