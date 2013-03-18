@@ -17,16 +17,15 @@
  */
 
 /**
- *  @fileoverview Event types for search suggestions events.
- *  @author Lukas Vlcek (lvlcek@redhat.com)
+ * @fileoverview Event types for search page events.
+ * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.suggestions.event.EventType');
+goog.provide('org.jboss.search.page.event.EventType');
 
 goog.require('goog.events');
 
 /** @enum {string} */
-org.jboss.search.suggestions.event.EventType = {
-    SEARCH_START  : goog.events.getUniqueId('search_start'),
-    SEARCH_FINISH : goog.events.getUniqueId('search_finish')
-};
+org.jboss.search.page.event.EventType = {
+    QUERY_SUBMITTED : goog.events.getUniqueId('query_submitted')
+}

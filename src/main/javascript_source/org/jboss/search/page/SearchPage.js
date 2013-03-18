@@ -18,7 +18,6 @@
 
 /**
  *  @fileoverview Object represents the main search page.
- *
  *  @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
@@ -34,36 +33,30 @@ goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.query.view.View');
 goog.require('org.jboss.search.suggestions.event.EventType');
+goog.require('org.jboss.search.page.event.QuerySubmitted');
 
 goog.require('goog.async.Delay');
-
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
-
 goog.require('goog.events');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyEvent');
 goog.require('goog.events.EventType');
 goog.require('goog.events.EventTarget');
-
 goog.require('goog.object');
-
 goog.require('goog.string');
-
 goog.require('goog.Uri');
 
 goog.require('goog.debug.Logger');
 
 /**
  * @param {EventTarget|goog.events.EventTarget} context element to catch click events and control behaviour of the UI. Typically, this is the document.
- * @param {!function(string)} querySelected Once a query is selected then call this function to notify outer controller.
  * @param {!org.jboss.search.page.SearchPageElements} elements HTML elements required by the search page
  * @constructor
  * @extends {goog.events.EventTarget}
  */
 org.jboss.search.page.SearchPage = function(
         context,
-        querySelected,
         elements
     ) {
 
@@ -71,12 +64,12 @@ org.jboss.search.page.SearchPage = function(
 
     var thiz_ = this;
 
-    /** @private */ this.log = goog.debug.Logger.getLogger('SearchPage');
+    /** @private */ this.log_ = goog.debug.Logger.getLogger('SearchPage');
 
     /**
      * @private
      * @type {org.jboss.search.page.SearchPageElements} */
-    this.elements = elements
+    this.elements = elements;
 
     /**
      * @private
@@ -84,7 +77,6 @@ org.jboss.search.page.SearchPage = function(
     this.xhrManager_ = org.jboss.search.LookUp.getInstance().getXhrManager();
 
     /** @private */ this.context = context;
-    /** @private */ this.querySelected = querySelected;
 
     /** @private */ this.query_suggestions_view = new org.jboss.search.suggestions.query.view.View(this.elements.getQuery_suggestions_div());
     /** @private */ this.query_suggestions_model = {};
@@ -113,12 +105,12 @@ org.jboss.search.page.SearchPage = function(
     this.query_suggestions_view.setClickCallbackFunction(
         function() {
             var selectedIndex = thiz_.query_suggestions_view.getSelectedIndex();
-            thiz_.hideAndCleanSuggestionsElementAndModel();
+            thiz_.hideAndCleanSuggestionsElementAndModel_();
             thiz_.elements.getQuery_field().focus();
 
             (function(selectedIndex) {
                 // TODO get query_string from model at the selectedIndex position
-                thiz_.querySelected("option was selected by pointer (index: "+selectedIndex+")");
+                thiz_.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted("option was selected by pointer (index: "+selectedIndex+")"));
 
             })(selectedIndex);
         }
@@ -128,7 +120,7 @@ org.jboss.search.page.SearchPage = function(
 
         if (goog.string.isEmptySafe(query_string)) {
 
-            thiz_.hideAndCleanSuggestionsElementAndModel();
+            thiz_.hideAndCleanSuggestionsElementAndModel_();
 
         } else {
 
@@ -157,7 +149,7 @@ org.jboss.search.page.SearchPage = function(
                         response['model']['search']['search']['query'] = query_string;
 
                         var model = /** @type {!Object} */ (goog.object.get(response, "model", {}));
-                        thiz_.query_suggestions_model = thiz_.parseQuerySuggestionsModel(model);
+                        thiz_.query_suggestions_model = thiz_.parseQuerySuggestionsModel_(model);
 
                         if (goog.object.containsKey(response, "view")) {
                             var view = /** @type {!Object} */ (goog.object.get(response, "view", {}));
@@ -166,11 +158,11 @@ org.jboss.search.page.SearchPage = function(
                             thiz_.query_suggestions_view.show();
 
                         } else {
-                            thiz_.hideAndCleanSuggestionsElementAndModel();
+                            thiz_.hideAndCleanSuggestionsElementAndModel_();
                         }
                     } else {
                         // We failed getting query suggestions
-                        thiz_.hideAndCleanSuggestionsElementAndModel();
+                        thiz_.hideAndCleanSuggestionsElementAndModel_();
                     }
 
                 }
@@ -182,7 +174,7 @@ org.jboss.search.page.SearchPage = function(
     this.dateClickListenerId_ = goog.events.listen(this.elements.getDate_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
-            thiz_.isDateFilterExpanded() ? thiz_.collapseDateFilter() : thiz_.expandDateFilter()
+            thiz_.isDateFilterExpanded_() ? thiz_.collapseDateFilter_() : thiz_.expandDateFilter_()
         }
     );
 
@@ -190,7 +182,7 @@ org.jboss.search.page.SearchPage = function(
     this.projectClickListenerId_ = goog.events.listen(this.elements.getProject_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
-            thiz_.isProjectFilterExpanded() ? thiz_.collapseProjectFilter() : thiz_.expandProjectFilter()
+            thiz_.isProjectFilterExpanded_() ? thiz_.collapseProjectFilter_() : thiz_.expandProjectFilter_()
         }
     );
 
@@ -198,7 +190,7 @@ org.jboss.search.page.SearchPage = function(
     this.authorClickListenerId_ = goog.events.listen(this.elements.getAuthor_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
-            thiz_.isAuthorFilterExpanded() ? thiz_.collapseAuthorFilter() : thiz_.expandAuthorFilter()
+            thiz_.isAuthorFilterExpanded_() ? thiz_.collapseAuthorFilter_() : thiz_.expandAuthorFilter_()
         }
     );
 
@@ -208,29 +200,29 @@ org.jboss.search.page.SearchPage = function(
         goog.events.EventType.CLICK,
         function(/** @type {goog.events.Event} */ e) {
 
-//            log.info("Context clicked: " + goog.debug.expose(e));
+//            thiz_.log_.info("Context clicked: " + goog.debug.expose(e));
 
             // if search field is clicked then do not hide search suggestions
             if (e.target !== thiz_.elements.getQuery_field()) {
-                thiz_.hideAndCleanSuggestionsElementAndModel();
+                thiz_.hideAndCleanSuggestionsElementAndModel_();
             }
 
             // if date filter (sub)element is clicked do not hide date filter
             if (e.target !== thiz_.elements.getDate_filter_tab_div() &&
                 !goog.dom.contains(thiz_.elements.getDate_filter_body_div(), e.target)) {
-                thiz_.collapseDateFilter();
+                thiz_.collapseDateFilter_();
             }
 
             // if project filter (sub)element is clicked do not hide project filter
             if (e.target !== thiz_.elements.getProject_filter_tab_div() &&
                 !goog.dom.contains(thiz_.elements.getProject_filter_body_div(), e.target)) {
-                thiz_.collapseProjectFilter();
+                thiz_.collapseProjectFilter_();
             }
 
             // if author filter (sub)element is clicked do not hide author filter
             if (e.target !== thiz_.elements.getAuthor_filter_tab_div() &&
                 !goog.dom.contains(thiz_.elements.getAuthor_filter_body_div(), e.target)) {
-                thiz_.collapseAuthorFilter();
+                thiz_.collapseAuthorFilter_();
             }
 
         });
@@ -254,7 +246,7 @@ org.jboss.search.page.SearchPage = function(
         100,
         suggestionsCallback,
         null,
-        this.getPresetKeyHandlers()
+        this.getPresetKeyHandlers_()
     );
 
     this.userIdle = new org.jboss.search.page.UserIdle(elements.getSearch_results_div());
@@ -294,11 +286,10 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     // Remove references to COM objects.
 
     // Remove references to DOM nodes, which are COM objects in IE.
-    delete this.log;
+    delete this.log_;
 
     delete this.xhrManager_;
     delete this.context;
-    delete this.querySelected;
 
     delete this.query_suggestions_model;
 
@@ -322,8 +313,9 @@ org.jboss.search.page.SearchPage.prototype.getSuggestionsUri = function() {
 
 /**
  * Stop and release (dispose) all resources related to user entertainment.
+ * @private
  */
-org.jboss.search.page.SearchPage.prototype.disposeUserEntertainment = function() {
+org.jboss.search.page.SearchPage.prototype.disposeUserEntertainment_ = function() {
     this.userIdleDelay.stop();
     goog.dispose(this.userIdle);
 };
@@ -348,8 +340,9 @@ org.jboss.search.page.SearchPage.prototype.getSearchUri = function() {
 /**
  * Set value of query field.
  * @param {?string} query
+ * @private
  */
-org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
+org.jboss.search.page.SearchPage.prototype.setUserQuery_ = function(query) {
     var newValue = "";
     if (!goog.string.isEmptySafe(query)) {
         newValue = query.trim();
@@ -364,13 +357,13 @@ org.jboss.search.page.SearchPage.prototype.setUserQuery = function(query) {
  */
 org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, opt_page) {
 
-    this.disposeUserEntertainment();
-    this.setUserQuery(query_string);
+    this.disposeUserEntertainment_();
+    this.setUserQuery_(query_string);
 
-    this.log.info("User query [" + query_string + "]");
+    this.log_.info("User query [" + query_string + "]");
 
     this.xhrManager_.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
-    this.disableSearchResults();
+    this.disableSearchResults_();
 
     var query_url_string = org.jboss.search.util.urlGenerator.searchUrl(this.getSearchUri(), query_string, undefined, undefined, opt_page);
 
@@ -398,7 +391,7 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
                         } catch(error) {
                             // Something went wrong when generating search results
                             // TODO fire event (with error)
-                            this.log.severe("Something went wrong",error);
+                            this.log_.severe("Something went wrong",error);
                         }
                     } else {
                         // We failed getting search results data
@@ -408,7 +401,7 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
                         });
                         this.elements.getSearch_results_div().innerHTML = html;
                     }
-                    this.enableSearchResults();
+                    this.enableSearchResults_();
                 },
             this)
         );
@@ -423,25 +416,21 @@ org.jboss.search.page.SearchPage.prototype.clearSearchResults = function() {
     this.elements.getSearch_results_div().innerHTML = '';
 };
 
-/**
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.disableSearchResults = function () {
+/** @private */
+org.jboss.search.page.SearchPage.prototype.disableSearchResults_ = function () {
     goog.dom.classes.add(this.elements.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
 };
 
-/**
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.enableSearchResults = function () {
+/** @private */
+org.jboss.search.page.SearchPage.prototype.enableSearchResults_ = function () {
     goog.dom.classes.remove(this.elements.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
 };
 
 /**
- * @private
  * @return {!Object.<(goog.events.KeyCodes|number), function(goog.events.KeyEvent, goog.async.Delay)>}
+ * @private
  */
-org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
+org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
 
     var thiz_ = this;
 
@@ -451,7 +440,7 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
      */
     var keyCodeEscHandler = function(event, delay) {
         delay.stop();
-        thiz_.hideAndCleanSuggestionsElementAndModel();
+        thiz_.hideAndCleanSuggestionsElementAndModel_();
     };
 
     /**
@@ -490,7 +479,7 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
      */
     var keyCodeTabHandler = function(event, delay) {
         delay.stop();
-        thiz_.hideAndCleanSuggestionsElementAndModel();
+        thiz_.hideAndCleanSuggestionsElementAndModel_();
     };
 
     /**
@@ -499,7 +488,7 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
      */
     var keyCodeEnterHandler = function(event, delay) {
         var selectedIndex = thiz_.query_suggestions_view.getSelectedIndex();
-        thiz_.hideAndCleanSuggestionsElementAndModel();
+        thiz_.hideAndCleanSuggestionsElementAndModel_();
         event.preventDefault();
 
         (function(selectedIndex) {
@@ -507,15 +496,15 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
             if (selectedIndex < 0) {
                 // user hit enter and no suggestions are displayed (yet) use content of query field
                 var query = thiz_.elements.getQuery_field().value;
-                thiz_.querySelected(query);
+                thiz_.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
             } else if (selectedIndex == 0) {
                 // suggestions are displayed, user selected the first one (use what is in query field)
                 var query = thiz_.elements.getQuery_field().value;
-                thiz_.querySelected(query);
+                thiz_.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
             } else if (selectedIndex > 0) {
                 // user selected from suggestions, use what is in model
                 // TODO get query_string from model at the selectedIndex position
-                thiz_.querySelected("option was selected by keys (index: "+selectedIndex+")");
+                thiz_.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted("option was selected by keys (index: "+selectedIndex+")"));
             }
         })(selectedIndex);
     };
@@ -537,10 +526,10 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers = function() {
 };
 
 /**
- * Hide and clean suggestions element and empty the model.
+ * Hide and clean suggestions element and empty the suggestions model.
  * @private
  */
-org.jboss.search.page.SearchPage.prototype.hideAndCleanSuggestionsElementAndModel = function() {
+org.jboss.search.page.SearchPage.prototype.hideAndCleanSuggestionsElementAndModel_ = function() {
 
     this.xhrManager_.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
     // abort with 'true' does not fire any event, thus we have to fire our own event
@@ -552,42 +541,40 @@ org.jboss.search.page.SearchPage.prototype.hideAndCleanSuggestionsElementAndMode
 
 /**
  * TODO
- * @private
  * @param {!Object} model
  * @return {!Object}
+ * @private
  */
-org.jboss.search.page.SearchPage.prototype.parseQuerySuggestionsModel = function(model) {
+org.jboss.search.page.SearchPage.prototype.parseQuerySuggestionsModel_ = function(model) {
     return model;
 };
 
 /**
- * @private
  * @return {boolean}
+ * @private
  */
-org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded = function () {
+org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded_ = function () {
     return !goog.dom.classes.has(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
 /**
- * @private
  * @return {boolean}
+ * @private
  */
-org.jboss.search.page.SearchPage.prototype.isProjectFilterExpanded = function () {
+org.jboss.search.page.SearchPage.prototype.isProjectFilterExpanded_ = function () {
     return !goog.dom.classes.has(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
 /**
- * @private
  * @return {boolean}
+ * @private
  */
-org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded = function () {
+org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded_ = function () {
     return !goog.dom.classes.has(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
-/**
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.expandDateFilter = function () {
+/** @private */
+org.jboss.search.page.SearchPage.prototype.expandDateFilter_ = function () {
 
     goog.dom.classes.add(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
     goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
@@ -601,10 +588,8 @@ org.jboss.search.page.SearchPage.prototype.expandDateFilter = function () {
     this.elements.getAuthor_filter_query_field().blur();
 };
 
-/**
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.expandAuthorFilter = function () {
+/** @private */
+org.jboss.search.page.SearchPage.prototype.expandAuthorFilter_ = function () {
 
     goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
     goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
@@ -618,10 +603,8 @@ org.jboss.search.page.SearchPage.prototype.expandAuthorFilter = function () {
     this.elements.getAuthor_filter_query_field().focus();
 };
 
-/**
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.expandProjectFilter = function () {
+/** @private */
+org.jboss.search.page.SearchPage.prototype.expandProjectFilter_ = function () {
 
     goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
     goog.dom.classes.add(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
@@ -635,28 +618,22 @@ org.jboss.search.page.SearchPage.prototype.expandProjectFilter = function () {
     this.elements.getAuthor_filter_query_field().blur();
 };
 
-/**
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.collapseDateFilter = function () {
+/** @private */
+org.jboss.search.page.SearchPage.prototype.collapseDateFilter_ = function () {
     goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
     goog.dom.classes.add(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
     // blur not needed now
 };
 
-/**
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.collapseProjectFilter = function () {
+/** @private */
+org.jboss.search.page.SearchPage.prototype.collapseProjectFilter_ = function () {
     goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
     goog.dom.classes.add(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
     this.elements.getProject_filter_query_field().blur();
 };
 
-/**
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.collapseAuthorFilter = function () {
+/** @private */
+org.jboss.search.page.SearchPage.prototype.collapseAuthorFilter_ = function () {
     goog.dom.classes.remove(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
     goog.dom.classes.add(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
     this.elements.getAuthor_filter_query_field().blur();
@@ -667,7 +644,7 @@ org.jboss.search.page.SearchPage.prototype.collapseAuthorFilter = function () {
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.collapseAllFilters = function() {
-    if (this.isAuthorFilterExpanded()) this.collapseAuthorFilter();
-    if (this.isProjectFilterExpanded()) this.collapseProjectFilter();
-    if (this.isDateFilterExpanded()) this.collapseDateFilter();
+    if (this.isAuthorFilterExpanded_()) this.collapseAuthorFilter_();
+    if (this.isProjectFilterExpanded_()) this.collapseProjectFilter_();
+    if (this.isDateFilterExpanded_()) this.collapseDateFilter_();
 };

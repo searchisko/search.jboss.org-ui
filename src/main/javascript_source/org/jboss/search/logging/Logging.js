@@ -118,7 +118,7 @@ org.jboss.search.logging.Logging.prototype.stopLogging = function() {
  */
 org.jboss.search.logging.Logging.prototype.disableConsole_ = function() {
     if (!goog.isDefAndNotNull(goog.debug.Console.instance)) {
-        goog.debug.Console.instance.setCapturing(false);
+        try { goog.debug.Console.instance.setCapturing(false); } catch (e) {}
     }
 };
 
@@ -130,7 +130,7 @@ org.jboss.search.logging.Logging.prototype.enableConsole_ = function() {
     if (!goog.isDefAndNotNull(goog.debug.Console.instance)) {
         goog.debug.Console.autoInstall();
     }
-    goog.debug.Console.instance.setCapturing(true);
+    try { goog.debug.Console.instance.setCapturing(true); } catch (e) {}
 };
 
 /**

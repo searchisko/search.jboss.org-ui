@@ -144,24 +144,33 @@ org.jboss.search.App = function() {
         throw new Error('Missing some HTML elements!');
     }
 
-    var searchPage = new org.jboss.search.page.SearchPage(
+    this.searchPage = new org.jboss.search.page.SearchPage(
         searchPageContext,
-        urlSetFragmentFunction,
         searchPageElements
     );
 
+    this.searchEventListenerId_ = goog.events.listen(this.searchPage,
+        org.jboss.search.page.event.EventType.QUERY_SUBMITTED,
+        function (e) {
+            var event = /** @type {org.jboss.search.page.event.QuerySubmitted} */ (e);
+            var q_ = event.getQuery();
+//            var p_ = event.getPage();
+            urlSetFragmentFunction(q_);
+        }
+    );
+
     // navigation controller
-    var navigationController = function (e) {
+    var navigationController = goog.bind(function (e) {
         // e.isNavigate (true if value in browser address bar is changed manually)
         var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
         var query = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.QUERY];
         var page = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.PAGE];
         if (goog.isDefAndNotNull(query)) {
-            searchPage.runSearch(query, page);
+            this.searchPage.runSearch(query, page);
         } else {
-            searchPage.clearSearchResults();
+            this.searchPage.clearSearchResults();
         }
-    };
+    }, this);
 
     // activate URL History manager
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
@@ -224,11 +233,11 @@ org.jboss.search.App = function() {
 
 
     // TODO experiment
-    this.finish_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, function(){
+    this.finish_ = goog.events.listen(this.searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, function(){
         goog.dom.classes.add(spinner_div, const_.HIDDEN);
     });
 
-    this.start_ = goog.events.listen(searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_START, function(){
+    this.start_ = goog.events.listen(this.searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_START, function(){
         goog.dom.classes.remove(spinner_div, const_.HIDDEN);
     });
 
@@ -237,9 +246,21 @@ goog.inherits(org.jboss.search.App, goog.Disposable);
 
 /** @inheritDoc */
 org.jboss.search.App.prototype.disposeInternal = function() {
+
+    // Call the superclass's disposeInternal() method.
     org.jboss.search.App.superClass_.disposeInternal.call(this);
+
+    // Dispose of all Disposable objects owned by this class.
+    goog.dispose(this.searchPage);
+
+    // Remove listeners added by this class.
     goog.events.unlistenByKey(this.historyListenerId_);
     goog.events.unlistenByKey(this.finish_);
     goog.events.unlistenByKey(this.start_);
     goog.events.unlistenByKey(this.unloadId_);
+    goog.events.unlistenByKey(this.searchEventListenerId_);
+
+    // Remove references to COM objects.
+    // Remove references to DOM nodes, which are COM objects in IE.
+    // TODO ^^
 };

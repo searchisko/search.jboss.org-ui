@@ -34,7 +34,8 @@
   --namespace="org.jboss.search.page.SearchPage" \
   --namespace="org.jboss.search.page.SearchPageElements" \
   --namespace="org.jboss.search.page.UserIdle" \
-  \
+  --namespace="org.jboss.search.page.event.EventType" \
+  --namespace="org.jboss.search.page.event.QuerySubmitted" \
   --namespace="org.jboss.search.page.element.Status" \
   \
   --namespace="org.jboss.search.response" \

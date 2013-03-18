@@ -17,16 +17,34 @@
  */
 
 /**
- *  @fileoverview Event types for search suggestions events.
- *  @author Lukas Vlcek (lvlcek@redhat.com)
+ * @fileoverview
+ * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.suggestions.event.EventType');
+goog.provide('org.jboss.search.page.event.QuerySubmitted');
 
-goog.require('goog.events');
+goog.require('org.jboss.search.page.event.EventType');
+goog.require('goog.events.Event');
 
-/** @enum {string} */
-org.jboss.search.suggestions.event.EventType = {
-    SEARCH_START  : goog.events.getUniqueId('search_start'),
-    SEARCH_FINISH : goog.events.getUniqueId('search_finish')
+/**
+ * @param {string} query
+ * @constructor
+ * @extends {goog.events.Event}
+ */
+org.jboss.search.page.event.QuerySubmitted = function(query) {
+    goog.events.Event.call(this, org.jboss.search.page.event.EventType.QUERY_SUBMITTED);
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.query_ = query || '';
+};
+goog.inherits(org.jboss.search.page.event.QuerySubmitted, goog.events.Event);
+
+/**
+ * @return {string}
+ */
+org.jboss.search.page.event.QuerySubmitted.prototype.getQuery = function() {
+    return this.query_;
 };
