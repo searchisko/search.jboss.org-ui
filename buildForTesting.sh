@@ -18,10 +18,9 @@
   \
   --namespace="init" \
   \
-  --namespace="org.jboss.search.LookUp" \
   --namespace="org.jboss.search.App" \
+  --namespace="org.jboss.search.LookUp" \
   --namespace="org.jboss.search.Constants" \
-  --namespace="org.jboss.search.SearchFieldHandler" \
   \
   --namespace="org.jboss.search.suggestions.event.EventType" \
   --namespace="org.jboss.search.suggestions.event.SearchStart" \
@@ -40,6 +39,7 @@
   --namespace="org.jboss.search.page.event.EventType" \
   --namespace="org.jboss.search.page.event.QuerySubmitted" \
   --namespace="org.jboss.search.page.element.Status" \
+  --namespace="org.jboss.search.page.element.SearchFieldHandler" \
   \
   --namespace="org.jboss.search.response" \
   \

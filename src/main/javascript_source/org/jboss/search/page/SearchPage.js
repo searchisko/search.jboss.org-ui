@@ -30,7 +30,7 @@ goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.page.SearchPageElements');
 goog.require('org.jboss.search.page.UserIdle');
 goog.require('org.jboss.search.Constants');
-goog.require('org.jboss.search.SearchFieldHandler');
+goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.query.view.View');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.page.event.QuerySubmitted');
@@ -241,7 +241,7 @@ org.jboss.search.page.SearchPage = function(
     );
 
     /** @private */
-    this.userQuerySearchField = new org.jboss.search.SearchFieldHandler(
+    this.userQuerySearchField = new org.jboss.search.page.element.SearchFieldHandler(
         this.elements.getQuery_field(),
         100,
         suggestionsCallback,

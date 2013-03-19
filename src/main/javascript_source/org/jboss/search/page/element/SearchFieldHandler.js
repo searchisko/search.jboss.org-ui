@@ -18,12 +18,11 @@
 
 /**
  * @fileoverview Encapsulates functionality around the search field.
- * TODO: move this class into some reasonable package namespace...
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.SearchFieldHandler');
+goog.provide('org.jboss.search.page.element.SearchFieldHandler');
 
 goog.require('goog.async.Delay');
 
@@ -57,7 +56,7 @@ goog.require('goog.debug.Logger');
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, blurHandler, keyHandlers) {
+org.jboss.search.page.element.SearchFieldHandler = function(field, callbackDelay, callback, blurHandler, keyHandlers) {
 
     goog.Disposable.call(this);
 
@@ -144,13 +143,13 @@ org.jboss.search.SearchFieldHandler = function(field, callbackDelay, callback, b
             delay.start();
         });
 };
-goog.inherits(org.jboss.search.SearchFieldHandler, goog.Disposable);
+goog.inherits(org.jboss.search.page.element.SearchFieldHandler, goog.Disposable);
 
 /** @inheritDoc */
-org.jboss.search.SearchFieldHandler.prototype.disposeInternal = function() {
+org.jboss.search.page.element.SearchFieldHandler.prototype.disposeInternal = function() {
 
     // Call the superclass's disposeInternal() method.
-    org.jboss.search.SearchFieldHandler.superClass_.disposeInternal.call(this);
+    org.jboss.search.page.element.SearchFieldHandler.superClass_.disposeInternal.call(this);
 
     // Dispose of all Disposable objects owned by this class.
     goog.dispose(this.delay_);

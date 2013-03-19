@@ -18,6 +18,7 @@
 
 goog.provide("test.org.jboss.search.SearchFieldHandlerAsyncTest");
 
+goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('goog.testing.events');
 
 AsyncTestCase('SearchFieldHandlerAsyncTest', {
@@ -56,7 +57,7 @@ AsyncTestCase('SearchFieldHandlerAsyncTest', {
             callbackCount++;
         };
 
-        var handler = new org.jboss.search.SearchFieldHandler(searchField, delay, callback, function(){}, keyHandlers);
+        var handler = new org.jboss.search.page.element.SearchFieldHandler(searchField, delay, callback, function(){}, keyHandlers);
 
         queue.call('Step 1: Fire an A keystroke', function(callbacks) {
 
@@ -130,7 +131,7 @@ AsyncTestCase('SearchFieldHandlerAsyncTest', {
             callbackCount++;
         };
 
-        var field = new org.jboss.search.SearchFieldHandler(searchField, delay, callback);
+        var field = new org.jboss.search.page.element.SearchFieldHandler(searchField, delay, callback);
 
         assertNotNull("Can not be null", field);
 

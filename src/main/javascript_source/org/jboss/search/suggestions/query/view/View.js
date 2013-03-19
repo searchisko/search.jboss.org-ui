@@ -23,17 +23,13 @@
  */
 
 goog.provide('org.jboss.search.suggestions.query.view.View');
-
 goog.require('org.jboss.search.suggestions.templates');
-
-goog.require("goog.Disposable");
 
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
-
 goog.require('goog.object');
-
 goog.require('goog.string');
+goog.require("goog.Disposable");
 
 goog.require('goog.debug.Logger');
 
@@ -277,7 +273,7 @@ org.jboss.search.suggestions.query.view.View.prototype.getClickCallbackFunction 
 org.jboss.search.suggestions.query.view.View.prototype.disposeInternal = function() {
 
     // Call the superclass's disposeInternal() method.
-    org.jboss.search.SearchFieldHandler.superClass_.disposeInternal.call(this);
+    org.jboss.search.suggestions.query.view.View.superClass_.disposeInternal.call(this);
 
     // Dispose of all Disposable objects owned by this class.
 
