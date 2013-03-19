@@ -433,38 +433,38 @@ org.jboss.search.page.SearchPage.prototype.enableSearchResults_ = function () {
  */
 org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
 
-    var thiz_ = this;
-
     /**
      * @param {goog.events.KeyEvent} event
      * @param {goog.async.Delay} delay
      */
-    var keyCodeEscHandler = function(event, delay) {
-        delay.stop();
-        thiz_.hideAndCleanSuggestionsElementAndModel_();
-    };
-
-    /**
-     * @param {goog.events.KeyEvent} event
-     * @param {goog.async.Delay} delay
-     */
-    var keyCodeDownHandler = function(event, delay) {
-        event.preventDefault();
-        if (thiz_.query_suggestions_view.isVisible()) {
-            thiz_.query_suggestions_view.selectNext();
+    var keyCodeEscHandler = goog.bind(function(event, delay) {
+        if (!event.repeat) {
+            delay.stop();
+            this.hideAndCleanSuggestionsElementAndModel_();
         }
-    };
+    }, this);
 
     /**
      * @param {goog.events.KeyEvent} event
      * @param {goog.async.Delay} delay
      */
-    var keyCodeUpHandler = function(event, delay) {
+    var keyCodeDownHandler = goog.bind(function(event, delay) {
         event.preventDefault();
-        if (thiz_.query_suggestions_view.isVisible()) {
-            thiz_.query_suggestions_view.selectPrevious();
+        if (this.query_suggestions_view.isVisible()) {
+            this.query_suggestions_view.selectNext();
         }
-    };
+    }, this);
+
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeUpHandler = goog.bind(function(event, delay) {
+        event.preventDefault();
+        if (this.query_suggestions_view.isVisible()) {
+            this.query_suggestions_view.selectPrevious();
+        }
+    }, this);
 
     /**
      * @param {goog.events.KeyEvent} event
@@ -478,37 +478,34 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
      * @param {goog.events.KeyEvent} event
      * @param {goog.async.Delay} delay
      */
-    var keyCodeTabHandler = function(event, delay) {
+    var keyCodeTabHandler = goog.bind(function(event, delay) {
         delay.stop();
-        thiz_.hideAndCleanSuggestionsElementAndModel_();
-    };
+        this.hideAndCleanSuggestionsElementAndModel_();
+    }, this);
 
     /**
      * @param {goog.events.KeyEvent} event
      * @param {goog.async.Delay} delay
      */
-    var keyCodeEnterHandler = function(event, delay) {
-        var selectedIndex = thiz_.query_suggestions_view.getSelectedIndex();
-        thiz_.hideAndCleanSuggestionsElementAndModel_();
+    var keyCodeEnterHandler = goog.bind(function(event, delay) {
+        var selectedIndex = this.query_suggestions_view.getSelectedIndex();
+        this.hideAndCleanSuggestionsElementAndModel_();
         event.preventDefault();
-
-        (function(selectedIndex) {
-            delay.stop();
-            if (selectedIndex < 0) {
-                // user hit enter and no suggestions are displayed (yet) use content of query field
-                var query = thiz_.elements.getQuery_field().value;
-                thiz_.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
-            } else if (selectedIndex == 0) {
-                // suggestions are displayed, user selected the first one (use what is in query field)
-                var query = thiz_.elements.getQuery_field().value;
-                thiz_.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
-            } else if (selectedIndex > 0) {
-                // user selected from suggestions, use what is in model
-                // TODO get query_string from model at the selectedIndex position
-                thiz_.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted("option was selected by keys (index: "+selectedIndex+")"));
-            }
-        })(selectedIndex);
-    };
+        delay.stop();
+        if (selectedIndex < 0) {
+            // user hit enter and no suggestions are displayed (yet) use content of query field
+            var query = this.elements.getQuery_field().value;
+            this.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
+        } else if (selectedIndex == 0) {
+            // suggestions are displayed, user selected the first one (use what is in query field)
+            var query = this.elements.getQuery_field().value;
+            this.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
+        } else if (selectedIndex > 0) {
+            // user selected from suggestions, use what is in model
+            // TODO get query_string from model at the selectedIndex position
+            this.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted("option was selected by keys (index: "+selectedIndex+")"));
+        }
+    }, this);
 
     // prepare keyHandlers for the main search field
     var keyHandlers = {};

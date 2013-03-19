@@ -24,9 +24,11 @@
 goog.provide('org.jboss.search.page.filter.ProjectFilter');
 
 goog.require('org.jboss.search.page.filter.templates');
+goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('org.jboss.search.Constants');
 goog.require('goog.string');
 goog.require('goog.events');
+goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.events.KeyHandler.EventType');
 goog.require('goog.dom');
@@ -48,9 +50,19 @@ org.jboss.search.page.filter.ProjectFilter = function(element) {
     this.items_div_ = /** @type {!HTMLElement} */ (goog.dom.getElementByClass('filter_items',element));
 
     /**
-     * @type {!HTMLElement}
+     * @type {!HTMLInputElement}
      * @private */
-    this.query_field_ = /** @type {!HTMLElement} */ (goog.dom.getElement('project_filter_query_field'));
+    this.query_field_ = /** @type {!HTMLInputElement} */ (goog.dom.getElement('project_filter_query_field'));
+
+    this.search_field_handler_ = new org.jboss.search.page.element.SearchFieldHandler(
+        this.query_field_,
+        0,
+        goog.bind(function(query) {
+            this.getSuggestions(query);
+        },this),
+        null,
+        this.getPresetKeyHandlers_()
+    );
 
     /** @private */
     this.keyHandler_ =  new goog.events.KeyHandler(this.query_field_);
@@ -65,15 +77,6 @@ org.jboss.search.page.filter.ProjectFilter = function(element) {
             // TODO: handle keyup, keydown, escape, enter...
         }
     );
-
-    /** @private */
-    this.query_field_input_ = goog.events.listen(
-        this.query_field_,
-        goog.events.EventType.INPUT,
-        goog.bind(function(e) {
-            this.getSuggestions(e.target.value);
-        },this)
-    );
 };
 goog.inherits(org.jboss.search.page.filter.ProjectFilter, goog.Disposable);
 
@@ -82,7 +85,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.disposeInternal = function(
     org.jboss.search.page.filter.ProjectFilter.superClass_.disposeInternal.call(this);
 
     goog.dispose(this.query_field_key_);
-    goog.dispose(this.query_field_input_);
+    goog.dispose(this.search_field_handler_);
     goog.dispose(this.keyHandler_);
 
     delete this.items_div_;
@@ -167,4 +170,83 @@ org.jboss.search.page.filter.ProjectFilter.prototype.getSuggestions = function(q
 org.jboss.search.page.filter.ProjectFilter.prototype.init = function() {
     var lookup_ = org.jboss.search.LookUp.getInstance();
     this.replaceItems(lookup_.getProjectArray());
+};
+
+/**
+ * @return {!Object.<(goog.events.KeyCodes|number), function(goog.events.KeyEvent, goog.async.Delay)>}
+ * @private
+ */
+org.jboss.search.page.filter.ProjectFilter.prototype.getPresetKeyHandlers_ = function() {
+
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeEscHandler = goog.bind(function(event, delay) {
+        if (!event.repeat) {
+            if (this.query_field_.value != '') {
+                delay.stop();
+                this.query_field_.value = '';
+                // we can not call init() directly because we want to abort previous request (if there is any)
+                this.getSuggestions('');
+            } else {
+                // TODO hide project filter
+            }
+        }
+    }, this);
+
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeDownHandler = goog.bind(function(event, delay) {
+        event.preventDefault();
+//        if (this.query_suggestions_view.isVisible()) {
+//            this.query_suggestions_view.selectNext();
+//        }
+    }, this);
+
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeUpHandler = goog.bind(function(event, delay) {
+        event.preventDefault();
+//        if (this.query_suggestions_view.isVisible()) {
+//            this.query_suggestions_view.selectPrevious();
+//        }
+    }, this);
+
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeTabHandler = goog.bind(function(event, delay) {
+        // do we need TAB handler?
+//        delay.stop();
+//        this.hideAndCleanSuggestionsElementAndModel_();
+    }, this);
+
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeEnterHandler = goog.bind(function(event, delay) {
+
+        }, this);
+
+    // prepare keyHandlers for the main search field
+    var keyHandlers = {};
+
+    keyHandlers[goog.events.KeyCodes.ESC] = keyCodeEscHandler;
+    keyHandlers[goog.events.KeyCodes.UP] = keyCodeUpHandler;
+    keyHandlers[goog.events.KeyCodes.DOWN] = keyCodeDownHandler;
+    keyHandlers[goog.events.KeyCodes.ENTER] = keyCodeEnterHandler;
+
+    // TAB key does not seem to yield true in @see {goog.events.KeyCodes.isTextModifyingKeyEvent}
+    // thus we have to handle it
+    keyHandlers[goog.events.KeyCodes.TAB] = keyCodeTabHandler;
+
+    return keyHandlers;
+
 };
