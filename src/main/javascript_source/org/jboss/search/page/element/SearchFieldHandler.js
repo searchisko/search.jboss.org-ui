@@ -18,21 +18,19 @@
 
 /**
  * @fileoverview Encapsulates functionality around the search field.
- *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
 goog.provide('org.jboss.search.page.element.SearchFieldHandler');
 
 goog.require('goog.async.Delay');
-
-goog.require("goog.Disposable");
-
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.events.InputHandler');
+
+goog.require("goog.Disposable");
 
 goog.require('goog.debug.Logger');
 
@@ -50,23 +48,29 @@ goog.require('goog.debug.Logger');
  *
  * @param {!HTMLInputElement} field Input field
  * @param {number} callbackDelay Delay in ms to call the callback
- * @param {!Function} callback what should happen after the delay
- * @param {?Function} blurHandler what should happen on BLUR event
- * @param {Object.<(goog.events.KeyCodes|number), function(goog.events.KeyEvent, goog.async.Delay)>=} keyHandlers user defined functions per keyCode
+ * @param {!Function} callback a function to call after the delay
+ * @param {Function=} opt_blurHandler a function to call on BLUR event
+ * @param {Object.<(goog.events.KeyCodes|number), function(goog.events.KeyEvent, goog.async.Delay)>=} opt_keyHandlers user defined functions per keyCode
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.page.element.SearchFieldHandler = function(field, callbackDelay, callback, blurHandler, keyHandlers) {
+org.jboss.search.page.element.SearchFieldHandler = function(field, callbackDelay, callback, opt_blurHandler, opt_keyHandlers) {
 
     goog.Disposable.call(this);
 
-    var log = goog.debug.Logger.getLogger('SearchFieldHandler [' + field.id + ']');
+//    var log = goog.debug.Logger.getLogger('SearchFieldHandler [' + field.id + ']');
 
     /** @private */ this.field_ = field;
     /** @private */ this.callbackDelay_ = callbackDelay;
     /** @private */ this.callback_ = callback;
-    /** @private */ this.blurHandler_ = blurHandler;
-    /** @private */ this.keyHandlers_ = keyHandlers;
+
+    /**
+     * @type {!Function}
+     * @private
+     */
+    this.blurHandler_ = goog.isFunction(opt_blurHandler) ? opt_blurHandler : goog.nullFunction;
+
+    /** @private */ this.keyHandlers_ = goog.isObject(opt_keyHandlers) ? opt_keyHandlers : {};
 
     /** @private */ this.keyListenerId_;
 
@@ -90,58 +94,45 @@ org.jboss.search.page.element.SearchFieldHandler = function(field, callbackDelay
      */
     this.clickListenerId_;
 
-    /** @private */ this.delay_ =  new goog.async.Delay(
-        function() { callback(field.value); },
+    /** @private */
+    this.delay_ =  new goog.async.Delay(
+        goog.bind(function(){ callback(this.field_.value) }, this),
         this.callbackDelay_
     );
-    var delay = this.delay_;
 
     /** @private */
     this.keyHandler_ =  new goog.events.KeyHandler(this.field_);
-    var keyHandler = this.keyHandler_;
-
-    var userKeyHandlers = goog.isDef(this.keyHandlers_) ? this.keyHandlers_ : {};
 
     // listen for key strokes
-    this.keyListenerId_ = goog.events.listen(keyHandler,
+    this.keyListenerId_ = goog.events.listen(this.keyHandler_,
         goog.events.KeyHandler.EventType.KEY,
-        function(e) {
+        goog.bind(function(e) {
 
             var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
 //            log.finest("keyEvent: " + goog.debug.expose(keyEvent));
 
-            if (goog.object.get(userKeyHandlers, keyEvent.keyCode.toString(10))) {
-                userKeyHandlers[keyEvent.keyCode](keyEvent, delay);
+            if (goog.object.get(this.keyHandlers_, keyEvent.keyCode.toString(10))) {
+                this.keyHandlers_[keyEvent.keyCode](keyEvent, this.delay_);
             }
             else if (goog.events.KeyCodes.isTextModifyingKeyEvent(/** @type {goog.events.BrowserEvent} */ (e))) {
-                delay.start();
-            } else {
-                // ignore...
+                this.delay_.start();
             }
-        });
+        }, this)
+    );
 
-    if (goog.isFunction(this.blurHandler_)) {
-        var blurHndl = this.blurHandler_;
-
-        this.blurListenerId_ = goog.events.listen(this.field_,
-            goog.events.EventType.BLUR,
-            function(/** @type {goog.events.Event} */ e) {
-                blurHndl();
-            }
-        );
-    }
+    this.blurListenerId_ = goog.events.listen(this.field_, goog.events.EventType.BLUR,
+        // using function wrapper because this.blurHandler_() would be passed the event as a parameter
+        goog.bind(function(){ this.blurHandler_() }, this)
+    );
 
     /** @private */
     this.inputHandler_ = new goog.events.InputHandler(this.field_);
-    var inputHandler = this.inputHandler_;
 
     // this listener can catch cut & paste in search field
-    this.changeListenerId_ = goog.events.listen(inputHandler,
-        goog.events.EventType.INPUT,
-        function(/** @type {goog.events.Event} */ e) {
-//            log.info("Field suddenly changed to: " + goog.debug.expose(e));
-            delay.start();
-        });
+    this.changeListenerId_ = goog.events.listen(this.inputHandler_, goog.events.EventType.INPUT,
+        // using function wrapper because this.delay_.start() would be passed the event as a parameter
+        goog.bind(function(){ this.delay_.start() }, this)
+    );
 };
 goog.inherits(org.jboss.search.page.element.SearchFieldHandler, goog.Disposable);
 
@@ -165,9 +156,8 @@ org.jboss.search.page.element.SearchFieldHandler.prototype.disposeInternal = fun
 
     // Remove references to DOM nodes, which are COM objects in IE.
     delete this.field_;
-    this.callbackDelay_ = null;
+    delete this.callbackDelay_;
     delete this.callback_;
-    if (goog.isDef(this.blurHandler_)) delete this.blurHandler_;
-    this.keyHandlers_ = null;
-
+    delete this.blurHandler_;
+    delete this.keyHandlers_;
 };
