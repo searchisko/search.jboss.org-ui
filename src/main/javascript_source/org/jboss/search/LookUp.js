@@ -50,10 +50,22 @@ org.jboss.search.LookUp = function() {
     this.projectArray_;
 
     /**
+     * @type {org.jboss.search.page.filter.DateFilter}
+     * @private
+     */
+    this.dateFilter_;
+
+    /**
      * @type {org.jboss.search.page.filter.ProjectFilter}
      * @private
      */
     this.projectFilter_;
+
+    /**
+     * @type {org.jboss.search.page.filter.AuthorFilter}
+     * @private
+     */
+    this.authorFilter_;
 
     /**
      * @type {goog.net.XhrManager}
@@ -127,6 +139,20 @@ org.jboss.search.LookUp.prototype.getHistory = function() {
 };
 
 /**
+ * @param {org.jboss.search.page.filter.DateFilter} filter
+ */
+org.jboss.search.LookUp.prototype.setDateFilter = function(filter) {
+    this.dateFilter_ = filter;
+};
+
+/**
+ * @return {org.jboss.search.page.filter.DateFilter}
+ */
+org.jboss.search.LookUp.prototype.getDateFilter = function() {
+    return this.dateFilter_;
+};
+
+/**
  * @param {org.jboss.search.page.filter.ProjectFilter} filter
  */
 org.jboss.search.LookUp.prototype.setProjectFilter = function(filter) {
@@ -138,4 +164,18 @@ org.jboss.search.LookUp.prototype.setProjectFilter = function(filter) {
  */
 org.jboss.search.LookUp.prototype.getProjectFilter = function() {
     return this.projectFilter_;
+};
+
+/**
+ * @param {org.jboss.search.page.filter.AuthorFilter} filter
+ */
+org.jboss.search.LookUp.prototype.setAuthorFilter = function(filter) {
+    this.authorFilter_ = filter;
+};
+
+/**
+ * @return {org.jboss.search.page.filter.AuthorFilter}
+ */
+org.jboss.search.LookUp.prototype.getAuthorFilter = function() {
+    return this.authorFilter_;
 };

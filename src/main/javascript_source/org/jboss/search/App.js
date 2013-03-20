@@ -19,7 +19,9 @@
 goog.provide('org.jboss.search.App');
 
 goog.require('org.jboss.search.LookUp');
+goog.require('org.jboss.search.page.filter.DateFilter');
 goog.require('org.jboss.search.page.filter.ProjectFilter');
+goog.require('org.jboss.search.page.filter.AuthorFilter');
 goog.require('org.jboss.search.list.project.Project');
 goog.require('org.jboss.search.page.element.Status');
 goog.require('org.jboss.search.page.SearchPage');
@@ -27,6 +29,7 @@ goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.search.util.fragmentParser.UI_param_suffix');
 goog.require('org.jboss.search.suggestions.event.EventType');
+goog.require('org.jboss.search.InitDeferred');
 goog.require('org.jboss.search.Constants');
 
 goog.require('goog.async.Deferred');
@@ -107,8 +110,6 @@ org.jboss.search.App = function() {
 
     var search_results_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('search_results'));
 
-    status.setProgressValue(0.5);
-
     // ================================================================
     // Define internal variables and objects
     // ================================================================
@@ -147,8 +148,6 @@ org.jboss.search.App = function() {
 
         history.setToken(token.join('&'));
     };
-
-    status.setProgressValue(0.8);
 
     var searchPageElements = new org.jboss.search.page.SearchPageElements(
         query_field, spinner_div, clear_query_div, query_suggestions_div,
@@ -193,27 +192,22 @@ org.jboss.search.App = function() {
     // activate URL History manager
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, navigationController);
 
-    // Initialization of lists.
-    // projectList will be initialized at some point in the future (it is deferred type)
-    // once it is initialized it calls the deferred that is passed as an argument
-    var deferred = new goog.async.Deferred();
-    var projectList = new org.jboss.search.list.project.Project(deferred);
+    // ================================================================
+    // Initialization of filters
+    // ================================================================
 
-    deferred
-        // keep project list data in the lookup (so it can be easily used by other objects in the application)
-        .addCallback(function() {
-            lookup_.setProjectMap(projectList.getMap());
-            lookup_.setProjectArray(projectList.getArray());
-        })
-        .addCallback(function(){
-            status.setProgressValue(1);
-        })
-        // initialize project filter and keep reference in the lookup
-        .addCallback(function(){
-            var projectFilter = new org.jboss.search.page.filter.ProjectFilter(searchPageElements.getProject_filter_body_div());
-            lookup_.setProjectFilter(projectFilter);
-            projectFilter.init();
-        })
+    // ## Date Filter
+    var dateFilterDeferred = new goog.async.Deferred();
+
+    // ## Author Filter
+    var authorFilterDeferred = new goog.async.Deferred();
+
+    // ## Project Filter
+    var projectFilterDeferred = new goog.async.Deferred();
+
+    // wait for all deferred initializations to finish and enable search GUI then
+    var asyncInit = new org.jboss.search.InitDeferred();
+    asyncInit
         // this is just an effect to hide status window as it is not needed now
         .addCallback(function(){
             setTimeout(function(){
@@ -228,7 +222,107 @@ org.jboss.search.App = function() {
             query_field.removeAttribute(org.jboss.search.Constants.DISABLED);
         });
 
-    // load project list
+    // projectList will be initialized at some point in the future (it is deferred type)
+    // once it is initialized it calls the deferred that is passed as an argument
+    var projectList = new org.jboss.search.list.project.Project(projectFilterDeferred);
+
+    projectFilterDeferred
+        // keep project list data in the lookup (so it can be easily used by other objects in the application)
+        .addCallback(function() {
+            lookup_.setProjectMap(projectList.getMap());
+            lookup_.setProjectArray(projectList.getArray());
+        })
+        // initialize project filter and keep reference in the lookup
+        .addCallback(function(){
+            var projectFilter = new org.jboss.search.page.filter.ProjectFilter(
+                searchPageElements.getProject_filter_body_div(),
+                searchPageElements.getProject_filter_query_field(),
+                function() {
+                    goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+
+                    goog.dom.classes.remove(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+
+                    searchPageElements.getProject_filter_query_field().focus();
+                    searchPageElements.getAuthor_filter_query_field().blur();
+                },
+                function() {
+                    goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    searchPageElements.getProject_filter_query_field().blur();
+                }
+            );
+            lookup_.setProjectFilter(projectFilter);
+            projectFilter.init();
+        })
+        .addCallback(function() {
+            status.setProgressValue(1);
+            asyncInit.setProjectFilterDone();
+        });
+
+    authorFilterDeferred
+        .addCallback(function() {
+            var authorFilter = new org.jboss.search.page.filter.AuthorFilter(
+                searchPageElements.getAuthor_filter_body_div(),
+                searchPageElements.getAuthor_filter_query_field(),
+                function() {
+                    goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+
+                    goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+
+                    searchPageElements.getProject_filter_query_field().blur();
+                    searchPageElements.getAuthor_filter_query_field().focus();
+                },
+                function() {
+                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    searchPageElements.getAuthor_filter_query_field().blur();
+                }
+            );
+            lookup_.setAuthorFilter(authorFilter);
+        })
+        .addCallback(function() {
+            status.setProgressValue(0.33);
+            asyncInit.setAuthorFilterDone();
+        });
+
+    dateFilterDeferred
+        .addCallback(function() {
+            var dateFilter = new org.jboss.search.page.filter.DateFilter(
+                searchPageElements.getDate_filter_body_div(),
+                function() {
+                    goog.dom.classes.add(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+
+                    goog.dom.classes.remove(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+
+                    searchPageElements.getProject_filter_query_field().blur();
+                    searchPageElements.getAuthor_filter_query_field().blur();
+                },
+                function() {
+                    goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    // blur not needed now
+                }
+            );
+            lookup_.setDateFilter(dateFilter);
+        })
+        .addCallback(function() {
+            status.setProgressValue(0.66);
+            asyncInit.setDateFilterDone();
+        });
+
+    // fire XHR to load project list data
     lookup_.getXhrManager().send(
         org.jboss.search.Constants.LOAD_PROJECT_LIST_REQUEST_ID,
         goog.Uri.parse(org.jboss.search.Constants.API_URL_PROJECT_LIST_QUERY).toString(),
@@ -241,14 +335,19 @@ org.jboss.search.App = function() {
             var event = /** @type goog.net.XhrManager.Event */ (e);
             if (event.target.isSuccess()) {
                 var response = event.target.getResponseJson();
-                deferred.callback(response);
+                projectFilterDeferred.callback(response);
             } else {
                 // Project info failed to load.
-                deferred.callback({});
+                projectFilterDeferred.callback({});
             }
         }
     );
 
+    // initialize authorFilter
+    authorFilterDeferred.callback({});
+
+    // initialize dateFilter
+    dateFilterDeferred.callback({});
 
     // TODO experiment
     this.finish_ = goog.events.listen(this.searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, function(){

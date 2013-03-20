@@ -573,68 +573,32 @@ org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded_ = function ()
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.expandDateFilter_ = function () {
-
-    goog.dom.classes.add(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.remove(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-
-    goog.dom.classes.remove(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-
-    this.elements.getProject_filter_query_field().blur();
-    this.elements.getAuthor_filter_query_field().blur();
+    org.jboss.search.LookUp.getInstance().getDateFilter().expandFilter();
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.expandAuthorFilter_ = function () {
-
-    goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-
-    goog.dom.classes.add(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.remove(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-
-    this.elements.getProject_filter_query_field().blur();
-    this.elements.getAuthor_filter_query_field().focus();
+    org.jboss.search.LookUp.getInstance().getAuthorFilter().expandFilter();
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.expandProjectFilter_ = function () {
-
-    goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.remove(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-
-    goog.dom.classes.remove(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-    goog.dom.classes.add(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-
-    this.elements.getProject_filter_query_field().focus();
-    this.elements.getAuthor_filter_query_field().blur();
+    org.jboss.search.LookUp.getInstance().getProjectFilter().expandFilter();
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.collapseDateFilter_ = function () {
-    goog.dom.classes.remove(this.elements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-    // blur not needed now
+    org.jboss.search.LookUp.getInstance().getDateFilter().collapseFilter();
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.collapseProjectFilter_ = function () {
-    goog.dom.classes.remove(this.elements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-    this.elements.getProject_filter_query_field().blur();
+    org.jboss.search.LookUp.getInstance().getProjectFilter().collapseFilter();
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.collapseAuthorFilter_ = function () {
-    goog.dom.classes.remove(this.elements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-    goog.dom.classes.add(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-    this.elements.getAuthor_filter_query_field().blur();
+    org.jboss.search.LookUp.getInstance().getAuthorFilter().collapseFilter();
 };
 
 /**

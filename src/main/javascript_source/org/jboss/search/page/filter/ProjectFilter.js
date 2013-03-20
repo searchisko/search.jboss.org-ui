@@ -17,7 +17,7 @@
  */
 
 /**
- * @fileoverview
+ * @fileoverview Project filter.
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
@@ -38,12 +38,28 @@ goog.require('goog.Disposable');
 /**
  * Create a new project filter.
  * It requires an element as a parameter, it assumes there is one element with class='filter_items' found inside.
- * @param {!Element} element to host the project filter
+ * @param {!HTMLElement} element to host the project filter
+ * @param {!HTMLInputElement} query_field to host the project filter
+ * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
+ * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.page.filter.ProjectFilter = function(element) {
+org.jboss.search.page.filter.ProjectFilter = function(element, query_field, opt_expandFilter, opt_collapseFilter) {
     goog.Disposable.call(this);
+
+    /**
+     * @type {!Function}
+     * @private
+     */
+    this.expandFilter_ = /** @type {!Function} */ (goog.isFunction(opt_expandFilter) ? opt_expandFilter : goog.nullFunction());
+
+    /**
+     * @type {!Function}
+     * @private
+     */
+    this.collpaseFilter_ = /** @type {!Function} */ (goog.isFunction(opt_collapseFilter) ? opt_collapseFilter : goog.nullFunction());
+
     /**
      * @type {!HTMLElement}
      * @private */
@@ -52,7 +68,7 @@ org.jboss.search.page.filter.ProjectFilter = function(element) {
     /**
      * @type {!HTMLInputElement}
      * @private */
-    this.query_field_ = /** @type {!HTMLInputElement} */ (goog.dom.getElement('project_filter_query_field'));
+    this.query_field_ = query_field;
 
     this.search_field_handler_ = new org.jboss.search.page.element.SearchFieldHandler(
         this.query_field_,
@@ -90,6 +106,24 @@ org.jboss.search.page.filter.ProjectFilter.prototype.disposeInternal = function(
 
     delete this.items_div_;
     delete this.query_field_;
+    delete this.expandFilter_;
+    delete this.collpaseFilter_;
+};
+
+/**
+ * Calls opt_expandFilter function.
+ * @see constructor
+ */
+org.jboss.search.page.filter.ProjectFilter.prototype.expandFilter = function() {
+    this.expandFilter_();
+};
+
+/**
+ * Calls opt_collapseFilter function.
+ * @see constructor
+ */
+org.jboss.search.page.filter.ProjectFilter.prototype.collapseFilter = function() {
+    this.collpaseFilter_();
 };
 
 /**
@@ -190,7 +224,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.getPresetKeyHandlers_ = fun
                 // we can not call init() directly because we want to abort previous request (if there is any)
                 this.getSuggestions('');
             } else {
-                // TODO hide project filter
+                this.collapseFilter();
             }
         }
     }, this);
