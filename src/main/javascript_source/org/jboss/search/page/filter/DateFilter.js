@@ -23,18 +23,29 @@
 
 goog.provide('org.jboss.search.page.filter.DateFilter');
 
+goog.require('goog.dom');
+goog.require('goog.events');
+goog.require('goog.events.KeyHandler');
+goog.require('goog.events.KeyHandler.EventType');
 goog.require('goog.Disposable');
 
 /**
  *
  * @param {!HTMLElement} element to host the date filter
+ * @param {function(): boolean} opt_isCollapsed a function that is used to learn of filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.page.filter.DateFilter = function(element, opt_expandFilter, opt_collapseFilter) {
+org.jboss.search.page.filter.DateFilter = function(element, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
     goog.Disposable.call(this);
+
+    /**
+     * @type {!HTMLElement}
+     * @private
+     */
+    this.element_ = element;
 
     /**
      * @type {!Function}
@@ -47,6 +58,31 @@ org.jboss.search.page.filter.DateFilter = function(element, opt_expandFilter, op
      * @private
      */
     this.collpaseFilter_ = /** @type {!Function} */ (goog.isFunction(opt_collapseFilter) ? opt_collapseFilter : goog.nullFunction());
+
+    /**
+     * @type {function(): boolean}
+     * @private
+     */
+    this.isCollapsed_ = /** @type {function(): boolean} */ (goog.isFunction(opt_isCollapsed) ? opt_isCollapsed : function(){ return true });
+
+    /** @private */
+    this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
+    // We can not use this.element_ but document - because <DIV> may not be focused.
+    // this.keyHandler_ = new goog.events.KeyHandler(this.element_);
+
+    // listen for key strokes
+    this.keyListenerId_ = goog.events.listen(this.keyHandler_,
+        goog.events.KeyHandler.EventType.KEY,
+        goog.bind(function(e) {
+            if (!this.isCollapsed_()) {
+                var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
+                if (keyEvent.keyCode == goog.events.KeyCodes.ESC) {
+//                    keyEvent.preventDefault();
+                    this.collapseFilter();
+                }
+            }
+        }, this)
+    );
 };
 goog.inherits(org.jboss.search.page.filter.DateFilter, goog.Disposable);
 
@@ -54,8 +90,14 @@ goog.inherits(org.jboss.search.page.filter.DateFilter, goog.Disposable);
 org.jboss.search.page.filter.DateFilter.prototype.disposeInternal = function() {
     org.jboss.search.page.filter.ProjectFilter.superClass_.disposeInternal.call(this);
 
+    goog.dispose(this.keyHandler_);
+
+    goog.events.unlistenByKey(this.keyListenerId_);
+
+    delete this.element_;
     delete this.expandFilter_;
     delete this.collpaseFilter_;
+    delete this.isCollapsed_;
 };
 
 /**
@@ -72,50 +114,4 @@ org.jboss.search.page.filter.DateFilter.prototype.expandFilter = function() {
  */
 org.jboss.search.page.filter.DateFilter.prototype.collapseFilter = function() {
     this.collpaseFilter_();
-};
-
-/**
- * @return {!Object.<(goog.events.KeyCodes|number), function(goog.events.KeyEvent, goog.async.Delay)>}
- * @private
- */
-org.jboss.search.page.filter.DateFilter.prototype.getPresetKeyHandlers_ = function() {
-
-    /**
-     * @param {goog.events.KeyEvent} event
-     * @param {goog.async.Delay} delay
-     */
-    var keyCodeEscHandler = goog.bind(function(event, delay) {
-        if (!event.repeat) {
-            this.collapseFilter();
-        }
-    }, this);
-
-    /**
-     * @param {goog.events.KeyEvent} event
-     * @param {goog.async.Delay} delay
-     */
-    var keyCodeTabHandler = goog.bind(function(event, delay) {
-        // do we need TAB handler?
-    }, this);
-
-    /**
-     * @param {goog.events.KeyEvent} event
-     * @param {goog.async.Delay} delay
-     */
-    var keyCodeEnterHandler = goog.bind(function(event, delay) {
-
-    }, this);
-
-    // prepare keyHandlers for the main search field
-    var keyHandlers = {};
-
-    keyHandlers[goog.events.KeyCodes.ESC] = keyCodeEscHandler;
-    keyHandlers[goog.events.KeyCodes.ENTER] = keyCodeEnterHandler;
-
-    // TAB key does not seem to yield true in @see {goog.events.KeyCodes.isTextModifyingKeyEvent}
-    // thus we have to handle it
-    keyHandlers[goog.events.KeyCodes.TAB] = keyCodeTabHandler;
-
-    return keyHandlers;
-
 };

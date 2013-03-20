@@ -573,32 +573,50 @@ org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded_ = function ()
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.expandDateFilter_ = function () {
-    org.jboss.search.LookUp.getInstance().getDateFilter().expandFilter();
+    var filter = org.jboss.search.LookUp.getInstance().getDateFilter();
+    if (goog.isDefAndNotNull(filter)) {
+        filter.expandFilter()
+    }
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.expandAuthorFilter_ = function () {
-    org.jboss.search.LookUp.getInstance().getAuthorFilter().expandFilter();
+    var filter = org.jboss.search.LookUp.getInstance().getAuthorFilter();
+    if (goog.isDefAndNotNull(filter)) {
+        filter.expandFilter()
+    }
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.expandProjectFilter_ = function () {
-    org.jboss.search.LookUp.getInstance().getProjectFilter().expandFilter();
+    var filter = org.jboss.search.LookUp.getInstance().getProjectFilter();
+    if (goog.isDefAndNotNull(filter)) {
+        filter.expandFilter()
+    }
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.collapseDateFilter_ = function () {
-    org.jboss.search.LookUp.getInstance().getDateFilter().collapseFilter();
+    var filter = org.jboss.search.LookUp.getInstance().getDateFilter();
+    if (goog.isDefAndNotNull(filter)) {
+        filter.collapseFilter()
+    }
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.collapseProjectFilter_ = function () {
-    org.jboss.search.LookUp.getInstance().getProjectFilter().collapseFilter();
+    var filter = org.jboss.search.LookUp.getInstance().getProjectFilter();
+    if (goog.isDefAndNotNull(filter)) {
+        filter.collapseFilter()
+    }
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.collapseAuthorFilter_ = function () {
-    org.jboss.search.LookUp.getInstance().getAuthorFilter().collapseFilter();
+    var filter = org.jboss.search.LookUp.getInstance().getAuthorFilter();
+    if (goog.isDefAndNotNull(filter)) {
+        filter.collapseFilter()
+    }
 };
 
 /**

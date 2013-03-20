@@ -297,6 +297,7 @@ org.jboss.search.App = function() {
         .addCallback(function() {
             var dateFilter = new org.jboss.search.page.filter.DateFilter(
                 searchPageElements.getDate_filter_body_div(),
+                function() { return goog.dom.classes.has(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN) },
                 function() {
                     goog.dom.classes.add(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
                     goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
