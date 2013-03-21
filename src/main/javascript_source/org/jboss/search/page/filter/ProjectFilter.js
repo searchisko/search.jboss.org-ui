@@ -79,20 +79,6 @@ org.jboss.search.page.filter.ProjectFilter = function(element, query_field, opt_
         null,
         this.getPresetKeyHandlers_()
     );
-
-    /** @private */
-    this.keyHandler_ =  new goog.events.KeyHandler(this.query_field_);
-
-    /** @private */
-    this.query_field_key_ = goog.events.listen(
-        this.keyHandler_,
-        goog.events.KeyHandler.EventType.KEY,
-        function(e) {
-            var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
-//            console.log('value', keyEvent.target.value);
-            // TODO: handle keyup, keydown, escape, enter...
-        }
-    );
 };
 goog.inherits(org.jboss.search.page.filter.ProjectFilter, goog.Disposable);
 
@@ -100,9 +86,7 @@ goog.inherits(org.jboss.search.page.filter.ProjectFilter, goog.Disposable);
 org.jboss.search.page.filter.ProjectFilter.prototype.disposeInternal = function() {
     org.jboss.search.page.filter.ProjectFilter.superClass_.disposeInternal.call(this);
 
-    goog.dispose(this.query_field_key_);
     goog.dispose(this.search_field_handler_);
-    goog.dispose(this.keyHandler_);
 
     delete this.items_div_;
     delete this.query_field_;

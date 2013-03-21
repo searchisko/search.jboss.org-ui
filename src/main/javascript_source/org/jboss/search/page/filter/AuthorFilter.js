@@ -50,6 +50,20 @@ org.jboss.search.page.filter.AuthorFilter = function(element, query_field, opt_e
      */
     this.collpaseFilter_ = /** @type {!Function} */ (goog.isFunction(opt_collapseFilter) ? opt_collapseFilter : goog.nullFunction());
 
+    /**
+     * @type {!HTMLInputElement}
+     * @private */
+    this.query_field_ = query_field;
+
+    this.search_field_handler_ = new org.jboss.search.page.element.SearchFieldHandler(
+        this.query_field_,
+        0,
+        goog.bind(function(query) {
+//            this.getSuggestions(query);
+        },this),
+        null,
+        this.getPresetKeyHandlers_()
+    );
 };
 goog.inherits(org.jboss.search.page.filter.AuthorFilter, goog.Disposable);
 
@@ -57,6 +71,9 @@ goog.inherits(org.jboss.search.page.filter.AuthorFilter, goog.Disposable);
 org.jboss.search.page.filter.AuthorFilter.prototype.disposeInternal = function() {
     org.jboss.search.page.filter.AuthorFilter.superClass_.disposeInternal.call(this);
 
+    goog.dispose(this.search_field_handler_);
+
+    delete this.query_field_;
     delete this.expandFilter_;
     delete this.collpaseFilter_;
 };
@@ -75,4 +92,35 @@ org.jboss.search.page.filter.AuthorFilter.prototype.expandFilter = function() {
  */
 org.jboss.search.page.filter.AuthorFilter.prototype.collapseFilter = function() {
     this.collpaseFilter_();
+};
+
+/**
+ * @return {!Object.<(goog.events.KeyCodes|number), function(goog.events.KeyEvent, goog.async.Delay)>}
+ * @private
+ */
+org.jboss.search.page.filter.AuthorFilter.prototype.getPresetKeyHandlers_ = function() {
+
+    /**
+     * @param {goog.events.KeyEvent} event
+     * @param {goog.async.Delay} delay
+     */
+    var keyCodeEscHandler = goog.bind(function(event, delay) {
+        if (!event.repeat) {
+            if (goog.string.isEmptySafe(this.query_field_.value)) {
+                this.query_field_.value = '';
+                this.collapseFilter();
+            } else {
+//                delay.stop();
+                this.query_field_.value = '';
+                // we can not call init() directly because we want to abort previous request (if there is any)
+//                this.getSuggestions('');
+            }
+        }
+    }, this);
+
+    // prepare keyHandlers for the main search field
+    var keyHandlers = {};
+    keyHandlers[goog.events.KeyCodes.ESC] = keyCodeEscHandler;
+
+    return keyHandlers;
 };

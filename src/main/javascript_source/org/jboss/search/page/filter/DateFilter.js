@@ -74,11 +74,13 @@ org.jboss.search.page.filter.DateFilter = function(element, opt_isCollapsed, opt
     this.keyListenerId_ = goog.events.listen(this.keyHandler_,
         goog.events.KeyHandler.EventType.KEY,
         goog.bind(function(e) {
-            if (!this.isCollapsed_()) {
-                var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
-                if (keyEvent.keyCode == goog.events.KeyCodes.ESC) {
-//                    keyEvent.preventDefault();
-                    this.collapseFilter();
+            var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
+            if (!keyEvent.repeat) {
+                if (!this.isCollapsed_()) {
+                    if (keyEvent.keyCode == goog.events.KeyCodes.ESC) {
+//                        keyEvent.preventDefault();
+                        this.collapseFilter();
+                    }
                 }
             }
         }, this)
