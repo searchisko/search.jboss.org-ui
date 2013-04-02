@@ -56,7 +56,7 @@ goog.inherits(org.jboss.search.page.element.Status, goog.Disposable);
 /** @inheritDoc */
 org.jboss.search.page.element.Status.prototype.disposeInternal = function() {
     org.jboss.search.page.element.Status.superClass_.disposeInternal.call(this);
-    delete this.progress_val;
+    this.progress_val = 0;
     delete this.progress;
     delete this.status;
     goog.dom.removeChildren(this.topDiv);

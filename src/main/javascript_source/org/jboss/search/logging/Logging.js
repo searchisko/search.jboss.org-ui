@@ -68,9 +68,10 @@ goog.inherits(org.jboss.search.logging.Logging, goog.Disposable);
 
 /** @inheritDoc */
 org.jboss.search.logging.Logging.prototype.disposeInternal = function() {
+    org.jboss.search.logging.Logging.superClass_.disposeInternal.call(this);
     this.stopLogging();
     goog.events.unlistenByKey(this.historyListenerId_);
-    delete this.navigationController_;
+    this.navigationController_ = null;
 };
 
 /**

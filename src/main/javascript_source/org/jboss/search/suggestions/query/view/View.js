@@ -285,7 +285,7 @@ org.jboss.search.suggestions.query.view.View.prototype.disposeInternal = functio
 
     // Remove references to DOM nodes, which are COM objects in IE.
     delete this.div_;
-    delete this.selectable_elements_;
-    delete this.clickCallbackFunction_;
+    this.selectable_elements_ = [];
+    this.clickCallbackFunction_ = null;
 
 };

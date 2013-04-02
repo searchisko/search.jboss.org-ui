@@ -55,10 +55,7 @@ goog.require('goog.debug.Logger');
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.jboss.search.page.SearchPage = function(
-        context,
-        elements
-    ) {
+org.jboss.search.page.SearchPage = function(context, elements) {
 
     goog.events.EventTarget.call(this);
 
@@ -286,15 +283,11 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     // Remove references to COM objects.
 
     // Remove references to DOM nodes, which are COM objects in IE.
-    delete this.log_;
-
+    this.log_ = null;
     delete this.xhrManager_;
-    delete this.context;
-
-    delete this.query_suggestions_model;
-
+    this.context = null;
+    this.query_suggestions_model = null;
 };
-
 
 /**
  * Prototype URI

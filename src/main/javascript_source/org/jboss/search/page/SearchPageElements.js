@@ -74,6 +74,7 @@ goog.inherits(org.jboss.search.page.SearchPageElements, goog.Disposable);
 
 /** @inheritDoc */
 org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() {
+    org.jboss.search.page.SearchPageElements.superClass_.disposeInternal.call(this);
     delete this.query_field;
     delete this.spinner_div;
     delete this.clear_query_div;

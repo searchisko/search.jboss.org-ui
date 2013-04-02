@@ -66,7 +66,7 @@ org.jboss.search.page.UserIdle.prototype.disposeInternal = function() {
     }
 
     delete this.xhrManager_;
-    delete this.selection_;
+    this.selection_ = null;
     delete this.element_;
 };
 

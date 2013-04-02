@@ -155,9 +155,9 @@ org.jboss.search.page.element.SearchFieldHandler.prototype.disposeInternal = fun
     // Remove references to COM objects.
 
     // Remove references to DOM nodes, which are COM objects in IE.
-    delete this.field_;
-    delete this.callbackDelay_;
-    delete this.callback_;
+    this.field_ = null;
+    this.callbackDelay_ = null;
+    this.callback_ = null;
     delete this.blurHandler_;
-    delete this.keyHandlers_;
+    this.keyHandlers_ = null;
 };
