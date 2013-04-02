@@ -74,6 +74,15 @@ SearchHit.prototype.highlight;
 SearchHit.prototype.highlight.comment_body;
 
 /**
+ * Keys related to date histogram.
+ * @interface */
+function DateHistogram() {};
+DateHistogram.prototype.activity_dates_histogram;
+DateHistogram.prototype.activity_dates_histogram_interval;
+DateHistogram.prototype.time;
+DateHistogram.prototype.count;
+
+/**
  * Project name suggestions
  * @interface */
 function filterItem() {};
