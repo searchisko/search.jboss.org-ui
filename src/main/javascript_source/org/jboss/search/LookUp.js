@@ -79,6 +79,12 @@ org.jboss.search.LookUp = function() {
      */
     this.history_;
 
+    /**
+     * @type {Object}
+     * @private
+     */
+    this.recentQueryResultData_;
+
 };
 goog.addSingletonGetter(org.jboss.search.LookUp);
 
@@ -178,4 +184,20 @@ org.jboss.search.LookUp.prototype.setAuthorFilter = function(filter) {
  */
 org.jboss.search.LookUp.prototype.getAuthorFilter = function() {
     return this.authorFilter_;
+};
+
+/**
+ * Set the latest JSON response date of user query.
+ * @param {Object} json
+ */
+org.jboss.search.LookUp.prototype.setRecentQueryResultData = function(json) {
+    this.recentQueryResultData_ = json;
+};
+
+/**
+ * Get the latest JSON response date of user query.
+ * @return {Object}
+ */
+org.jboss.search.LookUp.prototype.getRecentQueryResultData = function() {
+    return this.recentQueryResultData_;
 };

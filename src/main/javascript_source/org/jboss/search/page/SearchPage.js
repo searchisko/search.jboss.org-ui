@@ -25,6 +25,7 @@ goog.provide('org.jboss.search.page.SearchPage');
 
 goog.require('org.jboss.search.LookUp');
 goog.require('org.jboss.search.util.urlGenerator');
+goog.require('org.jboss.search.request');
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.page.SearchPageElements');
@@ -66,7 +67,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     /**
      * @private
      * @type {org.jboss.search.page.SearchPageElements} */
-    this.elements = elements;
+    this.elements_ = elements;
 
     /**
      * @private
@@ -75,35 +76,47 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
     /** @private */ this.context = context;
 
-    /** @private */ this.query_suggestions_view = new org.jboss.search.suggestions.query.view.View(this.elements.getQuery_suggestions_div());
+    /** @private */ this.query_suggestions_view_ = new org.jboss.search.suggestions.query.view.View(this.elements_.getQuery_suggestions_div());
     /** @private */ this.query_suggestions_model = {};
 
 
-    /** @private */
+    /**
+     * @type {?number}
+     * @private
+     */
     this.xhrReadyListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.READY, function(e) {
         thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_START);
     });
 
-    /** @private */
+    /**
+     * @type {?number}
+     * @private
+     */
     this.xhrCompleteListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.COMPLETE, function(e) {
         thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
     });
 
-    /** @private */
+    /**
+     * @type {?number}
+     * @private
+     */
     this.xhrErrorListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ERROR, function(e) {
         thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
     });
 
-    /** @private */
+    /**
+     * @type {?number}
+     * @private
+     */
     this.xhrAbortListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ABORT, function(e) {
         thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
     });
 
-    this.query_suggestions_view.setClickCallbackFunction(
+    this.query_suggestions_view_.setClickCallbackFunction(
         function() {
-            var selectedIndex = thiz_.query_suggestions_view.getSelectedIndex();
+            var selectedIndex = thiz_.query_suggestions_view_.getSelectedIndex();
             thiz_.hideAndCleanSuggestionsElementAndModel_();
-            thiz_.elements.getQuery_field().focus();
+            thiz_.elements_.getQuery_field().focus();
 
             (function(selectedIndex) {
                 // TODO get query_string from model at the selectedIndex position
@@ -151,8 +164,8 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                         if (goog.object.containsKey(response, "view")) {
                             var view = /** @type {!Object} */ (goog.object.get(response, "view", {}));
 
-                            thiz_.query_suggestions_view.update(view);
-                            thiz_.query_suggestions_view.show();
+                            thiz_.query_suggestions_view_.update(view);
+                            thiz_.query_suggestions_view_.show();
 
                         } else {
                             thiz_.hideAndCleanSuggestionsElementAndModel_();
@@ -167,31 +180,43 @@ org.jboss.search.page.SearchPage = function(context, elements) {
         }
     };
 
-    /** @private */
-    this.dateClickListenerId_ = goog.events.listen(this.elements.getDate_filter_tab_div(),
+    /**
+     * @type {?number}
+     * @private
+     */
+    this.dateClickListenerId_ = goog.events.listen(this.elements_.getDate_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
             thiz_.isDateFilterExpanded_() ? thiz_.collapseDateFilter_() : thiz_.expandDateFilter_()
         }
     );
 
-    /** @private */
-    this.projectClickListenerId_ = goog.events.listen(this.elements.getProject_filter_tab_div(),
+    /**
+     * @type {?number}
+     * @private
+     */
+    this.projectClickListenerId_ = goog.events.listen(this.elements_.getProject_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
             thiz_.isProjectFilterExpanded_() ? thiz_.collapseProjectFilter_() : thiz_.expandProjectFilter_()
         }
     );
 
-    /** @private */
-    this.authorClickListenerId_ = goog.events.listen(this.elements.getAuthor_filter_tab_div(),
+    /**
+     * @type {?number}
+     * @private
+     */
+    this.authorClickListenerId_ = goog.events.listen(this.elements_.getAuthor_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
             thiz_.isAuthorFilterExpanded_() ? thiz_.collapseAuthorFilter_() : thiz_.expandAuthorFilter_()
         }
     );
 
-    /** @private */
+    /**
+     * @type {?number}
+     * @private
+     */
     this.contextClickListenerId_ = goog.events.listen(
         thiz_.context,
         goog.events.EventType.CLICK,
@@ -200,25 +225,25 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 //            thiz_.log_.info("Context clicked: " + goog.debug.expose(e));
 
             // if search field is clicked then do not hide search suggestions
-            if (e.target !== thiz_.elements.getQuery_field()) {
+            if (e.target !== thiz_.elements_.getQuery_field()) {
                 thiz_.hideAndCleanSuggestionsElementAndModel_();
             }
 
             // if date filter (sub)element is clicked do not hide date filter
-            if (e.target !== thiz_.elements.getDate_filter_tab_div() &&
-                !goog.dom.contains(thiz_.elements.getDate_filter_body_div(), e.target)) {
+            if (e.target !== thiz_.elements_.getDate_filter_tab_div() &&
+                !goog.dom.contains(thiz_.elements_.getDate_filter_body_div(), e.target)) {
                 thiz_.collapseDateFilter_();
             }
 
             // if project filter (sub)element is clicked do not hide project filter
-            if (e.target !== thiz_.elements.getProject_filter_tab_div() &&
-                !goog.dom.contains(thiz_.elements.getProject_filter_body_div(), e.target)) {
+            if (e.target !== thiz_.elements_.getProject_filter_tab_div() &&
+                !goog.dom.contains(thiz_.elements_.getProject_filter_body_div(), e.target)) {
                 thiz_.collapseProjectFilter_();
             }
 
             // if author filter (sub)element is clicked do not hide author filter
-            if (e.target !== thiz_.elements.getAuthor_filter_tab_div() &&
-                !goog.dom.contains(thiz_.elements.getAuthor_filter_body_div(), e.target)) {
+            if (e.target !== thiz_.elements_.getAuthor_filter_tab_div() &&
+                !goog.dom.contains(thiz_.elements_.getAuthor_filter_body_div(), e.target)) {
                 thiz_.collapseAuthorFilter_();
             }
 
@@ -228,9 +253,10 @@ org.jboss.search.page.SearchPage = function(context, elements) {
      * This listener can catch events when the user navigates to the query field by other means then clicking,
      * for example by TAB key or by selecting text in the field by cursor (does not fire click event).
      * We want to hide filter tabs in such case.
+     * @type {?number}
      * @private
      */
-    this.query_field_focus_id_ = goog.events.listen(this.elements.getQuery_field(),
+    this.query_field_focus_id_ = goog.events.listen(this.elements_.getQuery_field(),
         goog.events.EventType.INPUT,
         function(){
             thiz_.collapseAllFilters();
@@ -238,20 +264,59 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     );
 
     /** @private */
-    this.userQuerySearchField = new org.jboss.search.page.element.SearchFieldHandler(
-        this.elements.getQuery_field(),
+    this.userQuerySearchField_ = new org.jboss.search.page.element.SearchFieldHandler(
+        this.elements_.getQuery_field(),
         100,
         suggestionsCallback,
         null,
         this.getPresetKeyHandlers_()
     );
 
-    this.userIdle = new org.jboss.search.page.UserIdle(elements.getSearch_results_div());
-    this.userIdleDelay = new goog.async.Delay(
-        goog.bind(this.userIdle.start,this.userIdle),
+
+    /**
+     * ID of listener which catches user clicks (click stream) on top of search results.
+     * @type {?number}
+     * @private
+     */
+    this.searchResultsClickId_ = goog.events.listen(
+        this.elements_.getSearch_results_div(),
+        goog.events.EventType.MOUSEUP,
+        function(/** @type {goog.events.Event} */ e) {
+            var element = e.target;
+            while (element) {
+                if (goog.dom.classes.has(element, org.jboss.search.Constants.CLICK_STREAM_CLASS)) {
+                    var hitPosition = element.getAttribute(org.jboss.search.Constants.HIT_POSITION);
+                    if (hitPosition) {
+                        try { hitPosition = +hitPosition; } catch(err) { /* ignore */ }
+                        if (goog.isNumber(hitPosition)) {
+                            var d = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
+                            var clickedHit = d && d.hits && d.hits.hits && d.hits.hits[hitPosition];
+                            if (clickedHit) {
+                                var _id = clickedHit._id;
+                                var uuid = d.uuid;
+                                if (_id && uuid) {
+                                    org.jboss.search.request.writeClickStreamStatistics(thiz_.getUserClickStreamUri(), uuid, _id);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                element = goog.dom.getParentElement(element);
+            }
+        }
+    );
+
+    /** @private */
+    this.userIdle_ = new org.jboss.search.page.UserIdle(this.elements_.getSearch_results_div());
+
+    /** @private */
+    this.userIdleDelay_ = new goog.async.Delay(
+        goog.bind(this.userIdle_.start,this.userIdle_),
         org.jboss.search.Constants.USER_IDLE_INTERVAL
     );
-    this.userIdleDelay.start();
+
+    this.userIdleDelay_.start();
 
 };
 goog.inherits(org.jboss.search.page.SearchPage, goog.events.EventTarget);
@@ -263,11 +328,11 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     org.jboss.search.page.SearchPage.superClass_.disposeInternal.call(this);
 
     // Dispose of all Disposable objects owned by this class.
-    goog.dispose(this.elements);
-    goog.dispose(this.userQuerySearchField);
-    goog.dispose(this.query_suggestions_view);
-    goog.dispose(this.userIdle);
-    goog.dispose(this.userIdleDelay);
+    goog.dispose(this.elements_);
+    goog.dispose(this.userQuerySearchField_);
+    goog.dispose(this.query_suggestions_view_);
+    goog.dispose(this.userIdle_);
+    goog.dispose(this.userIdleDelay_);
 
     // Remove listeners added by this class.
     goog.events.unlistenByKey(this.dateClickListenerId_);
@@ -279,6 +344,7 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.xhrErrorListenerId_);
     goog.events.unlistenByKey(this.xhrAbortListenerId_);
     goog.events.unlistenByKey(this.query_field_focus_id_);
+    goog.events.unlistenByKey(this.searchResultsClickId_);
 
     // Remove references to COM objects.
 
@@ -290,57 +356,24 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
 };
 
 /**
- * Prototype URI
- * @private
- * @type {goog.Uri}
- * @const
- */
-org.jboss.search.page.SearchPage.prototype.SUGGESTIONS_URI = goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_QUERY);
-
-/**
  * @return {goog.Uri} Search Suggestions Service URI
  */
 org.jboss.search.page.SearchPage.prototype.getSuggestionsUri = function() {
-    return this.SUGGESTIONS_URI.clone();
+    return this.SUGGESTIONS_URI_.clone();
 };
 
 /**
- * Stop and release (dispose) all resources related to user entertainment.
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.disposeUserEntertainment_ = function() {
-    this.userIdleDelay.stop();
-    goog.dispose(this.userIdle);
-};
-
-/**
- * @private
- * @type {goog.Uri}
- * @const
- */
-org.jboss.search.page.SearchPage.prototype.SEARCH_URI = goog.Uri.parse(org.jboss.search.Constants.API_URL_SEARCH_QUERY);
-
-/**
- * Prototype URI
  * @return {goog.Uri} Query Search Service URI
  */
 org.jboss.search.page.SearchPage.prototype.getSearchUri = function() {
-    return this.SEARCH_URI.clone();
+    return this.SEARCH_URI_.clone();
 };
-// current: http://search.jboss.org/search?query=Hibernate&filters%5Binterval%5D=month
-// upcoming: https://dcpapi-libor.rhcloud.com/v1/rest/search?type=jbossorg_blog&filters%5Bcount%5D=10&sortBy=new
 
 /**
- * Set value of query field.
- * @param {?string} query
- * @private
+ * @return {goog.Uri} URI of service to record user click stream.
  */
-org.jboss.search.page.SearchPage.prototype.setUserQuery_ = function(query) {
-    var newValue = "";
-    if (!goog.string.isEmptySafe(query)) {
-        newValue = query.trim();
-    }
-    this.elements.getQuery_field().value = newValue;
+org.jboss.search.page.SearchPage.prototype.getUserClickStreamUri = function() {
+    return this.USER_CLICK_STREAM_URI_.clone();
 };
 
 /**
@@ -379,9 +412,10 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
 //                        console.log("xhr response",response);
                         var data = org.jboss.search.response.normalizeSearchResponse(response, query_string, opt_page, opt_log);
 //                        console.log("normalized data",data);
+                        org.jboss.search.LookUp.getInstance().setRecentQueryResultData(data);
                         try {
                             var html = org.jboss.search.page.templates.search_results(data);
-                            this.elements.getSearch_results_div().innerHTML = html;
+                            this.elements_.getSearch_results_div().innerHTML = html;
                         } catch(error) {
                             // Something went wrong when generating search results
                             // TODO fire event (with error)
@@ -389,11 +423,12 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
                         }
                     } else {
                         // We failed getting search results data
+                        org.jboss.search.LookUp.getInstance().setRecentQueryResultData(null);
                         var html = org.jboss.search.page.templates.request_error({
                             'user_query':query_string,
                             'error':event.target.getLastError()
                         });
-                        this.elements.getSearch_results_div().innerHTML = html;
+                        this.elements_.getSearch_results_div().innerHTML = html;
                     }
                     this.enableSearchResults_();
                 },
@@ -407,17 +442,73 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
  */
 org.jboss.search.page.SearchPage.prototype.clearSearchResults = function() {
     // TODO: check if we need stop any listeners
-    this.elements.getSearch_results_div().innerHTML = '';
+    this.elements_.getSearch_results_div().innerHTML = '';
+};
+
+/**
+ * Collapse all filter tabs.
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.collapseAllFilters = function() {
+    if (this.isAuthorFilterExpanded_()) this.collapseAuthorFilter_();
+    if (this.isProjectFilterExpanded_()) this.collapseProjectFilter_();
+    if (this.isDateFilterExpanded_()) this.collapseDateFilter_();
+};
+
+/**
+ * Prototype URI
+ * @private
+ * @type {goog.Uri}
+ * @const
+ */
+org.jboss.search.page.SearchPage.prototype.SUGGESTIONS_URI_ = goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_QUERY);
+
+/**
+ * Prototype URI
+ * @private
+ * @type {goog.Uri}
+ * @const
+ */
+org.jboss.search.page.SearchPage.prototype.SEARCH_URI_ = goog.Uri.parse(org.jboss.search.Constants.API_URL_SEARCH_QUERY);
+
+/**
+ * Prototype URI
+ * @private
+ * @type {goog.Uri}
+ * @const
+ */
+org.jboss.search.page.SearchPage.prototype.USER_CLICK_STREAM_URI_ = goog.Uri.parse(org.jboss.search.Constants.API_URL_RECORD_USER_CLICK_STREAM);
+
+/**
+ * Set value of query field.
+ * @param {?string} query
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.setUserQuery_ = function(query) {
+    var newValue = "";
+    if (!goog.string.isEmptySafe(query)) {
+        newValue = query.trim();
+    }
+    this.elements_.getQuery_field().value = newValue;
+};
+
+/**
+ * Stop and release (dispose) all resources related to user entertainment.
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.disposeUserEntertainment_ = function() {
+    this.userIdleDelay_.stop();
+    goog.dispose(this.userIdle_);
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.disableSearchResults_ = function () {
-    goog.dom.classes.add(this.elements.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
+    goog.dom.classes.add(this.elements_.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.enableSearchResults_ = function () {
-    goog.dom.classes.remove(this.elements.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
+    goog.dom.classes.remove(this.elements_.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
 };
 
 /**
@@ -443,8 +534,8 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
      */
     var keyCodeDownHandler = goog.bind(function(event, delay) {
         event.preventDefault();
-        if (this.query_suggestions_view.isVisible()) {
-            this.query_suggestions_view.selectNext();
+        if (this.query_suggestions_view_.isVisible()) {
+            this.query_suggestions_view_.selectNext();
         }
     }, this);
 
@@ -454,8 +545,8 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
      */
     var keyCodeUpHandler = goog.bind(function(event, delay) {
         event.preventDefault();
-        if (this.query_suggestions_view.isVisible()) {
-            this.query_suggestions_view.selectPrevious();
+        if (this.query_suggestions_view_.isVisible()) {
+            this.query_suggestions_view_.selectPrevious();
         }
     }, this);
 
@@ -481,17 +572,17 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
      * @param {goog.async.Delay} delay
      */
     var keyCodeEnterHandler = goog.bind(function(event, delay) {
-        var selectedIndex = this.query_suggestions_view.getSelectedIndex();
+        var selectedIndex = this.query_suggestions_view_.getSelectedIndex();
         this.hideAndCleanSuggestionsElementAndModel_();
         event.preventDefault();
         delay.stop();
         if (selectedIndex < 0) {
             // user hit enter and no suggestions are displayed (yet) use content of query field
-            var query = this.elements.getQuery_field().value;
+            var query = this.elements_.getQuery_field().value;
             this.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
         } else if (selectedIndex == 0) {
             // suggestions are displayed, user selected the first one (use what is in query field)
-            var query = this.elements.getQuery_field().value;
+            var query = this.elements_.getQuery_field().value;
             this.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
         } else if (selectedIndex > 0) {
             // user selected from suggestions, use what is in model
@@ -526,7 +617,7 @@ org.jboss.search.page.SearchPage.prototype.hideAndCleanSuggestionsElementAndMode
     // abort with 'true' does not fire any event, thus we have to fire our own event
     this.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
 
-    this.query_suggestions_view.hide();
+    this.query_suggestions_view_.hide();
     this.query_suggestions_model = {};
 };
 
@@ -545,7 +636,7 @@ org.jboss.search.page.SearchPage.prototype.parseQuerySuggestionsModel_ = functio
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded_ = function () {
-    return !goog.dom.classes.has(this.elements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements_.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
 /**
@@ -553,7 +644,7 @@ org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded_ = function () {
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isProjectFilterExpanded_ = function () {
-    return !goog.dom.classes.has(this.elements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements_.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
 /**
@@ -561,7 +652,7 @@ org.jboss.search.page.SearchPage.prototype.isProjectFilterExpanded_ = function (
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded_ = function () {
-    return !goog.dom.classes.has(this.elements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements_.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
 /** @private */
@@ -610,14 +701,4 @@ org.jboss.search.page.SearchPage.prototype.collapseAuthorFilter_ = function () {
     if (goog.isDefAndNotNull(filter)) {
         filter.collapseFilter()
     }
-};
-
-/**
- * Collapse all filter tabs.
- * @private
- */
-org.jboss.search.page.SearchPage.prototype.collapseAllFilters = function() {
-    if (this.isAuthorFilterExpanded_()) this.collapseAuthorFilter_();
-    if (this.isProjectFilterExpanded_()) this.collapseProjectFilter_();
-    if (this.isDateFilterExpanded_()) this.collapseDateFilter_();
 };

@@ -72,6 +72,13 @@ org.jboss.search.response.normalizeSearchResponse = function(response, opt_query
     }
 
     // ==========================================
+    // Response UUID
+    // ==========================================
+    if (goog.object.containsKey(response,'uuid')) {
+        output.uuid = response.uuid;
+    }
+
+    // ==========================================
     // Hits
     // ==========================================
     if (goog.object.containsKey(response,'hits')) {
@@ -103,7 +110,13 @@ org.jboss.search.response.normalizeSearchResponse = function(response, opt_query
 
         var projectMap = org.jboss.search.LookUp.getInstance().getProjectMap();
 
-        goog.array.forEach(hits, function(hit){
+        goog.array.forEach(hits, function(hit, i){
+
+            // ==========================================
+            // Position of hit within one search results page
+            // <0, org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE - 1>
+            // ==========================================
+            hit.position_on_page = i;
 
             var fields = hit.fields;
 

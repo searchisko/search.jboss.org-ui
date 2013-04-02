@@ -29,16 +29,17 @@
  * Search hits.
  * @interface */
 function SearchResults() {};
+SearchResults.prototype.actual_page;  // computed by normalize.js
+SearchResults.prototype.user_query;   // computed by normalize.js
 SearchResults.prototype.time_out;
+SearchResults.prototype.uuid;
 SearchResults.prototype.hits;
-SearchResults.prototype.user_query;         // added by normalize.js
-SearchResults.prototype.actual_page;        // added by normalize.js
 
-SearchResults.prototype.pagination;         // added by normalize.js
-SearchResults.prototype.pagination.total_pages;     // added by normalize.js
-SearchResults.prototype.pagination.array.page;      // added by normalize.js
-SearchResults.prototype.pagination.array.symbol;    // added by normalize.js
-SearchResults.prototype.pagination.array.fragment;  // added by normalize.js
+SearchResults.prototype.pagination;                 // computed by normalize.js
+SearchResults.prototype.pagination.total_pages;     // computed by normalize.js
+SearchResults.prototype.pagination.array.page;      // computed by normalize.js
+SearchResults.prototype.pagination.array.symbol;    // computed by normalize.js
+SearchResults.prototype.pagination.array.fragment;  // computed by normalize.js
 
 SearchResults.prototype.hits.total;
 SearchResults.prototype.hits.max_score;
@@ -48,6 +49,9 @@ SearchResults.prototype.hits.hits;
  * Individual search hit.
  * @interface */
 function SearchHit() {};
+SearchHit.prototype._id;
+SearchHit.prototype.position_on_page;  // computed or modified by normalize.js
+
 SearchHit.prototype.fields;
 SearchHit.prototype.fields.dcp_contributors;
 SearchHit.prototype.fields.dcp_title;
@@ -57,14 +61,14 @@ SearchHit.prototype.fields.dcp_project;
 SearchHit.prototype.fields.dcp_type;
 SearchHit.prototype.fields.dcp_description;
 
-SearchHit.prototype.fields.dcp_url_view_tr;                 // added or modified by normalize.js
-SearchHit.prototype.fields.dcp_contributors_view;           // added or modified by normalize.js
-SearchHit.prototype.fields.dcp_contributors_view.name;      // added or modified by normalize.js
-SearchHit.prototype.fields.dcp_contributors_view.gURL16;    // added or modified by normalize.js
-SearchHit.prototype.fields.dcp_contributors_view.gURL40;    // added or modified by normalize.js
-SearchHit.prototype.fields.dcp_project_full_name;           // added or modified by normalize.js
-SearchHit.prototype.fields.dcp_description_tr;              // added or modified by normalize.js
-SearchHit.prototype.fields.dcp_last_activity_date_parsed;   // added or modified by normalize.js
+SearchHit.prototype.fields.dcp_url_view_tr;                 // computed or modified by normalize.js
+SearchHit.prototype.fields.dcp_contributors_view;           // computed or modified by normalize.js
+SearchHit.prototype.fields.dcp_contributors_view.name;      // computed or modified by normalize.js
+SearchHit.prototype.fields.dcp_contributors_view.gURL16;    // computed or modified by normalize.js
+SearchHit.prototype.fields.dcp_contributors_view.gURL40;    // computed or modified by normalize.js
+SearchHit.prototype.fields.dcp_project_full_name;           // computed or modified by normalize.js
+SearchHit.prototype.fields.dcp_description_tr;              // computed or modified by normalize.js
+SearchHit.prototype.fields.dcp_last_activity_date_parsed;   // computed or modified by normalize.js
 
 SearchHit.prototype.highlight;
 SearchHit.prototype.highlight.comment_body;

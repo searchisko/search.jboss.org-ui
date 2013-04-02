@@ -175,3 +175,43 @@ var testProjectSuggestionsUrlGenerator = function() {
         urlString);
 
 };
+
+var testClickStreamUrlGenerator = function() {
+
+    var root = "http://localhost:1234";
+    var url = new goog.Uri(root);
+    var g_ = org.jboss.search.util.urlGenerator;
+
+
+    var urlString;
+
+    urlString = g_.clickStreamUrl(null, "ignored", "ignored");
+    assertEquals(
+        null,
+        urlString);
+
+    urlString = g_.clickStreamUrl(url.clone(), "one", "two");
+    assertEquals(
+        [
+            root,
+            [
+                "one",
+                "two"
+            ].join('/')
+        ].join('/'),
+        urlString);
+
+    urlString = g_.clickStreamUrl(url.clone(), "one", "two", "three");
+    assertEquals(
+        [
+            [
+                root,
+                [
+                    "one",
+                    "two"
+                ].join('/')
+            ].join('/'),
+            "three"
+        ].join('?'),
+        urlString);
+};

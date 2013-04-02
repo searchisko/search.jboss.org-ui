@@ -55,6 +55,7 @@
  * Individual search hit DIV.
  * @param fields
  * @param highlight
+ * @param position_on_page
  */
 {template .hit private="true"}
 
@@ -66,11 +67,11 @@
             </div>
             <div class="main">
                 {if isNonnull($highlight?.dcp_title)}
-                    <div class="title"><a href="{$fields.dcp_url_view}">{$highlight.dcp_title|noAutoescape}</a></div>
+                    <div class="title cs_" _position="{$position_on_page}"><a href="{$fields.dcp_url_view}">{$highlight.dcp_title|noAutoescape}</a></div>
                 {else}
-                    <div class="title"><a href="{$fields.dcp_url_view}">{$fields.dcp_title}</a></div>
+                    <div class="title cs_" _position="{$position_on_page}"><a href="{$fields.dcp_url_view}">{$fields.dcp_title}</a></div>
                 {/if}
-                <div class="link"><a href="{$fields.dcp_url_view}">{$fields.dcp_url_view_tr}</a></div>
+                <div class="link cs_" _position="{$position_on_page}"><a href="{$fields.dcp_url_view}">{$fields.dcp_url_view_tr}</a></div>
                 <div class="snippet">
                     <span class="date">{$fields.dcp_last_activity_date_parsed} - </span>
                     {if isNonnull($fields?.dcp_project)}

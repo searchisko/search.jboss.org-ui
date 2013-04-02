@@ -119,4 +119,31 @@ org.jboss.search.util.urlGenerator.projectNameSuggestionsUrl = function(rootUri,
     return rootUri.toString();
 };
 
+/**
+ * Generate URL that is used to post click stream statistics.
+ * Note it directly modifies provided `rootUri` so you may want use clone.
+ *
+ * @param {goog.Uri|string} rootUri
+ * @param {string} uuid
+ * @param {string} id
+ * @param {string=} opt_session
+ * @return {string|null}
+ */
+org.jboss.search.util.urlGenerator.clickStreamUrl = function(rootUri, uuid, id, opt_session) {
+
+    if (goog.isNull(rootUri)) { return null }
+
+    if (goog.isString(rootUri)) {
+        rootUri = new goog.Uri(rootUri)
+    }
+
+    rootUri.setPath([rootUri.getPath(),uuid].join('/'));
+    rootUri.setPath([rootUri.getPath(),id].join('/'));
+
+    if (goog.isString(opt_session)) {
+        rootUri.setParameterValue(opt_session,'');
+    }
+
+    return rootUri.toString();
+};
 

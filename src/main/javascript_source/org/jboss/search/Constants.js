@@ -47,32 +47,46 @@ org.jboss.search.Constants = {
     GET: "GET",
 
     /**
-     * Used as an identified to abort or/and send the search suggestions request.
+     * HTTP POST request type.
+     * @type {string}
+     * @const
+     */
+    POST: "POST",
+
+    /**
+     * Used as an identifier to abort or/and send the search suggestions request.
      * @type {string}
      * @const
      */
     SEARCH_SUGGESTIONS_REQUEST_ID: "1",
 
     /**
-     * Used as an identified to abort or/and send the project suggestions request.
+     * Used as an identifier to abort or/and send the project suggestions request.
      * @type {string}
      * @const
      */
     PROJECT_SUGGESTIONS_REQUEST_ID: "2",
 
     /**
-     * Used as an identified to abort or/and send the query search request.
+     * Used as an identifier to abort or/and send the query search request.
      * @type {string}
      * @const
      */
     SEARCH_QUERY_REQUEST_ID: "3",
 
     /**
-     * Used as an identified to abort or/and send the query search request.
+     * Used as an identifier to abort or/and send the query search request.
      * @type {string}
      * @const
      */
     LOAD_PROJECT_LIST_REQUEST_ID: "4",
+
+    /**
+     * Used as an identifier to abort or/and send the query click stream writes.
+     * @type {string}
+     * @const
+     */
+    WRITE_CLICK_STREAM_STATS_ID: "5",
 
     /**
      * Priority of initialization.
@@ -103,6 +117,13 @@ org.jboss.search.Constants = {
     SEARCH_QUERY_REQUEST_PRIORITY: 20,
 
     /**
+     * Priority of write stats requests. (It should be lower then search suggestions requests.)
+     * @type {number}
+     * @const
+     */
+    WRITE_STATS_REQUEST_PRIORITY: 30,
+
+    /**
      * Used in CSS.
      * @type {string}
      * @const
@@ -122,6 +143,20 @@ org.jboss.search.Constants = {
      * @const
      */
     DISABLED: "disabled",
+
+    /**
+     * Used in elements to declare that they can be used to watch for click stream analysis.
+     * @type {string}
+     * @const
+     */
+    CLICK_STREAM_CLASS: "cs_",
+
+    /**
+     * Element attribute used to hold position number of individual search hit on the page.
+     * @type {string}
+     * @const
+     */
+    HIT_POSITION: "_position",
 
     /**
      * Temporary: URL of Apiary Mock Server
@@ -151,6 +186,14 @@ org.jboss.search.Constants = {
      * @const
      */
     API_URL_PROJECT_LIST_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search?dcp_type=project_info&size=300'].join(''),
+
+    /**
+     * Base URL for recording user click stream.
+     * @see http://docs.jbossorg.apiary.io/#put-%2Fv1%2Frest%2Fsearch%2F%7Bsearch_result_uuid%7D%2F%7Bhit_id%7D%3F%7Bsession_id%7D
+     * @type {string}
+     * @const
+     */
+    API_URL_RECORD_USER_CLICK_STREAM: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search'].join(''),
 
     /**
      * Interval in ms. When user has been idle for this time then we can fire some 'entertaining' action.
