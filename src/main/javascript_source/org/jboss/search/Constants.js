@@ -152,11 +152,25 @@ org.jboss.search.Constants = {
     CLICK_STREAM_CLASS: "cs_",
 
     /**
+     * Used in elements to catch mouseover events.
+     * @type {string}
+     * @const
+     */
+    CONTRIBUTOR_CLASS: "ct_",
+
+    /**
      * Element attribute used to hold position number of individual search hit on the page.
      * @type {string}
      * @const
      */
-    HIT_POSITION: "_position",
+    HIT_NUMBER: "hn_",
+
+    /**
+     * Element attribute used to hold position number of contributor for single search hit.
+     * @type {string}
+     * @const
+     */
+    CONTRIBUTOR_NUMBER: "cn_",
 
     /**
      * Temporary: URL of Apiary Mock Server

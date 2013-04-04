@@ -285,17 +285,92 @@ org.jboss.search.page.SearchPage = function(context, elements) {
             var element = e.target;
             while (element) {
                 if (goog.dom.classes.has(element, org.jboss.search.Constants.CLICK_STREAM_CLASS)) {
-                    var hitPosition = element.getAttribute(org.jboss.search.Constants.HIT_POSITION);
-                    if (hitPosition) {
-                        try { hitPosition = +hitPosition; } catch(err) { /* ignore */ }
-                        if (goog.isNumber(hitPosition)) {
+                    var hitNumber = element.getAttribute(org.jboss.search.Constants.HIT_NUMBER);
+                    if (hitNumber) {
+                        try { hitNumber = +hitNumber } catch(err) { /* ignore */ }
+                        if (goog.isNumber(hitNumber)) {
                             var d = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
-                            var clickedHit = d && d.hits && d.hits.hits && d.hits.hits[hitPosition];
+                            var clickedHit = d && d.hits && d.hits.hits && d.hits.hits[hitNumber];
                             if (clickedHit) {
                                 var _id = clickedHit._id;
                                 var uuid = d.uuid;
                                 if (_id && uuid) {
                                     org.jboss.search.request.writeClickStreamStatistics(thiz_.getUserClickStreamUri(), uuid, _id);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                element = goog.dom.getParentElement(element);
+            }
+        }
+    );
+
+    /**
+     * ID of listener which catches mouse over events for contributor icons.
+     * @type {?number}
+     * @private
+     */
+    this.contributorMouseOverId_ = goog.events.listen(
+        this.elements_.getSearch_results_div(),
+        goog.events.EventType.MOUSEOVER,
+        function(/** @type {goog.events.Event} */ e) {
+            var element = e.target;
+            while (element) {
+                // When mouse is over small contributor avatar then do two things:
+                // - change name to selected contributor
+                // - change src of large avatar img on the left to search hit
+                // (this is one nasty piece of code...)
+                if (goog.dom.classes.has(element, org.jboss.search.Constants.CONTRIBUTOR_CLASS)) {
+                    var hitNumber = element.getAttribute(org.jboss.search.Constants.HIT_NUMBER);
+                    var contributorNumber = element.getAttribute(org.jboss.search.Constants.CONTRIBUTOR_NUMBER);
+                    if (hitNumber && contributorNumber) {
+                        // we have both values: hit number and contributor number
+                        try {hitNumber = +hitNumber } catch(err) { /* ignore */ }
+                        try {contributorNumber = +contributorNumber } catch(err) { /* ignore */ }
+                        if (goog.isNumber(hitNumber) && goog.isNumber(contributorNumber)) {
+                            // both are numbers, good...
+                            var d = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
+                            var currentHit = d && d.hits && d.hits.hits && d.hits.hits[hitNumber];
+                            if (currentHit && currentHit.fields && currentHit.fields.dcp_contributors_view) {
+                                var contributor = currentHit.fields.dcp_contributors_view[contributorNumber];
+                                if (contributor) {
+                                    // contributor data found in query response
+                                    var contributorListElement = goog.dom.getParentElement(element);
+                                    var nameElement = goog.dom.getElementByClass(
+                                        "selected_contributor_name",
+                                        contributorListElement
+                                    );
+                                    if (nameElement) {
+                                        // Element holding the name of contributor found
+                                        var valueElement = goog.dom.getElementByClass("value", nameElement);
+                                        if (valueElement && valueElement != contributor.name) {
+                                            goog.dom.setTextContent(
+                                                valueElement,
+                                                contributor.name
+                                            );
+                                        }
+                                    }
+                                    var hitElement = goog.dom.getParentElement(
+                                        goog.dom.getParentElement(contributorListElement)
+                                    );
+                                    if (hitElement) {
+                                        var leftElement = goog.dom.getElementByClass("left", hitElement);
+                                        if (leftElement) {
+                                            var avatarElement = goog.dom.getElementByClass("avatar", leftElement);
+                                            if (avatarElement) {
+                                                var avatarImg = goog.dom.getFirstElementChild(avatarElement);
+                                                if (avatarImg) {
+                                                    // img Element holding contributor large avatar found
+                                                    var currentSRC = avatarImg.getAttribute("src");
+                                                    if (currentSRC && currentSRC != contributor.gURL40) {
+                                                        avatarImg.setAttribute("src", contributor.gURL40);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -345,6 +420,7 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.xhrAbortListenerId_);
     goog.events.unlistenByKey(this.query_field_focus_id_);
     goog.events.unlistenByKey(this.searchResultsClickId_);
+    goog.events.unlistenByKey(this.contributorMouseOverId_);
 
     // Remove references to COM objects.
 
