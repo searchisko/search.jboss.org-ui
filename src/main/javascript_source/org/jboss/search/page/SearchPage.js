@@ -485,13 +485,18 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
                     var event = /** @type goog.net.XhrManager.Event */ (e);
                     if (event.target.isSuccess()) {
                         var response = event.target.getResponseJson();
-//                        console.log("xhr response",response);
-                        var data = org.jboss.search.response.normalizeSearchResponse(response, query_string, opt_page, opt_log);
-//                        console.log("normalized data",data);
-                        org.jboss.search.LookUp.getInstance().setRecentQueryResultData(data);
+//                        console.log("xhr response", response);
+                        var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(
+                            response, query_string, opt_page, opt_log
+                        );
+//                        console.log("normalized data", normalizedResponse);
+                        org.jboss.search.LookUp.getInstance().setRecentQueryResultData(normalizedResponse);
                         try {
-                            var html = org.jboss.search.page.templates.search_results(data);
+                            // generate HTML for search results
+                            var html = org.jboss.search.page.templates.search_results(normalizedResponse);
                             this.elements_.getSearch_results_div().innerHTML = html;
+                            // pre-load avatar images
+                            this.preLoadAvatarImages_(normalizedResponse);
                         } catch(error) {
                             // Something went wrong when generating search results
                             // TODO fire event (with error)
@@ -501,8 +506,8 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, op
                         // We failed getting search results data
                         org.jboss.search.LookUp.getInstance().setRecentQueryResultData(null);
                         var html = org.jboss.search.page.templates.request_error({
-                            'user_query':query_string,
-                            'error':event.target.getLastError()
+                            'user_query': query_string,
+                            'error': event.target.getLastError()
                         });
                         this.elements_.getSearch_results_div().innerHTML = html;
                     }
@@ -776,5 +781,32 @@ org.jboss.search.page.SearchPage.prototype.collapseAuthorFilter_ = function () {
     var filter = org.jboss.search.LookUp.getInstance().getAuthorFilter();
     if (goog.isDefAndNotNull(filter)) {
         filter.collapseFilter()
+    }
+};
+
+/**
+ * Pre-load large avatar images of all contributors found in the data.
+ * @param {Object} data
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.preLoadAvatarImages_ = function(data) {
+    if (data && data.hits && data.hits.hits) {
+        var imageLoader = org.jboss.search.LookUp.getInstance().getImageLoader();
+        goog.array.forEach(
+            data.hits.hits,
+            function(hit) {
+                if (hit.fields && hit.fields.dcp_contributors_view) {
+                    goog.array.forEach(
+                        hit.fields.dcp_contributors_view,
+                        function(c) {
+                            if (goog.isString(c.gURL40)) {
+                                imageLoader.addImage(c.gURL40, c.gURL40);
+                            }
+                        }
+                    )
+                }
+            }
+        )
+        imageLoader.start();
     }
 };

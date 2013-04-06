@@ -37,6 +37,7 @@ goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
+goog.require('goog.net.ImageLoader');
 goog.require('goog.Disposable');
 goog.require('goog.History');
 goog.require('goog.Uri');
@@ -85,6 +86,9 @@ org.jboss.search.App = function() {
     // Instantiate LookUp instance
     // ================================================================
     var lookup_ = org.jboss.search.LookUp.getInstance();
+
+    // setup ImageLoader that does pre-load images.
+    lookup_.setImageLoader(new goog.net.ImageLoader());
 
     // ================================================================
     // Get necessary HTML elements

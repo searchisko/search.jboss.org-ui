@@ -31,6 +31,7 @@ goog.provide('org.jboss.search.LookUp');
 
 goog.require('goog.History');
 goog.require('goog.net.XhrManager');
+goog.require('org.jboss.search.util.ImageLoader');
 
 /**
  * @constructor
@@ -84,6 +85,14 @@ org.jboss.search.LookUp = function() {
      * @private
      */
     this.recentQueryResultData_;
+
+    /**
+     * Global image loader.
+     * This is to ensure that any image pre-caching is handled via a single loader.
+     * @type {goog.net.ImageLoader}
+     * @private
+     */
+    this.imageLoader_;
 
 };
 goog.addSingletonGetter(org.jboss.search.LookUp);
@@ -200,4 +209,25 @@ org.jboss.search.LookUp.prototype.setRecentQueryResultData = function(json) {
  */
 org.jboss.search.LookUp.prototype.getRecentQueryResultData = function() {
     return this.recentQueryResultData_;
+};
+
+/**
+ * @param {goog.net.ImageLoader} imageLoader
+ */
+org.jboss.search.LookUp.prototype.setImageLoader = function(imageLoader) {
+    this.imageLoader_ = imageLoader;
+};
+
+/**
+ * Return instance of ImageLoader.
+ * It is a singleton instance at the application level.
+ * By default it return <code>org.jboss.search.util.ImageLoader</code> which does not do any image pre-loading,
+ * if you want pre-load images then you need to set different implementation of ImageLoader via #setImageLoader.
+ * @returns {!goog.net.ImageLoader}
+ */
+org.jboss.search.LookUp.prototype.getImageLoader = function() {
+    if (!goog.isDefAndNotNull(this.imageLoader_)) {
+        this.imageLoader_ = new org.jboss.search.util.ImageLoader();
+    }
+    return this.imageLoader_;
 };

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # ----------------------------------------------------------------------------
-# A simple script to generate dependency list in load order.
+# A simple script to generate dependency list for jsTestDriver in load order.
 #
 # Author: Lukas Vlcek (lvlcek@redhat.com)
 # ----------------------------------------------------------------------------

@@ -58,7 +58,7 @@ load:
 
 #### Keep jsTestDriver.conf Updated
 
-To get updated list of required Closure library code for the `jsTestDriver.conf` just execute the `printClosureDependencies.sh`.
+To get updated list of required Closure library code for the `jsTestDriver.conf` just execute the `printJSTDdeps.sh`.
 
 The script will print out list of JS scripts in correct order. Just copy and paste this list into `jsTestDriver.conf` into _load:_ section. If you are using other third-party js libraries
 (like D3.js for instance) then make sure you add them manually.
