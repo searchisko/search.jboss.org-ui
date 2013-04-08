@@ -16,7 +16,7 @@ Generally, [css files][css_files] can be changes directly, however, if the chang
 
 Quick (but not complete!) tutorial on branching. This is just the most basic workflow:
 
-```shell
+```sh
 # clone into local folder
 clone git@github.com:jbossorg/search-web-ui.git
 cd search-web-ui
@@ -26,6 +26,13 @@ git checkout -b design
 
 # do your thing and do new commits
 # when done you push into origin repo (this creates a new branch in remote repo)
+git push origin design
+
+# you can use the following command to list local branches
+git branch
+
+# when the design branch already exists on the remote repo, you should first pull form it and the push:
+git pull origin design
 git push origin design
 
 ```
