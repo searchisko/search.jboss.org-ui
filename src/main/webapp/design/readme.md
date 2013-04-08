@@ -14,7 +14,7 @@ Generally, [css files][css_files] can be changes directly, however, if the chang
 [css_files]: ../css
 [soy_templates]: ../../../main/soy_templates
 [compileClosureTemplates.sh]: ../../../../compileClosureTemplates.sh
-[generated_templates]: ../../javascript_sources/generated_templates
+[generated_templates]: ../../javascript_source/generated_templates
 
 ## Available Stubs
 
