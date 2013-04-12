@@ -22,13 +22,9 @@
     ======================================================================
 */
 
-svg.histogram {
-    background-color: #d3d3d3;
-}
-
 rect.inner {
     cursor: crosshair;
-    fill: #e3e3e3;
+    fill: #e8e8e8;
 }
 
 rect.bar {

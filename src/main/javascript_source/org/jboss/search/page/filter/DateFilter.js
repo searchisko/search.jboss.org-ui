@@ -23,6 +23,8 @@
 
 goog.provide('org.jboss.search.page.filter.DateFilter');
 
+goog.require('org.jboss.search.visualization.Histogram');
+
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.events.KeyHandler');
@@ -32,20 +34,27 @@ goog.require('goog.Disposable');
 /**
  *
  * @param {!HTMLElement} element to host the date filter
+ * @param {!HTMLElement} date_histogram_element to host the date histogram
  * @param {function(): boolean} opt_isCollapsed a function that is used to learn of filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.page.filter.DateFilter = function(element, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
+org.jboss.search.page.filter.DateFilter = function(element, date_histogram_element, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
     goog.Disposable.call(this);
 
     /**
-     * @type {!HTMLElement}
+     * @type {HTMLElement}
      * @private
      */
     this.element_ = element;
+
+    /**
+     * @type {HTMLElement}
+     * @private
+     */
+    this.date_histogram_element_ = date_histogram_element;
 
     /**
      * @type {!Function}
@@ -85,6 +94,13 @@ org.jboss.search.page.filter.DateFilter = function(element, opt_isCollapsed, opt
             }
         }, this)
     );
+
+    /**
+     * @type {org.jboss.search.visualization.Histogram}
+     * @private
+     */
+    this.histogram_chart_ = new org.jboss.search.visualization.Histogram(this.date_histogram_element_);
+    this.histogram_chart_.initialize('histogram', 420, 200); // TODO add size to configuration
 };
 goog.inherits(org.jboss.search.page.filter.DateFilter, goog.Disposable);
 
@@ -92,11 +108,13 @@ goog.inherits(org.jboss.search.page.filter.DateFilter, goog.Disposable);
 org.jboss.search.page.filter.DateFilter.prototype.disposeInternal = function() {
     org.jboss.search.page.filter.ProjectFilter.superClass_.disposeInternal.call(this);
 
+    goog.dispose(this.histogram_chart_);
     goog.dispose(this.keyHandler_);
 
     goog.events.unlistenByKey(this.keyListenerId_);
 
-    delete this.element_;
+    this.element_ = null;
+    this.date_histogram_element_ = null;
     delete this.expandFilter_;
     delete this.collpaseFilter_;
     delete this.isCollapsed_;
@@ -116,4 +134,11 @@ org.jboss.search.page.filter.DateFilter.prototype.expandFilter = function() {
  */
 org.jboss.search.page.filter.DateFilter.prototype.collapseFilter = function() {
     this.collpaseFilter_();
+};
+
+/**
+ * @returns {org.jboss.search.visualization.Histogram}
+ */
+org.jboss.search.page.filter.DateFilter.prototype.getHistogramChart = function() {
+    return this.histogram_chart_;
 };

@@ -39,6 +39,7 @@ goog.require('goog.Disposable');
  * @param {!HTMLDivElement}   date_filter_body_div
  * @param {!HTMLDivElement}   project_filter_body_div
  * @param {!HTMLDivElement}   author_filter_body_div
+ * @param {!HTMLDivElement}   date_histogram_chart_div
  * @param {!HTMLInputElement} project_filter_query_field
  * @param {!HTMLInputElement} author_filter_query_field
  * @param {!HTMLDivElement}   search_results_div
@@ -49,6 +50,7 @@ org.jboss.search.page.SearchPageElements = function(
     query_field, spinner_div, clear_query_div, query_suggestions_div,
     date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
     date_filter_body_div, project_filter_body_div, author_filter_body_div,
+    date_histogram_chart_div,
     project_filter_query_field, author_filter_query_field,
     search_results_div
     ) {
@@ -65,6 +67,7 @@ org.jboss.search.page.SearchPageElements = function(
     /** @type {!HTMLDivElement}   */ this.date_filter_body_div = date_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.project_filter_body_div = project_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.author_filter_body_div = author_filter_body_div;
+    /** @type {!HTMLDivElement}   */ this.date_histogram_chart_div = date_histogram_chart_div;
     /** @type {!HTMLInputElement} */ this.project_filter_query_field = project_filter_query_field;
     /** @type {!HTMLInputElement} */ this.author_filter_query_field = author_filter_query_field;
     /** @type {!HTMLDivElement}   */ this.search_results_div = search_results_div;
@@ -85,6 +88,7 @@ org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() 
     delete this.date_filter_body_div;
     delete this.project_filter_body_div;
     delete this.author_filter_body_div;
+    delete this.date_histogram_chart_div;
     delete this.project_filter_query_field;
     delete this.author_filter_query_field;
     delete this.search_results_div;
@@ -105,6 +109,7 @@ org.jboss.search.page.SearchPageElements.prototype.isValid = function() {
         && goog.isDefAndNotNull(this.date_filter_body_div)
         && goog.isDefAndNotNull(this.project_filter_body_div)
         && goog.isDefAndNotNull(this.author_filter_body_div)
+        && goog.isDefAndNotNull(this.date_histogram_chart_div)
         && goog.isDefAndNotNull(this.project_filter_query_field)
         && goog.isDefAndNotNull(this.author_filter_query_field)
         && goog.isDefAndNotNull(this.search_results_div)
@@ -158,6 +163,11 @@ org.jboss.search.page.SearchPageElements.prototype.getProject_filter_body_div = 
 /** @return {!HTMLDivElement} */
 org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_body_div = function() {
     return this.author_filter_body_div;
+};
+
+/** @return {!HTMLInputElement} */
+org.jboss.search.page.SearchPageElements.prototype.getDate_histogram_chart_div = function() {
+    return this.date_histogram_chart_div;
 };
 
 /** @return {!HTMLInputElement} */
