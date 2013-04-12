@@ -165,7 +165,7 @@ org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_body_div = f
     return this.author_filter_body_div;
 };
 
-/** @return {!HTMLInputElement} */
+/** @return {!HTMLDivElement} */
 org.jboss.search.page.SearchPageElements.prototype.getDate_histogram_chart_div = function() {
     return this.date_histogram_chart_div;
 };
