@@ -79,6 +79,13 @@ org.jboss.search.response.normalizeSearchResponse = function(response, opt_query
     }
 
     // ==========================================
+    // activity_dates_histogram_interval
+    // ==========================================
+    if (goog.object.containsKey(response,'activity_dates_histogram_interval')) {
+        output.activity_dates_histogram_interval = response.activity_dates_histogram_interval;
+    }
+
+    // ==========================================
     // Hits
     // ==========================================
     if (goog.object.containsKey(response,'hits')) {

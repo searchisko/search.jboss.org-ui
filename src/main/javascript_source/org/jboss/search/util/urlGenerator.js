@@ -78,7 +78,7 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, opt_query, opt_
         rootUri.setParameterValue(params.HIGHLIGHTS, "true")
     }
 //    .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_dcp_type_counts","tag_cloud"])
-    rootUri.setParameterValues(params.FACET, ["per_project_counts","per_dcp_type_counts"]);
+    rootUri.setParameterValues(params.FACET, ["per_project_counts","per_dcp_type_counts","activity_dates_histogram"]);
 
     if (goog.isDef(opt_page) && goog.isNumber(opt_page)) {
         if (opt_page > 1) {

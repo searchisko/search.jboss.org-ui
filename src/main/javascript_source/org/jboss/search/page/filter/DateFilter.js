@@ -24,6 +24,7 @@
 goog.provide('org.jboss.search.page.filter.DateFilter');
 
 goog.require('org.jboss.search.visualization.Histogram');
+goog.require('org.jboss.search.LookUp');
 
 goog.require('goog.dom');
 goog.require('goog.events');
@@ -126,6 +127,13 @@ org.jboss.search.page.filter.DateFilter.prototype.disposeInternal = function() {
  */
 org.jboss.search.page.filter.DateFilter.prototype.expandFilter = function() {
     this.expandFilter_();
+    var data = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
+    if (data && data.activity_dates_histogram_interval && data.facets &&
+        data.facets.activity_dates_histogram && data.facets.activity_dates_histogram.entries) {
+        this.histogram_chart_.update(data.facets.activity_dates_histogram.entries, data.activity_dates_histogram_interval);
+    } else {
+        this.histogram_chart_.update([],"month");
+    }
 };
 
 /**

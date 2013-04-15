@@ -73,6 +73,10 @@ SearchHit.prototype.fields.dcp_last_activity_date_parsed;   // computed or modif
 SearchHit.prototype.highlight;
 SearchHit.prototype.highlight.comment_body;
 
+SearchHit.prototype.facets;
+SearchHit.prototype.facets.activity_dates_histogram;
+SearchHit.prototype.facets.activity_dates_histogram.entries;
+
 /**
  * Keys related to date histogram.
  * @interface */
