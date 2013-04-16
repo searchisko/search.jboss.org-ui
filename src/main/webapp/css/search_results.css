@@ -203,6 +203,7 @@
 .hit > .main > .contributors_list .selected_contributor_name {
     font-size: 12px;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 .hit > .main > .snippet {
