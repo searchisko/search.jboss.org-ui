@@ -173,7 +173,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, opt_query
             if (goog.object.containsKey(fields,'dcp_url_view')) {
                 var url = fields.dcp_url_view;
                 if (goog.isDef(url)) {
-                    var url_tr = goog.string.truncateMiddle(url, 60, true);
+                    var url_tr = goog.string.truncateMiddle(url, org.jboss.search.Constants.MAX_URL_LENGTH, true);
                     fields.dcp_url_view_tr = url_tr;
                 }
             }
@@ -184,9 +184,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, opt_query
             if (goog.object.containsKey(fields,'dcp_description')) {
                 var desc = fields.dcp_description;
                 if (goog.isDef(desc)) {
-                    // ideal length of line 60
-                    // max 3 lines = 180
-                    var desc_tr = goog.string.truncate(desc, 180, true);
+                    var desc_tr = goog.string.truncate(desc, org.jboss.search.Constants.MAX_DESCRIPTION_LENGTH, true);
                     fields.dcp_description_tr = desc_tr;
                 }
             }

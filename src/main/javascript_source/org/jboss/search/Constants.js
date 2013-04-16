@@ -40,6 +40,21 @@ org.jboss.search.Constants = {
     PAGINATION_MAX_ITEMS_COUNT: 10,
 
     /**
+     * Max length of description text for individual search hit (if no highlights are used).
+     * Ideal length of line 60, max 3 lines = 180.
+     * @type {number}
+     * @const
+     */
+    MAX_DESCRIPTION_LENGTH: 180,
+
+    /**
+     * Max length of URL link for individual search hit.
+     * @type {number}
+     * @const
+     */
+    MAX_URL_LENGTH: 60,
+
+    /**
      * HTTP GET request type.
      * @type {string}
      * @const
