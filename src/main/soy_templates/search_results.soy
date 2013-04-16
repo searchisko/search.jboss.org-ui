@@ -88,7 +88,9 @@
                     {/if}
                     {if (isNonnull($highlight?.dcp_description) or isNonnull($fields?.dcp_description_tr))}
                         <div class="description">
-                            {if isNonnull($highlight?.dcp_description)}
+                            {if isNonnull($highlight?.dcp_content)}
+                                {$highlight.dcp_content|noAutoescape}
+                            {elseif isNonnull($highlight?.dcp_description)}
                                 {$highlight.dcp_description|noAutoescape}
                             {elseif isNonnull($fields?.dcp_description_tr)}
                                 {$fields.dcp_description_tr|noAutoescape}
@@ -111,7 +113,7 @@
                             <span class="ct_" hn_="{$position_on_page}" cn_="{index($c)}"><img src="{$c.gURL16}"></span>
                         {/foreach}
                         {if $fields?.dcp_contributors_view.length > 0}
-                            <span class="selected_contributor_name">&#8212;&nbsp;<span class="value">{$fields.dcp_contributors_view[0].name}</span></span>
+                            <span class="selected_contributor_name">&#8212; <span class="value">{$fields.dcp_contributors_view[0].name}</span></span>
                         {/if}
                     </div>
                 {/if}
