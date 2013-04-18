@@ -60,9 +60,22 @@
     var histogram1 = new org.jboss.search.visualization.Histogram(container1);
     var histogram2 = new org.jboss.search.visualization.Histogram(container2);
 
-    histogram1.initialize('histogram', 400, 260);
-    histogram2.initialize('histogram', 400, 260);
+    // Data with large values for histogram2, we want to test axis formatter.
+    var weeklyHigh = {
+        interval : "week",
+        data :
+                [
+                    {"time": 1204502400000, "count": 800},
+                    {"time": 1207526400000, "count": 700},
+                    {"time": 1208131200000, "count": 3000},
+                    {"time": 1210550400000, "count": 4000},
+                    {"time": 1211155200000, "count": 700},
+                    {"time": 1214784000000, "count": 200},
+                    {"time": 1219017600000, "count": 350}
+                ]
+    };
 
+    // Different data that are updated in histogram1
     var weekly1 = {
         interval : "week",
         data :
@@ -517,6 +530,11 @@
     var data = [weekly1, monthly1, weekly2, weekly3, weekly4, weekly5, empty];
     var i = data.length;
     var timeoutId = 0;
+
+    histogram1.initialize('histogram', 420, 230);
+    histogram2.initialize('histogram', 420, 230);
+
+    histogram2.update(weeklyHigh.data, weeklyHigh.interval);
 
     function updateChart(data) {
         histogram1.update(data.data, data.interval);

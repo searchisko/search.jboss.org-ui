@@ -29,6 +29,7 @@ goog.provide('org.jboss.search.visualization.Histogram');
 
 goog.require('goog.array');
 goog.require('goog.object');
+goog.require('goog.string');
 goog.require('goog.Disposable');
 
 /**
@@ -83,6 +84,7 @@ org.jboss.search.visualization.Histogram.prototype.initialize = function(css_cla
 
     if (!this.init) {
         var margin = {top: 20, right: 20, bottom: 30, left: 40};
+        var titleSize = {height: 20, margin:10};
         if (goog.isDef(opt_m)) {
             goog.object.extend(margin, opt_m);
         }
@@ -93,9 +95,22 @@ org.jboss.search.visualization.Histogram.prototype.initialize = function(css_cla
         this.svg = d3.select(this.element_).append("svg")
             .attr("class", css_class)
             .attr("width", this.width + margin.left + margin.right)
-            .attr("height", this.height + margin.top + margin.bottom)
+            .attr("height", this.height + margin.top + margin.bottom + titleSize.height + titleSize.margin)
           .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+//            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("transform", "translate(" + margin.left + "," + (margin.top + titleSize.height) + ")")
+        ;
+
+        this.title = this.svg
+          .append("text")
+            .attr("class", "chart_title")
+            .attr("dx", this.width/2)
+//            .attr("dy", ".35em")
+//            .attr("y", 14)
+            .attr("y", -12)
+            .attr("text-anchor", "middle");
+
+        this.title.text(function() {});
 
         this.svg
           .append("rect")
@@ -118,15 +133,17 @@ org.jboss.search.visualization.Histogram.prototype.initialize = function(css_cla
 //            .ticks(d3.time.days, 6)
 //            .tickFormat(d3.time.format('%a %d %Y'))
             .tickSize(6, 3, 1)
-            .tickPadding(8)
-            ;
+            .tickPadding(8);
 
         this.yAxis = d3.svg.axis()
             .scale(this.y)
             .orient('left')
             .tickSize(6, 3, 1)
             .tickPadding(8)
-        ;
+            .tickFormat(d3.format("s"));
+        // More about tick ^^ formatting:
+        // @see https://github.com/mbostock/d3/wiki/Formatting#wiki-d3_format
+        // @see http://stackoverflow.com/questions/13828003/format-a-number-with-si-prefix-with-fixed-number-of-decimals
 
         this.xAxisElement = this.svg.append("g")
             .attr("class", "x axis")
@@ -161,6 +178,9 @@ org.jboss.search.visualization.Histogram.prototype.update = function(data, inter
     if (timeInterval == "quarter") {
         timeInterval = "month";
     }
+
+    // update chart title, use plural form of interval
+    this.title.text(function() { return "Matching content by " + (goog.string.endsWith(timeInterval, 's') ? timeInterval : timeInterval+'s') });
 
     timeInterval = d3.time[timeInterval];
 

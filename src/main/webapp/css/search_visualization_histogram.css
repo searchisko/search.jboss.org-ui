@@ -46,3 +46,7 @@ text.bar {
     stroke: #000;
     shape-rendering: crispEdges;
 }
+
+.chart_title {
+    font-size: 14px;
+}

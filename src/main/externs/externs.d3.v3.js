@@ -34,6 +34,7 @@ d3.prototype.layout;
 d3.prototype.scale;
 d3.prototype.svg;
 d3.prototype.max;
+d3.prototype.format;
 d3.prototype.call; // probably not needed as JS has call function
 
 /**
@@ -169,6 +170,7 @@ time.prototype.orient;
 time.prototype.ticks;
 time.prototype.tickSize;
 time.prototype.tickPadding;
+time.prototype.tickFormat;
 
 /**
  * Axes.
