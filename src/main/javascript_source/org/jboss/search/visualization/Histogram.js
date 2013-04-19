@@ -17,7 +17,7 @@
  */
 
 /**
- * @fileoverview Histogram chart. Supports (animated) updates.
+ * @fileoverview Histogram chart. Supports (animated) updates and interval selection (via brush).
  *
  * There is a known issue with d3 transitions when the browser tab is in background.
  * See https://github.com/mbostock/d3/issues/885
@@ -27,19 +27,21 @@
 
 goog.provide('org.jboss.search.visualization.Histogram');
 
+goog.require('org.jboss.search.visualization.IntervalSelected');
+
 goog.require('goog.array');
 goog.require('goog.object');
 goog.require('goog.string');
-goog.require('goog.Disposable');
+goog.require('goog.events.EventTarget');
 
 /**
- *
+ * Create a new Histogram instance.
  * @param {!HTMLElement} element
  * @constructor
- * @extends {goog.Disposable}
+ * @extends {goog.events.EventTarget}
  */
 org.jboss.search.visualization.Histogram = function(element) {
-    goog.Disposable.call(this);
+    goog.events.EventTarget.call(this);
 
     /**
      * @type {HTMLElement}
@@ -48,10 +50,16 @@ org.jboss.search.visualization.Histogram = function(element) {
     this.element_ = element;
 
     /** @private */ this.svg;
+    /** @private */ this.title;
     /** @private */ this.x;
+    /** @private */ this.xAxis;
+    /** @private */ this.xAxisElement;
     /** @private */ this.y;
+    /** @private */ this.yAxis;
+    /** @private */ this.yAxisElement;
     /** @private */ this.width;
     /** @private */ this.height;
+    /** @private */ this.brush;
 
     /**
      * Has the chart been already initialized?
@@ -60,18 +68,28 @@ org.jboss.search.visualization.Histogram = function(element) {
      */
     this.init = false;
 };
-goog.inherits(org.jboss.search.visualization.Histogram, goog.Disposable);
+goog.inherits(org.jboss.search.visualization.Histogram, goog.events.EventTarget);
 
 /** @inheritDoc */
 org.jboss.search.visualization.Histogram.prototype.disposeInternal = function() {
     org.jboss.search.visualization.Histogram.superClass_.disposeInternal.call(this);
 
+    // Possible TODO:
+    // This dispose implementation is probably not complete as it does not clean the SVG elements
+    // but we do not need to get it right for now.
+
     this.element_ = null;
     this.svg = null;
+    this.title = null;
     this.x = null;
+    this.xAxis = null;
+    this.xAxisElement = null;
     this.y = null;
+    this.yAxis = null;
+    this.yAxisElement = null;
     this.width = null;
     this.height = null;
+    this.brush = null;
 };
 
 /**
@@ -155,7 +173,46 @@ org.jboss.search.visualization.Histogram.prototype.initialize = function(css_cla
 //            .attr("transform","translate(" + this.width + ",0)")
             .call(this.yAxis);
 
+        this.brush = d3.svg.brush()
+            .x(this.x)
+            .on("brush", goog.bind(this.brush_, this))
+//            .on("brushstart", function(){ })
+            .on("brushend", goog.bind(this.brushEnd_, this));
+
+
+        this.brushElement = this.svg.append("g")
+            .attr("class", "x brush")
+            .call(this.brush);
+
+        this.brushElement.selectAll("rect")
+            .attr("y", 0)
+            .attr("height", this.height);
+
         this.init = true;
+    }
+};
+
+/**
+ * @private
+ */
+org.jboss.search.visualization.Histogram.prototype.brushEnd_ = function() {
+    var extent = this.brush.extent();
+    if (goog.isDateLike(extent[0]) && goog.isDateLike(extent[1])) {
+        this.dispatchEvent(new org.jboss.search.visualization.IntervalSelected(extent[0], extent[1], true));
+    }
+    // Clear the brush
+    // @see https://groups.google.com/d/msg/d3-js/SN4-kJD6_2Q/SmQNwLm-5bwJ
+    this.svg.select(".brush").call(this.brush.clear());
+    // TODO: disable brush? ... because we are going to load a new data.
+};
+
+/**
+ * @private
+ */
+org.jboss.search.visualization.Histogram.prototype.brush_ = function() {
+    var extent = this.brush.extent();
+    if (goog.isDateLike(extent[0]) && goog.isDateLike(extent[1])) {
+        this.dispatchEvent(new org.jboss.search.visualization.IntervalSelected(extent[0], extent[1], false));
     }
 };
 

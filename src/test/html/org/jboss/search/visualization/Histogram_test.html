@@ -45,6 +45,10 @@
 <script src="Histogram_test_deps.js"></script>
 <script type="text/javascript">
     goog.require('org.jboss.search.visualization.Histogram');
+    goog.require('org.jboss.search.visualization.HistogramEventType');
+    goog.require('org.jboss.search.visualization.IntervalSelected');
+    goog.require('goog.events');
+    goog.require('goog.array');
 </script>
 
 <table><tr>
@@ -550,6 +554,20 @@
     updateChart(getData());
 
     setTimeout(function(){ clearTimeout(timeoutId)}, 60000);
+
+    goog.events.listen(
+        histogram2,
+        org.jboss.search.visualization.HistogramEventType.INTERVAL_SELECTED,
+        function(e) {
+            var ie = /** @type{org.jboss.search.visualization.IntervalSelected} */ (e);
+            if (ie.isLast()) {
+                var newData = goog.array.filter(weeklyHigh.data, function(d) {
+                    return (d.time >= ie.getFrom().getTime() && d.time <= ie.getTo().getTime())
+                });
+                histogram2.update(newData, weeklyHigh.interval);
+            }
+        }
+    )
 
 </script>
 

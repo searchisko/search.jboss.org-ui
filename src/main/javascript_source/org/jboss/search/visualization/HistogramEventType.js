@@ -16,42 +16,16 @@
  * limitations under the License.
  */
 
-/*
-    ======================================================================
-    Styles for Histogram
-    ======================================================================
-*/
+/**
+ * @fileoverview Event types for Histogram chart.
+ * @author Lukas Vlcek (lvlcek@redhat.com)
+ */
 
-rect.inner {
-    fill: #e8e8e8;
-}
+goog.provide('org.jboss.search.visualization.HistogramEventType');
 
-rect.bar {
-    fill: steelblue;
-    shape-rendering: crispEdges;
-    pointer-events: none;
-}
+goog.require('goog.events');
 
-rect.bar.on_exit {
-    fill: rgb(195, 184, 201);
-}
-
-text.bar {
-    fill: #fff;
-}
-
-.axis path, .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-}
-
-.chart_title {
-    font-size: 14px;
-}
-
-.brush .extent {
-    stroke: #fff;
-    fill-opacity: .125;
-    shape-rendering: crispEdges;
+/** @enum {string} */
+org.jboss.search.visualization.HistogramEventType = {
+    INTERVAL_SELECTED : goog.events.getUniqueId('interval_selected')
 }

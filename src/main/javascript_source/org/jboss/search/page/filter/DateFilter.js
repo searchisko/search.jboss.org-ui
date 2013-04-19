@@ -24,6 +24,7 @@
 goog.provide('org.jboss.search.page.filter.DateFilter');
 
 goog.require('org.jboss.search.visualization.Histogram');
+goog.require('org.jboss.search.visualization.IntervalSelected');
 goog.require('org.jboss.search.LookUp');
 
 goog.require('goog.dom');

@@ -199,13 +199,27 @@ pie.prototype.sort;
 
 /**
  * SVG.
- * @see https://github.com/mbostock/d3/wiki/SVG-Shapes
+ * @see https://github.com/mbostock/d3/wiki/SVG
  * @interface
  */
 function svg() {}
 
+// @see https://github.com/mbostock/d3/wiki/SVG-Shapes
 svg.prototype.arc;
+// @see https://github.com/mbostock/d3/wiki/SVG-Controls
+svg.prototype.brush;
 
+/**
+ * Brush
+ * @see https://github.com/mbostock/d3/wiki/SVG-Controls#wiki-brush
+ * @interface
+ */
+function brush() {}
+brush.prototype.x;
+brush.prototype.y;
+brush.prototype.on;
+brush.prototype.extent;
+brush.prototype.clear;
 
 /**
  * Arc Shape generator.
