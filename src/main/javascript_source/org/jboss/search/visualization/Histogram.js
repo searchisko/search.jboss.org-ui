@@ -239,7 +239,7 @@ org.jboss.search.visualization.Histogram.prototype.update = function(data, inter
     }
 
     // update chart title, use plural form of interval
-    this.title.text(function() { return "Matching content by " + (goog.string.endsWith(timeInterval, 's') ? timeInterval : timeInterval+'s') });
+    this.title.text(function() { return "Matching contribution updates by " + (goog.string.endsWith(timeInterval, 's') ? timeInterval : timeInterval+'s') });
 
     timeInterval = d3.time[timeInterval];
 
