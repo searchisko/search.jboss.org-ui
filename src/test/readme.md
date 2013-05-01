@@ -34,7 +34,7 @@ Tests implemented using Google [JsTestDriver](http://code.google.com/p/js-test-d
 
 When `mvm clean test` (or `mvn clean jstd:test`) is run, then all these tests are executed in web browser. Some IDE support jsTestDriver as well, for example IntelliJ IDEA do (just note that some configuration of maven pom.xml was required to support both manual execution of these tests as well as execution driven by IDE).
 
-These tests are driven by configuration file called [`jsTestDriver.conf`](https://github.com/jbossorg/search-web-ui/blob/master/jsTestDriver.conf) and dependency list in this configuration file can be generated/updated using [`printClosureDependencies.sh`](https://github.com/jbossorg/search-web-ui/blob/master/printClosureDependencies.sh) script.
+These tests are driven by configuration file called [`jsTestDriver.conf`](https://github.com/jbossorg/search-web-ui/blob/master/jsTestDriver.conf) and dependency list in this configuration file can be generated/updated using [`printJSTDdeps.sh`](https://github.com/jbossorg/search-web-ui/blob/master/printJSTDdeps.sh) script.
 
 # How to implement Javascript tests
 
