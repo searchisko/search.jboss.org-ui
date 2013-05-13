@@ -29,6 +29,7 @@ goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.search.util.fragmentParser.UI_param_suffix');
 goog.require('org.jboss.search.suggestions.event.EventType');
+goog.require('org.jboss.search.service.QueryServiceImpl');
 goog.require('org.jboss.search.InitDeferred');
 goog.require('org.jboss.search.Constants');
 
@@ -89,6 +90,8 @@ org.jboss.search.App = function() {
 
     // setup ImageLoader that does pre-load images.
     lookup_.setImageLoader(new goog.net.ImageLoader());
+    // setup production QueryService
+    lookup_.setQueryService(new org.jboss.search.service.QueryServiceImpl( lookup_.getQueryServiceDispatcher() ));
 
     // ================================================================
     // Get necessary HTML elements

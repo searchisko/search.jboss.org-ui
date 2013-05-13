@@ -146,7 +146,7 @@ org.jboss.search.page.filter.DateFilter.prototype.collapseFilter = function() {
 };
 
 /**
- * @returns {org.jboss.search.visualization.Histogram}
+ * @return {org.jboss.search.visualization.Histogram}
  */
 org.jboss.search.page.filter.DateFilter.prototype.getHistogramChart = function() {
     return this.histogram_chart_;

@@ -35,6 +35,7 @@ goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.query.view.View');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.page.event.QuerySubmitted');
+goog.require('org.jboss.search.service.QueryServiceEventType');
 
 goog.require('goog.async.Delay');
 goog.require('goog.dom');
@@ -79,6 +80,64 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     /** @private */ this.query_suggestions_view_ = new org.jboss.search.suggestions.query.view.View(this.elements_.getQuery_suggestions_div());
     /** @private */ this.query_suggestions_model = {};
 
+    /**
+     * @type {org.jboss.search.service.QueryServiceDispatcher}
+     * @private
+     */
+    this.queryServiceDispatcher_ = org.jboss.search.LookUp.getInstance().getQueryServiceDispatcher();
+
+    /**
+     * @type {?number}
+     * @private
+     */
+    this.queryServiceDispatcherListenerId_ = goog.events.listen(
+        this.queryServiceDispatcher_,
+        [
+            org.jboss.search.service.QueryServiceEventType.SEARCH_START,
+            org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED,
+            org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED,
+            org.jboss.search.service.QueryServiceEventType.SEARCH_SUCCEEDED,
+            org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR
+        ],
+        goog.bind(function(e) {
+            var event = /** @type {org.jboss.search.service.QueryServiceEvent} */ (e);
+            switch (event.getType())
+            {
+                case org.jboss.search.service.QueryServiceEventType.SEARCH_START:
+                    var metadata_ = event.getMetadata();
+                    var query_string_ = metadata_["query_string"];
+                    this.log_.info("Search for ["+query_string_+"] started. Query to ["+metadata_["query_url_string"]+"]");
+                    this.setUserQuery_(query_string_);
+                    this.disableSearchResults_();
+                    break;
+                case  org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED:
+                    this.log_.info("Search aborted");
+                    this.enableSearchResults_();
+                    break;
+                case  org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED:
+                    this.log_.info("Search finished");
+                    this.disposeUserEntertainment_();
+                    break;
+                case  org.jboss.search.service.QueryServiceEventType.SEARCH_SUCCEEDED:
+                    var response = event.getMetadata();
+//                    console.log("response > ",response);
+                    this.log_.info("Search succeeded, took " + response["took"] + "ms, uuid [" +response["uuid"] + "]");
+                    org.jboss.search.LookUp.getInstance().setRecentQueryResultData(response);
+                    this.renderQueryResponse_();
+                    this.enableSearchResults_();
+                    break;
+                case  org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR:
+                    this.log_.info("Search error");
+                    org.jboss.search.LookUp.getInstance().setRecentQueryResultData(null);
+                    var metadata_ = event.getMetadata();
+                    this.renderQueryResponseError_(metadata_["query_string"], metadata_["error"]);
+                    this.enableSearchResults_();
+                    break;
+                default:
+                    this.log_.info("Unknown search event type [" + event.getType() + "]");
+            }
+        }, this)
+    );
 
     /**
      * @type {?number}
@@ -421,6 +480,7 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.query_field_focus_id_);
     goog.events.unlistenByKey(this.searchResultsClickId_);
     goog.events.unlistenByKey(this.contributorMouseOverId_);
+    goog.events.unlistenByKey(this.queryServiceDispatcherListenerId_);
 
     // Remove references to COM objects.
 
@@ -429,6 +489,7 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     delete this.xhrManager_;
     this.context = null;
     this.query_suggestions_model = null;
+    delete this.queryServiceDispatcher_;
 };
 
 /**
@@ -454,68 +515,44 @@ org.jboss.search.page.SearchPage.prototype.getUserClickStreamUri = function() {
 
 /**
  * Set user query and execute the query.
- * @param {!string} query_string
+ * @param {string} query_string
  * @param {number=} opt_page
  * @param {string=} opt_log
  */
 org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, opt_page, opt_log) {
+    var queryService = org.jboss.search.LookUp.getInstance().getQueryService();
+    queryService.userQuery(query_string, opt_page, opt_log);
+};
 
-    this.disposeUserEntertainment_();
-    this.setUserQuery_(query_string);
-
-    this.log_.info("User query [" + query_string + "]");
-
-    this.xhrManager_.abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
-    this.disableSearchResults_();
-
-    var query_url_string = org.jboss.search.util.urlGenerator.searchUrl(this.getSearchUri(), query_string, undefined, undefined, opt_page);
-
-    if (query_url_string != null) {
-        this.xhrManager_.send(
-            org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
-            // setting the parameter value clears previously set value (that is what we want!)
-            query_url_string,
-            org.jboss.search.Constants.GET,
-            "", // post_data
-            {}, // headers_map
-            org.jboss.search.Constants.SEARCH_QUERY_REQUEST_PRIORITY,
-            goog.bind(
-                // callback, The only param is the event object from the COMPLETE event.
-                function(e) {
-                    var event = /** @type goog.net.XhrManager.Event */ (e);
-                    if (event.target.isSuccess()) {
-                        var response = event.target.getResponseJson();
-//                        console.log("xhr response", response);
-                        var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(
-                            response, query_string, opt_page, opt_log
-                        );
-//                        console.log("normalized data", normalizedResponse);
-                        org.jboss.search.LookUp.getInstance().setRecentQueryResultData(normalizedResponse);
-                        try {
-                            // generate HTML for search results
-                            var html = org.jboss.search.page.templates.search_results(normalizedResponse);
-                            this.elements_.getSearch_results_div().innerHTML = html;
-                            // pre-load avatar images
-                            this.preLoadAvatarImages_(normalizedResponse);
-                        } catch(error) {
-                            // Something went wrong when generating search results
-                            // TODO fire event (with error)
-                            this.log_.severe("Something went wrong",error);
-                        }
-                    } else {
-                        // We failed getting search results data
-                        org.jboss.search.LookUp.getInstance().setRecentQueryResultData(null);
-                        var html = org.jboss.search.page.templates.request_error({
-                            'user_query': query_string,
-                            'error': event.target.getLastError()
-                        });
-                        this.elements_.getSearch_results_div().innerHTML = html;
-                    }
-                    this.enableSearchResults_();
-                },
-            this)
-        );
+/**
+ *
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.renderQueryResponse_ = function() {
+    var normalizedResponse = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
+    try {
+        // generate HTML for search results
+        var html = org.jboss.search.page.templates.search_results(normalizedResponse);
+        this.elements_.getSearch_results_div().innerHTML = html;
+        // pre-load avatar images
+        this.preLoadAvatarImages_(normalizedResponse);
+    } catch(error) {
+        // Something went wrong when generating search results
+        // TODO fire event (with error)
+        this.log_.severe("Something went wrong",error);
     }
+};
+
+/**
+ *
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.renderQueryResponseError_ = function(query_string, error) {
+    var html = org.jboss.search.page.templates.request_error({
+        'user_query': query_string,
+        'error': error
+    });
+    this.elements_.getSearch_results_div().innerHTML = html;
 };
 
 /**

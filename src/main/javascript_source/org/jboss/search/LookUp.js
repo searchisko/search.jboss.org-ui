@@ -32,6 +32,8 @@ goog.provide('org.jboss.search.LookUp');
 goog.require('goog.History');
 goog.require('goog.net.XhrManager');
 goog.require('org.jboss.search.util.ImageLoader');
+goog.require('org.jboss.search.service.QueryService');
+goog.require('org.jboss.search.service.QueryServiceDispatcher');
 
 /**
  * @constructor
@@ -93,6 +95,18 @@ org.jboss.search.LookUp = function() {
      * @private
      */
     this.imageLoader_;
+
+    /**
+     * @type {org.jboss.search.service.QueryService}
+     * @private
+     */
+    this.queryService_;
+
+    /**
+     * @type {org.jboss.search.service.QueryServiceDispatcher}
+     * @private
+     */
+    this.queryServiceDispatcher_;
 
 };
 goog.addSingletonGetter(org.jboss.search.LookUp);
@@ -223,11 +237,36 @@ org.jboss.search.LookUp.prototype.setImageLoader = function(imageLoader) {
  * It is a singleton instance at the application level.
  * By default it return <code>org.jboss.search.util.ImageLoader</code> which does not do any image pre-loading,
  * if you want pre-load images then you need to set different implementation of ImageLoader via #setImageLoader.
- * @returns {!goog.net.ImageLoader}
+ * @return {!goog.net.ImageLoader}
  */
 org.jboss.search.LookUp.prototype.getImageLoader = function() {
     if (!goog.isDefAndNotNull(this.imageLoader_)) {
         this.imageLoader_ = new org.jboss.search.util.ImageLoader();
     }
     return this.imageLoader_;
+};
+
+/**
+ * @param {org.jboss.search.service.QueryService} queryService
+ */
+org.jboss.search.LookUp.prototype.setQueryService = function(queryService) {
+    this.queryService_ = queryService;
+};
+
+/**
+ * @return {org.jboss.search.service.QueryService}
+ */
+org.jboss.search.LookUp.prototype.getQueryService = function() {
+    return this.queryService_;
+};
+
+/**
+ * Return QueryServiceDispatcher.
+ * @return {!org.jboss.search.service.QueryServiceDispatcher}
+ */
+org.jboss.search.LookUp.prototype.getQueryServiceDispatcher = function() {
+    if (!goog.isDefAndNotNull(this.queryServiceDispatcher_)) {
+        this.queryServiceDispatcher_ = new org.jboss.search.service.QueryServiceDispatcher();
+    }
+    return this.queryServiceDispatcher_;
 };
