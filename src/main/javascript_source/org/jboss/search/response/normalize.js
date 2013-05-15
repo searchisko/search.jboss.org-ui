@@ -41,9 +41,9 @@ goog.require('goog.memoize');
 /**
  * It returns normalized and sanitized search response.
  * @param {!Object} response raw response from DCP search API.
- * @param {string=} opt_query related user query
+ * @param {string=} opt_query user query
  * @param {number=} opt_page search results page number [1..x]
- * @param {string=} opt_log type of logging windows is used
+ * @param {string=} opt_log type of logging windows that is used
  * @return {!Object}
  */
 org.jboss.search.response.normalizeSearchResponse = function(response, opt_query, opt_page, opt_log) {

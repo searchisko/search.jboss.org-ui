@@ -17,7 +17,9 @@
  */
 
 /**
- * @fileoverview Object that dispatches events related to QueryService.
+ * @fileoverview Object that dispatches events related to QueryService. The convention is that for all '*_SUCCEEDED' events
+ * the metadata contains raw (normalized) response data (JSON). For other event types it can contain different metadata (but again JSON).
+ * Later, the format of 'other' event's metadata can be formalized. Right now it is not.
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
@@ -28,7 +30,7 @@ goog.require('org.jboss.search.service.QueryServiceEvent');
 goog.require('goog.events.EventTarget');
 
 /**
- *
+ * Crate a new instance.
  * @constructor
  * @extends {goog.events.EventTarget}
  */
@@ -99,6 +101,67 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQuerySucce
 org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryError = function(query_string, error) {
     var event = new org.jboss.search.service.QueryServiceEvent(
         org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR,
+        {
+            query_string: query_string,
+            error: error
+        }
+    );
+    this.dispatchEvent(event);
+};
+
+/**
+ *
+ */
+org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryAbort = function() {
+    var event = new org.jboss.search.service.QueryServiceEvent(
+        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ABORTED
+    );
+    this.dispatchEvent(event);
+};
+
+/**
+ * @param {string} query_string
+ * @param {string} query_url_string
+ */
+org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryStart = function(query_string, query_url_string) {
+    var event = new org.jboss.search.service.QueryServiceEvent(
+        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_START,
+        {
+            query_string: query_string,
+            url: query_url_string
+        }
+    );
+    this.dispatchEvent(event);
+};
+
+/**
+ *
+ */
+org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryFinished = function() {
+    var event = new org.jboss.search.service.QueryServiceEvent(
+        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_FINISHED
+    );
+    this.dispatchEvent(event);
+};
+
+/**
+ * @param {{ model: Object, view: Object}|undefined} responseData response data (model and view data)
+ */
+org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQuerySucceeded = function(responseData) {
+    var event = new org.jboss.search.service.QueryServiceEvent(
+        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_SUCCEEDED,
+        responseData
+    );
+    this.dispatchEvent(event);
+};
+
+/**
+ * @param {string} query_string
+ * @param {Object} error
+ */
+org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryError = function(query_string, error) {
+    var event = new org.jboss.search.service.QueryServiceEvent(
+        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR,
         {
             query_string: query_string,
             error: error

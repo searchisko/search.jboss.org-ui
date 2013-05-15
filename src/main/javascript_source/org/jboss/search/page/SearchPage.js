@@ -87,10 +87,11 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     this.queryServiceDispatcher_ = org.jboss.search.LookUp.getInstance().getQueryServiceDispatcher();
 
     /**
+     * Listener ID, this listener handles events for user query (the query based on text from main search field).
      * @type {?number}
      * @private
      */
-    this.queryServiceDispatcherListenerId_ = goog.events.listen(
+    this.userQueryServiceDispatcherListenerId_ = goog.events.listen(
         this.queryServiceDispatcher_,
         [
             org.jboss.search.service.QueryServiceEventType.SEARCH_START,
@@ -110,14 +111,17 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     this.setUserQuery_(query_string_);
                     this.disableSearchResults_();
                     break;
+
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED:
                     this.log_.info("Search aborted");
                     this.enableSearchResults_();
                     break;
+
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED:
                     this.log_.info("Search finished");
                     this.disposeUserEntertainment_();
                     break;
+
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_SUCCEEDED:
                     var response = event.getMetadata();
 //                    console.log("response > ",response);
@@ -126,6 +130,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     this.renderQueryResponse_();
                     this.enableSearchResults_();
                     break;
+
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR:
                     this.log_.info("Search error");
                     org.jboss.search.LookUp.getInstance().setRecentQueryResultData(null);
@@ -133,8 +138,63 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     this.renderQueryResponseError_(metadata_["query_string"], metadata_["error"]);
                     this.enableSearchResults_();
                     break;
+
                 default:
                     this.log_.info("Unknown search event type [" + event.getType() + "]");
+            }
+        }, this)
+    );
+
+    /**
+     * Listener ID, this listener handles events for user query suggestions.
+     * @type {?number}
+     * @private
+     */
+    this.userSuggestionsQueryServiceDispatcherListenerId_ = goog.events.listen(
+        this.queryServiceDispatcher_,
+        [
+//            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_START,
+            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ABORTED,
+//            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_FINISHED,
+            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_SUCCEEDED,
+            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR
+        ],
+        goog.bind(function(e) {
+            var event = /** @type {org.jboss.search.service.QueryServiceEvent} */ (e);
+            switch (event.getType())
+            {
+//                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_START:
+//                    break;
+
+                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ABORTED:
+                    this.hideAndCleanSuggestionsElementAndModel_();
+                    break;
+
+//                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_FINISHED:
+//                    break;
+
+                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_SUCCEEDED:
+                    var response = /** @type {!Object} */ (event.getMetadata());
+                    var model = /** @type {!Object} */ (goog.object.get(response, "model", {}));
+                    this.query_suggestions_model = this.parseQuerySuggestionsModel_(model);
+
+                    if (goog.object.containsKey(response, "view")) {
+                        var view = /** @type {!Object} */ (goog.object.get(response, "view", {}));
+
+                        this.query_suggestions_view_.update(view);
+                        this.query_suggestions_view_.show();
+
+                    } else {
+                        this.hideAndCleanSuggestionsElementAndModel_();
+                    }
+                    break;
+
+                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR:
+                    this.hideAndCleanSuggestionsElementAndModel_();
+                    break;
+
+                default:
+                    this.log_.info("Unknown search suggestions event type [" + event.getType() + "]");
             }
         }, this)
     );
@@ -186,57 +246,9 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     );
 
     var suggestionsCallback = function(query_string) {
-
-        if (goog.string.isEmptySafe(query_string)) {
-
-            thiz_.hideAndCleanSuggestionsElementAndModel_();
-
-        } else {
-
-            // Abort does not send any event (because of the 'true')
-            // so technically, we should fire our own SEARCH_FINISH event but because
-            // we are immediately starting a new search we do not do it.
-            thiz_.xhrManager_.abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
-            thiz_.xhrManager_.send(
-                org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID,
-//                "../../test/resources/suggestions_response.json",
-                // setting the parameter value clears previously set value (that is what we want!)
-                thiz_.getSuggestionsUri().setParameterValue("q",query_string).toString(),
-                org.jboss.search.Constants.GET,
-                "", // post_data
-                {}, // headers_map
-                org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_PRIORITY,
-
-                // callback, The only param is the event object from the COMPLETE event.
-                function(e) {
-                    var event = /** @type goog.net.XhrManager.Event */ (e);
-                    if (event.target.isSuccess()) {
-                        var response = event.target.getResponseJson();
-                        // We are taking the response from the mock server for now,
-                        // just replace the token with an actual query string.
-                        response['view']['search']['options'] = [query_string];
-                        response['model']['search']['search']['query'] = query_string;
-
-                        var model = /** @type {!Object} */ (goog.object.get(response, "model", {}));
-                        thiz_.query_suggestions_model = thiz_.parseQuerySuggestionsModel_(model);
-
-                        if (goog.object.containsKey(response, "view")) {
-                            var view = /** @type {!Object} */ (goog.object.get(response, "view", {}));
-
-                            thiz_.query_suggestions_view_.update(view);
-                            thiz_.query_suggestions_view_.show();
-
-                        } else {
-                            thiz_.hideAndCleanSuggestionsElementAndModel_();
-                        }
-                    } else {
-                        // We failed getting query suggestions
-                        thiz_.hideAndCleanSuggestionsElementAndModel_();
-                    }
-
-                }
-            );
-        }
+        org.jboss.search.LookUp.getInstance()
+            .getQueryService()
+            .userSuggestionQuery(query_string);
     };
 
     /**
@@ -480,7 +492,8 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.query_field_focus_id_);
     goog.events.unlistenByKey(this.searchResultsClickId_);
     goog.events.unlistenByKey(this.contributorMouseOverId_);
-    goog.events.unlistenByKey(this.queryServiceDispatcherListenerId_);
+    goog.events.unlistenByKey(this.userQueryServiceDispatcherListenerId_);
+    goog.events.unlistenByKey(this.userSuggestionsQueryServiceDispatcherListenerId_);
 
     // Remove references to COM objects.
 

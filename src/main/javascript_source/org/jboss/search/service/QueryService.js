@@ -31,8 +31,14 @@ org.jboss.search.service.QueryService = function(dispatcher) {};
 
 /**
  * Execute user query. This is used for the main search field that can contain any user input.
- * @param {string} query_string
- * @param {number=} opt_page
- * @param {string=} opt_log
+ * @param {string} query_string user query
+ * @param {number=} opt_page search results page number [1..x]
+ * @param {string=} opt_log type of logging windows that is used
  */
 org.jboss.search.service.QueryService.prototype.userQuery;
+
+/**
+ * Execute user suggestion query. This is fired for type ahead queries while user types in a query into the main search field.
+ * @param {string} query_string user query
+ */
+org.jboss.search.service.QueryService.prototype.userSuggestionQuery;

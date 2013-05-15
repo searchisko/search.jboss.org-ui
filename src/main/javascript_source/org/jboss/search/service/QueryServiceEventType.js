@@ -31,18 +31,41 @@ goog.require('goog.events');
  */
 org.jboss.search.service.QueryServiceEventType = {
 
+    // ----------------------------------------------
+    // User query events
+    // ----------------------------------------------
+
     // search request has been started
     SEARCH_START: goog.events.getUniqueId('search_start'),
 
     // running search request has been aborted
     SEARCH_ABORTED: goog.events.getUniqueId('search_aborted'),
 
-    // running search request has finished (either successfully or failed)
+    // search request has finished (either successfully or failed)
     SEARCH_FINISHED: goog.events.getUniqueId('search_finished'),
 
     // search request finished successfully
     SEARCH_SUCCEEDED: goog.events.getUniqueId('search_succeeded'),
 
     // search request failed
-    SEARCH_ERROR: goog.events.getUniqueId('search_error')
+    SEARCH_ERROR: goog.events.getUniqueId('search_error'),
+
+    // ----------------------------------------------
+    // User suggestions query events
+    // ----------------------------------------------
+
+    // search request has been started
+    SEARCH_SUGGESTIONS_START: goog.events.getUniqueId('search_suggestions_start'),
+
+    // running search request has been aborted
+    SEARCH_SUGGESTIONS_ABORTED: goog.events.getUniqueId('search_suggestions_aborted'),
+
+    // search request has finished (either successfully or failed)
+    SEARCH_SUGGESTIONS_FINISHED: goog.events.getUniqueId('search_suggestions_finished'),
+
+    // search request finished successfully
+    SEARCH_SUGGESTIONS_SUCCEEDED: goog.events.getUniqueId('search_suggestions_succeeded'),
+
+    // search request failed
+    SEARCH_SUGGESTIONS_ERROR: goog.events.getUniqueId('search_suggestions_error')
 };
