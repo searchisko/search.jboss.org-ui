@@ -15,5 +15,8 @@
   --output_mode='script' \
   --output_file=./src/main/webapp/testing-only.js
 
-echo "---------------------------------------"
-echo "src/main/webapp/testing-only.js updated"
+echo "# ---------------------------------------"
+echo "# src/main/webapp/testing-only.js was updated"
+echo "# to open the application in web browser (on Mac OSX) execute:"
+echo "# open ./src/main/webapp/index.html"
+echo "# ---------------------------------------"
