@@ -303,7 +303,9 @@ org.jboss.search.App = function() {
             asyncInit.setAuthorFilterDone();
         });
 
+    // initialization of date filter
     dateFilterDeferred
+        // first instantiate date filter and push it up into LookUp
         .addCallback(function() {
             var dateFilter = new org.jboss.search.page.filter.DateFilter(
                 searchPageElements.getDate_filter_body_div(),
@@ -328,11 +330,16 @@ org.jboss.search.App = function() {
                 }
             );
             lookup_.setDateFilter(dateFilter);
+
         })
-        .addCallback(function() {
-            status.setProgressValue(0.66);
-            asyncInit.setDateFilterDone();
-        });
+        // second register listener on the date filter
+        .addCallback(
+            goog.bind(function() {
+                status.setProgressValue(0.66);
+                this.searchPage.registerListenerOnDateFilterChanges(lookup_.getDateFilter());
+                asyncInit.setDateFilterDone();
+            },this)
+        );
 
     // fire XHR to load project list data
     lookup_.getXhrManager().send(

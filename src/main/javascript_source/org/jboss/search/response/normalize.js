@@ -43,10 +43,12 @@ goog.require('goog.memoize');
  * @param {!Object} response raw response from DCP search API.
  * @param {string=} opt_query user query
  * @param {number=} opt_page search results page number [1..x]
+ * @param {number=} opt_from specify search results interval: from [1..X]
+ * @param {number=} opt_to specify search results interval: to [1..x]
  * @param {string=} opt_log type of logging windows that is used
  * @return {!Object}
  */
-org.jboss.search.response.normalizeSearchResponse = function(response, opt_query, opt_page, opt_log) {
+org.jboss.search.response.normalizeSearchResponse = function(response, opt_query, opt_page, opt_from, opt_to, opt_log) {
 
     var output = {};
 

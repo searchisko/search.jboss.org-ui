@@ -193,13 +193,19 @@ org.jboss.search.visualization.Histogram.prototype.initialize = function(css_cla
 };
 
 /**
+ * Called when user finishes the brush.
  * @private
  */
 org.jboss.search.visualization.Histogram.prototype.brushEnd_ = function() {
     var extent = this.brush.extent();
     if (goog.isDateLike(extent[0]) && goog.isDateLike(extent[1])) {
-        this.dispatchEvent(new org.jboss.search.visualization.IntervalSelected(
-            /** @type {!Date} */ (extent[0]), /** @type {!Date} */ (extent[1]), true));
+        this.dispatchEvent(
+            new org.jboss.search.visualization.IntervalSelected(
+                /** @type {!Date} */ (extent[0]),
+                /** @type {!Date} */ (extent[1]),
+                true
+            )
+        );
     }
     // Clear the brush
     // @see https://groups.google.com/d/msg/d3-js/SN4-kJD6_2Q/SmQNwLm-5bwJ
@@ -208,13 +214,19 @@ org.jboss.search.visualization.Histogram.prototype.brushEnd_ = function() {
 };
 
 /**
+ * Called when user changes the brush.
  * @private
  */
 org.jboss.search.visualization.Histogram.prototype.brush_ = function() {
     var extent = this.brush.extent();
     if (goog.isDateLike(extent[0]) && goog.isDateLike(extent[1])) {
-        this.dispatchEvent(new org.jboss.search.visualization.IntervalSelected(
-            /** @type {!Date} */ (extent[0]), /** @type {!Date} */ (extent[1]), false));
+        this.dispatchEvent(
+            new org.jboss.search.visualization.IntervalSelected(
+                /** @type {!Date} */ (extent[0]),
+                /** @type {!Date} */ (extent[1]),
+                false
+            )
+        );
     }
 };
 

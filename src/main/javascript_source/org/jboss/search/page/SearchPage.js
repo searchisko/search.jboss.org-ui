@@ -36,6 +36,7 @@ goog.require('org.jboss.search.suggestions.query.view.View');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.page.event.QuerySubmitted');
 goog.require('org.jboss.search.service.QueryServiceEventType');
+goog.require('org.jboss.search.visualization.HistogramEventType');
 
 goog.require('goog.async.Delay');
 goog.require('goog.dom');
@@ -200,6 +201,14 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     );
 
     /**
+     * Listener ID, this listener handles events from date filter. It is initiated later.
+     * Client needs to remember that this listener can be initiated only after the date filter has been instantiated!
+     * @type {?number}
+     * @private
+     */
+    this.dateFilterIntervalSelectedId_;
+
+    /**
      * @type {?number}
      * @private
      */
@@ -327,7 +336,8 @@ org.jboss.search.page.SearchPage = function(context, elements) {
      * @type {?number}
      * @private
      */
-    this.query_field_focus_id_ = goog.events.listen(this.elements_.getQuery_field(),
+    this.query_field_focus_id_ = goog.events.listen(
+        this.elements_.getQuery_field(),
         goog.events.EventType.INPUT,
         function(){
             thiz_.collapseAllFilters();
@@ -495,6 +505,11 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.userQueryServiceDispatcherListenerId_);
     goog.events.unlistenByKey(this.userSuggestionsQueryServiceDispatcherListenerId_);
 
+    // initiated later, thus we have to check first
+    if (goog.isDefAndNotNull(this.dateFilterIntervalSelectedId_)) {
+        goog.events.unlistenByKey(this.dateFilterIntervalSelectedId_);
+    }
+
     // Remove references to COM objects.
 
     // Remove references to DOM nodes, which are COM objects in IE.
@@ -527,6 +542,34 @@ org.jboss.search.page.SearchPage.prototype.getUserClickStreamUri = function() {
 };
 
 /**
+ *
+ * @param {org.jboss.search.page.filter.DateFilter} dateFilter
+ */
+org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges = function(dateFilter) {
+    // unlisten if already registered
+    if (goog.isDefAndNotNull(this.dateFilterIntervalSelectedId_)) {
+        goog.events.unlistenByKey(this.dateFilterIntervalSelectedId_);
+    }
+    if (goog.isDefAndNotNull(dateFilter)) {
+        this.dateFilterIntervalSelectedId_ = goog.events.listen(
+            dateFilter.getHistogramChart(),
+            org.jboss.search.visualization.HistogramEventType.INTERVAL_SELECTED,
+            function(e) {
+                var event = /** @type {org.jboss.search.visualization.IntervalSelected} */ (e);
+                if (event.isLast()) {
+                    var queryService = org.jboss.search.LookUp.getInstance().getQueryService();
+                    if (goog.isDefAndNotNull(queryService)) {
+//                        console.log(event.getFrom());
+//                        console.log(event.getTo());
+//                        queryService.userQuery()
+                    }
+                }
+            }
+        );
+    }
+};
+
+/**
  * Set user query and execute the query.
  * @param {string} query_string
  * @param {number=} opt_page
@@ -534,7 +577,7 @@ org.jboss.search.page.SearchPage.prototype.getUserClickStreamUri = function() {
  */
 org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, opt_page, opt_log) {
     var queryService = org.jboss.search.LookUp.getInstance().getQueryService();
-    queryService.userQuery(query_string, opt_page, opt_log);
+    queryService.userQuery(query_string, opt_page, undefined, undefined, opt_log);
 };
 
 /**

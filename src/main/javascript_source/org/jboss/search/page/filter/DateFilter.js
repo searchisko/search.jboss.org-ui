@@ -36,8 +36,8 @@ goog.require('goog.Disposable');
 /**
  *
  * @param {!HTMLElement} element to host the date filter
- * @param {!HTMLElement} date_histogram_element to host the date histogram
- * @param {function(): boolean} opt_isCollapsed a function that is used to learn of filter is collapsed
+ * @param {!HTMLElement} date_histogram_element to host the date histogram chart
+ * @param {function(): boolean} opt_isCollapsed a function that is used to learn if filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor

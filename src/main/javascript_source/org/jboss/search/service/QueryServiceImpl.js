@@ -78,7 +78,7 @@ org.jboss.search.service.QueryServiceImpl.prototype.disposeInternal = function()
 /**
  * @override
  */
-org.jboss.search.service.QueryServiceImpl.prototype.userQuery = function(query_string, opt_page, opt_log) {
+org.jboss.search.service.QueryServiceImpl.prototype.userQuery = function(query_string, opt_page, opt_from, opt_to, opt_log) {
 
     this.getXHRManager_().abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
     this.dispatcher_.dispatchUserQueryAbort();
@@ -104,7 +104,7 @@ org.jboss.search.service.QueryServiceImpl.prototype.userQuery = function(query_s
                     try {
                         var response = event.target.getResponseJson();
                         var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(
-                            response, query_string, opt_page, opt_log
+                            response, query_string, opt_page, opt_from, opt_to, opt_log
                         );
                         this.dispatcher_.dispatchUserQuerySucceeded(normalizedResponse);
                     } catch (err) {

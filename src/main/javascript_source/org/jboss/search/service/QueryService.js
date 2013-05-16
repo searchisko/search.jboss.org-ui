@@ -33,6 +33,8 @@ org.jboss.search.service.QueryService = function(dispatcher) {};
  * Execute user query. This is used for the main search field that can contain any user input.
  * @param {string} query_string user query
  * @param {number=} opt_page search results page number [1..x]
+ * @param {number=} opt_from specify search results interval: from [1..x]
+ * @param {number=} opt_to specify search results interval: to [1..x]
  * @param {string=} opt_log type of logging windows that is used
  */
 org.jboss.search.service.QueryService.prototype.userQuery;
