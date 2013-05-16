@@ -26,8 +26,18 @@
 // see https://groups.google.com/forum/?fromgroups=#!topic/closure-templates-discuss/dRgUIbp84iw
 
 /**
+ * Metadata in {@link org.jboss.search.service.QueryServiceEvent}
+ * @interface
+ */
+function QueryEventMetadata() {};
+QueryEventMetadata.prototype.query_string;
+QueryEventMetadata.prototype.url;
+QueryEventMetadata.prototype.error;
+
+/**
  * Search hits.
- * @interface */
+ * @interface
+ */
 function SearchResults() {};
 SearchResults.prototype.actual_page;  // computed by normalize.js
 SearchResults.prototype.user_query;   // computed by normalize.js
@@ -47,7 +57,8 @@ SearchResults.prototype.hits.hits;
 
 /**
  * Individual search hit.
- * @interface */
+ * @interface
+ */
 function SearchHit() {};
 SearchHit.prototype._id;
 SearchHit.prototype.position_on_page;  // computed or modified by normalize.js
@@ -80,7 +91,8 @@ SearchHit.prototype.facets.activity_dates_histogram.entries;
 
 /**
  * Keys related to date histogram.
- * @interface */
+ * @interface
+ */
 function DateHistogram() {};
 DateHistogram.prototype.activity_dates_histogram;
 DateHistogram.prototype.activity_dates_histogram_interval;
@@ -89,7 +101,8 @@ DateHistogram.prototype.count;
 
 /**
  * Project name suggestions
- * @interface */
+ * @interface
+ */
 function filterItem() {};
 filterItem.items;
 filterItem.did_you_mean_items;
