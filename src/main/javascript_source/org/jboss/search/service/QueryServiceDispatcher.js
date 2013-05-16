@@ -47,7 +47,7 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.disposeInternal = func
 };
 
 /**
- *
+ * Dispatches SEARCH_ABORTED event.
  */
 org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryAbort = function() {
     var event = new org.jboss.search.service.QueryServiceEvent(
@@ -57,6 +57,12 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryAbort
 };
 
 /**
+ * Dispatches SEARCH_START event.
+ * Event metadata format:
+ * {
+ *   query_string: "client query",
+ *   url: "Request URL"
+ * }
  *
  * @param {string} query_string
  * @param {string} query_url_string
@@ -73,7 +79,7 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryStart
 };
 
 /**
- *
+ * Dispatches SEARCH_FINISHED event.
  */
 org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryFinished = function() {
     var event = new org.jboss.search.service.QueryServiceEvent(
@@ -83,6 +89,8 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryFinis
 };
 
 /**
+ * Dispatches SEARCH_SUCCEEDED event.
+ * Metadata contains response JSON data.
  *
  * @param {Object|undefined} responseData normalized response data
  */
@@ -95,6 +103,13 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQuerySucce
 };
 
 /**
+ * Dispatches SEARCH_ERROR event.
+ * Event metadata format:
+ * {
+ *   query_string: "client query",
+ *   error: {...}
+ * }
+ *
  * @param {string} query_string
  * @param {Object} error
  */
@@ -110,7 +125,7 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryError
 };
 
 /**
- *
+ * Dispatches SEARCH_SUGGESTIONS_ABORTED event.
  */
 org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryAbort = function() {
     var event = new org.jboss.search.service.QueryServiceEvent(
@@ -120,6 +135,13 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestion
 };
 
 /**
+ * Dispatches SEARCH_SUGGESTIONS_START event.
+ * Event metadata format:
+ * {
+ *   query_string: "client query",
+ *   url: "Request URL"
+ * }
+ *
  * @param {string} query_string
  * @param {string} query_url_string
  */
@@ -135,7 +157,7 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestion
 };
 
 /**
- *
+ * Dispatches SEARCH_SUGGESTIONS_FINISHED event.
  */
 org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryFinished = function() {
     var event = new org.jboss.search.service.QueryServiceEvent(
@@ -145,6 +167,8 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestion
 };
 
 /**
+ * Dispatches SEARCH_SUGGESTIONS_SUCCEEDED event.
+ *
  * @param {{ model: Object, view: Object}|undefined} responseData response data (model and view data)
  */
 org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQuerySucceeded = function(responseData) {
@@ -156,6 +180,13 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestion
 };
 
 /**
+ * Dispatches SEARCH_SUGGESTIONS_ERROR event.
+ * Event metadata format:
+ * {
+ *   query_string: "client query",
+ *   error: {...}
+ * }
+ *
  * @param {string} query_string
  * @param {Object} error
  */
