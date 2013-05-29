@@ -95,6 +95,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     this.userQueryServiceDispatcherListenerId_ = goog.events.listen(
         this.queryServiceDispatcher_,
         [
+            org.jboss.search.service.QueryServiceEventType.NEW_REQUEST_PARAMETERS,
             org.jboss.search.service.QueryServiceEventType.SEARCH_START,
             org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED,
             org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED,
@@ -105,6 +106,11 @@ org.jboss.search.page.SearchPage = function(context, elements) {
             var event = /** @type {org.jboss.search.service.QueryServiceEvent} */ (e);
             switch (event.getType())
             {
+                case org.jboss.search.service.QueryServiceEventType.NEW_REQUEST_PARAMETERS:
+                    var requestParams = /** @type {org.jboss.search.context.RequestParams} */ (event.getMetadata());
+                    org.jboss.search.LookUp.getInstance().setRequestParams(requestParams);
+                    break;
+
                 case org.jboss.search.service.QueryServiceEventType.SEARCH_START:
                     var metadata_ = event.getMetadata();
                     var query_string_ = metadata_["query_string"];
@@ -550,7 +556,7 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
     if (goog.isDefAndNotNull(this.dateFilterIntervalSelectedId_)) {
         goog.events.unlistenByKey(this.dateFilterIntervalSelectedId_);
     }
-    if (goog.isDefAndNotNull(dateFilter)) {
+    if (goog.isDefAndNotNull(dateFilter) && goog.isDefAndNotNull(dateFilter.getHistogramChart())) {
         this.dateFilterIntervalSelectedId_ = goog.events.listen(
             dateFilter.getHistogramChart(),
             org.jboss.search.visualization.HistogramEventType.INTERVAL_SELECTED,
@@ -561,7 +567,12 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
                     if (goog.isDefAndNotNull(queryService)) {
 //                        console.log(event.getFrom());
 //                        console.log(event.getTo());
-//                        queryService.userQuery()
+                        var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
+                        if (goog.isDefAndNotNull(rp)) {
+                            // set 'page' to 1
+                            rp = rp.mixin(rp, undefined, 1, event.getFrom(), event.getTo());
+                            queryService.userQuery(rp);
+                        }
                     }
                 }
             }
@@ -571,13 +582,11 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
 
 /**
  * Set user query and execute the query.
- * @param {string} query_string
- * @param {number=} opt_page
- * @param {string=} opt_log
+ * @param {!org.jboss.search.context.RequestParams} requestParams
  */
-org.jboss.search.page.SearchPage.prototype.runSearch = function(query_string, opt_page, opt_log) {
+org.jboss.search.page.SearchPage.prototype.runSearch = function(requestParams) {
     var queryService = org.jboss.search.LookUp.getInstance().getQueryService();
-    queryService.userQuery(query_string, opt_page, undefined, undefined, opt_log);
+    queryService.userQuery(requestParams);
 };
 
 /**

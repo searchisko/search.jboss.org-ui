@@ -68,8 +68,8 @@ The script will print out list of JS scripts in correct order. Just copy and pas
 If you want to load the application into browser and test/play with it manually then use `buildForTesting.sh` script.
 When executed it builds `testing-only.js` which is referenced from `index.html`.
 
-Note for IntelliJ IDEA: Generated `testing-only.js` file can be huge (this file is without any optimizations) and as soon as it is
-generated, IntelliJ IDEA try to parse it. This can take some time and IDE is frozen during that. While this file is really not needed
+**Tip for IntelliJ IDEA users:** Generated `testing-only.js` file can be huge (this file is without any optimizations) and as soon as it is
+generated, IntelliJ IDEA tries to parse it. This can take some time and IDE gets frozen until it is done with parsing. While this file is really not needed
 for any code completion it makes sense to [mark it as a plain text](http://www.jetbrains.com/idea/webhelp/excluding-files-from-project.html).
 
 ### Closure Templates

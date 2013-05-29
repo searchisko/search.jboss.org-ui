@@ -33,8 +33,8 @@ goog.require('goog.events.Event');
  * until the client considers the selection final.
  * Typical use case is that while the 'last' is 'false' we want to update some small bits in the UI, but once
  * user finishes selection, the 'last' is 'true' and we want to do something more expensive (e.g. start a new query).
- * @param {!Date} from
- * @param {!Date} to
+ * @param {!goog.date.DateTime} from
+ * @param {!goog.date.DateTime} to
  * @param {boolean} last
  * @constructor
  * @extends {goog.events.Event}
@@ -43,13 +43,13 @@ org.jboss.search.visualization.IntervalSelected = function(from, to, last) {
     goog.events.Event.call(this, org.jboss.search.visualization.HistogramEventType.INTERVAL_SELECTED);
 
     /**
-     * @type {!Date}
+     * @type {!goog.date.DateTime}
      * @private
      */
     this.from_ = from;
 
     /**
-     * @type {!Date}
+     * @type {!goog.date.DateTime}
      * @private
      */
     this.to_ = to;
@@ -63,14 +63,14 @@ org.jboss.search.visualization.IntervalSelected = function(from, to, last) {
 goog.inherits(org.jboss.search.visualization.IntervalSelected, goog.events.Event);
 
 /**
- * @return {!Date}
+ * @return {!goog.date.DateTime}
  */
 org.jboss.search.visualization.IntervalSelected.prototype.getFrom = function() {
     return this.from_;
 };
 
 /**
- * @return {!Date}
+ * @return {!goog.date.DateTime}
  */
 org.jboss.search.visualization.IntervalSelected.prototype.getTo = function() {
     return this.to_;

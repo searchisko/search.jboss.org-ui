@@ -32,6 +32,7 @@ goog.require('org.jboss.search.visualization.IntervalSelected');
 goog.require('goog.array');
 goog.require('goog.object');
 goog.require('goog.string');
+goog.require('goog.date.DateTime');
 goog.require('goog.events.EventTarget');
 
 /**
@@ -201,8 +202,8 @@ org.jboss.search.visualization.Histogram.prototype.brushEnd_ = function() {
     if (goog.isDateLike(extent[0]) && goog.isDateLike(extent[1])) {
         this.dispatchEvent(
             new org.jboss.search.visualization.IntervalSelected(
-                /** @type {!Date} */ (extent[0]),
-                /** @type {!Date} */ (extent[1]),
+                /** @type {!goog.date.DateTime} */ (new goog.date.DateTime(extent[0])),
+                /** @type {!goog.date.DateTime} */ (new goog.date.DateTime(extent[1])),
                 true
             )
         );
@@ -222,8 +223,8 @@ org.jboss.search.visualization.Histogram.prototype.brush_ = function() {
     if (goog.isDateLike(extent[0]) && goog.isDateLike(extent[1])) {
         this.dispatchEvent(
             new org.jboss.search.visualization.IntervalSelected(
-                /** @type {!Date} */ (extent[0]),
-                /** @type {!Date} */ (extent[1]),
+                /** @type {!goog.date.DateTime} */ (new goog.date.DateTime(extent[0])),
+                /** @type {!goog.date.DateTime} */ (new goog.date.DateTime(extent[1])),
                 false
             )
         );

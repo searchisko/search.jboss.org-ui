@@ -125,6 +125,20 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryError
 };
 
 /**
+ * Dispatches NEW_REQUEST_PARAMETERS.
+ * Event contains {@link org.jboss.search.context.RequestParams}
+ *
+ * @param {org.jboss.search.context.RequestParams} requestParameters
+ */
+org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchNewRequestParameters = function(requestParameters) {
+    var event = new org.jboss.search.service.QueryServiceEvent(
+        org.jboss.search.service.QueryServiceEventType.NEW_REQUEST_PARAMETERS,
+        requestParameters
+    );
+    this.dispatchEvent(event);
+};
+
+/**
  * Dispatches SEARCH_SUGGESTIONS_ABORTED event.
  */
 org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryAbort = function() {

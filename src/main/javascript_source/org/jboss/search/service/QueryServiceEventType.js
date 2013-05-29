@@ -51,6 +51,12 @@ org.jboss.search.service.QueryServiceEventType = {
     SEARCH_ERROR: goog.events.getUniqueId('search_error'),
 
     // ----------------------------------------------
+    // Request parameters for the last successful query
+    // ----------------------------------------------
+
+    NEW_REQUEST_PARAMETERS: goog.events.getUniqueId('new_request_params'),
+
+    // ----------------------------------------------
     // User suggestions query events
     // ----------------------------------------------
 

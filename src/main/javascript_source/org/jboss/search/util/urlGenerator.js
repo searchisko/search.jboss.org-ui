@@ -17,8 +17,7 @@
  */
 
 /**
- * @fileoverview Static utilities to normalize raw DCP response to
- * JSON that can be easily processed in Closure Template.
+ * @fileoverview Static utilities to construct URL string for requests.
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
@@ -27,18 +26,23 @@ goog.provide('org.jboss.search.util.urlGenerator.QueryParams');
 
 goog.require('goog.Uri');
 goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.search.context.RequestParams');
+//goog.require('org.jboss.search.util.dateUtils');
 
 /**
- *
+ * These are the names of URL params used for search service.
+ * They must match the search API {@see http://docs.jbossorg.apiary.io/#searchapi}
  * @enum {string}
  */
 org.jboss.search.util.urlGenerator.QueryParams = {
-    QUERY: 'query',
-    FROM : 'from',
-    SIZE : 'size',
-    FACET: 'facet',
-    HIGHLIGHTS: 'query_highlight',
-    FIELD: 'field'
+    QUERY : 'query',
+    FROM  : 'from',
+    SIZE  : 'size',
+    FACET : 'facet',
+    FIELD : 'field',
+    HIGHLIGHTS : 'query_highlight',
+    ACTIVITY_DATE_FROM : 'activity_date_from',
+    ACTIVITY_DATE_TO   : 'activity_date_from'
 };
 
 /**
@@ -46,13 +50,12 @@ org.jboss.search.util.urlGenerator.QueryParams = {
  * Note it directly modifies provided `rootUri` so you may want use clone.
  *
  * @param {goog.Uri|string} rootUri
- * @param {string=} opt_query
+ * @param {!org.jboss.search.context.RequestParams} requestParams
  * @param {Array.<string>=} opt_fields
  * @param {boolean=} opt_highlighting
- * @param {number=} opt_page
  * @return {string|null}
  */
-org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, opt_query, opt_fields, opt_highlighting, opt_page) {
+org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, opt_fields, opt_highlighting) {
 
     if (goog.isNull(rootUri)) { return null }
 
@@ -63,8 +66,12 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, opt_query, opt_
     // shortcut
     var params = org.jboss.search.util.urlGenerator.QueryParams;
 
-    if (goog.isNull(opt_query) || !goog.isDef(opt_query)) { opt_query = '' }
-    rootUri.setParameterValue(params.QUERY, opt_query);
+    if (!goog.isDefAndNotNull(requestParams)) {
+        requestParams = new org.jboss.search.context.RequestParams('');
+    }
+    var query = requestParams.getQueryString();
+    if (!goog.isDefAndNotNull(requestParams.getQueryString())) { query = '' }
+    rootUri.setParameterValue(params.QUERY, query);
 
     if (goog.isDef(opt_fields) && goog.isArray(opt_fields)) {
         rootUri.setParameterValues(params.FIELD, opt_fields)
@@ -80,9 +87,29 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, opt_query, opt_
 //    .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_dcp_type_counts","tag_cloud"])
     rootUri.setParameterValues(params.FACET, ["per_project_counts","per_dcp_type_counts","activity_dates_histogram"]);
 
-    if (goog.isDef(opt_page) && goog.isNumber(opt_page)) {
-        if (opt_page > 1) {
-            rootUri.setParameterValue(params.FROM,(Math.round(opt_page-1)*org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE))
+    // page
+    var page = requestParams.getPage();
+    if (goog.isDef(page) && goog.isNumber(page)) {
+        if (page > 1) {
+            rootUri.setParameterValue(params.FROM,(Math.round(page-1)*org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE))
+        }
+    }
+
+    // from date
+    var from = requestParams.getFrom();
+    if (goog.isDef(from)) {
+        if (goog.isDateLike(from)) {
+//            var dateString_ = org.jboss.search.util.dateUtils.toString(from);
+//            rootUri.setParameterValue(params.ACTIVITY_DATE_FROM, dateString_);
+        }
+    }
+
+    // to date
+    var to = requestParams.getTo();
+    if (goog.isDef(to)) {
+        if (goog.isDateLike(to)) {
+//            var dateString_ = org.jboss.search.util.dateUtils.toString(to);
+//            rootUri.setParameterValue(params.ACTIVITY_DATE_FROM, dateString_);
         }
     }
 

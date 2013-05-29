@@ -17,6 +17,7 @@
  */
 
 goog.require('org.jboss.search.util.urlGenerator');
+goog.require('org.jboss.search.context.RequestParams');
 goog.require('goog.Uri');
 goog.require('goog.testing.jsunit');
 
@@ -26,14 +27,15 @@ var testSearchUrlGenerator = function() {
     var url = new goog.Uri(root);
     var g_ = org.jboss.search.util.urlGenerator;
 
-
     var urlString;
 
+    // such call should fail during compilation
     urlString = g_.searchUrl(null);
     assertEquals(
         null,
         urlString);
 
+    // such call should fail during compilation
     urlString = g_.searchUrl(url.clone());
     assertEquals(
         [
@@ -48,7 +50,10 @@ var testSearchUrlGenerator = function() {
         ].join('?'),
         urlString);
 
-    urlString = g_.searchUrl(url.clone(),' ');
+    urlString = g_.searchUrl(
+        url.clone(),
+        new org.jboss.search.context.RequestParams(' ')
+    );
     assertEquals(
         [
             root,
@@ -62,7 +67,10 @@ var testSearchUrlGenerator = function() {
         ].join('?'),
         urlString);
 
-    urlString = g_.searchUrl(url.clone(), "dummy");
+    urlString = g_.searchUrl(
+        url.clone(),
+        new org.jboss.search.context.RequestParams("dummy")
+    );
     assertEquals(
         [
             root,
@@ -76,7 +84,10 @@ var testSearchUrlGenerator = function() {
         ].join('?'),
         urlString);
 
-    urlString = g_.searchUrl(url.clone(), "dummy", undefined, undefined, 20);
+    urlString = g_.searchUrl(
+        url.clone(),
+        new org.jboss.search.context.RequestParams("dummy", 20)
+    );
     assertEquals(
         [
             root,
@@ -91,7 +102,11 @@ var testSearchUrlGenerator = function() {
         ].join('?'),
         urlString);
 
-    urlString = g_.searchUrl(url.clone(), "dummy", [''], false);
+    urlString = g_.searchUrl(
+        url.clone(),
+        new org.jboss.search.context.RequestParams("dummy"),
+        [''], false
+    );
     assertEquals(
         [
             root,
@@ -104,7 +119,10 @@ var testSearchUrlGenerator = function() {
         ].join('?'),
         urlString);
 
-    urlString = g_.searchUrl(url.clone(), "dummy", [], false);
+    urlString = g_.searchUrl(
+        url.clone(),
+        new org.jboss.search.context.RequestParams("dummy"),
+        [], false);
     assertEquals(
         [
             root,
@@ -116,7 +134,10 @@ var testSearchUrlGenerator = function() {
         ].join('?'),
         urlString);
 
-    urlString = g_.searchUrl(url.clone(), "dummy", []);
+    urlString = g_.searchUrl(
+        url.clone(),
+        new org.jboss.search.context.RequestParams("dummy"),
+        []);
     assertEquals(
         [
             root,

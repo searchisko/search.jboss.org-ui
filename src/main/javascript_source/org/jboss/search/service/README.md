@@ -6,9 +6,13 @@ The main interface all `QueryService` implementation must follow.
 
 The main function of this service is to allow for object that has responsibility for execution of query requests (typically AJAX/XHR driven).
 
-## QueryServiceImpl
+## QueryServiceXHR
 
 Using XHR manager (from org.jboss.search.LookUp) to handle all XHR requests.
+
+## QueryServiceCached
+
+Experimental... TBD.
 
 ## QueryServiceTestImpl
 

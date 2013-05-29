@@ -24,10 +24,11 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.service.QueryServiceImpl');
+goog.provide('org.jboss.search.service.QueryServiceXHR');
 
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.util.urlGenerator');
+goog.require('org.jboss.search.context.RequestParams');
 goog.require('org.jboss.search.LookUp');
 goog.require('org.jboss.search.Constants');
 
@@ -41,7 +42,7 @@ goog.require('goog.string');
  * @implements {org.jboss.search.service.QueryService}
  * @extends {goog.Disposable}
  */
-org.jboss.search.service.QueryServiceImpl = function(dispatcher) {
+org.jboss.search.service.QueryServiceXHR = function(dispatcher) {
 
     goog.Disposable.call(this);
 
@@ -63,31 +64,29 @@ org.jboss.search.service.QueryServiceImpl = function(dispatcher) {
      */
     this.searchSuggestionsURI_ = goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_QUERY);
 };
-goog.inherits(org.jboss.search.service.QueryServiceImpl, goog.Disposable);
+goog.inherits(org.jboss.search.service.QueryServiceXHR, goog.Disposable);
 
 /** @inheritDoc */
-org.jboss.search.service.QueryServiceImpl.prototype.disposeInternal = function() {
+org.jboss.search.service.QueryServiceXHR.prototype.disposeInternal = function() {
     // Call the superclass's disposeInternal() method.
-    org.jboss.search.service.QueryServiceImpl.superClass_.disposeInternal.call(this);
+    org.jboss.search.service.QueryServiceXHR.superClass_.disposeInternal.call(this);
 
     delete this.dispatcher_;
     delete this.searchURI_;
     delete this.searchSuggestionsURI_;
 };
 
-/**
- * @override
- */
-org.jboss.search.service.QueryServiceImpl.prototype.userQuery = function(query_string, opt_page, opt_from, opt_to, opt_log) {
+/** @override */
+org.jboss.search.service.QueryServiceXHR.prototype.userQuery = function(requestParams) {
 
     this.getXHRManager_().abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
     this.dispatcher_.dispatchUserQueryAbort();
 
     var searchURI_ = this.searchURI_.clone();
-    var query_url_string_ = org.jboss.search.util.urlGenerator.searchUrl(searchURI_, query_string, undefined, undefined, opt_page);
+    var query_url_string_ = org.jboss.search.util.urlGenerator.searchUrl(searchURI_, requestParams);
 
     if (!goog.isNull(query_url_string_)) {
-        this.dispatcher_.dispatchUserQueryStart(query_string, query_url_string_);
+        this.dispatcher_.dispatchUserQueryStart(requestParams.getQueryString(), query_url_string_);
         this.getXHRManager_().send(
             org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
             // setting the parameter value clears previously set value (that is what we want!)
@@ -99,20 +98,19 @@ org.jboss.search.service.QueryServiceImpl.prototype.userQuery = function(query_s
             // callback, The only param is the event object from the COMPLETE event.
             goog.bind(function(e) {
                 this.dispatcher_.dispatchUserQueryFinished();
-                var event = /** @type goog.net.XhrManager.Event */ (e);
+                var event = /** @type {goog.net.XhrManager.Event} */ (e);
                 if (event.target.isSuccess()) {
                     try {
+                        this.dispatcher_.dispatchNewRequestParameters(requestParams);
                         var response = event.target.getResponseJson();
-                        var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(
-                            response, query_string, opt_page, opt_from, opt_to, opt_log
-                        );
+                        var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(response, requestParams);
                         this.dispatcher_.dispatchUserQuerySucceeded(normalizedResponse);
                     } catch (err) {
                         // catch the error so the UI is not broken, ignore fixing for now...
                     }
                 } else {
                     // We failed getting search results data
-                    this.dispatcher_.dispatchUserQueryError(query_string, event.target.getLastError());
+                    this.dispatcher_.dispatchUserQueryError(requestParams.getQueryString(), event.target.getLastError());
                 }
             }, this)
         );
@@ -120,10 +118,8 @@ org.jboss.search.service.QueryServiceImpl.prototype.userQuery = function(query_s
 
 };
 
-/**
- * @override
- */
-org.jboss.search.service.QueryServiceImpl.prototype.userSuggestionQuery = function(query_string) {
+/** @override */
+org.jboss.search.service.QueryServiceXHR.prototype.userSuggestionQuery = function(query_string) {
 
     this.getXHRManager_().abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
 //    this.dispatcher_.dispatchUserSuggestionsQueryAbort();
@@ -149,7 +145,7 @@ org.jboss.search.service.QueryServiceImpl.prototype.userSuggestionQuery = functi
             // callback, The only param is the event object from the COMPLETE event.
             goog.bind(function(e) {
                 this.dispatcher_.dispatchUserSuggestionsQueryFinished();
-                var event = /** @type goog.net.XhrManager.Event */ (e);
+                var event = /** @type {goog.net.XhrManager.Event} */ (e);
                 if (event.target.isSuccess()) {
                     try {
                         var response = event.target.getResponseJson();
@@ -191,6 +187,6 @@ org.jboss.search.service.QueryServiceImpl.prototype.userSuggestionQuery = functi
  * @return {!goog.net.XhrManager}
  * @private
  */
-org.jboss.search.service.QueryServiceImpl.prototype.getXHRManager_ = function() {
+org.jboss.search.service.QueryServiceXHR.prototype.getXHRManager_ = function() {
     return org.jboss.search.LookUp.getInstance().getXhrManager();
 };

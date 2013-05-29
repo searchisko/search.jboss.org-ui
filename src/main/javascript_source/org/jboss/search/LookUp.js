@@ -83,6 +83,12 @@ org.jboss.search.LookUp = function() {
     this.history_;
 
     /**
+     * @type {?org.jboss.search.context.RequestParams}
+     * @private
+     */
+    this.requestParams_ = null;
+
+    /**
      * @type {Object}
      * @private
      */
@@ -270,3 +276,17 @@ org.jboss.search.LookUp.prototype.getQueryServiceDispatcher = function() {
     }
     return this.queryServiceDispatcher_;
 };
+
+/**
+ * @param {org.jboss.search.context.RequestParams} requestParams
+ */
+org.jboss.search.LookUp.prototype.setRequestParams = function(requestParams) {
+    this.requestParams_ = requestParams;
+};
+
+/**
+ * @return {?org.jboss.search.context.RequestParams}
+ */
+org.jboss.search.LookUp.prototype.getRequestParams = function() {
+    return this.requestParams_;
+}

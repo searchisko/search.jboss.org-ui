@@ -21,22 +21,15 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.service.QueryService');
+goog.provide('org.jboss.search.util.dateUtils');
+
+//goog.require('goog.date');
 
 /**
- * @param {!org.jboss.search.service.QueryServiceDispatcher} dispatcher
- * @interface
+ *
+ * @param {!Date} date
+ * @return {string}
  */
-org.jboss.search.service.QueryService = function(dispatcher) {};
-
-/**
- * Execute user query. This is used for the main search field that can contain any user input.
- * @param {!org.jboss.search.context.RequestParams} requestParams
- */
-org.jboss.search.service.QueryService.prototype.userQuery = function(requestParams){};
-
-/**
- * Execute user suggestion query. This is fired for type ahead queries while user types in a query into the main search field.
- * @param {string} query_string user query
- */
-org.jboss.search.service.QueryService.prototype.userSuggestionQuery = function(query_string){};
+org.jboss.search.util.dateUtils.toIsoString = function(date) {
+    return ""; //goog.date.toIsoString(date);
+};

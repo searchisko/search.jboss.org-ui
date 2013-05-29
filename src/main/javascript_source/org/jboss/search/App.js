@@ -29,13 +29,15 @@ goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.search.util.fragmentParser.UI_param_suffix');
 goog.require('org.jboss.search.suggestions.event.EventType');
-goog.require('org.jboss.search.service.QueryServiceImpl');
+goog.require('org.jboss.search.service.QueryServiceXHR');
+goog.require('org.jboss.search.service.QueryServiceCached');
 goog.require('org.jboss.search.InitDeferred');
 goog.require('org.jboss.search.Constants');
 
 goog.require('goog.async.Deferred');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
+goog.require('goog.string');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.net.ImageLoader');
@@ -90,8 +92,12 @@ org.jboss.search.App = function() {
 
     // setup ImageLoader that does pre-load images.
     lookup_.setImageLoader(new goog.net.ImageLoader());
-    // setup production QueryService
-    lookup_.setQueryService(new org.jboss.search.service.QueryServiceImpl( lookup_.getQueryServiceDispatcher() ));
+    // setup production QueryService (cached version)
+    lookup_.setQueryService(
+        new org.jboss.search.service.QueryServiceCached(
+            new org.jboss.search.service.QueryServiceXHR( lookup_.getQueryServiceDispatcher() )
+        )
+    );
 
     // ================================================================
     // Get necessary HTML elements
@@ -149,10 +155,11 @@ org.jboss.search.App = function() {
         }
 
         // is log was used in previous call, keep it
-        var parsedFragment = org.jboss.search.util.fragmentParser.parse(history.getToken());
-        var log = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.LOG];
+        /** @type {org.jboss.search.context.RequestParams} */
+        var requestParams = org.jboss.search.util.fragmentParser.parse(history.getToken());
+        var log = requestParams.getLog();
         if (goog.isDefAndNotNull(log) && !goog.string.isEmpty(log)) {
-            token.push([p_.LOG,goog.string.urlEncode(log)].join(''));
+            token.push([p_.LOG, goog.string.urlEncode(log)].join(''));
         }
 
         history.setToken(token.join('&'));
@@ -171,10 +178,7 @@ org.jboss.search.App = function() {
         throw new Error('Missing some HTML elements!');
     }
 
-    this.searchPage = new org.jboss.search.page.SearchPage(
-        searchPageContext,
-        searchPageElements
-    );
+    this.searchPage = new org.jboss.search.page.SearchPage(searchPageContext, searchPageElements);
 
     this.searchEventListenerId_ = goog.events.listen(this.searchPage,
         org.jboss.search.page.event.EventType.QUERY_SUBMITTED,
@@ -188,12 +192,10 @@ org.jboss.search.App = function() {
     // navigation controller
     var navigationController = goog.bind(function (e) {
         // e.isNavigate (true if value in browser address bar is changed manually)
-        var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
-        var query = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.QUERY];
-        var page = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.PAGE];
-        var log = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.LOG];
-        if (goog.isDefAndNotNull(query)) {
-            this.searchPage.runSearch(query, page, log);
+        /** @type {org.jboss.search.context.RequestParams} */
+        var requestParams = org.jboss.search.util.fragmentParser.parse(e.token);
+        if (goog.isDefAndNotNull(requestParams.getQueryString())) {
+            this.searchPage.runSearch(requestParams);
         } else {
             this.searchPage.clearSearchResults();
         }

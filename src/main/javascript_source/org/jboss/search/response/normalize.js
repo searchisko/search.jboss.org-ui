@@ -41,28 +41,24 @@ goog.require('goog.memoize');
 /**
  * It returns normalized and sanitized search response.
  * @param {!Object} response raw response from DCP search API.
- * @param {string=} opt_query user query
- * @param {number=} opt_page search results page number [1..x]
- * @param {number=} opt_from specify search results interval: from [1..X]
- * @param {number=} opt_to specify search results interval: to [1..x]
- * @param {string=} opt_log type of logging windows that is used
+ * @param {!org.jboss.search.context.RequestParams} requestParams
  * @return {!Object}
  */
-org.jboss.search.response.normalizeSearchResponse = function(response, opt_query, opt_page, opt_from, opt_to, opt_log) {
+org.jboss.search.response.normalizeSearchResponse = function(response, requestParams) {
 
     var output = {};
 
     // ==========================================
     // Actual page
     // ==========================================
-    var actualPage = opt_page || 1;
+    var actualPage = requestParams.getPage() || 1;
     if (actualPage < 1) { actualPage = 1 }
     output.actual_page = actualPage;
 
     // ==========================================
     // User query
     // ==========================================
-    var query = opt_query || "";
+    var query = requestParams.getQueryString() || "";
     query = goog.string.trim(query);
     output.user_query = query;
 
@@ -92,7 +88,6 @@ org.jboss.search.response.normalizeSearchResponse = function(response, opt_query
     // ==========================================
     if (goog.object.containsKey(response,'hits')) {
         output.hits = response.hits;
-//        output['hits']['hits'] = org.jboss.search.response.getDummyHits();
     } else {
         output.hits = [];
     }
@@ -111,7 +106,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, opt_query
     // ==========================================
     var total = /** @type {number} */ (goog.object.getValueByKeys(output, ["hits", "total"]));
     if (goog.isDefAndNotNull(total)) {
-        output.pagination = org.jboss.search.util.paginationGenerator.generate(query, actualPage, total, opt_log);
+        output.pagination = org.jboss.search.util.paginationGenerator.generate(query, actualPage, total, requestParams.getLog());
     }
 
     var hits = /** @type {Array} */ (goog.object.getValueByKeys(output, ["hits", "hits"]));
@@ -203,6 +198,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, opt_query
                         date.toUsTimeString(false, true, true)
                     ].join(', ');
                 } catch(e) {
+                    // TODO: add logging!
                     // date parsing probably failed
                 }
             }
@@ -253,93 +249,10 @@ org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams,
 };
 
 /**
- * TODO temporary only! Remove once we have better data in DCP.
- * @private
- * @return {*}
- */
-org.jboss.search.response.getDummyHits = function() {
-
-    var hit1 = {
-        _id: 'n/a',
-        highlight: {},
-        fields: {
-            dcp_type: 'mailling-list',
-            dcp_project: 'hibernate',
-            dcp_project_name: 'Hibernate',
-            dcp_contributors: ['Max R. Andersen <max.andersen@redhat.com>','Libor Krzyzanek <lkrzyzan@redhat.com>'],
-            dcp_tags: ["Content_tag1", "tag2", "tag3", "user_defined_additional_tag"],
-            dcp_title: 'Hibernate test #1',
-            dcp_url_view: 'http://www.jboss.org/hibernate',
-            dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
-        }
-    };
-
-    var hit2 = {
-        _id: 'n/a',
-        highlight: {},
-        fields: {
-            dcp_type: 'issue',
-            dcp_project: 'as7',
-            dcp_project_name: 'JBoss AS7',
-            dcp_contributors: ['Emmanuel Bernadr <emmanuel@hibernate.org>','Pat Mat <pat@mat.org>'],
-            dcp_tags: ["Content_tag1", "tag2"],
-            dcp_title: 'JBoss AS7 test #1',
-            dcp_url_view: 'http://www.cnn.com/2013/01/24/opinion/jones-sports-writers/index.html?iid=article_sidebar',
-            dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
-        }
-    };
-
-    var hit3 = {
-        _id: 'n/a',
-        highlight: {},
-        fields: {
-            dcp_type: 'mailing-list',
-            dcp_project: 'jbpm',
-            dcp_project_name: 'jBPM',
-            dcp_contributors: ['Sanne Grinovero <sanne.grinovero@gmail.com>','Lukas Vlcek <lukas.vlcek@gmail.com>'],
-            dcp_tags: ["Content_tag1", "tag2"],
-            dcp_title: 'Dummy Title',
-            dcp_url_view: 'http://news.cnet.com/8301-17938_105-57565529-1/pixar-artist-stays-inspired-by-drawing-superheroes/',
-            dcp_description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights.',
-            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
-        }
-    };
-
-    var hit4 = {
-        _id: 'n/a',
-        highlight: {},
-        fields: {
-            dcp_type: 'issue',
-            dcp_project: 'as7',
-            dcp_project_name: 'JBoss AS7',
-            dcp_contributors: ['Dan Allen <dan.j.allen@gmail.com>','Pat Mat <pat@mat.org>'],
-            dcp_tags: ["Content_tag1", "tag2"],
-            dcp_title: 'JBoss AS7 test #1',
-            dcp_url_view: 'http://www.cnn.com/2013/01/24/opinion/caplan-neanderthal-baby/index.html?hpt=hp_c3',
-            dcp_description: 'Lorem ipsum is used to show the content in the basic search GUI for queries that do not produce highlights',
-            dcp_last_activity_date: '2012-12-06T06:34:55.000Z'
-        }
-    };
-
-    var source = [hit1, hit2, hit3, hit4];
-
-    var hits = [];
-
-    for (var i = 0; i < 10; i++) {
-        hits[i] = source[Math.floor(Math.random() * source.length)];
-    }
-
-    return hits;
-
-};
-
-/**
- * @private
  * @type {goog.crypt.Md5}
+ * @private
  */
-org.jboss.search.response.md5 = new goog.crypt.Md5();
+org.jboss.search.response.md5_ = new goog.crypt.Md5();
 
 /**
  * Try to extract name from email address. If not possible return original email value.
@@ -367,7 +280,7 @@ org.jboss.search.response.gravatarEmailHash = function(email) {
     var email_ = goog.isDefAndNotNull(email) ? email : "";
     if (goog.isFunction(email.toLowerCase)) { email_ = email_.toLowerCase() }
     var e = goog.format.EmailAddress.parse(email_).getAddress();
-    var md5 = org.jboss.search.response.md5;
+    var md5 = org.jboss.search.response.md5_;
     md5.reset();
     md5.update(e);
     e = goog.crypt.byteArrayToHex(md5.digest());

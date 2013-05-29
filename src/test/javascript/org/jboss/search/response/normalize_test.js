@@ -18,6 +18,7 @@
 
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.LookUp');
+goog.require('org.jboss.search.context.RequestParams');
 
 goog.require('goog.testing.jsunit');
 
@@ -30,13 +31,15 @@ var testNormalizeSearchResponse = function() {
         }
     };
 
+    var requestParams = new org.jboss.search.context.RequestParams('test');
+
     var data;
     try {
-        data = org.jboss.search.response.normalizeSearchResponse(response,'test');
+        data = org.jboss.search.response.normalizeSearchResponse(response,requestParams);
         fail('normalize requires project map to be set first');
     } catch (e) {
         org.jboss.search.LookUp.getInstance().setProjectMap({});
-        data = org.jboss.search.response.normalizeSearchResponse(response,'test');
+        data = org.jboss.search.response.normalizeSearchResponse(response,requestParams);
     }
 
     assertEquals('user_query = "test"', 'test', data['user_query']);
