@@ -140,24 +140,23 @@ org.jboss.search.App = function() {
      * Basically, this function is called by the search page; whenever user selects or input search query this function
      * gets called. It changes URL fragment and thus calls navigatorController.
      *
-     * @param {!string} query_string value to be set to URL fragment, the value is encoded first!
-     * @param {string=} opt_page
+     * @param {!org.jboss.search.context.RequestParams} requestParams
      */
-    var urlSetFragmentFunction = function(query_string, opt_page) {
+    var urlSetFragmentFunction = function(requestParams) {
         var p_ = org.jboss.search.util.fragmentParser.UI_param_suffix;
 
         // always use query
-        var token = [[p_.QUERY,goog.string.urlEncode(query_string)].join('')];
+        var token = [[p_.QUERY,goog.string.urlEncode(requestParams.getQueryString())].join('')];
 
         // use page is provided
-        if (goog.isDefAndNotNull(opt_page)) {
-            token.push([p_.PAGE,goog.string.urlEncode(opt_page)].join(''));
+        if (goog.isDefAndNotNull(requestParams.getPage())) {
+            token.push([p_.PAGE,goog.string.urlEncode(requestParams.getPage())].join(''));
         }
 
         // is log was used in previous call, keep it
         /** @type {org.jboss.search.context.RequestParams} */
-        var requestParams = org.jboss.search.util.fragmentParser.parse(history.getToken());
-        var log = requestParams.getLog();
+        var requestParams_ = org.jboss.search.util.fragmentParser.parse(history.getToken());
+        var log = requestParams_.getLog();
         if (goog.isDefAndNotNull(log) && !goog.string.isEmpty(log)) {
             token.push([p_.LOG, goog.string.urlEncode(log)].join(''));
         }
@@ -184,8 +183,8 @@ org.jboss.search.App = function() {
         org.jboss.search.page.event.EventType.QUERY_SUBMITTED,
         function (e) {
             var event = /** @type {org.jboss.search.page.event.QuerySubmitted} */ (e);
-            var q_ = event.getQuery();
-            urlSetFragmentFunction(q_);
+            var qp_ = event.getRequestParams();
+            urlSetFragmentFunction(qp_);
         }
     );
 

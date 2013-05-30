@@ -24,6 +24,7 @@
 goog.provide('org.jboss.search.page.SearchPage');
 
 goog.require('org.jboss.search.LookUp');
+goog.require('org.jboss.search.context.RequestParams');
 goog.require('org.jboss.search.util.urlGenerator');
 goog.require('org.jboss.search.request');
 goog.require('org.jboss.search.response');
@@ -254,7 +255,11 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
             (function(selectedIndex) {
                 // TODO get query_string from model at the selectedIndex position
-                thiz_.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted("option was selected by pointer (index: "+selectedIndex+")"));
+                thiz_.dispatchEvent(
+                    new org.jboss.search.page.event.QuerySubmitted(
+                        new org.jboss.search.context.RequestParams("option was selected by pointer (index: "+selectedIndex+")",1)
+                    )
+                );
 
             })(selectedIndex);
         }
@@ -762,15 +767,27 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
         if (selectedIndex < 0) {
             // user hit enter and no suggestions are displayed (yet) use content of query field
             var query = this.elements_.getQuery_field().value;
-            this.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
+            this.dispatchEvent(
+                new org.jboss.search.page.event.QuerySubmitted(
+                    new org.jboss.search.context.RequestParams(query,1)
+                )
+            );
         } else if (selectedIndex == 0) {
             // suggestions are displayed, user selected the first one (use what is in query field)
             var query = this.elements_.getQuery_field().value;
-            this.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted(query));
+            this.dispatchEvent(
+                new org.jboss.search.page.event.QuerySubmitted(
+                    new org.jboss.search.context.RequestParams(query,1)
+                )
+            );
         } else if (selectedIndex > 0) {
             // user selected from suggestions, use what is in model
             // TODO get query_string from model at the selectedIndex position
-            this.dispatchEvent(new org.jboss.search.page.event.QuerySubmitted("option was selected by keys (index: "+selectedIndex+")"));
+            this.dispatchEvent(
+                new org.jboss.search.page.event.QuerySubmitted(
+                    new org.jboss.search.context.RequestParams("option was selected by keys (index: "+selectedIndex+")",1)
+                )
+            );
         }
     }, this);
 

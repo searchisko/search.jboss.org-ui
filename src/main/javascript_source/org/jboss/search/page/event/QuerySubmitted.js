@@ -27,38 +27,24 @@ goog.require('org.jboss.search.page.event.EventType');
 goog.require('goog.events.Event');
 
 /**
- * @param {string} query
- * @param {string=} opt_page
+ * @param {!org.jboss.search.context.RequestParams} requestParams
  * @constructor
  * @extends {goog.events.Event}
  */
-org.jboss.search.page.event.QuerySubmitted = function(query, opt_page) {
+org.jboss.search.page.event.QuerySubmitted = function(requestParams) {
     goog.events.Event.call(this, org.jboss.search.page.event.EventType.QUERY_SUBMITTED);
 
     /**
-     * @type {string}
+     * @type {!org.jboss.search.context.RequestParams}
      * @private
      */
-    this.query_ = query || '';
-
-    /**
-     * @type {string}
-     * @private
-     */
-    this.page_ = opt_page || '1';
+    this.requestParams_ = requestParams;
 };
 goog.inherits(org.jboss.search.page.event.QuerySubmitted, goog.events.Event);
 
 /**
- * @return {string}
+ * @return {!org.jboss.search.context.RequestParams}
  */
-org.jboss.search.page.event.QuerySubmitted.prototype.getQuery = function() {
-    return this.query_;
-};
-
-/**
- * @return {string}
- */
-org.jboss.search.page.event.QuerySubmitted.prototype.getPage = function() {
-    return this.page_;
+org.jboss.search.page.event.QuerySubmitted.prototype.getRequestParams = function() {
+    return this.requestParams_;
 };
