@@ -194,6 +194,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                 /** @type {goog.date.DateTime} */ var date = goog.date.fromIsoString(fields.dcp_last_activity_date);
                 fields.dcp_last_activity_date_parsed =
                     [
+                        // TODO: format according to browser locale
                         [date.getUTCFullYear(),date.getUTCMonth()+1,date.getUTCDate()].join('-'),
                         date.toUsTimeString(false, true, true)
                     ].join(', ');

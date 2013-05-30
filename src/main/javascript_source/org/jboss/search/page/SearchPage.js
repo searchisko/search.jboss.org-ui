@@ -565,22 +565,20 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
         this.dateFilterIntervalSelectedId_ = goog.events.listen(
             dateFilter.getHistogramChart(),
             org.jboss.search.visualization.HistogramEventType.INTERVAL_SELECTED,
-            function(e) {
+            goog.bind(function(e) {
                 var event = /** @type {org.jboss.search.visualization.IntervalSelected} */ (e);
                 if (event.isLast()) {
-                    var queryService = org.jboss.search.LookUp.getInstance().getQueryService();
-                    if (goog.isDefAndNotNull(queryService)) {
-//                        console.log(event.getFrom());
-//                        console.log(event.getTo());
-                        var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
-                        if (goog.isDefAndNotNull(rp)) {
-                            // set 'page' to 1
-                            rp = rp.mixin(rp, undefined, 1, event.getFrom(), event.getTo());
-                            queryService.userQuery(rp);
-                        }
+                    var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
+                    if (goog.isDefAndNotNull(rp)) {
+                        // TODO: consider rounding 'from' and 'to' to hours or days (for monthly granular chart it makes little sense to use minutes...)
+                        // set 'page' to 1
+                        rp = rp.mixin(rp, undefined, 1, event.getFrom(), event.getTo());
+                        this.dispatchEvent(
+                            new org.jboss.search.page.event.QuerySubmitted(rp)
+                        );
                     }
                 }
-            }
+            }, this)
         );
     }
 };

@@ -42,7 +42,7 @@ org.jboss.search.util.urlGenerator.QueryParams = {
     FIELD : 'field',
     HIGHLIGHTS : 'query_highlight',
     ACTIVITY_DATE_FROM : 'activity_date_from',
-    ACTIVITY_DATE_TO   : 'activity_date_from'
+    ACTIVITY_DATE_TO   : 'activity_date_to'
 };
 
 /**
@@ -98,18 +98,16 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
     // from date
     var from = requestParams.getFrom();
     if (goog.isDef(from)) {
-        if (goog.isDateLike(from)) {
-//            var dateString_ = org.jboss.search.util.dateUtils.toString(from);
-//            rootUri.setParameterValue(params.ACTIVITY_DATE_FROM, dateString_);
+        if (goog.isDateLike(from) && from instanceof goog.date.DateTime) {
+            rootUri.setParameterValue(params.ACTIVITY_DATE_FROM, from.toXmlDateTime(true));
         }
     }
 
     // to date
     var to = requestParams.getTo();
-    if (goog.isDef(to)) {
+    if (goog.isDef(to) && to instanceof goog.date.DateTime) {
         if (goog.isDateLike(to)) {
-//            var dateString_ = org.jboss.search.util.dateUtils.toString(to);
-//            rootUri.setParameterValue(params.ACTIVITY_DATE_FROM, dateString_);
+            rootUri.setParameterValue(params.ACTIVITY_DATE_TO, to.toXmlDateTime(true));
         }
     }
 

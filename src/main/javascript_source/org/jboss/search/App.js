@@ -148,9 +148,21 @@ org.jboss.search.App = function() {
         // always use query
         var token = [[p_.QUERY,goog.string.urlEncode(requestParams.getQueryString())].join('')];
 
-        // use page is provided
-        if (goog.isDefAndNotNull(requestParams.getPage())) {
+        // use page is provided and greater then 1
+        if (goog.isDefAndNotNull(requestParams.getPage()) && requestParams.getPage() > 1) {
             token.push([p_.PAGE,goog.string.urlEncode(requestParams.getPage())].join(''));
+        }
+
+        // use From if available
+        if (goog.isDefAndNotNull(requestParams.getFrom()) && goog.isDateLike(requestParams.getFrom())) {
+            var from_ = requestParams.getFrom().toXmlDateTime(true);
+            token.push([p_.FROM,goog.string.urlEncode(from_)].join(''));
+        }
+
+        // use To if available
+        if (goog.isDefAndNotNull(requestParams.getTo()) && goog.isDateLike(requestParams.getTo())) {
+            var to_ = requestParams.getTo().toXmlDateTime(true);
+            token.push([p_.TO,goog.string.urlEncode(to_)].join(''));
         }
 
         // is log was used in previous call, keep it
