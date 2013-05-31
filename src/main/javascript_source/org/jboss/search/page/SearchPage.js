@@ -135,6 +135,9 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 //                    console.log("response > ",response);
                     this.log_.info("Search succeeded, took " + response["took"] + "ms, uuid [" +response["uuid"] + "]");
                     org.jboss.search.LookUp.getInstance().setRecentQueryResultData(response);
+                    // refresh histogram chart only if filter expanded.
+                    var filter = org.jboss.search.LookUp.getInstance().getDateFilter();
+                    if (goog.isDefAndNotNull(filter)) { filter.refreshChart(false) }
                     this.renderQueryResponse_();
                     this.enableSearchResults_();
                     break;

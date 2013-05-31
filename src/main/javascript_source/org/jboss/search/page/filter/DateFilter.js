@@ -31,6 +31,7 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.events.KeyHandler.EventType');
+goog.require('goog.array');
 goog.require('goog.Disposable');
 
 /**
@@ -128,12 +129,38 @@ org.jboss.search.page.filter.DateFilter.prototype.disposeInternal = function() {
  */
 org.jboss.search.page.filter.DateFilter.prototype.expandFilter = function() {
     this.expandFilter_();
-    var data = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
-    if (data && data.activity_dates_histogram_interval && data.facets &&
-        data.facets.activity_dates_histogram && data.facets.activity_dates_histogram.entries) {
-        this.histogram_chart_.update(data.facets.activity_dates_histogram.entries, data.activity_dates_histogram_interval);
-    } else {
-        this.histogram_chart_.update([],"month");
+    this.refreshChart(false);
+};
+
+/**
+ * Refresh chart (meaning update to the latest search result histogram facet data). By default
+ * this does nothing if the filter is collapsed.
+ * @param {boolean=} opt_force refresh even if filter is collapsed. Defaults to false.
+ */
+org.jboss.search.page.filter.DateFilter.prototype.refreshChart = function(opt_force) {
+    var force = !!(opt_force || false);
+    if (!this.isCollapsed_() || force) {
+        var data = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
+        if (data && data.activity_dates_histogram_interval && data.facets &&
+            data.facets.activity_dates_histogram && data.facets.activity_dates_histogram.entries) {
+
+            /** @type {Array.<{time: number, count: number}>} */
+            var entries_ = data.facets.activity_dates_histogram.entries;
+
+            var requestParams = org.jboss.search.LookUp.getInstance().getRequestParams();
+            var from_ = goog.isDateLike(requestParams.getFrom()) ? requestParams.getFrom().getTime() : null;
+            var to_ = goog.isDateLike(requestParams.getTo()) ? requestParams.getTo().getTime() : null;
+            if (!goog.isNull(from_) || !goog.isNull(to_)) {
+                entries_ = goog.array.filter(entries_, function(entry){
+                    if (!goog.isNull(to_) && entry.time > to_) { return false }
+                    if (!goog.isNull(from_) && entry.time < from_) { return false }
+                    return true;
+                });
+            }
+            this.histogram_chart_.update(entries_, data.activity_dates_histogram_interval);
+        } else {
+            this.histogram_chart_.update([],"month");
+        }
     }
 };
 
