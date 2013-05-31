@@ -27,7 +27,6 @@ goog.provide('org.jboss.search.util.urlGenerator.QueryParams');
 goog.require('goog.Uri');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.context.RequestParams');
-//goog.require('org.jboss.search.util.dateUtils');
 
 /**
  * These are the names of URL params used for search service.

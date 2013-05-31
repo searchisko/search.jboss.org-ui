@@ -366,16 +366,17 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
 
     /**
-     * ID of listener which catches user clicks (click stream) on top of search results.
+     * ID of listener which catches user clicks on top of search results.
      * @type {?number}
      * @private
      */
     this.searchResultsClickId_ = goog.events.listen(
         this.elements_.getSearch_results_div(),
         goog.events.EventType.MOUSEUP,
-        function(/** @type {goog.events.Event} */ e) {
+        goog.bind(function(/** @type {goog.events.Event} */ e) {
             var element = e.target;
             while (element) {
+                // user clicked individual search hit, we want to record click-stream
                 if (goog.dom.classes.has(element, org.jboss.search.Constants.CLICK_STREAM_CLASS)) {
                     var hitNumber = element.getAttribute(org.jboss.search.Constants.HIT_NUMBER);
                     if (hitNumber) {
@@ -394,9 +395,25 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     }
                     break;
                 }
+                // user clicked pagination, we want to record click-stream and issue a new search request
+                if (goog.dom.classes.has(element, org.jboss.search.Constants.PAGINATION_CLASS)) {
+                    var pageNumber = element.getAttribute(org.jboss.search.Constants.PAGINATION_NUMBER);
+                    if (pageNumber) {
+                        try { pageNumber = +pageNumber } catch(err) { /* ignore */ }
+                        if (goog.isNumber(pageNumber)) {
+                            var rp_ = org.jboss.search.LookUp.getInstance().getRequestParams();
+                            rp_ = rp_.mixin(rp_, undefined, /** @type {number} */ (pageNumber));
+                            this.dispatchEvent(
+                                new org.jboss.search.page.event.QuerySubmitted(rp_)
+                            );
+                            // TODO: call writeClickStreamStatistics
+                        }
+                    }
+                    break;
+                }
                 element = goog.dom.getParentElement(element);
             }
-        }
+        }, this)
     );
 
     /**

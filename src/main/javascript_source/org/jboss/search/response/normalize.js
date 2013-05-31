@@ -106,7 +106,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
     // ==========================================
     var total = /** @type {number} */ (goog.object.getValueByKeys(output, ["hits", "total"]));
     if (goog.isDefAndNotNull(total)) {
-        output.pagination = org.jboss.search.util.paginationGenerator.generate(query, actualPage, total, requestParams.getLog());
+        output.pagination = org.jboss.search.util.paginationGenerator.generate(actualPage, total);
     }
 
     var hits = /** @type {Array} */ (goog.object.getValueByKeys(output, ["hits", "hits"]));

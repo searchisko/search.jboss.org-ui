@@ -259,12 +259,14 @@
     color: gray;
 }
 
-.pagination a {
+.pagination .pc_ {
+    margin: 0 15px 0 15px;
+    cursor: pointer;
     text-decoration: none;
     color: gray;
 }
 
-.pagination a.actual {
+.pagination .pc_.actual {
     text-decoration: underline;
 }
 

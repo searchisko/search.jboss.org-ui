@@ -84,6 +84,8 @@ org.jboss.search.context.RequestParams = function(query_string, opt_page, opt_fr
  * Return a new instance of RequestParams based on provided requestParams instance and if any of other parameters is
  * defined and not null then it is setup as a new value in the new RequestParams instance.
  *
+ * TODO: Rename to cloneAndOverride (that is what it does)
+ *
  * @param {!org.jboss.search.context.RequestParams} requestParams
  * @param {string=} opt_query_string
  * @param {number=} opt_page

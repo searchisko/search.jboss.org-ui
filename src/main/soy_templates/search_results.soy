@@ -42,7 +42,7 @@
         <div class="pagination">
             {if isNonnull($pagination)}
                 {foreach $p in $pagination.array}
-                    <span> <a {if $actual_page == $p.page}class="actual"{/if} href="{$p.fragment}">{$p.symbol|noAutoescape}</a></span>
+                    <span class="{if $actual_page == $p.page}actual {/if}pc_" pn_="{$p.symbol}">{$p.symbol|noAutoescape}</span>
                 {ifempty}
                     /* skip */
                 {/foreach}

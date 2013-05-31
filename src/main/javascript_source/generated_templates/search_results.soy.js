@@ -39,7 +39,7 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_ignored)
     if (pListLen56 > 0) {
       for (var pIndex56 = 0; pIndex56 < pListLen56; pIndex56++) {
         var pData56 = pList56[pIndex56];
-        output += '<span> <a ' + ((opt_data.actual_page == pData56.page) ? 'class="actual"' : '') + ' href="' + soy.$$escapeHtml(pData56.fragment) + '">' + soy.$$filterNoAutoescape(pData56.symbol) + '</a></span>';
+        output += '<span class="' + ((opt_data.actual_page == pData56.page) ? 'actual ' : '') + 'pc_" pn_="' + soy.$$escapeHtml(pData56.symbol) + '">' + soy.$$filterNoAutoescape(pData56.symbol) + '</span>';
       }
     } else {
     }

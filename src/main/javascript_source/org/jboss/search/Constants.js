@@ -188,6 +188,20 @@ org.jboss.search.Constants = {
     CONTRIBUTOR_NUMBER: "cn_",
 
     /**
+     * Used in elements which represent individual pagination options on the result page.
+     * @type {string}
+     * @const
+     */
+    PAGINATION_CLASS: "pc_",
+
+    /**
+     * Element attribute used to hold pagination number.
+     * @type {string}
+     * @const
+     */
+    PAGINATION_NUMBER: "pn_",
+
+    /**
      * Temporary: URL of Apiary Mock Server
      * @see http://docs.jbossorg.apiary.io/#searchapi
      * @type {string}

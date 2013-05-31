@@ -29,27 +29,20 @@ goog.require('org.jboss.search.Constants');
  * Returns array with simple data structure that can be easily used to generate
  * pagination element.
  *
- * @param {string} user_query
  * @param {number} actual_page
  * @param {number} search_total_hits
- * @param {string=} opt_log
- * @return {{total_pages: number, array: !Array.<{page: number, symbol: string, fragment: string}>}}
+ * @return {{total_pages: number, array: !Array.<{page: number, symbol: string}>}}
  */
-org.jboss.search.util.paginationGenerator.generate = function(user_query, actual_page, search_total_hits, opt_log) {
+org.jboss.search.util.paginationGenerator.generate = function(actual_page, search_total_hits) {
     var array = [];
     var result = { total_pages: 0, array: array};
 
     if (goog.isNumber(search_total_hits) && search_total_hits > 0) {
 
-        var generateItem_ = function(page, user_query, opt_log) {
-            var arr_ = [['#q=',user_query].join(''),["page=",page].join('')];
-            if (goog.isDefAndNotNull(opt_log)) {
-                arr_.push(["log=",opt_log].join(''));
-            }
+        var generateItem_ = function(page) {
             return {
                 'page'     : page,
-                'symbol'   : page.toString(10),
-                'fragment' : arr_.join('&')
+                'symbol'   : page.toString(10)
             }
         };
 
@@ -74,14 +67,14 @@ org.jboss.search.util.paginationGenerator.generate = function(user_query, actual
                 // can we add next page?
                 if (max < total_pages) {
                     var page = (result.array.length > 0 ? max + 1 : max);
-                    result.array.push(generateItem_(page, user_query, opt_log));
+                    result.array.push(generateItem_(page));
                 }
                 push = !push;
             } else {
                 // can we add previous page?
                 if (min > 1) {
                     var page = (result.array.length > 0 ? min - 1 : min);
-                    result.array.unshift(generateItem_(page, user_query, opt_log));
+                    result.array.unshift(generateItem_(page));
                 }
                 push = !push;
             }

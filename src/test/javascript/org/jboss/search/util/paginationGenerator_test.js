@@ -26,21 +26,19 @@ var testPaginationGenerator = function() {
     var g_ = org.jboss.search.util.paginationGenerator;
     var pagination;
 
-    pagination = g_.generate("test", 2, 43);
+    pagination = g_.generate(2, 43);
     assertEquals(5, pagination.total_pages);
     assertEquals(5, pagination.array.length);
     assertEquals(1, pagination.array[0].page);
     assertEquals("1", pagination.array[0].symbol);
-    assertEquals("#q=test&page=1", pagination.array[0].fragment);
 
-    pagination = g_.generate("test", 2, 143);
+    pagination = g_.generate(2, 143);
     assertEquals(15, pagination.total_pages);
     assertEquals(org.jboss.search.Constants.PAGINATION_MAX_ITEMS_COUNT, pagination.array.length);
     assertEquals(1, pagination.array[0].page);
     assertEquals("1", pagination.array[0].symbol);
-    assertEquals("#q=test&page=1", pagination.array[0].fragment);
 
-    pagination = g_.generate("test", 6, 143);
+    pagination = g_.generate(6, 143);
     assertEquals(15, pagination.total_pages);
     assertEquals(org.jboss.search.Constants.PAGINATION_MAX_ITEMS_COUNT, pagination.array.length);
     assertEquals(2, pagination.array[0].page);
@@ -56,7 +54,7 @@ var testPaginationGeneratorInfiniteLoop = function() {
     var g_ = org.jboss.search.util.paginationGenerator;
     var pagination;
 
-    pagination = g_.generate("test", 1, org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE);
+    pagination = g_.generate(1, org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE);
     assertEquals(1, pagination.total_pages);
     assertEquals(0, pagination.array.length);
 };
@@ -67,9 +65,7 @@ var testPaginationGeneratorLogParameter = function() {
     var pagination;
 
     // make sure pagination is generated, thus SEARCH_RESULTS_PER_PAGE + 1
-    pagination = g_.generate("test", 1, org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE + 1, "console");
+    pagination = g_.generate(1, org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE + 1);
     assertEquals(2, pagination.total_pages);
     assertEquals(2, pagination.array.length);
-
-    assertEquals("#q=test&page=1&log=console", pagination.array[0].fragment);
 };
