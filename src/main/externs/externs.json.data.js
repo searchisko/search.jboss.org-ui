@@ -82,7 +82,7 @@ SearchHit.prototype.fields.dcp_description_tr;              // computed or modif
 SearchHit.prototype.fields.dcp_last_activity_date_parsed;   // computed or modified by normalize.js
 
 SearchHit.prototype.highlight;
-SearchHit.prototype.highlight.dcp_content;
+SearchHit.prototype.highlight.dcp_content_plaintext;
 SearchHit.prototype.highlight.comment_body;
 
 SearchHit.prototype.facets;

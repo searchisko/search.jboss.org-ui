@@ -88,8 +88,8 @@
                     {/if}
                     {if (isNonnull($highlight?.dcp_description) or isNonnull($fields?.dcp_description_tr))}
                         <div class="description">
-                            {if isNonnull($highlight?.dcp_content)}
-                                {$highlight.dcp_content|noAutoescape}
+                            {if isNonnull($highlight?.dcp_content_plaintext)}
+                                {$highlight.dcp_content_plaintext|noAutoescape}
                             {elseif isNonnull($highlight?.dcp_description)}
                                 {$highlight.dcp_description|noAutoescape}
                             {elseif isNonnull($fields?.dcp_description_tr)}
