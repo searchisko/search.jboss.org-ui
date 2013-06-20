@@ -179,7 +179,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             // Description truncate
             // ==========================================
             if (goog.object.containsKey(fields,'dcp_description')) {
-                var desc = fields.dcp_description;
+                var desc = org.jboss.search.response.normalizeAllSpaces_(fields.dcp_description);
                 if (goog.isDef(desc)) {
                     var desc_tr = goog.string.truncate(desc, org.jboss.search.Constants.MAX_DESCRIPTION_LENGTH, true);
                     fields.dcp_description_tr = desc_tr;
@@ -203,10 +203,51 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                     // date parsing probably failed
                 }
             }
+
+            var highlights = hit.highlight;
+
+            // ==========================================
+            // normalizeSpaces in highlighted content_plaintext
+            // This sounds like a hack but the problem is that we display content using "noAutoescape" mode
+            // thus we need to remove any spaces manually first.
+            // ==========================================
+            if (goog.object.containsKey(highlights,'dcp_content_plaintext')) {
+                var content_plaintext = highlights.dcp_content_plaintext;
+                if (goog.isArray(content_plaintext) && content_plaintext.length > 0) {
+                    goog.array.forEach(content_plaintext, function(item, index, array){
+                        array[index] = org.jboss.search.response.normalizeAllSpaces_(item);
+                    });
+                }
+            }
+
+            // ==========================================
+            // normalizeSpaces in highlighted comment_body
+            // This sounds like a hack but the problem is that we display content using "noAutoescape" mode
+            // thus we need to remove any spaces manually first.
+            // ==========================================
+            if (goog.object.containsKey(highlights,'comment_body')) {
+                var comment_body = highlights.comment_body;
+                if (goog.isArray(comment_body) && comment_body.length > 0) {
+                    goog.array.forEach(comment_body, function(item, index, array){
+                        array[index] = org.jboss.search.response.normalizeAllSpaces_(item);
+                    });
+                }
+            }
         })
     }
 //    console.log(output);
     return output;
+};
+
+/**
+ * Does the same thing as goog.string.normalizeSpaces() except
+ * it also translates both the &#160; and &nbsp; entities to vanilla space first.
+ * @param {string} str
+ * @return {string} str
+ * @private
+ */
+org.jboss.search.response.normalizeAllSpaces_ = function(str) {
+    return goog.isString(str) ? goog.string.normalizeSpaces(str.replace(/(&#160;|&nbsp;)/g, ' ')) : '';
 };
 
 /**

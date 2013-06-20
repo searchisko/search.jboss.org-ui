@@ -86,10 +86,12 @@
                     {if isNonnull($fields?.dcp_type)}
                         <span class="dcp_type">{$fields.dcp_type}</span>
                     {/if}
-                    {if (isNonnull($highlight?.dcp_description) or isNonnull($fields?.dcp_description_tr))}
+                    {if (isNonnull($highlight?.dcp_description) or isNonnull($fields?.dcp_description_tr) or ($highlight?.dcp_content_plaintext?.length > 0))}
                         <div class="description">
-                            {if isNonnull($highlight?.dcp_content_plaintext)}
-                                {$highlight.dcp_content_plaintext|noAutoescape}
+                            {if ($highlight?.dcp_content_plaintext?.length > 0)}
+                                {foreach $content_snippet in $highlight.dcp_content_plaintext}
+                                    {$content_snippet|noAutoescape}&nbsp;&hellip;{sp}
+                                {/foreach}
                             {elseif isNonnull($highlight?.dcp_description)}
                                 {$highlight.dcp_description|noAutoescape}
                             {elseif isNonnull($fields?.dcp_description_tr)}
