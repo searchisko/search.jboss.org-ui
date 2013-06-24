@@ -139,6 +139,33 @@
                 </configuration>
             </plugin>
 
+            <!--
+                Perform LESS compilation
+                Using https://github.com/marceloverdijk/lesscss-maven-plugin
+                To run the compiler manually just execute: mvn lesscss:compile
+            -->
+            <plugin>
+                <groupId>org.lesscss</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <version>1.3.3</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/src/main/webapp/css/jbosscommunity</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
+                    <compress>true</compress>
+                    <includes>
+                        <include>bootstrap-default.less</include>
+                        <include>bootstrap-community.less</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
