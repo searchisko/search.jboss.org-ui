@@ -146,6 +146,10 @@ org.jboss.search.page.filter.DateFilter.prototype.refreshChart = function(opt_fo
 
             /** @type {Array.<{time: number, count: number}>} */
             var entries_ = data.facets.activity_dates_histogram.entries;
+            // TODO: move this check to response data normalization
+            entries_ = goog.array.filter(entries_, function(entry){
+                return entry.time == 0 ? false : true;
+            });
 
             var requestParams = org.jboss.search.LookUp.getInstance().getRequestParams();
             var from_ = goog.isDateLike(requestParams.getFrom()) ? requestParams.getFrom().getTime() : null;
