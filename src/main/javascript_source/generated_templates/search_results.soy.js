@@ -83,14 +83,24 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
     }
     output += '</ul></div>';
   }
+  if (((opt_data.fields == null) ? null : (opt_data.fields.dcp_tags_view == null) ? null : opt_data.fields.dcp_tags_view.length) > 0) {
+    output += '<div class="tags_list">Tags:';
+    var tagList149 = opt_data.fields.dcp_tags_view;
+    var tagListLen149 = tagList149.length;
+    for (var tagIndex149 = 0; tagIndex149 < tagListLen149; tagIndex149++) {
+      var tagData149 = tagList149[tagIndex149];
+      output += '<span> ' + soy.$$escapeHtml(tagData149) + ((! (tagIndex149 == tagListLen149 - 1)) ? ',' : '') + '</span>';
+    }
+    output += '</div>';
+  }
   output += '</div>';
   if (((opt_data.fields == null) ? null : opt_data.fields.dcp_contributors_view) != null) {
     output += '<div class="contributors_list">';
-    var cList150 = opt_data.fields.dcp_contributors_view;
-    var cListLen150 = cList150.length;
-    for (var cIndex150 = 0; cIndex150 < cListLen150; cIndex150++) {
-      var cData150 = cList150[cIndex150];
-      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex150) + '"><img src="' + soy.$$escapeHtml(cData150.gURL16) + '"></span>';
+    var cList162 = opt_data.fields.dcp_contributors_view;
+    var cListLen162 = cList162.length;
+    for (var cIndex162 = 0; cIndex162 < cListLen162; cIndex162++) {
+      var cData162 = cList162[cIndex162];
+      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex162) + '"><img src="' + soy.$$escapeHtml(cData162.gURL16) + '"></span>';
     }
     output += ((((opt_data.fields == null) ? null : opt_data.fields.dcp_contributors_view.length) > 0) ? '<span class="selected_contributor_name">&#8212; <span class="value">' + soy.$$escapeHtml(opt_data.fields.dcp_contributors_view[0].name) + '</span></span>' : '') + '</div>';
   }

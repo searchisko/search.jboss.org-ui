@@ -108,6 +108,14 @@
                         </ul>
                         </div>
                     {/if}
+                    {if $fields?.dcp_tags_view?.length > 0}
+                        <div class="tags_list">
+                            Tags:
+                            {foreach $tag in $fields.dcp_tags_view}
+                                <span> {$tag}{if not isLast($tag)},{/if}</span>
+                            {/foreach}
+                        </div>
+                    {/if}
                 </div>
                 {if isNonnull($fields?.dcp_contributors_view)}
                     <div class="contributors_list">

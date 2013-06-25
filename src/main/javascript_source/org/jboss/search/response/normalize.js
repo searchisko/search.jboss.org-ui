@@ -131,6 +131,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                 var conts = fields.dcp_contributors;
                 if (goog.isDef(conts)) {
                     var cont_;
+                    // we need to ensure that it is an array (because we test length and iterate it in soy template)
                     if (goog.isArray(conts)) {
                         cont_ = conts;
                     } else {
@@ -144,6 +145,23 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                         var gravatarURL40 = org.jboss.search.response.gravatarURI_Memo(c,40).valueOf();
                         fields.dcp_contributors_view.push({'name': name, 'gURL16': gravatarURL16, 'gURL40': gravatarURL40});
                     });
+                }
+            }
+
+            // ==========================================
+            // Tags
+            // ==========================================
+            if (goog.object.containsKey(fields,'dcp_contributors')) {
+                var tags = fields.dcp_tags;
+                if (goog.isDef(tags)) {
+                    var tags_;
+                    // we need to ensure that it is an array (because we test length and iterate it in soy template)
+                    if (goog.isArray(tags)) {
+                        tags_ = tags;
+                    } else {
+                        tags_ = [tags.valueOf()];
+                    }
+                    fields.dcp_tags_view = tags_;
                 }
             }
 
