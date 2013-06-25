@@ -24,9 +24,9 @@
 goog.provide('org.jboss.search.page.filter.DateFilter');
 
 goog.require('org.jboss.search.visualization.Histogram');
-goog.require('org.jboss.search.visualization.IntervalSelected');
 goog.require('org.jboss.search.LookUp');
 
+goog.require('goog.date.DateTime');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.events.KeyHandler');
@@ -38,13 +38,16 @@ goog.require('goog.Disposable');
  *
  * @param {!HTMLElement} element to host the date filter
  * @param {!HTMLElement} date_histogram_element to host the date histogram chart
+ * @param {!HTMLInputElement} date_from_field
+ * @param {!HTMLInputElement} date_to_field
  * @param {function(): boolean} opt_isCollapsed a function that is used to learn if filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.page.filter.DateFilter = function(element, date_histogram_element, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
+org.jboss.search.page.filter.DateFilter = function(element, date_histogram_element, date_from_field, date_to_field,
+                                                   opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
     goog.Disposable.call(this);
 
     /**
@@ -58,6 +61,18 @@ org.jboss.search.page.filter.DateFilter = function(element, date_histogram_eleme
      * @private
      */
     this.date_histogram_element_ = date_histogram_element;
+
+    /**
+     * @type {HTMLInputElement}
+     * @private
+     */
+    this.date_from_field_ = date_from_field;
+
+    /**
+     * @type {HTMLInputElement}
+     * @private
+     */
+    this.date_to_field_ = date_to_field;
 
     /**
      * @type {!Function}
@@ -118,6 +133,8 @@ org.jboss.search.page.filter.DateFilter.prototype.disposeInternal = function() {
 
     this.element_ = null;
     this.date_histogram_element_ = null;
+    this.date_from_field_ = null;
+    this.date_to_field_ = null;
     delete this.expandFilter_;
     delete this.collpaseFilter_;
     delete this.isCollapsed_;
@@ -181,4 +198,28 @@ org.jboss.search.page.filter.DateFilter.prototype.collapseFilter = function() {
  */
 org.jboss.search.page.filter.DateFilter.prototype.getHistogramChart = function() {
     return this.histogram_chart_;
+};
+
+/**
+ * Display new <code>from</code> date in the web form.
+ * @param {goog.date.DateTime|undefined} from
+ */
+org.jboss.search.page.filter.DateFilter.prototype.setFromDate = function(from) {
+    if (goog.isDateLike(from)) {
+        this.date_from_field_.value = from.toXmlDateTime(false).replace(/T/," ");
+    } else {
+        this.date_from_field_.value = "";
+    }
+};
+
+/**
+ * Display new <code>to</code> date in the web form.
+ * @param {goog.date.DateTime|undefined} to
+ */
+org.jboss.search.page.filter.DateFilter.prototype.setToDate = function(to) {
+    if (goog.isDateLike(to)) {
+        this.date_to_field_.value = to.toXmlDateTime(false).replace(/T/," ");
+    } else {
+        this.date_to_field_.value = "";
+    }
 };

@@ -86,7 +86,7 @@ org.jboss.search.service.QueryServiceXHR.prototype.userQuery = function(requestP
     var query_url_string_ = org.jboss.search.util.urlGenerator.searchUrl(searchURI_, requestParams);
 
     if (!goog.isNull(query_url_string_)) {
-        this.dispatcher_.dispatchUserQueryStart(requestParams.getQueryString(), query_url_string_);
+        this.dispatcher_.dispatchUserQueryStart(requestParams, query_url_string_);
         this.getXHRManager_().send(
             org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
             // setting the parameter value clears previously set value (that is what we want!)
@@ -106,7 +106,7 @@ org.jboss.search.service.QueryServiceXHR.prototype.userQuery = function(requestP
                         var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(response, requestParams);
                         this.dispatcher_.dispatchUserQuerySucceeded(normalizedResponse);
                     } catch (err) {
-                        // catch the error so the UI is not broken, ignore fixing for now...
+                        this.dispatcher_.dispatchUserQueryError(requestParams.getQueryString(), err);
                     }
                 } else {
                     // We failed getting search results data

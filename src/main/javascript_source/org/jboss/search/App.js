@@ -113,6 +113,8 @@ org.jboss.search.App = function() {
     var author_filter_body_div  = /** @type {!HTMLDivElement} */ (goog.dom.getElement('author_filter'));
 
     var date_histogram_chart_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('date_histogram_chart'));
+    var date_filter_from_field = /** @type {!HTMLInputElement} */ (goog.dom.getElement('date_filter_from_field'));
+    var date_filter_to_field = /** @type {!HTMLInputElement} */ (goog.dom.getElement('date_filter_to_field'));
 
     var project_filter_query_field = /** @type {!HTMLInputElement} */ (goog.dom.getElement('project_filter_query_field'));
     var author_filter_query_field  = /** @type {!HTMLInputElement} */ (goog.dom.getElement('author_filter_query_field'));
@@ -165,7 +167,7 @@ org.jboss.search.App = function() {
             token.push([p_.TO,goog.string.urlEncode(to_)].join(''));
         }
 
-        // is log was used in previous call, keep it
+        // if log was used in previous call, keep it
         /** @type {org.jboss.search.context.RequestParams} */
         var requestParams_ = org.jboss.search.util.fragmentParser.parse(history.getToken());
         var log = requestParams_.getLog();
@@ -180,7 +182,7 @@ org.jboss.search.App = function() {
         query_field, spinner_div, clear_query_div, query_suggestions_div,
         date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
-        date_histogram_chart_div,
+        date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
         project_filter_query_field, author_filter_query_field,
         search_results_div
     );
@@ -323,6 +325,8 @@ org.jboss.search.App = function() {
             var dateFilter = new org.jboss.search.page.filter.DateFilter(
                 searchPageElements.getDate_filter_body_div(),
                 searchPageElements.getDate_histogram_chart_div(),
+                searchPageElements.getDate_filter_from_field(),
+                searchPageElements.getDate_filter_to_field(),
                 function() { return goog.dom.classes.has(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN) },
                 function() {
                     goog.dom.classes.add(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);

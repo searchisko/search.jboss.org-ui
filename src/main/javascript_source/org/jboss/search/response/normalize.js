@@ -122,7 +122,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             // ==========================================
             hit.position_on_page = i;
 
-            var fields = hit.fields;
+            var fields = hit.fields || {};
 
             // ==========================================
             // Contributors
@@ -204,7 +204,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                 }
             }
 
-            var highlights = hit.highlight;
+            var highlights = hit.highlight || {};
 
             // ==========================================
             // normalizeSpaces in highlighted content_plaintext

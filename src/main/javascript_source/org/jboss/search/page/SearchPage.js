@@ -114,10 +114,17 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
                 case org.jboss.search.service.QueryServiceEventType.SEARCH_START:
                     var metadata_ = event.getMetadata();
-                    var query_string_ = metadata_["query_string"];
-                    this.log_.info("Search for ["+query_string_+"] started. Query to ["+metadata_["query_url_string"]+"]");
-                    this.setUserQuery_(query_string_);
+                    /** @type {org.jboss.search.context.RequestParams} */
+                    var requestParams_ = metadata_["requestParams"];
+                    this.log_.info("Search for ["+requestParams_.getQueryString()+"] started. Query to ["+metadata_["query_url_string"]+"]");
+                    this.setUserQuery_(requestParams_.getQueryString());
                     this.disableSearchResults_();
+                    // update date filter fields in date filter
+                    var filter = org.jboss.search.LookUp.getInstance().getDateFilter();
+                    if (goog.isDefAndNotNull(filter)) {
+                        filter.setFromDate(requestParams_.getFrom());
+                        filter.setToDate(requestParams_.getTo());
+                    }
                     break;
 
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED:
@@ -135,7 +142,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 //                    console.log("response > ",response);
                     this.log_.info("Search succeeded, took " + response["took"] + "ms, uuid [" +response["uuid"] + "]");
                     org.jboss.search.LookUp.getInstance().setRecentQueryResultData(response);
-                    // refresh histogram chart only if filter expanded.
+                    // refresh histogram chart only if filter expanded
                     var filter = org.jboss.search.LookUp.getInstance().getDateFilter();
                     if (goog.isDefAndNotNull(filter)) { filter.refreshChart(false) }
                     this.renderQueryResponse_();
@@ -587,6 +594,10 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
             org.jboss.search.visualization.HistogramEventType.INTERVAL_SELECTED,
             goog.bind(function(e) {
                 var event = /** @type {org.jboss.search.visualization.IntervalSelected} */ (e);
+                // update dates in the web form
+                dateFilter.setFromDate(event.getFrom());
+                dateFilter.setToDate(event.getTo());
+                // if last, then fire an event
                 if (event.isLast()) {
                     var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
                     if (goog.isDefAndNotNull(rp)) {
@@ -600,6 +611,7 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
                 }
             }, this)
         );
+        // TODO: subscribe for manual updates of date filter fields
     }
 };
 

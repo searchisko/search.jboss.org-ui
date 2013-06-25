@@ -60,18 +60,18 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryAbort
  * Dispatches SEARCH_START event.
  * Event metadata format:
  * {
- *   query_string: "client query",
+ *   requestParams: {!org.jboss.search.context.RequestParams},
  *   url: "Request URL"
  * }
  *
- * @param {string} query_string
+ * @param {!org.jboss.search.context.RequestParams} requestParams
  * @param {string} query_url_string
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryStart = function(query_string, query_url_string) {
+org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryStart = function(requestParams, query_url_string) {
     var event = new org.jboss.search.service.QueryServiceEvent(
         org.jboss.search.service.QueryServiceEventType.SEARCH_START,
         {
-            query_string: query_string,
+            requestParams: requestParams,
             url: query_url_string
         }
     );

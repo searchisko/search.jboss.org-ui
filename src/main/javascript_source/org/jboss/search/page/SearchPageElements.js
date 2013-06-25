@@ -20,6 +20,7 @@
  * @fileoverview 'POJO' for all HTML elements that are required by the SearchPage.
  * The idea is that this object is passed into SearchPage constructor instead of listing
  * all the elements in the SearchPage constructor parameters.
+ * In other words all HTML elements must be constructed and located upfront by the "client".
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
@@ -40,6 +41,8 @@ goog.require('goog.Disposable');
  * @param {!HTMLDivElement}   project_filter_body_div
  * @param {!HTMLDivElement}   author_filter_body_div
  * @param {!HTMLDivElement}   date_histogram_chart_div
+ * @param {!HTMLInputElement} date_filter_from_field
+ * @param {!HTMLInputElement} date_filter_to_field
  * @param {!HTMLInputElement} project_filter_query_field
  * @param {!HTMLInputElement} author_filter_query_field
  * @param {!HTMLDivElement}   search_results_div
@@ -50,7 +53,7 @@ org.jboss.search.page.SearchPageElements = function(
     query_field, spinner_div, clear_query_div, query_suggestions_div,
     date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
     date_filter_body_div, project_filter_body_div, author_filter_body_div,
-    date_histogram_chart_div,
+    date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
     project_filter_query_field, author_filter_query_field,
     search_results_div
     ) {
@@ -68,6 +71,8 @@ org.jboss.search.page.SearchPageElements = function(
     /** @type {!HTMLDivElement}   */ this.project_filter_body_div = project_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.author_filter_body_div = author_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.date_histogram_chart_div = date_histogram_chart_div;
+    /** @type {!HTMLInputElement} */ this.date_filter_from_field = date_filter_from_field;
+    /** @type {!HTMLInputElement} */ this.date_filter_to_field = date_filter_to_field;
     /** @type {!HTMLInputElement} */ this.project_filter_query_field = project_filter_query_field;
     /** @type {!HTMLInputElement} */ this.author_filter_query_field = author_filter_query_field;
     /** @type {!HTMLDivElement}   */ this.search_results_div = search_results_div;
@@ -89,6 +94,8 @@ org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() 
     delete this.project_filter_body_div;
     delete this.author_filter_body_div;
     delete this.date_histogram_chart_div;
+    delete this.date_filter_from_field;
+    delete this.date_filter_to_field;
     delete this.project_filter_query_field;
     delete this.author_filter_query_field;
     delete this.search_results_div;
@@ -110,6 +117,8 @@ org.jboss.search.page.SearchPageElements.prototype.isValid = function() {
         && goog.isDefAndNotNull(this.project_filter_body_div)
         && goog.isDefAndNotNull(this.author_filter_body_div)
         && goog.isDefAndNotNull(this.date_histogram_chart_div)
+        && goog.isDefAndNotNull(this.date_filter_from_field)
+        && goog.isDefAndNotNull(this.date_filter_to_field)
         && goog.isDefAndNotNull(this.project_filter_query_field)
         && goog.isDefAndNotNull(this.author_filter_query_field)
         && goog.isDefAndNotNull(this.search_results_div)
@@ -168,6 +177,16 @@ org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_body_div = f
 /** @return {!HTMLDivElement} */
 org.jboss.search.page.SearchPageElements.prototype.getDate_histogram_chart_div = function() {
     return this.date_histogram_chart_div;
+};
+
+/** @return {!HTMLInputElement} */
+org.jboss.search.page.SearchPageElements.prototype.getDate_filter_from_field = function() {
+    return this.date_filter_from_field;
+};
+
+/** @return {!HTMLInputElement} */
+org.jboss.search.page.SearchPageElements.prototype.getDate_filter_to_field = function() {
+    return this.date_filter_to_field;
 };
 
 /** @return {!HTMLInputElement} */

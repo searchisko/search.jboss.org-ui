@@ -30,6 +30,7 @@
  * @interface
  */
 function QueryEventMetadata() {};
+QueryEventMetadata.prototype.requestParams;
 QueryEventMetadata.prototype.query_string;
 QueryEventMetadata.prototype.url;
 QueryEventMetadata.prototype.error;
