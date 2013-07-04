@@ -75,7 +75,7 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
     if (goog.isDef(opt_fields) && goog.isArray(opt_fields)) {
         rootUri.setParameterValues(params.FIELD, opt_fields)
     } else {
-        rootUri.setParameterValues(params.FIELD, ["dcp_type","dcp_id","dcp_title","dcp_contributors","dcp_project","dcp_project_name","dcp_description","dcp_tags","dcp_last_activity_date","dcp_url_view"])
+        rootUri.setParameterValues(params.FIELD, ["dcp_type","dcp_id","dcp_title","dcp_contributors","dcp_project","dcp_project_name","dcp_description","dcp_tags","dcp_last_activity_date","dcp_created","dcp_url_view"])
     }
 
     if (goog.isBoolean(opt_highlighting)) {

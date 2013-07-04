@@ -56,15 +56,15 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_ignored)
  * @notypecheck
  */
 org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
-  var output = '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(((opt_data.fields.dcp_contributors_view == null) ? null : (opt_data.fields.dcp_contributors_view[0] == null) ? null : opt_data.fields.dcp_contributors_view[0].gURL40) != null ? ((opt_data.fields.dcp_contributors_view == null) ? null : (opt_data.fields.dcp_contributors_view[0] == null) ? null : opt_data.fields.dcp_contributors_view[0].gURL40) : 'image/test/generic.png') + '"></p></div><div class="main">' + ((((opt_data.highlight == null) ? null : opt_data.highlight.dcp_title) != null) ? '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$filterNoAutoescape(opt_data.highlight.dcp_title) + '</a></div>' : '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_title) + '</a></div>') + '<div class="link cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date_parsed) + ' - </span>' + ((((opt_data.fields == null) ? null : opt_data.fields.dcp_project) != null) ? ((((opt_data.fields == null) ? null : opt_data.fields.dcp_project_full_name) != null) ? '<span class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project_full_name) : '<span class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project)) + ((((opt_data.fields == null) ? null : opt_data.fields.dcp_project) != null && ((opt_data.fields == null) ? null : opt_data.fields.dcp_type) != null) ? ' / ' : '') + '</span>' : '') + ((((opt_data.fields == null) ? null : opt_data.fields.dcp_type) != null) ? '<span class="dcp_type">' + soy.$$escapeHtml(opt_data.fields.dcp_type) + '</span>' : '');
+  var output = '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(((opt_data.fields.dcp_contributors_view == null) ? null : (opt_data.fields.dcp_contributors_view[0] == null) ? null : opt_data.fields.dcp_contributors_view[0].gURL40) != null ? ((opt_data.fields.dcp_contributors_view == null) ? null : (opt_data.fields.dcp_contributors_view[0] == null) ? null : opt_data.fields.dcp_contributors_view[0].gURL40) : 'image/test/generic.png') + '"></p></div><div class="main">' + ((((opt_data.highlight == null) ? null : opt_data.highlight.dcp_title) != null) ? '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$filterNoAutoescape(opt_data.highlight.dcp_title) + '</a></div>' : '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_title) + '</a></div>') + '<div class="link cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + ((opt_data.fields.dcp_created_parsed != null) ? soy.$$escapeHtml(opt_data.fields.dcp_created_parsed) + '&nbsp;-&nbsp;' : '') + soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date_parsed) + '&nbsp;- </span>' + ((((opt_data.fields == null) ? null : opt_data.fields.dcp_project) != null) ? ((((opt_data.fields == null) ? null : opt_data.fields.dcp_project_full_name) != null) ? '<span class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project_full_name) : '<span class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project)) + ((((opt_data.fields == null) ? null : opt_data.fields.dcp_project) != null && ((opt_data.fields == null) ? null : opt_data.fields.dcp_type) != null) ? ' / ' : '') + '</span>' : '') + ((((opt_data.fields == null) ? null : opt_data.fields.dcp_type) != null) ? '<span class="dcp_type">' + soy.$$escapeHtml(opt_data.fields.dcp_type) + '</span>' : '');
   if (((opt_data.highlight == null) ? null : opt_data.highlight.dcp_description) != null || ((opt_data.fields == null) ? null : opt_data.fields.dcp_description_tr) != null || ((opt_data.highlight == null) ? null : (opt_data.highlight.dcp_content_plaintext == null) ? null : opt_data.highlight.dcp_content_plaintext.length) > 0) {
     output += '<div class="description">';
     if (((opt_data.highlight == null) ? null : (opt_data.highlight.dcp_content_plaintext == null) ? null : opt_data.highlight.dcp_content_plaintext.length) > 0) {
-      var content_snippetList124 = opt_data.highlight.dcp_content_plaintext;
-      var content_snippetListLen124 = content_snippetList124.length;
-      for (var content_snippetIndex124 = 0; content_snippetIndex124 < content_snippetListLen124; content_snippetIndex124++) {
-        var content_snippetData124 = content_snippetList124[content_snippetIndex124];
-        output += soy.$$filterNoAutoescape(content_snippetData124) + '&nbsp;&hellip; ';
+      var content_snippetList128 = opt_data.highlight.dcp_content_plaintext;
+      var content_snippetListLen128 = content_snippetList128.length;
+      for (var content_snippetIndex128 = 0; content_snippetIndex128 < content_snippetListLen128; content_snippetIndex128++) {
+        var content_snippetData128 = content_snippetList128[content_snippetIndex128];
+        output += soy.$$filterNoAutoescape(content_snippetData128) + '&nbsp;&hellip; ';
       }
     } else if (((opt_data.highlight == null) ? null : opt_data.highlight.dcp_description) != null) {
       output += soy.$$filterNoAutoescape(opt_data.highlight.dcp_description);
@@ -75,32 +75,32 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
   }
   if (((opt_data.highlight == null) ? null : opt_data.highlight.comment_body) != null) {
     output += '<div class="children comments">Comments:<ul>';
-    var commentList139 = opt_data.highlight.comment_body;
-    var commentListLen139 = commentList139.length;
-    for (var commentIndex139 = 0; commentIndex139 < commentListLen139; commentIndex139++) {
-      var commentData139 = commentList139[commentIndex139];
-      output += '<li>' + soy.$$filterNoAutoescape(commentData139) + '&nbsp;&hellip;</li>';
+    var commentList143 = opt_data.highlight.comment_body;
+    var commentListLen143 = commentList143.length;
+    for (var commentIndex143 = 0; commentIndex143 < commentListLen143; commentIndex143++) {
+      var commentData143 = commentList143[commentIndex143];
+      output += '<li>' + soy.$$filterNoAutoescape(commentData143) + '&nbsp;&hellip;</li>';
     }
     output += '</ul></div>';
   }
   if (((opt_data.fields == null) ? null : (opt_data.fields.dcp_tags_view == null) ? null : opt_data.fields.dcp_tags_view.length) > 0) {
     output += '<div class="tags_list">Tags:';
-    var tagList149 = opt_data.fields.dcp_tags_view;
-    var tagListLen149 = tagList149.length;
-    for (var tagIndex149 = 0; tagIndex149 < tagListLen149; tagIndex149++) {
-      var tagData149 = tagList149[tagIndex149];
-      output += '<span> ' + soy.$$escapeHtml(tagData149) + ((! (tagIndex149 == tagListLen149 - 1)) ? ',' : '') + '</span>';
+    var tagList153 = opt_data.fields.dcp_tags_view;
+    var tagListLen153 = tagList153.length;
+    for (var tagIndex153 = 0; tagIndex153 < tagListLen153; tagIndex153++) {
+      var tagData153 = tagList153[tagIndex153];
+      output += '<span> ' + soy.$$escapeHtml(tagData153) + ((! (tagIndex153 == tagListLen153 - 1)) ? ',' : '') + '</span>';
     }
     output += '</div>';
   }
   output += '</div>';
   if (((opt_data.fields == null) ? null : opt_data.fields.dcp_contributors_view) != null) {
     output += '<div class="contributors_list">';
-    var cList162 = opt_data.fields.dcp_contributors_view;
-    var cListLen162 = cList162.length;
-    for (var cIndex162 = 0; cIndex162 < cListLen162; cIndex162++) {
-      var cData162 = cList162[cIndex162];
-      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex162) + '"><img src="' + soy.$$escapeHtml(cData162.gURL16) + '"></span>';
+    var cList166 = opt_data.fields.dcp_contributors_view;
+    var cListLen166 = cList166.length;
+    for (var cIndex166 = 0; cIndex166 < cListLen166; cIndex166++) {
+      var cData166 = cList166[cIndex166];
+      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex166) + '"><img src="' + soy.$$escapeHtml(cData166.gURL16) + '"></span>';
     }
     output += ((((opt_data.fields == null) ? null : opt_data.fields.dcp_contributors_view.length) > 0) ? '<span class="selected_contributor_name">&#8212; <span class="value">' + soy.$$escapeHtml(opt_data.fields.dcp_contributors_view[0].name) + '</span></span>' : '') + '</div>';
   }

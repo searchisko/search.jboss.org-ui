@@ -70,6 +70,7 @@ SearchHit.prototype.fields.dcp_tags;
 SearchHit.prototype.fields.dcp_title;
 SearchHit.prototype.fields.dcp_url_view;
 SearchHit.prototype.fields.dcp_last_activity_date;
+SearchHit.prototype.fields.dcp_created;
 SearchHit.prototype.fields.dcp_project;
 SearchHit.prototype.fields.dcp_type;
 SearchHit.prototype.fields.dcp_description;
@@ -82,6 +83,7 @@ SearchHit.prototype.fields.dcp_contributors_view.gURL40;    // computed or modif
 SearchHit.prototype.fields.dcp_project_full_name;           // computed or modified by normalize.js
 SearchHit.prototype.fields.dcp_description_tr;              // computed or modified by normalize.js
 SearchHit.prototype.fields.dcp_last_activity_date_parsed;   // computed or modified by normalize.js
+SearchHit.prototype.fields.dcp_created_parsed;              // computed or modified by normalize.js
 SearchHit.prototype.fields.dcp_tags_view;                   // computed or modified by normalize.js
 
 SearchHit.prototype.highlight;

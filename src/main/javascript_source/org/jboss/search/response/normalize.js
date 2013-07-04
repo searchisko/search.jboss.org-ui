@@ -46,6 +46,7 @@ goog.require('goog.memoize');
  */
 org.jboss.search.response.normalizeSearchResponse = function(response, requestParams) {
 
+//    console.log("response",response);
     var output = {};
 
     // ==========================================
@@ -204,18 +205,43 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                 }
             }
 
+            /** @type {goog.date.DateTime} */
+            var date_created = goog.object.containsKey(fields,'dcp_created') ? goog.date.fromIsoString(fields.dcp_created) : null;
+            /** @type {goog.date.DateTime} */
+            var date_last = goog.object.containsKey(fields,'dcp_last_activity_date') ? goog.date.fromIsoString(fields.dcp_last_activity_date) : null;
+
             // ==========================================
-            // Date parsing
+            // Date parsing - dcp_last_activity_date
             // ==========================================
-            if (goog.object.containsKey(fields,'dcp_last_activity_date')) {
+            if (goog.isDefAndNotNull(date_last)) {
                 try {
-                /** @type {goog.date.DateTime} */ var date = goog.date.fromIsoString(fields.dcp_last_activity_date);
                 fields.dcp_last_activity_date_parsed =
                     [
                         // TODO: format according to browser locale
-                        [date.getUTCFullYear(),date.getUTCMonth()+1,date.getUTCDate()].join('-'),
-                        date.toUsTimeString(false, true, true)
+                        [date_last.getUTCFullYear(),date_last.getUTCMonth()+1,date_last.getUTCDate()].join('-'),
+                        date_last.toUsTimeString(false, true, true)
                     ].join(', ');
+                } catch(e) {
+                    // TODO: add logging!
+                    // date parsing probably failed
+                }
+            }
+
+            // ==========================================
+            // Date parsing - dcp_created
+            // ==========================================
+            if (goog.isDefAndNotNull(date_created)) {
+                try {
+                    if (goog.isDateLike(date_last)) {
+                        if (!date_created.equals(date_last)) {
+                            fields.dcp_created_parsed =
+                                [
+                                    // TODO: format according to browser locale
+                                    [date_created.getUTCFullYear(),date_created.getUTCMonth()+1,date_created.getUTCDate()].join('-'),
+                                    date_created.toUsTimeString(false, true, true)
+                                ].join(', ');
+                        }
+                    }
                 } catch(e) {
                     // TODO: add logging!
                     // date parsing probably failed
@@ -253,7 +279,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             }
         })
     }
-//    console.log(output);
+//    console.log("output",output);
     return output;
 };
 

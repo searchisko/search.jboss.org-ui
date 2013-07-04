@@ -43,7 +43,7 @@ var testSearchUrlGenerator = function() {
             [
                 "query",
                 "field=dcp_type", "field=dcp_id", "field=dcp_title", "field=dcp_contributors", "field=dcp_project",
-                "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_url_view",
+                "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_created", "field=dcp_url_view",
                 "query_highlight=true",
                 "facet=per_project_counts", "facet=per_dcp_type_counts", "facet=activity_dates_histogram"
             ].join('&')
@@ -60,7 +60,7 @@ var testSearchUrlGenerator = function() {
             [
                 "query=%20",
                 "field=dcp_type", "field=dcp_id", "field=dcp_title", "field=dcp_contributors", "field=dcp_project",
-                "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_url_view",
+                "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_created", "field=dcp_url_view",
                 "query_highlight=true",
                 "facet=per_project_counts", "facet=per_dcp_type_counts", "facet=activity_dates_histogram"
             ].join('&')
@@ -77,7 +77,7 @@ var testSearchUrlGenerator = function() {
             [
                 "query=dummy",
                 "field=dcp_type", "field=dcp_id", "field=dcp_title", "field=dcp_contributors", "field=dcp_project",
-                "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_url_view",
+                "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_created", "field=dcp_url_view",
                 "query_highlight=true",
                 "facet=per_project_counts", "facet=per_dcp_type_counts", "facet=activity_dates_histogram"
             ].join('&')
@@ -94,7 +94,7 @@ var testSearchUrlGenerator = function() {
             [
                 "query=dummy",
                 "field=dcp_type", "field=dcp_id", "field=dcp_title", "field=dcp_contributors", "field=dcp_project",
-                "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_url_view",
+                "field=dcp_project_name", "field=dcp_description", "field=dcp_tags", "field=dcp_last_activity_date", "field=dcp_created", "field=dcp_url_view",
                 "query_highlight=true",
                 "facet=per_project_counts", "facet=per_dcp_type_counts", "facet=activity_dates_histogram",
                 "from=190"

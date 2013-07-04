@@ -73,7 +73,7 @@
                 {/if}
                 <div class="link cs_" hn_="{$position_on_page}"><a href="{$fields.dcp_url_view}">{$fields.dcp_url_view_tr}</a></div>
                 <div class="snippet">
-                    <span class="date">{$fields.dcp_last_activity_date_parsed} - </span>
+                    <span class="date">{if isNonnull($fields.dcp_created_parsed)}{$fields.dcp_created_parsed}&nbsp;-&nbsp;{/if}{$fields.dcp_last_activity_date_parsed}&nbsp;- </span>
                     {if isNonnull($fields?.dcp_project)}
                         {if isNonnull($fields?.dcp_project_full_name)}
                             <span class="dcp_project">{$fields.dcp_project_full_name}
