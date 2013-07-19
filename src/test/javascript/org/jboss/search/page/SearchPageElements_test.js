@@ -59,6 +59,7 @@ var testValidParameters = function() {
     var date_filter_tab_div    = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
     var author_filter_tab_div  = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
     var project_filter_tab_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var date_order             = /** @type {!HTMLSelectElement} */ goog.dom.createDom('select', null);
 
     var project_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
     var author_filter_query_field  = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
@@ -70,6 +71,7 @@ var testValidParameters = function() {
         date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
         date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
+        date_order,
         project_filter_query_field, author_filter_query_field,
         search_results_div
     );

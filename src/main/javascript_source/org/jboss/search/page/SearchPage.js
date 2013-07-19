@@ -38,6 +38,7 @@ goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.page.event.QuerySubmitted');
 goog.require('org.jboss.search.service.QueryServiceEventType');
 goog.require('org.jboss.search.visualization.HistogramEventType');
+goog.require('org.jboss.search.page.filter.DateFilterEventType');
 
 goog.require('goog.async.Delay');
 goog.require('goog.dom');
@@ -124,6 +125,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     if (goog.isDefAndNotNull(filter)) {
                         filter.setFromDate(requestParams_.getFrom());
                         filter.setToDate(requestParams_.getTo());
+                        filter.setOrder(requestParams_.getOrder());
                     }
                     break;
 
@@ -218,12 +220,20 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     );
 
     /**
-     * Listener ID, this listener handles events from date filter. It is initiated later.
+     * Listener ID, this listener is invoked when date filter interval is changed.
      * Client needs to remember that this listener can be initiated only after the date filter has been instantiated!
      * @type {?number}
      * @private
      */
     this.dateFilterIntervalSelectedId_;
+
+    /**
+     * Listener ID, this listener is invoked when date orderBy value is changed.
+     * Client needs to remember that this listener can be initiated only after the date filter has been instantiated!
+     * @type {?number}
+     * @private
+     */
+    this.dateOrderByChangedId_;
 
     /**
      * @type {?number}
@@ -547,6 +557,9 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     if (goog.isDefAndNotNull(this.dateFilterIntervalSelectedId_)) {
         goog.events.unlistenByKey(this.dateFilterIntervalSelectedId_);
     }
+    if (goog.isDefAndNotNull(this.dateOrderByChangedId_)) {
+        goog.events.unlistenByKey(this.dateOrderByChangedId_);
+    }
 
     // Remove references to COM objects.
 
@@ -588,22 +601,50 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
     if (goog.isDefAndNotNull(this.dateFilterIntervalSelectedId_)) {
         goog.events.unlistenByKey(this.dateFilterIntervalSelectedId_);
     }
-    if (goog.isDefAndNotNull(dateFilter) && goog.isDefAndNotNull(dateFilter.getHistogramChart())) {
-        this.dateFilterIntervalSelectedId_ = goog.events.listen(
-            dateFilter.getHistogramChart(),
-            org.jboss.search.visualization.HistogramEventType.INTERVAL_SELECTED,
-            goog.bind(function(e) {
-                var event = /** @type {org.jboss.search.visualization.IntervalSelected} */ (e);
-                // update dates in the web form
-                dateFilter.setFromDate(event.getFrom());
-                dateFilter.setToDate(event.getTo());
-                // if last, then fire an event
-                if (event.isLast()) {
+    if (goog.isDefAndNotNull(this.dateOrderByChangedId_)) {
+        goog.events.unlistenByKey(this.dateOrderByChangedId_);
+    }
+
+    if (goog.isDefAndNotNull(dateFilter)) {
+
+        // register listener on date filter interval changes caused by histogram chart brush
+        if (goog.isDefAndNotNull(dateFilter.getHistogramChart())) {
+            this.dateFilterIntervalSelectedId_ = goog.events.listen(
+                dateFilter.getHistogramChart(),
+                org.jboss.search.visualization.HistogramEventType.INTERVAL_SELECTED,
+                goog.bind(function(e) {
+                    var event = /** @type {org.jboss.search.visualization.IntervalSelected} */ (e);
+                    // update dates in the web form
+                    dateFilter.setFromDate(event.getFrom());
+                    dateFilter.setToDate(event.getTo());
+                    // if last, then fire an event
+                    if (event.isLast()) {
+                        var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
+                        if (goog.isDefAndNotNull(rp)) {
+                            // TODO: consider rounding 'from' and 'to' to hours or days (for monthly granular chart it makes little sense to use minutes...)
+                            // set 'page' to 1
+                            rp = rp.mixin(rp, undefined, 1, event.getFrom(), event.getTo());
+                            this.dispatchEvent(
+                                new org.jboss.search.page.event.QuerySubmitted(rp)
+                            );
+                        }
+                    }
+                }, this)
+            );
+            // TODO: subscribe for manual updates of date filter fields
+        }
+
+        // register listener on date orderBy changes
+        this.dateOrderByChangedId_ = goog.events.listen(
+            dateFilter,
+            org.jboss.search.page.filter.DateFilterEventType.DATE_ORDER_BY_CHANGED,
+            goog.bind(function(e){
+                var event = /** @type {org.jboss.search.page.filter.DateOrderByChanged} */ (e);
+                var orderBy = event.getOrderBy();
+                if (goog.isDefAndNotNull(orderBy)) {
                     var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
                     if (goog.isDefAndNotNull(rp)) {
-                        // TODO: consider rounding 'from' and 'to' to hours or days (for monthly granular chart it makes little sense to use minutes...)
-                        // set 'page' to 1
-                        rp = rp.mixin(rp, undefined, 1, event.getFrom(), event.getTo());
+                        rp = rp.mixin(rp, undefined, undefined, undefined, undefined, orderBy);
                         this.dispatchEvent(
                             new org.jboss.search.page.event.QuerySubmitted(rp)
                         );
@@ -611,7 +652,6 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
                 }
             }, this)
         );
-        // TODO: subscribe for manual updates of date filter fields
     }
 };
 

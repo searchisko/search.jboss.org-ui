@@ -16,16 +16,12 @@
  * limitations under the License.
  */
 
-/**
- * @fileoverview Event types for search page events.
- * @author Lukas Vlcek (lvlcek@redhat.com)
- */
+/*
+    ======================================================================
+    Overrides or setup z-index values from selected goog.css files.
+    ======================================================================
+*/
 
-goog.provide('org.jboss.search.page.event.EventType');
-
-goog.require('goog.events');
-
-/** @enum {string} */
-org.jboss.search.page.event.EventType = {
-    QUERY_SUBMITTED : goog.events.getUniqueId('query_submitted')
-};
+.goog-date-picker {
+    z-index: 30;
+}

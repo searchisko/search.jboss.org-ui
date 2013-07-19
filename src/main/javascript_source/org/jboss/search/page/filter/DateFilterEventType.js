@@ -17,15 +17,15 @@
  */
 
 /**
- * @fileoverview Event types for search page events.
+ * @fileoverview
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.page.event.EventType');
+goog.provide('org.jboss.search.page.filter.DateFilterEventType');
 
 goog.require('goog.events');
 
 /** @enum {string} */
-org.jboss.search.page.event.EventType = {
-    QUERY_SUBMITTED : goog.events.getUniqueId('query_submitted')
+org.jboss.search.page.filter.DateFilterEventType = {
+    DATE_ORDER_BY_CHANGED : goog.events.getUniqueId('date_order_by_changed')
 };

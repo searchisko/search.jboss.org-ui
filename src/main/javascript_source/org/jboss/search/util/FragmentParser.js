@@ -27,8 +27,10 @@ goog.provide('org.jboss.search.util.fragmentParser.UI_param_suffix');
 goog.provide('org.jboss.search.util.fragmentParser.INTERNAL_param');
 
 goog.require('org.jboss.search.context.RequestParams');
+goog.require('org.jboss.search.context.RequestParams.Order');
 
 goog.require('goog.array');
+goog.require('goog.object');
 goog.require('goog.string');
 goog.require('goog.date');
 goog.require('goog.date.DateTime');
@@ -38,11 +40,12 @@ goog.require('goog.date.DateTime');
  * @enum {string}
  */
 org.jboss.search.util.fragmentParser.INTERNAL_param = {
-    QUERY: "query",
-    PAGE : "page",
-    FROM : "from",
-    TO   : "to",
-    LOG  : "log"
+    QUERY : "query",
+    PAGE  : "page",
+    FROM  : "from",
+    TO    : "to",
+    SORT_BY : "sortBy",
+    LOG   : "log"
 };
 
 /**
@@ -50,11 +53,12 @@ org.jboss.search.util.fragmentParser.INTERNAL_param = {
  * @enum {string}
  */
 org.jboss.search.util.fragmentParser.UI_param = {
-    QUERY: "q",
-    PAGE : "page",
-    FROM : "from",
-    TO   : "to",
-    LOG  : "log"
+    QUERY : "q",
+    PAGE  : "page",
+    FROM  : "from",
+    TO    : "to",
+    SORT_BY : "sortBy",
+    LOG   : "log"
 };
 
 /**
@@ -62,11 +66,12 @@ org.jboss.search.util.fragmentParser.UI_param = {
  * @enum {string}
  */
 org.jboss.search.util.fragmentParser.UI_param_suffix = {
-    QUERY: org.jboss.search.util.fragmentParser.UI_param.QUERY+"=",
-    PAGE : org.jboss.search.util.fragmentParser.UI_param.PAGE+"=",
-    FROM : org.jboss.search.util.fragmentParser.UI_param.FROM+"=",
-    TO   : org.jboss.search.util.fragmentParser.UI_param.TO+"=",
-    LOG  : org.jboss.search.util.fragmentParser.UI_param.LOG+"="
+    QUERY : org.jboss.search.util.fragmentParser.UI_param.QUERY+"=",
+    PAGE  : org.jboss.search.util.fragmentParser.UI_param.PAGE+"=",
+    FROM  : org.jboss.search.util.fragmentParser.UI_param.FROM+"=",
+    TO    : org.jboss.search.util.fragmentParser.UI_param.TO+"=",
+    SORT_BY : org.jboss.search.util.fragmentParser.UI_param.SORT_BY+"=",
+    LOG   : org.jboss.search.util.fragmentParser.UI_param.LOG+"="
 };
 
 /**
@@ -136,6 +141,19 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
                     // TODO: log?
                 }
             } else
+            // ------------------- SORT_BY ----------------------
+            if (goog.string.caseInsensitiveStartsWith(part, p_.SORT_BY)) {
+                var sortBy_ = goog.string.trim(
+                    goog.string.urlDecode(
+                        goog.string.removeAt(part, 0, p_.SORT_BY.length)
+                    )
+                    ).toLowerCase();
+                // sortBy should NOT equals to {@link org.jboss.search.context.RequestParams.Order.SCORE}
+                if (goog.object.containsValue(org.jboss.search.context.RequestParams.Order, sortBy_) &&
+                    sortBy_ != org.jboss.search.context.RequestParams.Order.SCORE) {
+                    parsed[intp_.SORT_BY] = sortBy_;
+                }
+            } else
             // ------------------- LOG ----------------------
             if (goog.string.caseInsensitiveStartsWith(part, p_.LOG)) {
                 var l_ = goog.string.trim(
@@ -154,6 +172,7 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
         parsed[intp_.PAGE],
         parsed[intp_.FROM],
         parsed[intp_.TO],
+        parsed[intp_.SORT_BY],
         parsed[intp_.LOG]
     );
 };

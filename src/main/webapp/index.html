@@ -21,6 +21,11 @@
     <link rel="stylesheet" href="css/search_visualization_histogram.css">
     <link rel="stylesheet" href="css/search_log.css">
 
+    <!-- Closure Tools CSS -->
+    <link rel="stylesheet" href="css/goog/css/datepicker.css">
+    <link rel="stylesheet" href="css/goog/css/popupdatepicker.css">
+    <link rel="stylesheet" href="css/goog/goog.ui.z-index.override.css">
+
     <title>Search JBoss Community</title>
 
 </head>
@@ -82,10 +87,10 @@
             To <input id="date_filter_to_field" type="text" autocomplete="off" spellcheck="false">
 
             <hr size=1>
-            Results sort by <select>
-                <option>relevancy</option>
-                <option>newest first</option>
-                <option>oldest first</option>
+            Results sort by <select id="date_order">
+                <option value="score">relevancy</option>
+                <option value="new_first">newest first</option>
+                <option value="old_first">oldest first</option>
             </select>
         </div>
     </div>

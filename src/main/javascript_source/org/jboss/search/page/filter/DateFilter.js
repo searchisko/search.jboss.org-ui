@@ -25,30 +25,42 @@ goog.provide('org.jboss.search.page.filter.DateFilter');
 
 goog.require('org.jboss.search.visualization.Histogram');
 goog.require('org.jboss.search.LookUp');
+goog.require('org.jboss.search.context.RequestParams.Order');
+goog.require('org.jboss.search.page.filter.DateOrderByChanged');
 
+goog.require('goog.object');
+goog.require('goog.date.Date');
 goog.require('goog.date.DateTime');
 goog.require('goog.dom');
+goog.require('goog.dom.forms');
 goog.require('goog.events');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.events.KeyHandler.EventType');
 goog.require('goog.array');
-goog.require('goog.Disposable');
+goog.require('goog.i18n.DateTimeFormat');
+goog.require('goog.i18n.DateTimeParse');
+goog.require('goog.ui.InputDatePicker');
+// needed to fix missing deps declaration in inputdatepicker.js file?
+goog.require('goog.ui.LabelInput');
+goog.require('goog.events.EventTarget');
 
 /**
+ * Create a new instance of Date Filter. Initialize histogaram chart and date pickers.
  *
  * @param {!HTMLElement} element to host the date filter
  * @param {!HTMLElement} date_histogram_element to host the date histogram chart
  * @param {!HTMLInputElement} date_from_field
  * @param {!HTMLInputElement} date_to_field
+ * @param {!HTMLSelectElement} order_by_select_element
  * @param {function(): boolean} opt_isCollapsed a function that is used to learn if filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
- * @extends {goog.Disposable}
+ * @extends {goog.events.EventTarget}
  */
 org.jboss.search.page.filter.DateFilter = function(element, date_histogram_element, date_from_field, date_to_field,
-                                                   opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
-    goog.Disposable.call(this);
+                                       order_by_select_element, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
+    goog.events.EventTarget.call(this);
 
     /**
      * @type {HTMLElement}
@@ -73,6 +85,12 @@ org.jboss.search.page.filter.DateFilter = function(element, date_histogram_eleme
      * @private
      */
     this.date_to_field_ = date_to_field;
+
+    /**
+     * @type {HTMLSelectElement}
+     * @private
+     */
+    this.order_by_select_element_ = order_by_select_element;
 
     /**
      * @type {!Function}
@@ -103,9 +121,14 @@ org.jboss.search.page.filter.DateFilter = function(element, date_histogram_eleme
         goog.bind(function(e) {
             var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
             if (!keyEvent.repeat) {
-                if (!this.isCollapsed_()) {
-                    if (keyEvent.keyCode == goog.events.KeyCodes.ESC) {
-//                        keyEvent.preventDefault();
+                if (keyEvent.keyCode == goog.events.KeyCodes.ESC) {
+                    if (e.target.id == this.date_from_field_.id && this.fromDatePicker_.popupDatePicker_.popup_.isVisible_) {
+                        this.fromDatePicker_.hidePopup();
+                    } else if (e.target.id == this.date_to_field_.id && this.toDatePicker_.popupDatePicker_.popup_.isVisible_) {
+                        this.toDatePicker_.hidePopup();
+                    } else if (!this.isCollapsed_()) {
+                        this.fromDatePicker_.hidePopup();
+                        this.toDatePicker_.hidePopup();
                         this.collapseFilter();
                     }
                 }
@@ -114,13 +137,78 @@ org.jboss.search.page.filter.DateFilter = function(element, date_histogram_eleme
     );
 
     /**
+     * Create and init the chart.
      * @type {org.jboss.search.visualization.Histogram}
      * @private
      */
     this.histogram_chart_ = new org.jboss.search.visualization.Histogram(this.date_histogram_element_);
-    this.histogram_chart_.initialize('histogram', 420, 200); // TODO add size to configuration
+    this.histogram_chart_.initialize('histogram', 420, 200); // TODO add size to search app configuration
+
+    /**
+     * Create and init input date pickers
+     */
+    this.PATTERN_ = "MM'/'dd'/'yyyy"; // TODO get local?
+    this.formatter_ = new goog.i18n.DateTimeFormat(this.PATTERN_);
+    this.parser_ = new goog.i18n.DateTimeParse(this.PATTERN_);
+
+    this.fromDatePicker_ = new goog.ui.InputDatePicker(this.formatter_, this.parser_);
+    this.fromDatePicker_.setPopupParentElement(this.element_);
+    this.fromDatePicker_.decorate(this.date_from_field_);
+
+    this.toDatePicker_ = new goog.ui.InputDatePicker(this.formatter_, this.parser_);
+    this.toDatePicker_.setPopupParentElement(this.element_);
+    this.toDatePicker_.decorate(this.date_to_field_);
+
+    // Listen for changes of FROM date
+    this.fromDateChangedListenerId_ = goog.events.listen(
+        this.fromDatePicker_.getDatePicker(),
+        goog.ui.DatePicker.Events.CHANGE,
+        goog.bind(function(e) {
+            var event = /** @type {goog.ui.DatePickerEvent} */ (e);
+            var nd = event.date;
+//            var od = org.jboss.search.LookUp.getInstance().getRequestParams().getFrom();
+//            console.log("from nd, od", nd, od);
+//            if (
+//                    (!goog.isDefAndNotNull(od) && goog.isDefAndNotNull(nd)) ||
+//                    (goog.isDefAndNotNull(od) && !goog.isDefAndNotNull(nd)) ||
+//                    (goog.isDefAndNotNull(od) && goog.isDefAndNotNull(nd) && (goog.date.Date.compare(nd,od) != 0))
+//                ){
+//                console.log("FROM changed", nd);
+//            }
+        }, this)
+    );
+
+    // Listen for changes of TO date
+    this.toDateChangedListenerId_ = goog.events.listen(
+        this.toDatePicker_.getDatePicker(),
+        goog.ui.DatePicker.Events.CHANGE,
+        goog.bind(function(e) {
+            var event = /** @type {goog.ui.DatePickerEvent} */ (e);
+            var nd = event.date;
+//            var od = org.jboss.search.LookUp.getInstance().getRequestParams().getTo();
+//            console.log("to nd, od", nd, od);
+//            if (
+//                (!goog.isDefAndNotNull(od) && goog.isDefAndNotNull(nd)) ||
+//                    (goog.isDefAndNotNull(od) && !goog.isDefAndNotNull(nd)) ||
+//                    (goog.isDefAndNotNull(od) && goog.isDefAndNotNull(nd) && (goog.date.Date.compare(nd,od) != 0))
+//                ){
+//                console.log("TO changed", nd);
+//            }
+        }, this)
+    );
+
+    // Listen for changes in search results order
+    this.resultsOrderListenerId_ = goog.events.listen(
+        this.order_by_select_element_,
+        goog.events.EventType.CHANGE,
+        goog.bind(function(e) {
+            var event = /** @type {goog.events.Event} */ (e);
+            var selected_order = event.target.value;
+            this.dispatchEvent(new org.jboss.search.page.filter.DateOrderByChanged(selected_order));
+        }, this)
+    );
 };
-goog.inherits(org.jboss.search.page.filter.DateFilter, goog.Disposable);
+goog.inherits(org.jboss.search.page.filter.DateFilter, goog.events.EventTarget);
 
 /** @inheritDoc */
 org.jboss.search.page.filter.DateFilter.prototype.disposeInternal = function() {
@@ -128,13 +216,19 @@ org.jboss.search.page.filter.DateFilter.prototype.disposeInternal = function() {
 
     goog.dispose(this.histogram_chart_);
     goog.dispose(this.keyHandler_);
+    goog.dispose(this.fromDatePicker_);
+    goog.dispose(this.toDatePicker_);
 
     goog.events.unlistenByKey(this.keyListenerId_);
+    goog.events.unlistenByKey(this.fromDateChangedListenerId_);
+    goog.events.unlistenByKey(this.toDateChangedListenerId_);
+    goog.events.unlistenByKey(this.resultsOrderListenerId_);
 
     this.element_ = null;
     this.date_histogram_element_ = null;
     this.date_from_field_ = null;
     this.date_to_field_ = null;
+    this.order_by_select_element_ = null;
     delete this.expandFilter_;
     delete this.collpaseFilter_;
     delete this.isCollapsed_;
@@ -206,9 +300,9 @@ org.jboss.search.page.filter.DateFilter.prototype.getHistogramChart = function()
  */
 org.jboss.search.page.filter.DateFilter.prototype.setFromDate = function(from) {
     if (goog.isDateLike(from)) {
-        this.date_from_field_.value = from.toXmlDateTime(false).replace(/T/," ");
+        this.fromDatePicker_.setDate(new goog.date.Date(from));
     } else {
-        this.date_from_field_.value = "";
+        this.fromDatePicker_.setDate(null);
     }
 };
 
@@ -218,8 +312,22 @@ org.jboss.search.page.filter.DateFilter.prototype.setFromDate = function(from) {
  */
 org.jboss.search.page.filter.DateFilter.prototype.setToDate = function(to) {
     if (goog.isDateLike(to)) {
-        this.date_to_field_.value = to.toXmlDateTime(false).replace(/T/," ");
+        this.toDatePicker_.setDate(new goog.date.Date(to));
     } else {
-        this.date_to_field_.value = "";
+        this.toDatePicker_.setDate(null);
+    }
+};
+
+/**
+ * Set appropriate order type in the <code>select</code> element.
+ * @param {org.jboss.search.context.RequestParams.Order|undefined} order
+ * {@see org.jboss.search.context.RequestParams.Order}
+ */
+org.jboss.search.page.filter.DateFilter.prototype.setOrder = function(order) {
+    if (!goog.isDef(order)) {
+        // default
+        goog.dom.forms.setValue(this.order_by_select_element_, org.jboss.search.context.RequestParams.Order.SCORE);
+    } else {
+        goog.dom.forms.setValue(this.order_by_select_element_, order);
     }
 };

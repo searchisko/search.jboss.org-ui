@@ -33,6 +33,7 @@ goog.require('org.jboss.search.service.QueryServiceXHR');
 goog.require('org.jboss.search.service.QueryServiceCached');
 goog.require('org.jboss.search.InitDeferred');
 goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.search.context.RequestParams.Order');
 
 goog.require('goog.async.Deferred');
 goog.require('goog.events');
@@ -115,6 +116,7 @@ org.jboss.search.App = function() {
     var date_histogram_chart_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('date_histogram_chart'));
     var date_filter_from_field = /** @type {!HTMLInputElement} */ (goog.dom.getElement('date_filter_from_field'));
     var date_filter_to_field = /** @type {!HTMLInputElement} */ (goog.dom.getElement('date_filter_to_field'));
+    var date_order = /** @type {!HTMLSelectElement} */ (goog.dom.getElement('date_order'));
 
     var project_filter_query_field = /** @type {!HTMLInputElement} */ (goog.dom.getElement('project_filter_query_field'));
     var author_filter_query_field  = /** @type {!HTMLInputElement} */ (goog.dom.getElement('author_filter_query_field'));
@@ -150,21 +152,28 @@ org.jboss.search.App = function() {
         // always use query
         var token = [[p_.QUERY,goog.string.urlEncode(requestParams.getQueryString())].join('')];
 
-        // use page is provided and greater then 1
+        // use 'page' is provided and greater then 1
         if (goog.isDefAndNotNull(requestParams.getPage()) && requestParams.getPage() > 1) {
             token.push([p_.PAGE,goog.string.urlEncode(requestParams.getPage())].join(''));
         }
 
-        // use From if available
+        // use 'from' if available
         if (goog.isDefAndNotNull(requestParams.getFrom()) && goog.isDateLike(requestParams.getFrom())) {
             var from_ = requestParams.getFrom().toXmlDateTime(true);
             token.push([p_.FROM,goog.string.urlEncode(from_)].join(''));
         }
 
-        // use To if available
+        // use 'to' if available
         if (goog.isDefAndNotNull(requestParams.getTo()) && goog.isDateLike(requestParams.getTo())) {
             var to_ = requestParams.getTo().toXmlDateTime(true);
             token.push([p_.TO,goog.string.urlEncode(to_)].join(''));
+        }
+
+        // use 'order' if available and NOT equals to {@link org.jboss.search.context.RequestParams.Order.SCORE}
+        if (goog.isDefAndNotNull(requestParams.getOrder())) {
+            if (requestParams.getOrder() != org.jboss.search.context.RequestParams.Order.SCORE) {
+                token.push([p_.SORT_BY,goog.string.urlEncode(requestParams.getOrder())].join(''));
+            }
         }
 
         // if log was used in previous call, keep it
@@ -183,6 +192,7 @@ org.jboss.search.App = function() {
         date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
         date_filter_body_div, project_filter_body_div, author_filter_body_div,
         date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
+        date_order,
         project_filter_query_field, author_filter_query_field,
         search_results_div
     );
@@ -327,6 +337,7 @@ org.jboss.search.App = function() {
                 searchPageElements.getDate_histogram_chart_div(),
                 searchPageElements.getDate_filter_from_field(),
                 searchPageElements.getDate_filter_to_field(),
+                searchPageElements.getDate_order(),
                 function() { return goog.dom.classes.has(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN) },
                 function() {
                     goog.dom.classes.add(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
