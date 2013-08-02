@@ -220,11 +220,11 @@
     padding: 6px 0 0 0;
 }
 
-.hit > .main > .snippet > .dcp_project {
+.hit > .main > .snippet > .sys_project {
     /*float: left;*/
 }
 
-.hit > .main > .snippet > .dcp_type {
+.hit > .main > .snippet > .sys_type {
     /*float: left;*/
 }
 

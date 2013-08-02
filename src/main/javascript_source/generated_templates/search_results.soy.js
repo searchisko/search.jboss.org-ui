@@ -56,20 +56,20 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_ignored)
  * @notypecheck
  */
 org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
-  var output = '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(((opt_data.fields.dcp_contributors_view == null) ? null : (opt_data.fields.dcp_contributors_view[0] == null) ? null : opt_data.fields.dcp_contributors_view[0].gURL40) != null ? ((opt_data.fields.dcp_contributors_view == null) ? null : (opt_data.fields.dcp_contributors_view[0] == null) ? null : opt_data.fields.dcp_contributors_view[0].gURL40) : 'image/test/generic.png') + '"></p></div><div class="main">' + ((((opt_data.highlight == null) ? null : opt_data.highlight.dcp_title) != null) ? '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$filterNoAutoescape(opt_data.highlight.dcp_title) + '</a></div>' : '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_title) + '</a></div>') + '<div class="link cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.dcp_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.dcp_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + ((opt_data.fields.dcp_created_parsed != null) ? soy.$$escapeHtml(opt_data.fields.dcp_created_parsed) + '&nbsp;-&nbsp;' : '') + soy.$$escapeHtml(opt_data.fields.dcp_last_activity_date_parsed) + '&nbsp;- </span>' + ((((opt_data.fields == null) ? null : opt_data.fields.dcp_project) != null) ? ((((opt_data.fields == null) ? null : opt_data.fields.dcp_project_full_name) != null) ? '<span class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project_full_name) : '<span class="dcp_project">' + soy.$$escapeHtml(opt_data.fields.dcp_project)) + ((((opt_data.fields == null) ? null : opt_data.fields.dcp_project) != null && ((opt_data.fields == null) ? null : opt_data.fields.dcp_type) != null) ? ' / ' : '') + '</span>' : '') + ((((opt_data.fields == null) ? null : opt_data.fields.dcp_type) != null) ? '<span class="dcp_type">' + soy.$$escapeHtml(opt_data.fields.dcp_type) + '</span>' : '');
-  if (((opt_data.highlight == null) ? null : opt_data.highlight.dcp_description) != null || ((opt_data.fields == null) ? null : opt_data.fields.dcp_description_tr) != null || ((opt_data.highlight == null) ? null : (opt_data.highlight.dcp_content_plaintext == null) ? null : opt_data.highlight.dcp_content_plaintext.length) > 0) {
+  var output = '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(((opt_data.fields.sys_contributors_view == null) ? null : (opt_data.fields.sys_contributors_view[0] == null) ? null : opt_data.fields.sys_contributors_view[0].gURL40) != null ? ((opt_data.fields.sys_contributors_view == null) ? null : (opt_data.fields.sys_contributors_view[0] == null) ? null : opt_data.fields.sys_contributors_view[0].gURL40) : 'image/test/generic.png') + '"></p></div><div class="main">' + ((((opt_data.highlight == null) ? null : opt_data.highlight.sys_title) != null) ? '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.sys_url_view) + '">' + soy.$$filterNoAutoescape(opt_data.highlight.sys_title) + '</a></div>' : '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.sys_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.sys_title) + '</a></div>') + '<div class="link cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.sys_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.sys_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + ((opt_data.fields.sys_created_parsed != null) ? soy.$$escapeHtml(opt_data.fields.sys_created_parsed) + '&nbsp;-&nbsp;' : '') + soy.$$escapeHtml(opt_data.fields.sys_last_activity_date_parsed) + '&nbsp;- </span>' + ((((opt_data.fields == null) ? null : opt_data.fields.sys_project) != null) ? ((((opt_data.fields == null) ? null : opt_data.fields.sys_project_full_name) != null) ? '<span class="sys_project">' + soy.$$escapeHtml(opt_data.fields.sys_project_full_name) : '<span class="sys_project">' + soy.$$escapeHtml(opt_data.fields.sys_project)) + ((((opt_data.fields == null) ? null : opt_data.fields.sys_project) != null && ((opt_data.fields == null) ? null : opt_data.fields.sys_type) != null) ? ' / ' : '') + '</span>' : '') + ((((opt_data.fields == null) ? null : opt_data.fields.sys_type) != null) ? '<span class="sys_type">' + soy.$$escapeHtml(opt_data.fields.sys_type) + '</span>' : '');
+  if (((opt_data.highlight == null) ? null : opt_data.highlight.sys_description) != null || ((opt_data.fields == null) ? null : opt_data.fields.sys_description_tr) != null || ((opt_data.highlight == null) ? null : (opt_data.highlight.sys_content_plaintext == null) ? null : opt_data.highlight.sys_content_plaintext.length) > 0) {
     output += '<div class="description">';
-    if (((opt_data.highlight == null) ? null : (opt_data.highlight.dcp_content_plaintext == null) ? null : opt_data.highlight.dcp_content_plaintext.length) > 0) {
-      var content_snippetList128 = opt_data.highlight.dcp_content_plaintext;
+    if (((opt_data.highlight == null) ? null : (opt_data.highlight.sys_content_plaintext == null) ? null : opt_data.highlight.sys_content_plaintext.length) > 0) {
+      var content_snippetList128 = opt_data.highlight.sys_content_plaintext;
       var content_snippetListLen128 = content_snippetList128.length;
       for (var content_snippetIndex128 = 0; content_snippetIndex128 < content_snippetListLen128; content_snippetIndex128++) {
         var content_snippetData128 = content_snippetList128[content_snippetIndex128];
         output += soy.$$filterNoAutoescape(content_snippetData128) + '&nbsp;&hellip; ';
       }
-    } else if (((opt_data.highlight == null) ? null : opt_data.highlight.dcp_description) != null) {
-      output += soy.$$filterNoAutoescape(opt_data.highlight.dcp_description);
-    } else if (((opt_data.fields == null) ? null : opt_data.fields.dcp_description_tr) != null) {
-      output += soy.$$filterNoAutoescape(opt_data.fields.dcp_description_tr);
+    } else if (((opt_data.highlight == null) ? null : opt_data.highlight.sys_description) != null) {
+      output += soy.$$filterNoAutoescape(opt_data.highlight.sys_description);
+    } else if (((opt_data.fields == null) ? null : opt_data.fields.sys_description_tr) != null) {
+      output += soy.$$filterNoAutoescape(opt_data.fields.sys_description_tr);
     }
     output += '</div>';
   }
@@ -83,9 +83,9 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
     }
     output += '</ul></div>';
   }
-  if (((opt_data.fields == null) ? null : (opt_data.fields.dcp_tags_view == null) ? null : opt_data.fields.dcp_tags_view.length) > 0) {
+  if (((opt_data.fields == null) ? null : (opt_data.fields.sys_tags_view == null) ? null : opt_data.fields.sys_tags_view.length) > 0) {
     output += '<div class="tags_list">Tags:';
-    var tagList153 = opt_data.fields.dcp_tags_view;
+    var tagList153 = opt_data.fields.sys_tags_view;
     var tagListLen153 = tagList153.length;
     for (var tagIndex153 = 0; tagIndex153 < tagListLen153; tagIndex153++) {
       var tagData153 = tagList153[tagIndex153];
@@ -94,15 +94,15 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
     output += '</div>';
   }
   output += '</div>';
-  if (((opt_data.fields == null) ? null : opt_data.fields.dcp_contributors_view) != null) {
+  if (((opt_data.fields == null) ? null : opt_data.fields.sys_contributors_view) != null) {
     output += '<div class="contributors_list">';
-    var cList166 = opt_data.fields.dcp_contributors_view;
+    var cList166 = opt_data.fields.sys_contributors_view;
     var cListLen166 = cList166.length;
     for (var cIndex166 = 0; cIndex166 < cListLen166; cIndex166++) {
       var cData166 = cList166[cIndex166];
       output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex166) + '"><img src="' + soy.$$escapeHtml(cData166.gURL16) + '"></span>';
     }
-    output += ((((opt_data.fields == null) ? null : opt_data.fields.dcp_contributors_view.length) > 0) ? '<span class="selected_contributor_name">&#8212; <span class="value">' + soy.$$escapeHtml(opt_data.fields.dcp_contributors_view[0].name) + '</span></span>' : '') + '</div>';
+    output += ((((opt_data.fields == null) ? null : opt_data.fields.sys_contributors_view.length) > 0) ? '<span class="selected_contributor_name">&#8212; <span class="value">' + soy.$$escapeHtml(opt_data.fields.sys_contributors_view[0].name) + '</span></span>' : '') + '</div>';
   }
   output += '</div></div>';
   return output;

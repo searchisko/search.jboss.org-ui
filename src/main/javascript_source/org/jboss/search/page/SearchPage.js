@@ -462,8 +462,8 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                             // both are numbers, good...
                             var d = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
                             var currentHit = d && d.hits && d.hits.hits && d.hits.hits[hitNumber];
-                            if (currentHit && currentHit.fields && currentHit.fields.dcp_contributors_view) {
-                                var contributor = currentHit.fields.dcp_contributors_view[contributorNumber];
+                            if (currentHit && currentHit.fields && currentHit.fields.sys_contributors_view) {
+                                var contributor = currentHit.fields.sys_contributors_view[contributorNumber];
                                 if (contributor) {
                                     // contributor data found in query response
                                     var contributorListElement = goog.dom.getParentElement(element);
@@ -984,9 +984,9 @@ org.jboss.search.page.SearchPage.prototype.preLoadAvatarImages_ = function(data)
         goog.array.forEach(
             data.hits.hits,
             function(hit) {
-                if (hit.fields && hit.fields.dcp_contributors_view) {
+                if (hit.fields && hit.fields.sys_contributors_view) {
                     goog.array.forEach(
-                        hit.fields.dcp_contributors_view,
+                        hit.fields.sys_contributors_view,
                         function(c) {
                             if (goog.isString(c.gURL40)) {
                                 imageLoader.addImage(c.gURL40, c.gURL40);

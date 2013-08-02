@@ -39,12 +39,12 @@ var sample_response_data = {
     "hits":{
         "total":108,"max_score":1.0,
         "hits":[
-            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbosscache","_score":1.0,"fields":{"dcp_project":"cdi","dcp_project_name":"CDI","dcp_type":"project_info"}},
-            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbosscache","_score":1.0,"fields":{"dcp_project":"jrunit","dcp_project_name":"","dcp_type":"project_info"}},
-            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbosscache","_score":1.0,"fields":{"dcp_project":"jbosscache","dcp_project_name":"JBoss Cache","dcp_type":"project_info"}},
-            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbossesb","_score":1.0,"fields":{"dcp_project":"jbossesb","dcp_project_name":"JBoss ESB","dcp_type":"project_info"}},
-            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbossforums","_score":1.0,"fields":{"dcp_project":"jbossforums","dcp_project_name":"JBoss Forums","dcp_type":"project_info"}},
-            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbossidentity","_score":1.0,"fields":{"dcp_project":"jbossidentity","dcp_project_name":"JBoss Identity","dcp_type":"project_info"}}
+            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbosscache","_score":1.0,"fields":{"sys_project":"cdi","sys_project_name":"CDI","sys_type":"project_info"}},
+            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbosscache","_score":1.0,"fields":{"sys_project":"jrunit","sys_project_name":"","sys_type":"project_info"}},
+            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbosscache","_score":1.0,"fields":{"sys_project":"jbosscache","sys_project_name":"JBoss Cache","sys_type":"project_info"}},
+            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbossesb","_score":1.0,"fields":{"sys_project":"jbossesb","sys_project_name":"JBoss ESB","sys_type":"project_info"}},
+            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbossforums","_score":1.0,"fields":{"sys_project":"jbossforums","sys_project_name":"JBoss Forums","sys_type":"project_info"}},
+            {"_index":"data_project_info","_type":"jbossorg_project_info","_id":"jbossorg_project_info-jbossidentity","_score":1.0,"fields":{"sys_project":"jbossidentity","sys_project_name":"JBoss Identity","sys_type":"project_info"}}
         ]}};
 
 function testProject() {
@@ -58,8 +58,8 @@ function testProject() {
         .addCallback(function(){
 
             // data available now
-            assertEquals('CDI', project.getDcpProjectName('cdi'));
-            assertEquals('jrunit does not have name', '', project.getDcpProjectName('jrunit'));
+            assertEquals('CDI', project.getSysProjectName('cdi'));
+            assertEquals('jrunit does not have name', '', project.getSysProjectName('jrunit'));
 
             // we can also get all the values as an array (used for initialization)
             var array = project.getArray();

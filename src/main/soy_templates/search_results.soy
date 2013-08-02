@@ -62,40 +62,40 @@
         <div class="hit">
             <div class="left">
                 <p class="avatar">
-                    <img src="{$fields.dcp_contributors_view?[0]?.gURL40 ?: 'image/test/generic.png'}">
+                    <img src="{$fields.sys_contributors_view?[0]?.gURL40 ?: 'image/test/generic.png'}">
                 </p>
             </div>
             <div class="main">
-                {if isNonnull($highlight?.dcp_title)}
-                    <div class="title cs_" hn_="{$position_on_page}"><a href="{$fields.dcp_url_view}">{$highlight.dcp_title|noAutoescape}</a></div>
+                {if isNonnull($highlight?.sys_title)}
+                    <div class="title cs_" hn_="{$position_on_page}"><a href="{$fields.sys_url_view}">{$highlight.sys_title|noAutoescape}</a></div>
                 {else}
-                    <div class="title cs_" hn_="{$position_on_page}"><a href="{$fields.dcp_url_view}">{$fields.dcp_title}</a></div>
+                    <div class="title cs_" hn_="{$position_on_page}"><a href="{$fields.sys_url_view}">{$fields.sys_title}</a></div>
                 {/if}
-                <div class="link cs_" hn_="{$position_on_page}"><a href="{$fields.dcp_url_view}">{$fields.dcp_url_view_tr}</a></div>
+                <div class="link cs_" hn_="{$position_on_page}"><a href="{$fields.sys_url_view}">{$fields.sys_url_view_tr}</a></div>
                 <div class="snippet">
-                    <span class="date">{if isNonnull($fields.dcp_created_parsed)}{$fields.dcp_created_parsed}&nbsp;-&nbsp;{/if}{$fields.dcp_last_activity_date_parsed}&nbsp;- </span>
-                    {if isNonnull($fields?.dcp_project)}
-                        {if isNonnull($fields?.dcp_project_full_name)}
-                            <span class="dcp_project">{$fields.dcp_project_full_name}
+                    <span class="date">{if isNonnull($fields.sys_created_parsed)}{$fields.sys_created_parsed}&nbsp;-&nbsp;{/if}{$fields.sys_last_activity_date_parsed}&nbsp;- </span>
+                    {if isNonnull($fields?.sys_project)}
+                        {if isNonnull($fields?.sys_project_full_name)}
+                            <span class="sys_project">{$fields.sys_project_full_name}
                         {else}
-                            <span class="dcp_project">{$fields.dcp_project}
+                            <span class="sys_project">{$fields.sys_project}
                         {/if}
-                        {if (isNonnull($fields?.dcp_project) and isNonnull($fields?.dcp_type))} / {/if}
+                        {if (isNonnull($fields?.sys_project) and isNonnull($fields?.sys_type))} / {/if}
                         </span>
                     {/if}
-                    {if isNonnull($fields?.dcp_type)}
-                        <span class="dcp_type">{$fields.dcp_type}</span>
+                    {if isNonnull($fields?.sys_type)}
+                        <span class="sys_type">{$fields.sys_type}</span>
                     {/if}
-                    {if (isNonnull($highlight?.dcp_description) or isNonnull($fields?.dcp_description_tr) or ($highlight?.dcp_content_plaintext?.length > 0))}
+                    {if (isNonnull($highlight?.sys_description) or isNonnull($fields?.sys_description_tr) or ($highlight?.sys_content_plaintext?.length > 0))}
                         <div class="description">
-                            {if ($highlight?.dcp_content_plaintext?.length > 0)}
-                                {foreach $content_snippet in $highlight.dcp_content_plaintext}
+                            {if ($highlight?.sys_content_plaintext?.length > 0)}
+                                {foreach $content_snippet in $highlight.sys_content_plaintext}
                                     {$content_snippet|noAutoescape}&nbsp;&hellip;{sp}
                                 {/foreach}
-                            {elseif isNonnull($highlight?.dcp_description)}
-                                {$highlight.dcp_description|noAutoescape}
-                            {elseif isNonnull($fields?.dcp_description_tr)}
-                                {$fields.dcp_description_tr|noAutoescape}
+                            {elseif isNonnull($highlight?.sys_description)}
+                                {$highlight.sys_description|noAutoescape}
+                            {elseif isNonnull($fields?.sys_description_tr)}
+                                {$fields.sys_description_tr|noAutoescape}
                             {/if}
                         </div>
                     {/if}
@@ -108,22 +108,22 @@
                         </ul>
                         </div>
                     {/if}
-                    {if $fields?.dcp_tags_view?.length > 0}
+                    {if $fields?.sys_tags_view?.length > 0}
                         <div class="tags_list">
                             Tags:
-                            {foreach $tag in $fields.dcp_tags_view}
+                            {foreach $tag in $fields.sys_tags_view}
                                 <span> {$tag}{if not isLast($tag)},{/if}</span>
                             {/foreach}
                         </div>
                     {/if}
                 </div>
-                {if isNonnull($fields?.dcp_contributors_view)}
+                {if isNonnull($fields?.sys_contributors_view)}
                     <div class="contributors_list">
-                        {foreach $c in $fields.dcp_contributors_view}
+                        {foreach $c in $fields.sys_contributors_view}
                             <span class="ct_" hn_="{$position_on_page}" cn_="{index($c)}"><img src="{$c.gURL16}"></span>
                         {/foreach}
-                        {if $fields?.dcp_contributors_view.length > 0}
-                            <span class="selected_contributor_name">&#8212; <span class="value">{$fields.dcp_contributors_view[0].name}</span></span>
+                        {if $fields?.sys_contributors_view.length > 0}
+                            <span class="selected_contributor_name">&#8212; <span class="value">{$fields.sys_contributors_view[0].name}</span></span>
                         {/if}
                     </div>
                 {/if}

@@ -17,7 +17,7 @@
  */
 
 /**
- * @fileoverview Static utilities to normalize raw DCP response to
+ * @fileoverview Static utilities to normalize raw response to
  * JSON that can be easily processed in Closure Template.
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
@@ -40,7 +40,7 @@ goog.require('goog.memoize');
 
 /**
  * It returns normalized and sanitized search response.
- * @param {!Object} response raw response from DCP search API.
+ * @param {!Object} response raw response from search API.
  * @param {!org.jboss.search.context.RequestParams} requestParams
  * @return {!Object}
  */
@@ -128,8 +128,8 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             // ==========================================
             // Contributors
             // ==========================================
-            if (goog.object.containsKey(fields,'dcp_contributors')) {
-                var conts = fields.dcp_contributors;
+            if (goog.object.containsKey(fields,'sys_contributors')) {
+                var conts = fields.sys_contributors;
                 if (goog.isDef(conts)) {
                     var cont_;
                     // we need to ensure that it is an array (because we test length and iterate it in soy template)
@@ -138,13 +138,13 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                     } else {
                         cont_ = [conts.valueOf()];
                     }
-                    fields.dcp_contributors_view = [];
+                    fields.sys_contributors_view = [];
 
                     goog.array.forEach(cont_,function(c){
                         var name = org.jboss.search.response.extractNameFromMail(c).valueOf();
                         var gravatarURL16 = org.jboss.search.response.gravatarURI_Memo(c,16).valueOf();
                         var gravatarURL40 = org.jboss.search.response.gravatarURI_Memo(c,40).valueOf();
-                        fields.dcp_contributors_view.push({'name': name, 'gURL16': gravatarURL16, 'gURL40': gravatarURL40});
+                        fields.sys_contributors_view.push({'name': name, 'gURL16': gravatarURL16, 'gURL40': gravatarURL40});
                     });
                 }
             }
@@ -152,8 +152,8 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             // ==========================================
             // Tags
             // ==========================================
-            if (goog.object.containsKey(fields,'dcp_contributors')) {
-                var tags = fields.dcp_tags;
+            if (goog.object.containsKey(fields,'sys_tags')) {
+                var tags = fields.sys_tags;
                 if (goog.isDef(tags)) {
                     var tags_;
                     // we need to ensure that it is an array (because we test length and iterate it in soy template)
@@ -162,60 +162,60 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                     } else {
                         tags_ = [tags.valueOf()];
                     }
-                    fields.dcp_tags_view = tags_;
+                    fields.sys_tags_view = tags_;
                 }
             }
 
             // ==========================================
             // Try to translate project id -> project name
             // ==========================================
-            if (goog.object.containsKey(fields,'dcp_project')) {
-                var projectId = fields.dcp_project;
+            if (goog.object.containsKey(fields,'sys_project')) {
+                var projectId = fields.sys_project;
                 if (goog.object.containsKey(projectMap, projectId)){
-                    fields.dcp_project_full_name = projectMap[projectId];
+                    fields.sys_project_full_name = projectMap[projectId];
                 }
             }
 
             // ==========================================
-            // Capitalize first letter of dcp_type
+            // Capitalize first letter of sys_type
             // ==========================================
-            if (goog.object.containsKey(fields,'dcp_type')) {
-                fields.dcp_type = goog.string.toTitleCase(fields.dcp_type);
+            if (goog.object.containsKey(fields,'sys_type')) {
+                fields.sys_type = goog.string.toTitleCase(fields.sys_type);
             }
 
             // ==========================================
             // URL truncate
             // ==========================================
-            if (goog.object.containsKey(fields,'dcp_url_view')) {
-                var url = fields.dcp_url_view;
+            if (goog.object.containsKey(fields,'sys_url_view')) {
+                var url = fields.sys_url_view;
                 if (goog.isDef(url)) {
                     var url_tr = goog.string.truncateMiddle(url, org.jboss.search.Constants.MAX_URL_LENGTH, true);
-                    fields.dcp_url_view_tr = url_tr;
+                    fields.sys_url_view_tr = url_tr;
                 }
             }
 
             // ==========================================
             // Description truncate
             // ==========================================
-            if (goog.object.containsKey(fields,'dcp_description')) {
-                var desc = org.jboss.search.response.normalizeAllSpaces_(fields.dcp_description);
+            if (goog.object.containsKey(fields,'sys_description')) {
+                var desc = org.jboss.search.response.normalizeAllSpaces_(fields.sys_description);
                 if (goog.isDef(desc)) {
                     var desc_tr = goog.string.truncate(desc, org.jboss.search.Constants.MAX_DESCRIPTION_LENGTH, true);
-                    fields.dcp_description_tr = desc_tr;
+                    fields.sys_description_tr = desc_tr;
                 }
             }
 
             /** @type {goog.date.DateTime} */
-            var date_created = goog.object.containsKey(fields,'dcp_created') ? goog.date.fromIsoString(fields.dcp_created) : null;
+            var date_created = goog.object.containsKey(fields,'sys_created') ? goog.date.fromIsoString(fields.sys_created) : null;
             /** @type {goog.date.DateTime} */
-            var date_last = goog.object.containsKey(fields,'dcp_last_activity_date') ? goog.date.fromIsoString(fields.dcp_last_activity_date) : null;
+            var date_last = goog.object.containsKey(fields,'sys_last_activity_date') ? goog.date.fromIsoString(fields.sys_last_activity_date) : null;
 
             // ==========================================
-            // Date parsing - dcp_last_activity_date
+            // Date parsing - sys_last_activity_date
             // ==========================================
             if (goog.isDefAndNotNull(date_last)) {
                 try {
-                fields.dcp_last_activity_date_parsed =
+                fields.sys_last_activity_date_parsed =
                     [
                         // TODO: format according to browser locale
                         [date_last.getUTCFullYear(),date_last.getUTCMonth()+1,date_last.getUTCDate()].join('-'),
@@ -228,13 +228,13 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             }
 
             // ==========================================
-            // Date parsing - dcp_created
+            // Date parsing - sys_created
             // ==========================================
             if (goog.isDefAndNotNull(date_created)) {
                 try {
                     if (goog.isDateLike(date_last)) {
                         if (!date_created.equals(date_last)) {
-                            fields.dcp_created_parsed =
+                            fields.sys_created_parsed =
                                 [
                                     // TODO: format according to browser locale
                                     [date_created.getUTCFullYear(),date_created.getUTCMonth()+1,date_created.getUTCDate()].join('-'),
@@ -255,8 +255,8 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             // This sounds like a hack but the problem is that we display content using "noAutoescape" mode
             // thus we need to remove any spaces manually first.
             // ==========================================
-            if (goog.object.containsKey(highlights,'dcp_content_plaintext')) {
-                var content_plaintext = highlights.dcp_content_plaintext;
+            if (goog.object.containsKey(highlights,'sys_content_plaintext')) {
+                var content_plaintext = highlights.sys_content_plaintext;
                 if (goog.isArray(content_plaintext) && content_plaintext.length > 0) {
                     goog.array.forEach(content_plaintext, function(item, index, array){
                         array[index] = org.jboss.search.response.normalizeAllSpaces_(item);
@@ -296,8 +296,8 @@ org.jboss.search.response.normalizeAllSpaces_ = function(str) {
 
 /**
  * It returns normalized and sanitized project name suggestions response.
- * @param {{length: number}} ngrams raw response from DCP search API.
- * @param {{length: number}} fuzzy raw response from DCP search API.
+ * @param {{length: number}} ngrams raw response from search API.
+ * @param {{length: number}} fuzzy raw response from search API.
  * @return {{ items: Array, did_you_mean_items: Array }}
  */
 org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams, fuzzy) {
@@ -305,8 +305,8 @@ org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams,
     var items = [];
     goog.array.forEach(ngrams, function(item) {
         items.push({
-            'name': item.highlight['dcp_project_name.edgengram'] ? item.highlight['dcp_project_name.edgengram'] : item.highlight['dcp_project_name.ngram'],
-            'code': item.fields['dcp_project']
+            'name': item.highlight['sys_project_name.edgengram'] ? item.highlight['sys_project_name.edgengram'] : item.highlight['sys_project_name.ngram'],
+            'code': item.fields['sys_project']
         });
     });
 
@@ -316,15 +316,15 @@ org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams,
             goog.array.some(
                 items,
                 function(already_selected){
-                    return already_selected['code'] == item.fields['dcp_project'];
+                    return already_selected['code'] == item.fields['sys_project'];
                 }
             )
         ) {
             // filter out item if it is already present in 'items'
         } else {
             did_you_mean_items.push({
-                'name': item.fields['dcp_project_name'],
-                'code': item.fields['dcp_project']
+                'name': item.fields['sys_project_name'],
+                'code': item.fields['sys_project']
             });
         }
     });

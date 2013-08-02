@@ -58,14 +58,14 @@ var testNormalizeProjectNameSuggestionResponse = function() {
     assertEquals(0, result.did_you_mean_items.length);
 
     items = [
-        { highlight: { dcp_project_name : { edgengram: 'A'}}, fields: { dcp_project: "1" }},
-        { highlight: { dcp_project_name : { edgengram: 'B'}}, fields: { dcp_project: "2" }},
-        { highlight: { dcp_project_name : { edgengram: 'C'}}, fields: { dcp_project: "3" }}
+        { highlight: { sys_project_name : { edgengram: 'A'}}, fields: { sys_project: "1" }},
+        { highlight: { sys_project_name : { edgengram: 'B'}}, fields: { sys_project: "2" }},
+        { highlight: { sys_project_name : { edgengram: 'C'}}, fields: { sys_project: "3" }}
     ];
 
     did_you_mean = [
-        { fields: { dcp_project: "2", dcp_project_name: "B" }},
-        { fields: { dcp_project: "4", dcp_project_name: "D" }}
+        { fields: { sys_project: "2", sys_project_name: "B" }},
+        { fields: { sys_project: "4", sys_project_name: "D" }}
     ];
 
     result = org.jboss.search.response.normalizeProjectSuggestionsResponse(items, did_you_mean);

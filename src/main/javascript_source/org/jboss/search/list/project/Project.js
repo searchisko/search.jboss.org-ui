@@ -81,8 +81,8 @@ org.jboss.search.list.project.Project.prototype.parseProjectData = function(json
         goog.array.forEach(hits, function(hit){
             var fields = goog.object.getValueByKeys(hit, "fields");
             if (goog.isObject(fields)) {
-                var id_ = goog.object.getValueByKeys(fields, "dcp_project");
-                var name_ = goog.object.getValueByKeys(fields, "dcp_project_name");
+                var id_ = goog.object.getValueByKeys(fields, "sys_project");
+                var name_ = goog.object.getValueByKeys(fields, "sys_project_name");
                 if (goog.isDefAndNotNull(id_) && goog.isDefAndNotNull(name_)) {
                     map_[id_] = name_;
                 }
@@ -93,12 +93,12 @@ org.jboss.search.list.project.Project.prototype.parseProjectData = function(json
 };
 
 /**
- * Return DCP Project Name for given Project DCP ID.
- * @param {!string} dcpId
+ * Return Project Name for given Project ID.
+ * @param {!string} sysId
  * @return {!string}
  */
-org.jboss.search.list.project.Project.prototype.getDcpProjectName = function(dcpId) {
-    return goog.object.get(this.map, dcpId, "Unknown").valueOf();
+org.jboss.search.list.project.Project.prototype.getSysProjectName = function(sysId) {
+    return goog.object.get(this.map, sysId, "Unknown").valueOf();
 };
 
 /**

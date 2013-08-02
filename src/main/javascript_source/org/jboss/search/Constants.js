@@ -228,7 +228,7 @@ org.jboss.search.Constants = {
      * @type {string}
      * @const
      */
-    API_URL_PROJECT_LIST_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search?dcp_type=project_info&size=300'].join(''),
+    API_URL_PROJECT_LIST_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search?sys_type=project_info&size=300'].join(''),
 
     /**
      * Base URL for recording user click stream.
