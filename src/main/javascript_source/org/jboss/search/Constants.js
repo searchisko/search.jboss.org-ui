@@ -207,7 +207,7 @@ org.jboss.search.Constants = {
      * @type {string}
      * @const
      */
-    API_URL_SUGGESTIONS_QUERY: "http://private-5ebf-jbossorg.apiary.io/v1/rest/suggestions/query_string",
+    API_URL_SUGGESTIONS_QUERY: "http://jbossorg.apiary.io/v1/rest/suggestions/query_string",
 
     /**
      * @see http://docs.jbossorg.apiary.io/#suggestionsapiproject
