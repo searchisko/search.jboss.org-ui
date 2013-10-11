@@ -324,6 +324,17 @@ org.jboss.search.page.SearchPage = function(context, elements) {
         }
     );
 
+	/**
+	 * @type {?number}
+	 * @private
+	 */
+	this.contentClickListenerId_ = goog.events.listen(this.elements_.getContent_filter_tab_div(),
+		goog.events.EventType.CLICK,
+		function() {
+			thiz_.isContentFilterExpanded_() ? thiz_.collapseContentFilter_() : thiz_.expandContentFilter_()
+		}
+	);
+
     /**
      * @type {?number}
      * @private
@@ -357,6 +368,12 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                 !goog.dom.contains(thiz_.elements_.getAuthor_filter_body_div(), e.target)) {
                 thiz_.collapseAuthorFilter_();
             }
+
+			// if content filter (sub)element is clicked do not hide content filter
+			if (e.target !== thiz_.elements_.getContent_filter_tab_div() &&
+				!goog.dom.contains(thiz_.elements_.getContent_filter_body_div(), e.target)) {
+				thiz_.collapseContentFilter_();
+			}
 
         });
 
@@ -542,6 +559,7 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.dateClickListenerId_);
     goog.events.unlistenByKey(this.projectClickListenerId_);
     goog.events.unlistenByKey(this.authorClickListenerId_);
+    goog.events.unlistenByKey(this.contentClickListenerId_);
     goog.events.unlistenByKey(this.contextClickListenerId_);
     goog.events.unlistenByKey(this.xhrReadyListenerId_);
     goog.events.unlistenByKey(this.xhrCompleteListenerId_);
@@ -925,6 +943,14 @@ org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded_ = function ()
     return !goog.dom.classes.has(this.elements_.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
 };
 
+/**
+ * @return {boolean}
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.isContentFilterExpanded_ = function () {
+	return !goog.dom.classes.has(this.elements_.getContent_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+};
+
 /** @private */
 org.jboss.search.page.SearchPage.prototype.expandDateFilter_ = function () {
     var filter = org.jboss.search.LookUp.getInstance().getDateFilter();
@@ -939,6 +965,14 @@ org.jboss.search.page.SearchPage.prototype.expandAuthorFilter_ = function () {
     if (goog.isDefAndNotNull(filter)) {
         filter.expandFilter()
     }
+};
+
+/** @private */
+org.jboss.search.page.SearchPage.prototype.expandContentFilter_ = function () {
+	var filter = org.jboss.search.LookUp.getInstance().getContentFilter();
+	if (goog.isDefAndNotNull(filter)) {
+		filter.expandFilter()
+	}
 };
 
 /** @private */
@@ -971,6 +1005,14 @@ org.jboss.search.page.SearchPage.prototype.collapseAuthorFilter_ = function () {
     if (goog.isDefAndNotNull(filter)) {
         filter.collapseFilter()
     }
+};
+
+/** @private */
+org.jboss.search.page.SearchPage.prototype.collapseContentFilter_ = function () {
+	var filter = org.jboss.search.LookUp.getInstance().getContentFilter();
+	if (goog.isDefAndNotNull(filter)) {
+		filter.collapseFilter()
+	}
 };
 
 /**

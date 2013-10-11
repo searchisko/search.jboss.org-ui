@@ -70,6 +70,12 @@ org.jboss.search.LookUp = function() {
      */
     this.authorFilter_;
 
+	/**
+	 * @type {org.jboss.search.page.filter.ContentFilter}
+	 * @private
+	 */
+	this.contentFilter_;
+
     /**
      * @type {goog.net.XhrManager}
      * @private
@@ -209,10 +215,24 @@ org.jboss.search.LookUp.prototype.setAuthorFilter = function(filter) {
 };
 
 /**
+ * @param {org.jboss.search.page.filter.ContentFilter} filter
+ */
+org.jboss.search.LookUp.prototype.setContentFilter = function(filter) {
+	this.contentFilter_ = filter;
+};
+
+/**
  * @return {org.jboss.search.page.filter.AuthorFilter}
  */
 org.jboss.search.LookUp.prototype.getAuthorFilter = function() {
     return this.authorFilter_;
+};
+
+/**
+ * @return {org.jboss.search.page.filter.ContentFilter}
+ */
+org.jboss.search.LookUp.prototype.getContentFilter = function() {
+	return this.contentFilter_;
 };
 
 /**

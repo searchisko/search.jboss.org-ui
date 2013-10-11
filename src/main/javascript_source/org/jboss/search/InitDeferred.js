@@ -36,6 +36,7 @@ org.jboss.search.InitDeferred = function() {
     this.dateFilterDone_ = false;
     this.projectFilterDone_ = false;
     this.authorFilterDone_ = false;
+    this.contentFilterDone_ = false;
 };
 goog.inherits(org.jboss.search.InitDeferred, goog.async.Deferred);
 
@@ -63,9 +64,17 @@ org.jboss.search.InitDeferred.prototype.setAuthorFilterDone = function() {
     this.callCallbackIfAllDone_();
 };
 
+/**
+ * Set contentFilterDone flag to true.
+ */
+org.jboss.search.InitDeferred.prototype.setContentFilterDone = function() {
+	this.contentFilterDone_ = true;
+	this.callCallbackIfAllDone_();
+};
+
 /** @private */
 org.jboss.search.InitDeferred.prototype.callCallbackIfAllDone_ = function() {
-    if (this.dateFilterDone_ && this.projectFilterDone_ && this.authorFilterDone_) {
+    if (this.dateFilterDone_ && this.projectFilterDone_ && this.authorFilterDone_ && this.contentFilterDone_) {
         this.callback(goog.nullFunction());
     }
 };

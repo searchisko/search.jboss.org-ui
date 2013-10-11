@@ -75,16 +75,12 @@ h1 {
     margin-right: auto ;
 }
 
-#first_filters_row > div.option {
-    border-bottom: 1px solid rgb(168, 169, 169);
-}
-
-.filter, .content {
+.filter {
     height: 26px;
     float: left;
 }
 
-.filter_clear, .content_clear {
+.filter_clear {
     clear: left;
 }
 
@@ -106,12 +102,6 @@ h1 {
     text-align: center;
     border-right: 1px solid rgb(168, 168, 168);
     cursor: pointer;
-}
-
-#first_filters_row > div.option:hover {
-    /*background-color: rgb(138, 139, 139);*/
-    background-color: rgb(178, 179, 179);
-    color: rgb(56, 56, 56);
 }
 
 #second_filters_row > div.option:hover {

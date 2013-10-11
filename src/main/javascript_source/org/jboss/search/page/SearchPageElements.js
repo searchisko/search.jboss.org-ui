@@ -37,9 +37,11 @@ goog.require('goog.Disposable');
  * @param {!HTMLDivElement}   date_filter_tab_div
  * @param {!HTMLDivElement}   project_filter_tab_div
  * @param {!HTMLDivElement}   author_filter_tab_div
+ * @param {!HTMLDivElement}   content_filter_tab_div
  * @param {!HTMLDivElement}   date_filter_body_div
  * @param {!HTMLDivElement}   project_filter_body_div
  * @param {!HTMLDivElement}   author_filter_body_div
+ * @param {!HTMLDivElement}   content_filter_body_div
  * @param {!HTMLDivElement}   date_histogram_chart_div
  * @param {!HTMLInputElement} date_filter_from_field
  * @param {!HTMLInputElement} date_filter_to_field
@@ -52,8 +54,8 @@ goog.require('goog.Disposable');
  */
 org.jboss.search.page.SearchPageElements = function(
     query_field, spinner_div, clear_query_div, query_suggestions_div,
-    date_filter_tab_div, project_filter_tab_div, author_filter_tab_div,
-    date_filter_body_div, project_filter_body_div, author_filter_body_div,
+    date_filter_tab_div, project_filter_tab_div, author_filter_tab_div, content_filter_tab_div,
+    date_filter_body_div, project_filter_body_div, author_filter_body_div, content_filter_body_div,
     date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
     date_order,
     project_filter_query_field, author_filter_query_field,
@@ -69,9 +71,11 @@ org.jboss.search.page.SearchPageElements = function(
     /** @type {!HTMLDivElement}   */ this.date_filter_tab_div = date_filter_tab_div;
     /** @type {!HTMLDivElement}   */ this.project_filter_tab_div = project_filter_tab_div;
     /** @type {!HTMLDivElement}   */ this.author_filter_tab_div = author_filter_tab_div;
+    /** @type {!HTMLDivElement}   */ this.content_filter_tab_div = content_filter_tab_div;
     /** @type {!HTMLDivElement}   */ this.date_filter_body_div = date_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.project_filter_body_div = project_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.author_filter_body_div = author_filter_body_div;
+    /** @type {!HTMLDivElement}   */ this.content_filter_body_div = content_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.date_histogram_chart_div = date_histogram_chart_div;
     /** @type {!HTMLInputElement} */ this.date_filter_from_field = date_filter_from_field;
     /** @type {!HTMLInputElement} */ this.date_filter_to_field = date_filter_to_field;
@@ -93,9 +97,11 @@ org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() 
     delete this.date_filter_tab_div;
     delete this.project_filter_tab_div;
     delete this.author_filter_tab_div;
+    delete this.content_filter_tab_div;
     delete this.date_filter_body_div;
     delete this.project_filter_body_div;
     delete this.author_filter_body_div;
+    delete this.content_filter_body_div;
     delete this.date_histogram_chart_div;
     delete this.date_filter_from_field;
     delete this.date_filter_to_field;
@@ -117,9 +123,11 @@ org.jboss.search.page.SearchPageElements.prototype.isValid = function() {
         && goog.isDefAndNotNull(this.date_filter_tab_div)
         && goog.isDefAndNotNull(this.project_filter_tab_div)
         && goog.isDefAndNotNull(this.author_filter_tab_div)
+        && goog.isDefAndNotNull(this.content_filter_tab_div)
         && goog.isDefAndNotNull(this.date_filter_body_div)
         && goog.isDefAndNotNull(this.project_filter_body_div)
         && goog.isDefAndNotNull(this.author_filter_body_div)
+        && goog.isDefAndNotNull(this.content_filter_body_div)
         && goog.isDefAndNotNull(this.date_histogram_chart_div)
         && goog.isDefAndNotNull(this.date_filter_from_field)
         && goog.isDefAndNotNull(this.date_filter_to_field)
@@ -165,6 +173,11 @@ org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_tab_div = fu
 };
 
 /** @return {!HTMLDivElement} */
+org.jboss.search.page.SearchPageElements.prototype.getContent_filter_tab_div = function() {
+	return this.content_filter_tab_div;
+};
+
+/** @return {!HTMLDivElement} */
 org.jboss.search.page.SearchPageElements.prototype.getDate_filter_body_div = function() {
     return this.date_filter_body_div;
 };
@@ -177,6 +190,11 @@ org.jboss.search.page.SearchPageElements.prototype.getProject_filter_body_div = 
 /** @return {!HTMLDivElement} */
 org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_body_div = function() {
     return this.author_filter_body_div;
+};
+
+/** @return {!HTMLDivElement} */
+org.jboss.search.page.SearchPageElements.prototype.getContent_filter_body_div = function() {
+	return this.content_filter_body_div;
 };
 
 /** @return {!HTMLDivElement} */

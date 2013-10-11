@@ -60,19 +60,12 @@
     <!-- Filters
     ======================================================= -->
     <div id="search_filters">
-        <div id="first_filters_row">
-            <div class="content caption">Content</div>
-            <div class="content option">All</div>
-            <div class="content option">Mails</div>
-            <div class="content option">Issues</div>
-            <div class="content option">Blogs</div>
-            <div class="content_clear"></div>
-        </div>
         <div id="second_filters_row">
             <div class="filter caption">Filters</div>
             <div class="filter option date">Date</div>
             <div class="filter option project">Project</div>
             <div class="filter option author">Author</div>
+			<div class="filter option content">Content</div>
             <div class="filter_clear"></div>
         </div>
     </div>
@@ -110,7 +103,6 @@
             <div class="filter_items">
                 <div>Initializing...</div>
             </div>
-
         </div>
     </div>
 
@@ -129,9 +121,19 @@
             <div class="filter_items">
                 <div>Initializing... (TBD)</div>
             </div>
-
         </div>
     </div>
+
+	<div id="content_filter" class="filter_tab content hidden">
+		<div class="filter_tab_content">
+			<div class="filter_items">
+				<div>Issues</div>
+				<div>Mailing lists</div>
+				<div>Blogs</div>
+				<div>Articles</div>
+			</div>
+		</div>
+	</div>
 
     <!-- Active filter badges
     ======================================================= -->
