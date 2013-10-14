@@ -115,7 +115,10 @@ org.jboss.search.page.filter.DateFilter = function(element, date_histogram_eleme
     // We can not use this.element_ but document - because <DIV> may not be focused.
     // this.keyHandler_ = new goog.events.KeyHandler(this.element_);
 
-    // listen for key strokes
+	/**
+	 * listen for key strokes
+	 * @private
+	 */
     this.keyListenerId_ = goog.events.listen(this.keyHandler_,
         goog.events.KeyHandler.EventType.KEY,
         goog.bind(function(e) {
