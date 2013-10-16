@@ -145,8 +145,12 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     this.log_.info("Search succeeded, took " + response["took"] + "ms, uuid [" +response["uuid"] + "]");
                     org.jboss.search.LookUp.getInstance().setRecentQueryResultData(response);
                     // refresh histogram chart only if filter expanded
-                    var filter = org.jboss.search.LookUp.getInstance().getDateFilter();
-                    if (goog.isDefAndNotNull(filter)) { filter.refreshChart(false) }
+                    var dateFilter_ = org.jboss.search.LookUp.getInstance().getDateFilter();
+                    if (goog.isDefAndNotNull(dateFilter_)) { dateFilter_.refreshChart(false) }
+					// refresh author filter
+					var authorFilter_ = org.jboss.search.LookUp.getInstance().getAuthorFilter();
+					if (goog.isDefAndNotNull(authorFilter_)) { authorFilter_.refreshItems(false) }
+					// render new HTML for search results
                     this.renderQueryResponse_();
                     this.enableSearchResults_();
                     break;
@@ -683,7 +687,8 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(requestParams) {
 };
 
 /**
- *
+ * Render HTML representation of search results.
+ * It assumes the search results are stored in the lookup.
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.renderQueryResponse_ = function() {
@@ -1037,7 +1042,7 @@ org.jboss.search.page.SearchPage.prototype.preLoadAvatarImages_ = function(data)
                     )
                 }
             }
-        )
+        );
         imageLoader.start();
     }
 };

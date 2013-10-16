@@ -90,9 +90,23 @@ SearchHit.prototype.highlight;
 SearchHit.prototype.highlight.sys_content_plaintext;
 SearchHit.prototype.highlight.comment_body;
 
+// Date histogram facet
 SearchHit.prototype.facets;
 SearchHit.prototype.facets.activity_dates_histogram;
 SearchHit.prototype.facets.activity_dates_histogram.entries;
+
+// Top contributors facet
+SearchHit.prototype.facets.top_contributors;
+SearchHit.prototype.facets.top_contributors.other;
+SearchHit.prototype.facets.top_contributors.missing;
+SearchHit.prototype.facets.top_contributors.total;
+SearchHit.prototype.facets.top_contributors.terms;
+
+// Project counts facet
+SearchHit.prototype.facets.pre_project_counts;
+
+// sys_type counts facet
+SearchHit.prototype.facets.pre_sys_type_counts;
 
 /**
  * Keys related to date histogram.
@@ -103,6 +117,16 @@ DateHistogram.prototype.activity_dates_histogram;
 DateHistogram.prototype.activity_dates_histogram_interval;
 DateHistogram.prototype.time;
 DateHistogram.prototype.count;
+
+/**
+ * Top contributor facet fields
+ * @interface
+ */
+function TopContributorFacet() {};
+TopContributorFacet.prototype.count;
+TopContributorFacet.prototype.term;
+TopContributorFacet.prototype.name;		// computed or modified by normalize.js
+TopContributorFacet.prototype.gURL16;	// computed or modified by normalize.js
 
 /**
  * Project name suggestions

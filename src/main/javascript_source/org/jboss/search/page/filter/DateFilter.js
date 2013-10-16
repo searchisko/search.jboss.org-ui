@@ -45,7 +45,7 @@ goog.require('goog.ui.LabelInput');
 goog.require('goog.events.EventTarget');
 
 /**
- * Create a new instance of Date Filter. Initialize histogaram chart and date pickers.
+ * Create a new instance of Date Filter. Initialize histogram chart and date pickers.
  *
  * @param {!HTMLElement} element to host the date filter
  * @param {!HTMLElement} date_histogram_element to host the date histogram chart
@@ -238,15 +238,6 @@ org.jboss.search.page.filter.DateFilter.prototype.disposeInternal = function() {
 };
 
 /**
- * Calls opt_expandFilter function.
- * @see constructor
- */
-org.jboss.search.page.filter.DateFilter.prototype.expandFilter = function() {
-    this.expandFilter_();
-    this.refreshChart(false);
-};
-
-/**
  * Refresh chart (meaning update to the latest search result histogram facet data). By default
  * this does nothing if the filter is collapsed.
  * @param {boolean=} opt_force refresh even if filter is collapsed. Defaults to false.
@@ -280,6 +271,15 @@ org.jboss.search.page.filter.DateFilter.prototype.refreshChart = function(opt_fo
             this.histogram_chart_.update([],"month");
         }
     }
+};
+
+/**
+ * Calls opt_expandFilter function.
+ * @see constructor
+ */
+org.jboss.search.page.filter.DateFilter.prototype.expandFilter = function() {
+	this.expandFilter_();
+	this.refreshChart(false);
 };
 
 /**

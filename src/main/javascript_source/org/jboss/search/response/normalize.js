@@ -110,6 +110,9 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
         output.pagination = org.jboss.search.util.paginationGenerator.generate(actualPage, total);
     }
 
+	// ==========================================
+	// Hits details
+	// ==========================================
     var hits = /** @type {Array} */ (goog.object.getValueByKeys(output, ["hits", "hits"]));
     if (goog.isDefAndNotNull(hits)) {
 
@@ -279,7 +282,26 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             }
         })
     }
-//    console.log("output",output);
+
+	// ==========================================
+	// Top contributors facet details.
+	// For each top_contributor facet item we add two new fields derived from
+	// the 'term' field value (which should contain a normalized email string):
+	// - a new field 'name' with a readable name
+	// - a new field 'gURL16' with a small gravatar URL
+	// ==========================================
+	var contributors_facet = /** @type {Array} */ (goog.object.getValueByKeys(output, ["facets", "top_contributors"]));
+	if (goog.isDefAndNotNull(contributors_facet)) {
+		if (goog.isArray(contributors_facet.terms) && contributors_facet.terms.length > 0) {
+			goog.array.forEach(contributors_facet.terms, function(item, index, array){
+				var name = org.jboss.search.response.extractNameFromMail(item.term).valueOf();
+				var gravatarURL16 = org.jboss.search.response.gravatarURI_Memo(item.term,16).valueOf();
+				item.name = name;
+				item.gURL16 = gravatarURL16;
+			});
+		}
+	}
+
     return output;
 };
 

@@ -1,7 +1,7 @@
 {namespace org.jboss.search.page.filter.templates}
 
 /**
- * Search results DIV.
+ * Project filter DIV.
  *
  * @param items
  * @param did_you_mean_items
@@ -22,5 +22,20 @@
     {if isNonnull($did_you_mean_items) and isNonnull($items) and $did_you_mean_items.length == 0 and $items.length == 0}
         <div>No matching projects...</div>
     {/if}
+
+{/template}
+
+/**
+ * Author filter DIV.
+ *
+ * @param terms
+ */
+{template .author_filter_items}
+
+    {foreach $term in $terms}
+        <div code='{$term.term}'>
+        	<span class="selectable"><img src="{$term.gURL16}"> {$term.name|noAutoescape} ({$term.count})</span>
+        </div>
+    {/foreach}
 
 {/template}

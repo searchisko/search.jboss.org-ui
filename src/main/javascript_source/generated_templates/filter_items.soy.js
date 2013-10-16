@@ -1,4 +1,4 @@
-// This file was automatically generated from project_filter_items.soy.
+// This file was automatically generated from filter_items.soy.
 // Please don't edit this file by hand.
 
 goog.provide('org.jboss.search.page.filter.templates');
@@ -31,5 +31,23 @@ org.jboss.search.page.filter.templates.project_filter_items = function(opt_data,
     }
   }
   output += (opt_data.did_you_mean_items != null && opt_data.items != null && opt_data.did_you_mean_items.length == 0 && opt_data.items.length == 0) ? '<div>No matching projects...</div>' : '';
+  return output;
+};
+
+
+/**
+ * @param {Object.<string, *>=} opt_data
+ * @param {(null|undefined)=} opt_ignored
+ * @return {string}
+ * @notypecheck
+ */
+org.jboss.search.page.filter.templates.author_filter_items = function(opt_data, opt_ignored) {
+  var output = '';
+  var termList25 = opt_data.terms;
+  var termListLen25 = termList25.length;
+  for (var termIndex25 = 0; termIndex25 < termListLen25; termIndex25++) {
+    var termData25 = termList25[termIndex25];
+    output += '<div code=\'' + soy.$$escapeHtml(termData25.term) + '\'><span class="selectable"><img src="' + soy.$$escapeHtml(termData25.gURL16) + '"> ' + soy.$$filterNoAutoescape(termData25.name) + ' (' + soy.$$escapeHtml(termData25.count) + ')</span></div>';
+  }
   return output;
 };

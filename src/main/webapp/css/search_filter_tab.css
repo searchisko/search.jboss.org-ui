@@ -110,6 +110,17 @@
     margin-left: 10px;
 }
 
+/* highlight background of filter items on hover */
+.filter_items div:hover {
+	background-color: lightgrey;
+	cursor: pointer;
+}
+
+/* align small avatars on filter items */
+.filter_items div span img {
+	vertical-align: text-bottom;
+}
+
 /*
     ======================================================================
     Specific to Project Filter.

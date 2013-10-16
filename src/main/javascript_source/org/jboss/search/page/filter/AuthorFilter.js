@@ -23,6 +23,10 @@
 
 goog.provide('org.jboss.search.page.filter.AuthorFilter');
 
+goog.require('org.jboss.search.page.filter.templates');
+goog.require('org.jboss.search.LookUp');
+goog.require('org.jboss.search.page.element.SearchFieldHandler');
+
 goog.require('goog.Disposable');
 
 /**
@@ -30,12 +34,14 @@ goog.require('goog.Disposable');
  * It requires an element as a parameter, it assumes there is one element with class='filter_items' found inside.
  * @param {!HTMLElement} element to host the author filter
  * @param {!HTMLInputElement} query_field to host the project filter
+ * @param {!HTMLDivElement} author_filter_items_div where authors are listed
+ * @param {function(): boolean} opt_isCollapsed a function that is used to learn if filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.page.filter.AuthorFilter = function(element, query_field, opt_expandFilter, opt_collapseFilter) {
+org.jboss.search.page.filter.AuthorFilter = function(element, query_field, author_filter_items_div, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
     goog.Disposable.call(this);
 
     /**
@@ -50,10 +56,22 @@ org.jboss.search.page.filter.AuthorFilter = function(element, query_field, opt_e
      */
     this.collpaseFilter_ = /** @type {!Function} */ (goog.isFunction(opt_collapseFilter) ? opt_collapseFilter : goog.nullFunction());
 
+	/**
+	 * @type {function(): boolean}
+	 * @private
+	 */
+	this.isCollapsed_ = /** @type {function(): boolean} */ (goog.isFunction(opt_isCollapsed) ? opt_isCollapsed : function(){ return true });
+
     /**
      * @type {!HTMLInputElement}
      * @private */
     this.query_field_ = query_field;
+
+	/**
+	 * @type {!HTMLDivElement}
+	 * @private
+	 */
+	this.author_filter_items_div_ = author_filter_items_div;
 
     this.search_field_handler_ = new org.jboss.search.page.element.SearchFieldHandler(
         this.query_field_,
@@ -79,11 +97,40 @@ org.jboss.search.page.filter.AuthorFilter.prototype.disposeInternal = function()
 };
 
 /**
+ * Refresh filter items (meaning update to the latest search result data). By default
+ * this does nothing if the filter is collapsed.
+ * @param {boolean=} opt_force refresh even if filter is collapsed. Defaults to false.
+ */
+org.jboss.search.page.filter.AuthorFilter.prototype.refreshItems = function(opt_force) {
+	var force = !!(opt_force || false);
+	if (!this.isCollapsed_() || force) {
+		var data = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
+		if (data && data.facets && data.facets.top_contributors &&
+			data.facets.top_contributors.terms && goog.isArray(data.facets.top_contributors.terms)) {
+			this.updateItems_(data.facets.top_contributors.terms);
+		} else {
+			this.updateItems_([]);
+		}
+	}
+};
+
+/**
+ * (Re)generate HTML of filter items
+ * @param {Array} data
+ * @private
+ */
+org.jboss.search.page.filter.AuthorFilter.prototype.updateItems_ = function(data) {
+	var html = org.jboss.search.page.filter.templates.author_filter_items({ 'terms': data });
+	this.author_filter_items_div_.innerHTML = html;
+};
+
+/**
  * Calls opt_expandFilter function.
  * @see constructor
  */
 org.jboss.search.page.filter.AuthorFilter.prototype.expandFilter = function() {
     this.expandFilter_();
+	this.refreshItems();
 };
 
 /**

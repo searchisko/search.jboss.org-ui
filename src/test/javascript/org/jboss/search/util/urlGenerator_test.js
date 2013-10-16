@@ -45,7 +45,7 @@ var testSearchUrlGenerator = function() {
                 "field=sys_type", "field=sys_id", "field=sys_title", "field=sys_contributors", "field=sys_project",
                 "field=sys_project_name", "field=sys_description", "field=sys_tags", "field=sys_last_activity_date", "field=sys_created", "field=sys_url_view",
                 "query_highlight=true",
-                "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
             ].join('&')
         ].join('?'),
         urlString);
@@ -62,7 +62,7 @@ var testSearchUrlGenerator = function() {
                 "field=sys_type", "field=sys_id", "field=sys_title", "field=sys_contributors", "field=sys_project",
                 "field=sys_project_name", "field=sys_description", "field=sys_tags", "field=sys_last_activity_date", "field=sys_created", "field=sys_url_view",
                 "query_highlight=true",
-                "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
             ].join('&')
         ].join('?'),
         urlString);
@@ -79,7 +79,7 @@ var testSearchUrlGenerator = function() {
                 "field=sys_type", "field=sys_id", "field=sys_title", "field=sys_contributors", "field=sys_project",
                 "field=sys_project_name", "field=sys_description", "field=sys_tags", "field=sys_last_activity_date", "field=sys_created", "field=sys_url_view",
                 "query_highlight=true",
-                "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
             ].join('&')
         ].join('?'),
         urlString);
@@ -96,7 +96,7 @@ var testSearchUrlGenerator = function() {
                 "field=sys_type", "field=sys_id", "field=sys_title", "field=sys_contributors", "field=sys_project",
                 "field=sys_project_name", "field=sys_description", "field=sys_tags", "field=sys_last_activity_date", "field=sys_created", "field=sys_url_view",
                 "query_highlight=true",
-                "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram",
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram",
                 "from=190"
             ].join('&')
         ].join('?'),
@@ -114,7 +114,7 @@ var testSearchUrlGenerator = function() {
                 "query=dummy",
                 "field",
                 "query_highlight=false",
-                "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
             ].join('&')
         ].join('?'),
         urlString);
@@ -129,7 +129,7 @@ var testSearchUrlGenerator = function() {
             [
                 "query=dummy",
                 "query_highlight=false",
-                "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
             ].join('&')
         ].join('?'),
         urlString);
@@ -144,7 +144,7 @@ var testSearchUrlGenerator = function() {
             [
                 "query=dummy",
                 "query_highlight=true",
-                "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
             ].join('&')
         ].join('?'),
         urlString);

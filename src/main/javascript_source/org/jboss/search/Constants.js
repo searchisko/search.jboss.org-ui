@@ -214,21 +214,21 @@ org.jboss.search.Constants = {
      * @type {string}
      * @const
      */
-    API_URL_SUGGESTIONS_PROJECT: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/suggestions/project'].join(''),
+    API_URL_SUGGESTIONS_PROJECT: ['http://dcp-dev.jboss.org:8080/v1/rest','/suggestions/project'].join(''),
 
     /**
      * @see http://docs.jbossorg.apiary.io/#searchapi
      * @type {string}
      * @const
      */
-    API_URL_SEARCH_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search'].join(''),
+    API_URL_SEARCH_QUERY: ['http://dcp-dev.jboss.org:8080/v1/rest','/search'].join(''),
 
     /**
      * Pull project_info from DCP @see http://docs.jbossorg.apiary.io/#searchapi
      * @type {string}
      * @const
      */
-    API_URL_PROJECT_LIST_QUERY: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search?sys_type=project_info&size=300'].join(''),
+    API_URL_PROJECT_LIST_QUERY: ['http://dcp-dev.jboss.org:8080/v1/rest','/search?sys_type=project_info&size=300'].join(''),
 
     /**
      * Base URL for recording user click stream.
@@ -236,7 +236,7 @@ org.jboss.search.Constants = {
      * @type {string}
      * @const
      */
-    API_URL_RECORD_USER_CLICK_STREAM: ['https://dcp-jbossorgdev.rhcloud.com/v1/rest','/search'].join(''),
+    API_URL_RECORD_USER_CLICK_STREAM: ['http://dcp-dev.jboss.org:8080/v1/rest','/search'].join(''),
 
     /**
      * Interval in ms. When user has been idle for this time then we can fire some 'entertaining' action.

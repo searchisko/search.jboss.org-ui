@@ -88,7 +88,10 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
     if (goog.isDef(opt_fields) && goog.isArray(opt_fields)) {
         rootUri.setParameterValues(params.FIELD, opt_fields)
     } else {
-        rootUri.setParameterValues(params.FIELD, ["sys_type","sys_id","sys_title","sys_contributors","sys_project","sys_project_name","sys_description","sys_tags","sys_last_activity_date","sys_created","sys_url_view"])
+        rootUri.setParameterValues(params.FIELD,
+			["sys_type","sys_id","sys_title","sys_contributors","sys_project","sys_project_name",
+			"sys_description","sys_tags","sys_last_activity_date","sys_created","sys_url_view"]
+		)
     }
 
     if (goog.isBoolean(opt_highlighting)) {
@@ -96,8 +99,10 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
     } else {
         rootUri.setParameterValue(params.HIGHLIGHTS, "true")
     }
-//    .setParameterValues("facet", ["top_contributors","activity_dates_histogram","per_project_counts","per_sys_type_counts","tag_cloud"])
-    rootUri.setParameterValues(params.FACET, ["per_project_counts","per_sys_type_counts","activity_dates_histogram"]);
+
+    rootUri.setParameterValues(params.FACET,
+		["top_contributors","per_project_counts","per_sys_type_counts","activity_dates_histogram"]
+	);
 
     // page
     var page = requestParams.getPage();
