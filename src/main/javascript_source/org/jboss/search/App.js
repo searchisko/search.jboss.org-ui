@@ -81,7 +81,7 @@ org.jboss.search.App = function() {
     this.unloadId_ = goog.events.listen(goog.dom.getWindow(), goog.events.EventType.UNLOAD, goog.nullFunction);
 
     // init Status window (consider doing it earlier)
-    var status_window = /** @type {!HTMLDivElement} */ (goog.dom.getElement('status_window'))
+    var status_window = /** @type {!HTMLDivElement} */ (goog.dom.getElement('status_window'));
     var status = new org.jboss.search.page.element.Status(status_window);
     status.show('Initialization...');
 
