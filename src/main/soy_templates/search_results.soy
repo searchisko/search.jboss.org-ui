@@ -108,6 +108,15 @@
                         </ul>
                         </div>
                     {/if}
+                    {if isNonnull($highlight?['message_attachments.content'])}
+                    	<div class="children attachments">
+                        Attachments:<ul>
+                        {foreach $attachment in $highlight['message_attachments.content']}
+                            <li>{$attachment|noAutoescape}&nbsp;&hellip;</li>
+                        {/foreach}
+                        </ul>
+                    	</div>
+                    {/if}
                     {if $fields?.sys_tags_view?.length > 0}
                         <div class="tags_list">
                             Tags:

@@ -83,24 +83,34 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
     }
     output += '</ul></div>';
   }
+  if (((opt_data.highlight == null) ? null : opt_data.highlight['message_attachments.content']) != null) {
+    output += '<div class="children attachments">Attachments:<ul>';
+    var attachmentList166 = opt_data.highlight['message_attachments.content'];
+    var attachmentListLen166 = attachmentList166.length;
+    for (var attachmentIndex166 = 0; attachmentIndex166 < attachmentListLen166; attachmentIndex166++) {
+      var attachmentData166 = attachmentList166[attachmentIndex166];
+      output += '<li>' + soy.$$filterNoAutoescape(attachmentData166) + '&nbsp;&hellip;</li>';
+    }
+    output += '</ul></div>';
+  }
   if (((opt_data.fields == null) ? null : (opt_data.fields.sys_tags_view == null) ? null : opt_data.fields.sys_tags_view.length) > 0) {
     output += '<div class="tags_list">Tags:';
-    var tagList166 = opt_data.fields.sys_tags_view;
-    var tagListLen166 = tagList166.length;
-    for (var tagIndex166 = 0; tagIndex166 < tagListLen166; tagIndex166++) {
-      var tagData166 = tagList166[tagIndex166];
-      output += '<span> ' + soy.$$escapeHtml(tagData166) + ((! (tagIndex166 == tagListLen166 - 1)) ? ',' : '') + '</span>';
+    var tagList176 = opt_data.fields.sys_tags_view;
+    var tagListLen176 = tagList176.length;
+    for (var tagIndex176 = 0; tagIndex176 < tagListLen176; tagIndex176++) {
+      var tagData176 = tagList176[tagIndex176];
+      output += '<span> ' + soy.$$escapeHtml(tagData176) + ((! (tagIndex176 == tagListLen176 - 1)) ? ',' : '') + '</span>';
     }
     output += '</div>';
   }
   output += '</div>';
   if (((opt_data.fields == null) ? null : opt_data.fields.sys_contributors_view) != null) {
     output += '<div class="contributors_list">';
-    var cList179 = opt_data.fields.sys_contributors_view;
-    var cListLen179 = cList179.length;
-    for (var cIndex179 = 0; cIndex179 < cListLen179; cIndex179++) {
-      var cData179 = cList179[cIndex179];
-      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex179) + '"><img src="' + soy.$$escapeHtml(cData179.gURL16) + '"></span>';
+    var cList189 = opt_data.fields.sys_contributors_view;
+    var cListLen189 = cList189.length;
+    for (var cIndex189 = 0; cIndex189 < cListLen189; cIndex189++) {
+      var cData189 = cList189[cIndex189];
+      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex189) + '"><img src="' + soy.$$escapeHtml(cData189.gURL16) + '"></span>';
     }
     output += ((((opt_data.fields == null) ? null : opt_data.fields.sys_contributors_view.length) > 0) ? '<span class="selected_contributor_name">&#8212; <span class="value">' + soy.$$escapeHtml(opt_data.fields.sys_contributors_view[0].name) + '</span></span>' : '') + '</div>';
   }

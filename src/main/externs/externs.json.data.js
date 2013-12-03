@@ -72,6 +72,7 @@ SearchHit.prototype.fields.sys_url_view;
 SearchHit.prototype.fields.sys_last_activity_date;
 SearchHit.prototype.fields.sys_created;
 SearchHit.prototype.fields.sys_project;
+SearchHit.prototype.fields.sys_project_name;
 SearchHit.prototype.fields.sys_type;
 SearchHit.prototype.fields.sys_description;
 

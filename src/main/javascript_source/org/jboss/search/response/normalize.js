@@ -176,7 +176,12 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                 var projectId = fields.sys_project;
                 if (goog.object.containsKey(projectMap, projectId)){
                     fields.sys_project_full_name = projectMap[projectId];
-                }
+                } else {
+					// fallback to sys_project_name if available TODO: check it is not empty!
+					if (goog.object.containsKey(fields,'sys_project_name')) {
+						fields.sys_project_full_name = fields.sys_project_name;
+					}
+				}
             }
 
             // ==========================================
@@ -280,6 +285,20 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                     });
                 }
             }
+
+			// ==========================================
+			// normalizeSpaces in highlighted message_attachments.content
+			// This sounds like a hack but the problem is that we display content using "noAutoescape" mode
+			// thus we need to remove any spaces manually first.
+			// ==========================================
+			if (goog.object.containsKey(highlights,'message_attachments.content')) {
+				var attachments_body = highlights['message_attachments.content'];
+				if (goog.isArray(attachments_body) && attachments_body.length > 0) {
+					goog.array.forEach(attachments_body, function(item, index, array){
+						array[index] = org.jboss.search.response.normalizeAllSpaces_(item);
+					});
+				}
+			}
         })
     }
 
