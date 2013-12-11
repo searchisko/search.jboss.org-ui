@@ -1021,13 +1021,20 @@ org.jboss.search.page.SearchPage.prototype.collapseContentFilter_ = function () 
 };
 
 /**
- * Pre-load large avatar images of all contributors found in the data.
+ * Pre-load large avatar images of contributors found in the data.
+ * <p/>
+ * First, it grab all contributors from search results and start pre-loading large
+ * 40x40px avatars. This is to ensure that when user mouseover small avatars the large avatar changes instantly without
+ * noticeable loading.
+ * <p/>
+ * Second, it pre-load all avatar icons found in the top_contributor facet. This to make sure there is minimal visual
+ * distraction when the author filter is opened.
  * @param {Object} data
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.preLoadAvatarImages_ = function(data) {
+	var imageLoader = org.jboss.search.LookUp.getInstance().getImageLoader();
     if (data && data.hits && data.hits.hits) {
-        var imageLoader = org.jboss.search.LookUp.getInstance().getImageLoader();
         goog.array.forEach(
             data.hits.hits,
             function(hit) {
@@ -1045,4 +1052,15 @@ org.jboss.search.page.SearchPage.prototype.preLoadAvatarImages_ = function(data)
         );
         imageLoader.start();
     }
+	if (data && data.facets && data.facets.top_contributors && data.facets.top_contributors.terms) {
+		goog.array.forEach(
+			data.facets.top_contributors.terms,
+			function(term) {
+				if (goog.isString(term.gURL16)) {
+					imageLoader.addImage(term.gURL16, term.gURL16);
+				}
+			}
+		);
+		imageLoader.start();
+	}
 };
