@@ -13,3 +13,7 @@ When used in tests some services can be injected with mock objects.
 # Constants.js
 
 Global application constants.
+
+# Variables.js
+
+Variables that need to be customized in order to produce JS application for different deployment environment.
