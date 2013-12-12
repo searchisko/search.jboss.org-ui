@@ -93,6 +93,18 @@
     display: none;
 }
 
+.filter_tab .float_left {
+	float: left;
+}
+
+.filter_tab .float_right {
+	float: right;
+}
+
+.filter_tab .clear_both {
+	clear: both;
+}
+
 .filter_tab_content {
     margin: 30px 30px 30px 30px;
 }
