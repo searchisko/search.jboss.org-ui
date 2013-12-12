@@ -184,7 +184,7 @@ org.jboss.search.App = function() {
         // use 'order' if available and NOT equals to {@link org.jboss.search.context.RequestParams.Order.SCORE}
         if (goog.isDefAndNotNull(requestParams.getOrder())) {
             if (requestParams.getOrder() != org.jboss.search.context.RequestParams.Order.SCORE) {
-                token.push([p_.SORT_BY,goog.string.urlEncode(requestParams.getOrder())].join(''));
+                token.push([p_.ORDER_BY,goog.string.urlEncode(requestParams.getOrder())].join(''));
             }
         }
 

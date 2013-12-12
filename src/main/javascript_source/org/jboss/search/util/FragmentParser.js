@@ -36,7 +36,8 @@ goog.require('goog.date');
 goog.require('goog.date.DateTime');
 
 /**
- * Keys of the URL fragment parameters are translated to the following keys that are used internally.
+ * Keys of the URL fragment parameters are translated to the following keys that are used internally
+ * when generating Searchisko REST API call.
  * @enum {string}
  */
 org.jboss.search.util.fragmentParser.INTERNAL_param = {
@@ -44,7 +45,7 @@ org.jboss.search.util.fragmentParser.INTERNAL_param = {
     PAGE  : "page",
     FROM  : "from",
     TO    : "to",
-    SORT_BY : "sortBy",
+    ORDER_BY : "sortBy",
     LOG   : "log"
 };
 
@@ -57,7 +58,7 @@ org.jboss.search.util.fragmentParser.UI_param = {
     PAGE  : "page",
     FROM  : "from",
     TO    : "to",
-    SORT_BY : "sortBy",
+    ORDER_BY : "orderBy",
     LOG   : "log"
 };
 
@@ -70,7 +71,7 @@ org.jboss.search.util.fragmentParser.UI_param_suffix = {
     PAGE  : org.jboss.search.util.fragmentParser.UI_param.PAGE+"=",
     FROM  : org.jboss.search.util.fragmentParser.UI_param.FROM+"=",
     TO    : org.jboss.search.util.fragmentParser.UI_param.TO+"=",
-    SORT_BY : org.jboss.search.util.fragmentParser.UI_param.SORT_BY+"=",
+    ORDER_BY : org.jboss.search.util.fragmentParser.UI_param.ORDER_BY+"=",
     LOG   : org.jboss.search.util.fragmentParser.UI_param.LOG+"="
 };
 
@@ -141,17 +142,17 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
                     // TODO: log?
                 }
             } else
-            // ------------------- SORT_BY ----------------------
-            if (goog.string.caseInsensitiveStartsWith(part, p_.SORT_BY)) {
-                var sortBy_ = goog.string.trim(
+            // ------------------- ORDER_BY ----------------------
+            if (goog.string.caseInsensitiveStartsWith(part, p_.ORDER_BY)) {
+                var orderBy_ = goog.string.trim(
                     goog.string.urlDecode(
-                        goog.string.removeAt(part, 0, p_.SORT_BY.length)
+                        goog.string.removeAt(part, 0, p_.ORDER_BY.length)
                     )
                     ).toLowerCase();
-                // sortBy should NOT equals to {@link org.jboss.search.context.RequestParams.Order.SCORE}
-                if (goog.object.containsValue(org.jboss.search.context.RequestParams.Order, sortBy_) &&
-                    sortBy_ != org.jboss.search.context.RequestParams.Order.SCORE) {
-                    parsed[intp_.SORT_BY] = sortBy_;
+                // orderBy should NOT equals to {@link org.jboss.search.context.RequestParams.Order.SCORE}
+                if (goog.object.containsValue(org.jboss.search.context.RequestParams.Order, orderBy_) &&
+                    orderBy_ != org.jboss.search.context.RequestParams.Order.SCORE) {
+                    parsed[intp_.ORDER_BY] = orderBy_;
                 }
             } else
             // ------------------- LOG ----------------------
@@ -172,7 +173,7 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
         parsed[intp_.PAGE],
         parsed[intp_.FROM],
         parsed[intp_.TO],
-        parsed[intp_.SORT_BY],
+        parsed[intp_.ORDER_BY],
         parsed[intp_.LOG]
     );
 };

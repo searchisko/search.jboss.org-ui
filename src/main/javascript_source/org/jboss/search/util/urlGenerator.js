@@ -44,7 +44,7 @@ org.jboss.search.util.urlGenerator.QueryParams = {
     HIGHLIGHTS : 'query_highlight',
     ACTIVITY_DATE_FROM : 'activity_date_from',
     ACTIVITY_DATE_TO   : 'activity_date_to',
-    SORT_BY : 'sortBy'
+    ORDER_BY : 'sortBy'
 };
 
 /**
@@ -128,17 +128,17 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
         }
     }
 
-    var sortBy = requestParams.getOrder();
-    if (goog.isDef(sortBy) && goog.isString(sortBy)) {
-        if (goog.object.containsValue(org.jboss.search.context.RequestParams.Order, sortBy)) {
-            // sort by score is the default
-            if (org.jboss.search.context.RequestParams.Order.SCORE != sortBy) {
-                switch (sortBy) {
+    var orderBy = requestParams.getOrder();
+    if (goog.isDef(orderBy) && goog.isString(orderBy)) {
+        if (goog.object.containsValue(org.jboss.search.context.RequestParams.Order, orderBy)) {
+            // order by score is the default
+            if (org.jboss.search.context.RequestParams.Order.SCORE != orderBy) {
+                switch (orderBy) {
                     case org.jboss.search.context.RequestParams.Order.NEW_FIRST:
-                        rootUri.setParameterValue(params.SORT_BY, org.jboss.search.util.urlGenerator.QueryParams.SortBy.NEW);
+                        rootUri.setParameterValue(params.ORDER_BY, org.jboss.search.util.urlGenerator.QueryParams.SortBy.NEW);
                         break;
                     case org.jboss.search.context.RequestParams.Order.OLD_FIRST:
-                        rootUri.setParameterValue(params.SORT_BY, org.jboss.search.util.urlGenerator.QueryParams.SortBy.OLD);
+                        rootUri.setParameterValue(params.ORDER_BY, org.jboss.search.util.urlGenerator.QueryParams.SortBy.OLD);
                         break;
                 }
             }
