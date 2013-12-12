@@ -26,7 +26,7 @@ goog.provide('org.jboss.search.util.urlGenerator.QueryParams');
 goog.provide('org.jboss.search.util.urlGenerator.QueryParams.SortBy');
 
 goog.require('goog.Uri');
-goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.search.Variables');
 goog.require('org.jboss.search.context.RequestParams');
 goog.require('org.jboss.search.context.RequestParams.Order');
 
@@ -108,7 +108,7 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
     var page = requestParams.getPage();
     if (goog.isDef(page) && goog.isNumber(page)) {
         if (page > 1) {
-            rootUri.setParameterValue(params.FROM,(Math.round(page-1)*org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE))
+            rootUri.setParameterValue(params.FROM,(Math.round(page-1)*org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE))
         }
     }
 

@@ -539,7 +539,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     /** @private */
     this.userIdleDelay_ = new goog.async.Delay(
         goog.bind(this.userIdle_.start,this.userIdle_),
-        org.jboss.search.Constants.USER_IDLE_INTERVAL
+        org.jboss.search.Variables.USER_IDLE_INTERVAL
     );
 
     this.userIdleDelay_.start();

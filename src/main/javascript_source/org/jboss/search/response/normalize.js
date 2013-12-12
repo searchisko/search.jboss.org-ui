@@ -24,7 +24,7 @@
  */
 goog.provide('org.jboss.search.response');
 
-goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.search.Variables');
 goog.require('org.jboss.search.util.paginationGenerator');
 goog.require('org.jboss.search.LookUp');
 
@@ -122,7 +122,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
 
             // ==========================================
             // Position of hit within one search results page
-            // <0, org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE - 1>
+            // <0, org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE - 1>
             // ==========================================
             hit.position_on_page = i;
 
@@ -197,7 +197,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             if (goog.object.containsKey(fields,'sys_url_view')) {
                 var url = fields.sys_url_view;
                 if (goog.isDef(url)) {
-                    var url_tr = goog.string.truncateMiddle(url, org.jboss.search.Constants.MAX_URL_LENGTH, true);
+                    var url_tr = goog.string.truncateMiddle(url, org.jboss.search.Variables.MAX_URL_LENGTH, true);
                     fields.sys_url_view_tr = url_tr;
                 }
             }
@@ -208,7 +208,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             if (goog.object.containsKey(fields,'sys_description')) {
                 var desc = org.jboss.search.response.normalizeAllSpaces_(fields.sys_description);
                 if (goog.isDef(desc)) {
-                    var desc_tr = goog.string.truncate(desc, org.jboss.search.Constants.MAX_DESCRIPTION_LENGTH, true);
+                    var desc_tr = goog.string.truncate(desc, org.jboss.search.Variables.MAX_DESCRIPTION_LENGTH, true);
                     fields.sys_description_tr = desc_tr;
                 }
             }

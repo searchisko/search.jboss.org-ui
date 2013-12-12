@@ -35,6 +35,35 @@ org.jboss.search.Variables = {
 	API_URL_BASE_DCP : 'http://dcp-dev.jboss.org:8080',
 
 	/**
+	 * Number of search results per page (is also used for pagination navigation calculations).
+	 * @type {number}
+	 * @const
+	 */
+	SEARCH_RESULTS_PER_PAGE: 10,
+
+	/**
+	 * When pagination navigation is generated then it has up to 'PAGINATION_MAX_ITEMS_COUNT' items.
+	 * @type {number}
+	 * @const
+	 */
+	PAGINATION_MAX_ITEMS_COUNT: 10,
+
+	/**
+	 * Max length of description text for individual search hit (if no highlights are used).
+	 * Ideal length of line 60, max 3 lines = 180.
+	 * @type {number}
+	 * @const
+	 */
+	MAX_DESCRIPTION_LENGTH: 180,
+
+	/**
+	 * Max length of URL link for individual search hit.
+	 * @type {number}
+	 * @const
+	 */
+	MAX_URL_LENGTH: 60,
+
+	/**
 	 * How many avatars are pre-loaded from contributor facet.
 	 * The idea is to pre-load only as many as can be visible when the filter
 	 * is expanded after its content update. When relevant HTML/CSS is changed
@@ -42,6 +71,13 @@ org.jboss.search.Variables = {
 	 * @type {number}
 	 * @const
 	 */
-	CONTRIBUTOR_FACET_AVATAR_PRELOAD_CNT : 17
+	CONTRIBUTOR_FACET_AVATAR_PRELOAD_CNT : 17,
+
+	/**
+	 * Interval in ms. When user has been idle for this time then we can fire some 'entertaining' action.
+	 * @type {number}
+	 * @const
+	 */
+	USER_IDLE_INTERVAL: 4000
 
 };

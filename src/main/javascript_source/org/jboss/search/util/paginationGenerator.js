@@ -23,7 +23,7 @@
 
 goog.provide('org.jboss.search.util.paginationGenerator');
 
-goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.search.Variables');
 
 /**
  * Returns array with simple data structure that can be easily used to generate
@@ -46,8 +46,8 @@ org.jboss.search.util.paginationGenerator.generate = function(actual_page, searc
             }
         };
 
-        var hits_per_page = org.jboss.search.Constants.SEARCH_RESULTS_PER_PAGE;
-        var pagination_size = org.jboss.search.Constants.PAGINATION_MAX_ITEMS_COUNT;
+        var hits_per_page = org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE;
+        var pagination_size = org.jboss.search.Variables.PAGINATION_MAX_ITEMS_COUNT;
         var total_pages = Math.ceil(search_total_hits/hits_per_page);
         result.total_pages = total_pages;
 

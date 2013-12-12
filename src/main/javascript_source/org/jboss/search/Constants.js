@@ -28,35 +28,6 @@ goog.require('org.jboss.search.Variables');
 org.jboss.search.Constants = {
 
     /**
-     * Number of search results per page (is also used for pagination navigation calculations).
-     * @type {number}
-     * @const
-     */
-    SEARCH_RESULTS_PER_PAGE: 10,
-
-    /**
-     * When pagination navigation is generated then it has up to 'PAGINATION_MAX_ITEMS_COUNT' items.
-     * @type {number}
-     * @const
-     */
-    PAGINATION_MAX_ITEMS_COUNT: 10,
-
-    /**
-     * Max length of description text for individual search hit (if no highlights are used).
-     * Ideal length of line 60, max 3 lines = 180.
-     * @type {number}
-     * @const
-     */
-    MAX_DESCRIPTION_LENGTH: 180,
-
-    /**
-     * Max length of URL link for individual search hit.
-     * @type {number}
-     * @const
-     */
-    MAX_URL_LENGTH: 60,
-
-    /**
      * HTTP GET request type.
      * @type {string}
      * @const
@@ -238,13 +209,6 @@ org.jboss.search.Constants = {
      * @type {string}
      * @const
      */
-    API_URL_RECORD_USER_CLICK_STREAM: [org.jboss.search.Variables.API_URL_BASE_DCP,'/v1/rest','/search'].join(''),
-
-    /**
-     * Interval in ms. When user has been idle for this time then we can fire some 'entertaining' action.
-     * @type {number}
-     * @const
-     */
-    USER_IDLE_INTERVAL: 4000
+    API_URL_RECORD_USER_CLICK_STREAM: [org.jboss.search.Variables.API_URL_BASE_DCP,'/v1/rest','/search'].join('')
 
 };
