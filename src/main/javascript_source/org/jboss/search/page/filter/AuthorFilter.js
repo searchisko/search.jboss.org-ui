@@ -120,6 +120,8 @@ org.jboss.search.page.filter.AuthorFilter.prototype.refreshItems = function(opt_
  * @private
  */
 org.jboss.search.page.filter.AuthorFilter.prototype.updateItems_ = function(data) {
+	// scroll to top when changing the content of the filter
+	if (this.author_filter_items_div_.scrollTop) { this.author_filter_items_div_.scrollTop = 0 }
 	var html = org.jboss.search.page.filter.templates.author_filter_items({ 'terms': data });
 	this.author_filter_items_div_.innerHTML = html;
 };
