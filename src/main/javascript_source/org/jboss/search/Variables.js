@@ -32,6 +32,16 @@ org.jboss.search.Variables = {
 	 * @type {string}
 	 * @const
 	 */
-	API_URL_BASE_DCP: 'http://dcp-dev.jboss.org:8080'
+	API_URL_BASE_DCP : 'http://dcp-dev.jboss.org:8080',
+
+	/**
+	 * How many avatars are pre-loaded from contributor facet.
+	 * The idea is to pre-load only as many as can be visible when the filter
+	 * is expanded after its content update. When relevant HTML/CSS is changed
+	 * this variable should updated as well.
+	 * @type {number}
+	 * @const
+	 */
+	CONTRIBUTOR_FACET_AVATAR_PRELOAD_CNT : 17
 
 };

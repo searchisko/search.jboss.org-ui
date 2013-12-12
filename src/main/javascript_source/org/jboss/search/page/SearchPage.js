@@ -31,6 +31,7 @@ goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.page.SearchPageElements');
 goog.require('org.jboss.search.page.UserIdle');
+goog.require('org.jboss.search.Variables');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('org.jboss.search.suggestions.query.view.View');
@@ -144,15 +145,15 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 //                    console.log("response > ",response);
                     this.log_.info("Search succeeded, took " + response["took"] + "ms, uuid [" +response["uuid"] + "]");
                     org.jboss.search.LookUp.getInstance().setRecentQueryResultData(response);
-                    // refresh histogram chart only if filter expanded
-                    var dateFilter_ = org.jboss.search.LookUp.getInstance().getDateFilter();
-                    if (goog.isDefAndNotNull(dateFilter_)) { dateFilter_.refreshChart(false) }
+					// render new HTML for search results first
+                    this.renderQueryResponse_();
+                    this.enableSearchResults_();
+					// refresh histogram chart only if filter expanded
+					var dateFilter_ = org.jboss.search.LookUp.getInstance().getDateFilter();
+					if (goog.isDefAndNotNull(dateFilter_)) { dateFilter_.refreshChart(false) }
 					// refresh author filter
 					var authorFilter_ = org.jboss.search.LookUp.getInstance().getAuthorFilter();
 					if (goog.isDefAndNotNull(authorFilter_)) { authorFilter_.refreshItems(false) }
-					// render new HTML for search results
-                    this.renderQueryResponse_();
-                    this.enableSearchResults_();
                     break;
 
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR:
@@ -1027,8 +1028,9 @@ org.jboss.search.page.SearchPage.prototype.collapseContentFilter_ = function () 
  * 40x40px avatars. This is to ensure that when user mouseover small avatars the large avatar changes instantly without
  * noticeable loading.
  * <p/>
- * Second, it pre-load all avatar icons found in the top_contributor facet. This to make sure there is minimal visual
- * distraction when the author filter is opened.
+ * Second, it pre-load avatar icons found in the top_contributor facet. This to make sure there is minimal visual
+ * distraction when the author filter is opened. Number of avatars pre-loaded is limited
+ * by org.jboss.search.Variables.CONTRIBUTOR_FACET_AVATAR_PRELOAD_CNT.
  * @param {Object} data
  * @private
  */
@@ -1053,11 +1055,15 @@ org.jboss.search.page.SearchPage.prototype.preLoadAvatarImages_ = function(data)
         imageLoader.start();
     }
 	if (data && data.facets && data.facets.top_contributors && data.facets.top_contributors.terms) {
+		var cnt = org.jboss.search.Variables.CONTRIBUTOR_FACET_AVATAR_PRELOAD_CNT;
+		// sanity check
+		cnt = cnt < 0 ? 0 : cnt;
 		goog.array.forEach(
 			data.facets.top_contributors.terms,
 			function(term) {
-				if (goog.isString(term.gURL16)) {
+				if (cnt > 0 && goog.isString(term.gURL16)) {
 					imageLoader.addImage(term.gURL16, term.gURL16);
+					cnt -= 1;
 				}
 			}
 		);
