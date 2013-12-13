@@ -18,6 +18,11 @@
 
 /**
  * @fileoverview Externs for json data structures that are input to Soy templates.
+ * <p>
+ * Note that there can be the same field names defined several times. In fact this does
+ * not matter, it is better to have duplicities as long as it makes code not readable.
+ * It does not add up to size of compiled code.
+ *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  * @externs
  */
@@ -105,6 +110,10 @@ SearchHit.prototype.facets.top_contributors.terms;
 
 // Project counts facet
 SearchHit.prototype.facets.pre_project_counts;
+SearchHit.prototype.facets.pre_project_counts.other;
+SearchHit.prototype.facets.pre_project_counts.missing;
+SearchHit.prototype.facets.pre_project_counts.total;
+SearchHit.prototype.facets.pre_project_counts.terms;
 
 // sys_type counts facet
 SearchHit.prototype.facets.pre_sys_type_counts;

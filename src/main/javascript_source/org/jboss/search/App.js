@@ -288,6 +288,7 @@ org.jboss.search.App = function() {
             var projectFilter = new org.jboss.search.page.filter.ProjectFilter(
                 searchPageElements.getProject_filter_body_div(),
                 searchPageElements.getProject_filter_query_field(),
+				function() { return goog.dom.classes.has(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN) },
                 function() {
                     goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
                     goog.dom.classes.add(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
@@ -316,6 +317,7 @@ org.jboss.search.App = function() {
             asyncInit.setProjectFilterDone();
         });
 
+	// initialize author filter and keep reference in the lookup
     authorFilterDeferred
         .addCallback(function() {
             var authorFilter = new org.jboss.search.page.filter.AuthorFilter(
@@ -350,6 +352,7 @@ org.jboss.search.App = function() {
             asyncInit.setAuthorFilterDone();
         });
 
+	// initialize content filter and keep reference in the lookup
 	contentFilterDeferred
 		.addCallback(function() {
 			var contentFilter = new org.jboss.search.page.filter.ContentFilter(
@@ -381,7 +384,7 @@ org.jboss.search.App = function() {
 			asyncInit.setContentFilterDone();
 		});
 
-    // initialization of date filter
+    // initialization of date filter and keep reference in the lookup
     dateFilterDeferred
         // first instantiate date filter and push it up into LookUp
         .addCallback(function() {

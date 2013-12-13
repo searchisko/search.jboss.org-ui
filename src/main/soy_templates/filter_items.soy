@@ -7,22 +7,31 @@
  * @param did_you_mean_items
  */
 {template .project_filter_items}
-
     {foreach $item in $items}
         <div code='{$item.code}'><span class="selectable">{$item.name|noAutoescape}</span></div>
     {/foreach}
-
     {if isNonnull($did_you_mean_items) and $did_you_mean_items.length > 0}
         <div class="did_you_mean">Did you mean?</div>
         {foreach $item in $did_you_mean_items}
             <div code='{$item.code}'><span class="selectable">{$item.name}</span></div>
         {/foreach}
     {/if}
-
     {if isNonnull($did_you_mean_items) and isNonnull($items) and $did_you_mean_items.length == 0 and $items.length == 0}
         <div>No matching projects...</div>
     {/if}
+{/template}
 
+/**
+ * Author filter DIV.
+ *
+ * @param terms
+ */
+{template .project_filter_top_items}
+    {foreach $term in $terms}
+        <div code='{$term.term}'>
+        	<span class="selectable">{$term.name|noAutoescape} ({$term.count})</span>
+        </div>
+    {/foreach}
 {/template}
 
 /**
@@ -31,11 +40,9 @@
  * @param terms
  */
 {template .author_filter_items}
-
     {foreach $term in $terms}
         <div code='{$term.term}'>
         	<span class="selectable"><img src="{$term.gURL16}"> {$term.name|noAutoescape} ({$term.count})</span>
         </div>
     {/foreach}
-
 {/template}

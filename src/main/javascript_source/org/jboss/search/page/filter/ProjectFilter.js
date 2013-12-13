@@ -40,25 +40,32 @@ goog.require('goog.Disposable');
  * It requires an element as a parameter, it assumes there is one element with class='filter_items' found inside.
  * @param {!HTMLElement} element to host the project filter
  * @param {!HTMLInputElement} query_field to host the project filter
+ * @param {function(): boolean} opt_isCollapsed a function that is used to learn if filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.page.filter.ProjectFilter = function(element, query_field, opt_expandFilter, opt_collapseFilter) {
+org.jboss.search.page.filter.ProjectFilter = function(element, query_field, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
     goog.Disposable.call(this);
 
     /**
      * @type {!Function}
      * @private
      */
-    this.expandFilter_ = /** @type {!Function} */ (goog.isFunction(opt_expandFilter) ? opt_expandFilter : goog.nullFunction());
+    this.expandFilter_ = /** @type {!Function} */ (goog.isFunction(opt_expandFilter) ? opt_expandFilter : goog.nullFunction);
 
     /**
      * @type {!Function}
      * @private
      */
-    this.collpaseFilter_ = /** @type {!Function} */ (goog.isFunction(opt_collapseFilter) ? opt_collapseFilter : goog.nullFunction());
+    this.collpaseFilter_ = /** @type {!Function} */ (goog.isFunction(opt_collapseFilter) ? opt_collapseFilter : goog.nullFunction);
+
+	/**
+	 * @type {function(): boolean}
+	 * @private
+	 */
+	this.isCollapsed_ = /** @type {function(): boolean} */ (goog.isFunction(opt_isCollapsed) ? opt_isCollapsed : function(){ return true });
 
     /**
      * @type {!HTMLElement}
@@ -95,11 +102,42 @@ org.jboss.search.page.filter.ProjectFilter.prototype.disposeInternal = function(
 };
 
 /**
+ * Refresh filter items (meaning update to the latest search result data). By default
+ * this does nothing if the filter is collapsed.
+ * @param {boolean=} opt_force refresh even if filter is collapsed. Defaults to false.
+ */
+org.jboss.search.page.filter.ProjectFilter.prototype.refreshItems = function(opt_force) {
+	var force = !!(opt_force || false);
+	if (!this.isCollapsed_() || force) {
+		var data = org.jboss.search.LookUp.getInstance().getRecentQueryResultData();
+		if (data && data.facets && data.facets.per_project_counts &&
+			data.facets.per_project_counts.terms && goog.isArray(data.facets.per_project_counts.terms)) {
+			this.updateItems_(data.facets.per_project_counts.terms);
+		} else {
+			this.updateItems_([]);
+		}
+	}
+};
+
+/**
+ * (Re)generate HTML of filter items
+ * @param {Array} data
+ * @private
+ */
+org.jboss.search.page.filter.ProjectFilter.prototype.updateItems_ = function(data) {
+	// scroll to top when changing the content of the filter
+	if (this.items_div_.scrollTop) { this.items_div_.scrollTop = 0 }
+	var html = org.jboss.search.page.filter.templates.project_filter_top_items({ 'terms': data });
+	this.items_div_.innerHTML = html;
+};
+
+/**
  * Calls opt_expandFilter function.
  * @see constructor
  */
 org.jboss.search.page.filter.ProjectFilter.prototype.expandFilter = function() {
     this.expandFilter_();
+	this.refreshItems();
 };
 
 /**
@@ -241,6 +279,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.getPresetKeyHandlers_ = fun
      */
     var keyCodeTabHandler = goog.bind(function(event, delay) {
         // do we need TAB handler?
+		event.preventDefault();
 //        delay.stop();
 //        this.hideAndCleanSuggestionsElementAndModel_();
     }, this);

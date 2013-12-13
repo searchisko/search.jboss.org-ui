@@ -26,20 +26,20 @@ org.jboss.search.page.templates.request_error = function(opt_data, opt_ignored) 
  */
 org.jboss.search.page.templates.search_results = function(opt_data, opt_ignored) {
   var output = '<div class="statistics">Found ' + soy.$$escapeHtml(opt_data.hits.total) + ' results for "' + soy.$$escapeHtml(opt_data.user_query) + '" -&nbsp;page&nbsp;' + ((opt_data.pagination != null && opt_data.pagination.total_pages == 0) ? '0' : soy.$$escapeHtml(opt_data.actual_page)) + '/' + ((opt_data.pagination != null) ? soy.$$escapeHtml(opt_data.pagination.total_pages) : 'na') + '.</div>';
-  var hitList62 = opt_data.hits.hits;
-  var hitListLen62 = hitList62.length;
-  for (var hitIndex62 = 0; hitIndex62 < hitListLen62; hitIndex62++) {
-    var hitData62 = hitList62[hitIndex62];
-    output += org.jboss.search.page.templates.hit(hitData62) + '<div class="hit_spacer"></div>';
+  var hitList73 = opt_data.hits.hits;
+  var hitListLen73 = hitList73.length;
+  for (var hitIndex73 = 0; hitIndex73 < hitListLen73; hitIndex73++) {
+    var hitData73 = hitList73[hitIndex73];
+    output += org.jboss.search.page.templates.hit(hitData73) + '<div class="hit_spacer"></div>';
   }
   output += '<div class="pagination">';
   if (opt_data.pagination != null) {
-    var pList69 = opt_data.pagination.array;
-    var pListLen69 = pList69.length;
-    if (pListLen69 > 0) {
-      for (var pIndex69 = 0; pIndex69 < pListLen69; pIndex69++) {
-        var pData69 = pList69[pIndex69];
-        output += '<span class="' + ((opt_data.actual_page == pData69.page) ? 'actual ' : '') + 'pc_" pn_="' + soy.$$escapeHtml(pData69.symbol) + '">' + soy.$$filterNoAutoescape(pData69.symbol) + '</span>';
+    var pList80 = opt_data.pagination.array;
+    var pListLen80 = pList80.length;
+    if (pListLen80 > 0) {
+      for (var pIndex80 = 0; pIndex80 < pListLen80; pIndex80++) {
+        var pData80 = pList80[pIndex80];
+        output += '<span class="' + ((opt_data.actual_page == pData80.page) ? 'actual ' : '') + 'pc_" pn_="' + soy.$$escapeHtml(pData80.symbol) + '">' + soy.$$filterNoAutoescape(pData80.symbol) + '</span>';
       }
     } else {
     }
@@ -60,11 +60,11 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
   if (((opt_data.highlight == null) ? null : opt_data.highlight.sys_description) != null || ((opt_data.fields == null) ? null : opt_data.fields.sys_description_tr) != null || ((opt_data.highlight == null) ? null : (opt_data.highlight.sys_content_plaintext == null) ? null : opt_data.highlight.sys_content_plaintext.length) > 0) {
     output += '<div class="description">';
     if (((opt_data.highlight == null) ? null : (opt_data.highlight.sys_content_plaintext == null) ? null : opt_data.highlight.sys_content_plaintext.length) > 0) {
-      var content_snippetList141 = opt_data.highlight.sys_content_plaintext;
-      var content_snippetListLen141 = content_snippetList141.length;
-      for (var content_snippetIndex141 = 0; content_snippetIndex141 < content_snippetListLen141; content_snippetIndex141++) {
-        var content_snippetData141 = content_snippetList141[content_snippetIndex141];
-        output += (content_snippetIndex141 < 2) ? soy.$$filterNoAutoescape(content_snippetData141) + '&nbsp;&hellip; ' : '';
+      var content_snippetList152 = opt_data.highlight.sys_content_plaintext;
+      var content_snippetListLen152 = content_snippetList152.length;
+      for (var content_snippetIndex152 = 0; content_snippetIndex152 < content_snippetListLen152; content_snippetIndex152++) {
+        var content_snippetData152 = content_snippetList152[content_snippetIndex152];
+        output += (content_snippetIndex152 < 2) ? soy.$$filterNoAutoescape(content_snippetData152) + '&nbsp;&hellip; ' : '';
       }
     } else if (((opt_data.highlight == null) ? null : opt_data.highlight.sys_description) != null) {
       output += soy.$$filterNoAutoescape(opt_data.highlight.sys_description);
@@ -75,42 +75,42 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
   }
   if (((opt_data.highlight == null) ? null : opt_data.highlight.comment_body) != null) {
     output += '<div class="children comments">Comments:<ul>';
-    var commentList158 = opt_data.highlight.comment_body;
-    var commentListLen158 = commentList158.length;
-    for (var commentIndex158 = 0; commentIndex158 < commentListLen158; commentIndex158++) {
-      var commentData158 = commentList158[commentIndex158];
-      output += '<li>' + soy.$$filterNoAutoescape(commentData158) + '&nbsp;&hellip;</li>';
+    var commentList169 = opt_data.highlight.comment_body;
+    var commentListLen169 = commentList169.length;
+    for (var commentIndex169 = 0; commentIndex169 < commentListLen169; commentIndex169++) {
+      var commentData169 = commentList169[commentIndex169];
+      output += '<li>' + soy.$$filterNoAutoescape(commentData169) + '&nbsp;&hellip;</li>';
     }
     output += '</ul></div>';
   }
   if (((opt_data.highlight == null) ? null : opt_data.highlight['message_attachments.content']) != null) {
     output += '<div class="children attachments">Attachments:<ul>';
-    var attachmentList168 = opt_data.highlight['message_attachments.content'];
-    var attachmentListLen168 = attachmentList168.length;
-    for (var attachmentIndex168 = 0; attachmentIndex168 < attachmentListLen168; attachmentIndex168++) {
-      var attachmentData168 = attachmentList168[attachmentIndex168];
-      output += '<li>' + soy.$$filterNoAutoescape(attachmentData168) + '&nbsp;&hellip;</li>';
+    var attachmentList179 = opt_data.highlight['message_attachments.content'];
+    var attachmentListLen179 = attachmentList179.length;
+    for (var attachmentIndex179 = 0; attachmentIndex179 < attachmentListLen179; attachmentIndex179++) {
+      var attachmentData179 = attachmentList179[attachmentIndex179];
+      output += '<li>' + soy.$$filterNoAutoescape(attachmentData179) + '&nbsp;&hellip;</li>';
     }
     output += '</ul></div>';
   }
   if (((opt_data.fields == null) ? null : (opt_data.fields.sys_tags_view == null) ? null : opt_data.fields.sys_tags_view.length) > 0) {
     output += '<div class="tags_list">Tags:';
-    var tagList178 = opt_data.fields.sys_tags_view;
-    var tagListLen178 = tagList178.length;
-    for (var tagIndex178 = 0; tagIndex178 < tagListLen178; tagIndex178++) {
-      var tagData178 = tagList178[tagIndex178];
-      output += '<span> ' + soy.$$escapeHtml(tagData178) + ((! (tagIndex178 == tagListLen178 - 1)) ? ',' : '') + '</span>';
+    var tagList189 = opt_data.fields.sys_tags_view;
+    var tagListLen189 = tagList189.length;
+    for (var tagIndex189 = 0; tagIndex189 < tagListLen189; tagIndex189++) {
+      var tagData189 = tagList189[tagIndex189];
+      output += '<span> ' + soy.$$escapeHtml(tagData189) + ((! (tagIndex189 == tagListLen189 - 1)) ? ',' : '') + '</span>';
     }
     output += '</div>';
   }
   output += '</div>';
   if (((opt_data.fields == null) ? null : opt_data.fields.sys_contributors_view) != null) {
     output += '<div class="contributors_list">';
-    var cList191 = opt_data.fields.sys_contributors_view;
-    var cListLen191 = cList191.length;
-    for (var cIndex191 = 0; cIndex191 < cListLen191; cIndex191++) {
-      var cData191 = cList191[cIndex191];
-      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex191) + '"><img src="' + soy.$$escapeHtml(cData191.gURL16) + '"></span>';
+    var cList202 = opt_data.fields.sys_contributors_view;
+    var cListLen202 = cList202.length;
+    for (var cIndex202 = 0; cIndex202 < cListLen202; cIndex202++) {
+      var cData202 = cList202[cIndex202];
+      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex202) + '"><img src="' + soy.$$escapeHtml(cData202.gURL16) + '"></span>';
     }
     output += ((((opt_data.fields == null) ? null : opt_data.fields.sys_contributors_view.length) > 0) ? '<span class="selected_contributor_name">&#8212; <span class="value">' + soy.$$escapeHtml(opt_data.fields.sys_contributors_view[0].name) + '</span></span>' : '') + '</div>';
   }

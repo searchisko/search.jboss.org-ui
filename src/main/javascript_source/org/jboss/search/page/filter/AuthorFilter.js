@@ -31,7 +31,7 @@ goog.require('goog.Disposable');
 
 /**
  * Create a new author filter.
- * It requires an element as a parameter, it assumes there is one element with class='filter_items' found inside.
+ * It requires an element as the parameter, it assumes there is one element with class='filter_items' found inside.
  * @param {!HTMLElement} element to host the author filter
  * @param {!HTMLInputElement} query_field to host the project filter
  * @param {!HTMLDivElement} author_filter_items_div where authors are listed
@@ -48,13 +48,13 @@ org.jboss.search.page.filter.AuthorFilter = function(element, query_field, autho
      * @type {!Function}
      * @private
      */
-    this.expandFilter_ = /** @type {!Function} */ (goog.isFunction(opt_expandFilter) ? opt_expandFilter : goog.nullFunction());
+    this.expandFilter_ = /** @type {!Function} */ (goog.isFunction(opt_expandFilter) ? opt_expandFilter : goog.nullFunction);
 
     /**
      * @type {!Function}
      * @private
      */
-    this.collpaseFilter_ = /** @type {!Function} */ (goog.isFunction(opt_collapseFilter) ? opt_collapseFilter : goog.nullFunction());
+    this.collpaseFilter_ = /** @type {!Function} */ (goog.isFunction(opt_collapseFilter) ? opt_collapseFilter : goog.nullFunction);
 
 	/**
 	 * @type {function(): boolean}
@@ -167,9 +167,50 @@ org.jboss.search.page.filter.AuthorFilter.prototype.getPresetKeyHandlers_ = func
         }
     }, this);
 
+	/**
+	 * @param {goog.events.KeyEvent} event
+	 * @param {goog.async.Delay} delay
+	 */
+	var keyCodeDownHandler = goog.bind(function(event, delay) {
+		event.preventDefault();
+	}, this);
+
+	/**
+	 * @param {goog.events.KeyEvent} event
+	 * @param {goog.async.Delay} delay
+	 */
+	var keyCodeUpHandler = goog.bind(function(event, delay) {
+		event.preventDefault();
+	}, this);
+
+	/**
+	 * @param {goog.events.KeyEvent} event
+	 * @param {goog.async.Delay} delay
+	 */
+	var keyCodeTabHandler = goog.bind(function(event, delay) {
+		// do we need TAB handler?
+		event.preventDefault();
+	}, this);
+
+	/**
+	 * @param {goog.events.KeyEvent} event
+	 * @param {goog.async.Delay} delay
+	 */
+	var keyCodeEnterHandler = goog.bind(function(event, delay) {
+
+	}, this);
+
     // prepare keyHandlers for the main search field
     var keyHandlers = {};
+
     keyHandlers[goog.events.KeyCodes.ESC] = keyCodeEscHandler;
+	keyHandlers[goog.events.KeyCodes.UP] = keyCodeUpHandler;
+	keyHandlers[goog.events.KeyCodes.DOWN] = keyCodeDownHandler;
+	keyHandlers[goog.events.KeyCodes.ENTER] = keyCodeEnterHandler;
+
+	// TAB key does not seem to yield true in @see {goog.events.KeyCodes.isTextModifyingKeyEvent}
+	// thus we have to handle it
+	keyHandlers[goog.events.KeyCodes.TAB] = keyCodeTabHandler;
 
     return keyHandlers;
 };

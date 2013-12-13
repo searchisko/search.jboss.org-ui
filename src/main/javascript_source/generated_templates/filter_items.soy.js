@@ -41,13 +41,31 @@ org.jboss.search.page.filter.templates.project_filter_items = function(opt_data,
  * @return {string}
  * @notypecheck
  */
-org.jboss.search.page.filter.templates.author_filter_items = function(opt_data, opt_ignored) {
+org.jboss.search.page.filter.templates.project_filter_top_items = function(opt_data, opt_ignored) {
   var output = '';
   var termList25 = opt_data.terms;
   var termListLen25 = termList25.length;
   for (var termIndex25 = 0; termIndex25 < termListLen25; termIndex25++) {
     var termData25 = termList25[termIndex25];
-    output += '<div code=\'' + soy.$$escapeHtml(termData25.term) + '\'><span class="selectable"><img src="' + soy.$$escapeHtml(termData25.gURL16) + '"> ' + soy.$$filterNoAutoescape(termData25.name) + ' (' + soy.$$escapeHtml(termData25.count) + ')</span></div>';
+    output += '<div code=\'' + soy.$$escapeHtml(termData25.term) + '\'><span class="selectable">' + soy.$$filterNoAutoescape(termData25.name) + ' (' + soy.$$escapeHtml(termData25.count) + ')</span></div>';
+  }
+  return output;
+};
+
+
+/**
+ * @param {Object.<string, *>=} opt_data
+ * @param {(null|undefined)=} opt_ignored
+ * @return {string}
+ * @notypecheck
+ */
+org.jboss.search.page.filter.templates.author_filter_items = function(opt_data, opt_ignored) {
+  var output = '';
+  var termList36 = opt_data.terms;
+  var termListLen36 = termList36.length;
+  for (var termIndex36 = 0; termIndex36 < termListLen36; termIndex36++) {
+    var termData36 = termList36[termIndex36];
+    output += '<div code=\'' + soy.$$escapeHtml(termData36.term) + '\'><span class="selectable"><img src="' + soy.$$escapeHtml(termData36.gURL16) + '"> ' + soy.$$filterNoAutoescape(termData36.name) + ' (' + soy.$$escapeHtml(termData36.count) + ')</span></div>';
   }
   return output;
 };

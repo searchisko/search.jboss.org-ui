@@ -15,11 +15,11 @@ goog.require('soydata');
  */
 org.jboss.search.suggestions.templates.suggestions_section = function(opt_data, opt_ignored) {
   var output = '<div class="suggestions_section">';
-  var optionList210 = opt_data.options;
-  var optionListLen210 = optionList210.length;
-  for (var optionIndex210 = 0; optionIndex210 < optionListLen210; optionIndex210++) {
-    var optionData210 = optionList210[optionIndex210];
-    output += '<div class="selectable" index="' + soy.$$escapeHtml(opt_data.indexStart + optionIndex210) + '">' + ((optionIndex210 == 0) ? '<div class="caption">' + soy.$$escapeHtml(opt_data.caption) + '</div>' : '') + '<div class="option">' + soy.$$filterNoAutoescape(optionData210) + '</div></div>';
+  var optionList221 = opt_data.options;
+  var optionListLen221 = optionList221.length;
+  for (var optionIndex221 = 0; optionIndex221 < optionListLen221; optionIndex221++) {
+    var optionData221 = optionList221[optionIndex221];
+    output += '<div class="selectable" index="' + soy.$$escapeHtml(opt_data.indexStart + optionIndex221) + '">' + ((optionIndex221 == 0) ? '<div class="caption">' + soy.$$escapeHtml(opt_data.caption) + '</div>' : '') + '<div class="option">' + soy.$$filterNoAutoescape(optionData221) + '</div></div>';
   }
   output += '<div class="suggestion_section_last"></div></div>';
   return output;

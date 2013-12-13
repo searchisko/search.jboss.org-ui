@@ -321,6 +321,22 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
 		}
 	}
 
+	// ==========================================
+	// Top projects facet details.
+	// ==========================================
+	var project_facet = /** @type {Array} */ (goog.object.getValueByKeys(output, ["facets", "per_project_counts"]));
+	if (goog.isDefAndNotNull(project_facet)) {
+		if (goog.isArray(project_facet.terms) && project_facet.terms.length > 0) {
+			var projectMap = org.jboss.search.LookUp.getInstance().getProjectMap();
+			goog.array.forEach(project_facet.terms, function(item, index, array){
+				var name = projectMap[item.term];
+				item.name = goog.string.isEmptySafe(name) ? item.term : name;
+				//var projectIcon =
+				//item.icon =
+			});
+		}
+	}
+
     return output;
 };
 

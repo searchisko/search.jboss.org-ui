@@ -154,6 +154,9 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 					// refresh author filter
 					var authorFilter_ = org.jboss.search.LookUp.getInstance().getAuthorFilter();
 					if (goog.isDefAndNotNull(authorFilter_)) { authorFilter_.refreshItems(false) }
+					// refresh project filter
+					var projectFilter_ = org.jboss.search.LookUp.getInstance().getProjectFilter();
+					if (goog.isDefAndNotNull(projectFilter_)) { projectFilter_.refreshItems(false) }
                     break;
 
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR:
