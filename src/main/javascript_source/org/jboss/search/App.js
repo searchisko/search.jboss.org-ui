@@ -131,6 +131,8 @@ org.jboss.search.App = function() {
 
 	// DIV element where authors are listed
 	var author_filter_items_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('filter_items', author_filter_body_div));
+	// DIV element where projects are listed
+	var project_filter_items_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('filter_items', project_filter_body_div));
 
     var second_filters_row_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('second_filters_row'));
 
@@ -206,7 +208,7 @@ org.jboss.search.App = function() {
         date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
         date_order,
         project_filter_query_field, author_filter_query_field,
-		author_filter_items_div,
+		author_filter_items_div, project_filter_items_div,
         search_results_div
     );
 
@@ -288,6 +290,7 @@ org.jboss.search.App = function() {
             var projectFilter = new org.jboss.search.page.filter.ProjectFilter(
                 searchPageElements.getProject_filter_body_div(),
                 searchPageElements.getProject_filter_query_field(),
+				searchPageElements.getProject_filter_items_div(),
 				function() { return goog.dom.classes.has(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN) },
                 function() {
                     goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);

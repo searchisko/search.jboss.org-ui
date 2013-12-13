@@ -62,16 +62,16 @@ org.jboss.search.page.filter.AuthorFilter = function(element, query_field, autho
 	 */
 	this.isCollapsed_ = /** @type {function(): boolean} */ (goog.isFunction(opt_isCollapsed) ? opt_isCollapsed : function(){ return true });
 
-    /**
-     * @type {!HTMLInputElement}
-     * @private */
-    this.query_field_ = query_field;
-
 	/**
 	 * @type {!HTMLDivElement}
 	 * @private
 	 */
-	this.author_filter_items_div_ = author_filter_items_div;
+	this.items_div_ = author_filter_items_div;
+
+    /**
+     * @type {!HTMLInputElement}
+     * @private */
+    this.query_field_ = query_field;
 
     this.search_field_handler_ = new org.jboss.search.page.element.SearchFieldHandler(
         this.query_field_,
@@ -121,9 +121,9 @@ org.jboss.search.page.filter.AuthorFilter.prototype.refreshItems = function(opt_
  */
 org.jboss.search.page.filter.AuthorFilter.prototype.updateItems_ = function(data) {
 	// scroll to top when changing the content of the filter
-	if (this.author_filter_items_div_.scrollTop) { this.author_filter_items_div_.scrollTop = 0 }
+	if (this.items_div_.scrollTop) { this.items_div_.scrollTop = 0 }
 	var html = org.jboss.search.page.filter.templates.author_filter_items({ 'terms': data });
-	this.author_filter_items_div_.innerHTML = html;
+	this.items_div_.innerHTML = html;
 };
 
 /**

@@ -49,6 +49,7 @@ goog.require('goog.Disposable');
  * @param {!HTMLInputElement} project_filter_query_field
  * @param {!HTMLInputElement} author_filter_query_field
  * @param {!HTMLDivElement}   author_filter_items_div
+ * @param {!HTMLDivElement}   project_filter_items_div
  * @param {!HTMLDivElement}   search_results_div
  * @constructor
  * @extends {goog.Disposable}
@@ -60,7 +61,7 @@ org.jboss.search.page.SearchPageElements = function(
     date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
     date_order,
     project_filter_query_field, author_filter_query_field,
-	author_filter_items_div,
+	author_filter_items_div, project_filter_items_div,
     search_results_div
     ) {
 
@@ -85,6 +86,7 @@ org.jboss.search.page.SearchPageElements = function(
     /** @type {!HTMLInputElement} */ this.project_filter_query_field = project_filter_query_field;
     /** @type {!HTMLInputElement} */ this.author_filter_query_field = author_filter_query_field;
     /** @type {!HTMLDivElement}   */ this.author_filter_items_div = author_filter_items_div;
+    /** @type {!HTMLDivElement}   */ this.project_filter_items_div = project_filter_items_div;
     /** @type {!HTMLDivElement}   */ this.search_results_div = search_results_div;
 
 }
@@ -112,6 +114,7 @@ org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() 
     delete this.project_filter_query_field;
     delete this.author_filter_query_field;
     delete this.author_filter_items_div;
+    delete this.project_filter_items_div;
     delete this.search_results_div;
 };
 
@@ -139,6 +142,7 @@ org.jboss.search.page.SearchPageElements.prototype.isValid = function() {
         && goog.isDefAndNotNull(this.project_filter_query_field)
         && goog.isDefAndNotNull(this.author_filter_query_field)
         && goog.isDefAndNotNull(this.author_filter_items_div)
+        && goog.isDefAndNotNull(this.project_filter_items_div)
         && goog.isDefAndNotNull(this.search_results_div)
 };
 
@@ -235,6 +239,11 @@ org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_query_field 
 /** @return {!HTMLDivElement} */
 org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_items_div = function() {
 	return this.author_filter_items_div;
+};
+
+/** @return {!HTMLDivElement} */
+org.jboss.search.page.SearchPageElements.prototype.getProject_filter_items_div = function() {
+	return this.project_filter_items_div;
 };
 
 /** @return {!HTMLDivElement} */

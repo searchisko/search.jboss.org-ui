@@ -31,7 +31,6 @@ goog.require('goog.events');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.events.KeyHandler.EventType');
-goog.require('goog.dom');
 goog.require('goog.Uri');
 goog.require('goog.Disposable');
 
@@ -40,13 +39,14 @@ goog.require('goog.Disposable');
  * It requires an element as a parameter, it assumes there is one element with class='filter_items' found inside.
  * @param {!HTMLElement} element to host the project filter
  * @param {!HTMLInputElement} query_field to host the project filter
+ * @param {!HTMLDivElement} project_filter_items_div where projects are listed
  * @param {function(): boolean} opt_isCollapsed a function that is used to learn if filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
  * @extends {goog.Disposable}
  */
-org.jboss.search.page.filter.ProjectFilter = function(element, query_field, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
+org.jboss.search.page.filter.ProjectFilter = function(element, query_field, project_filter_items_div, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
     goog.Disposable.call(this);
 
     /**
@@ -69,8 +69,9 @@ org.jboss.search.page.filter.ProjectFilter = function(element, query_field, opt_
 
     /**
      * @type {!HTMLElement}
-     * @private */
-    this.items_div_ = /** @type {!HTMLElement} */ (goog.dom.getElementByClass('filter_items',element));
+     * @private
+	 */
+    this.items_div_ = project_filter_items_div;
 
     /**
      * @type {!HTMLInputElement}
