@@ -90,7 +90,9 @@
                         <div class="description">
                             {if ($highlight?.sys_content_plaintext?.length > 0)}
                                 {foreach $content_snippet in $highlight.sys_content_plaintext}
-                                    {$content_snippet|noAutoescape}&nbsp;&hellip;{sp}
+                                    {if (index($content_snippet) < 2)}
+                                    	{$content_snippet|noAutoescape}&nbsp;&hellip;{sp}
+                                   	{/if}
                                 {/foreach}
                             {elseif isNonnull($highlight?.sys_description)}
                                 {$highlight.sys_description|noAutoescape}
