@@ -67,7 +67,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
     var thiz_ = this;
 
-    /** @private */ this.log_ = goog.debug.Logger.getLogger('SearchPage');
+    /** @private */ this.log_ = goog.debug.Logger.getLogger('org.jboss.search.page.SearchPage');
 
     /**
      * @private
@@ -118,7 +118,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     var metadata_ = event.getMetadata();
                     /** @type {org.jboss.search.context.RequestParams} */
                     var requestParams_ = metadata_["requestParams"];
-                    this.log_.info("Search for ["+requestParams_.getQueryString()+"] started. Query to ["+metadata_["query_url_string"]+"]");
+                    this.log_.info("Search request for ["+requestParams_.getQueryString()+"] started. URL: ["+metadata_["url"]+"]");
                     this.setUserQuery_(requestParams_.getQueryString());
                     this.disableSearchResults_();
                     // update date filter fields in date filter
@@ -131,19 +131,19 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     break;
 
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED:
-                    this.log_.info("Search aborted");
+                    this.log_.fine("Search request aborted");
                     this.enableSearchResults_();
                     break;
 
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED:
-                    this.log_.info("Search finished");
+                    this.log_.info("Search request finished");
                     this.disposeUserEntertainment_();
                     break;
 
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_SUCCEEDED:
                     var response = event.getMetadata();
 //                    console.log("response > ",response);
-                    this.log_.info("Search succeeded, took " + response["took"] + "ms, uuid [" +response["uuid"] + "]");
+                    this.log_.info("Search request succeeded, took " + response["took"] + "ms, uuid [" +response["uuid"] + "]");
                     org.jboss.search.LookUp.getInstance().setRecentQueryResultData(response);
 					// render new HTML for search results first
                     this.renderQueryResponse_();
@@ -160,7 +160,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     break;
 
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR:
-                    this.log_.info("Search error");
+                    this.log_.info("Search request error");
                     org.jboss.search.LookUp.getInstance().setRecentQueryResultData(null);
                     var metadata_ = event.getMetadata();
                     this.renderQueryResponseError_(metadata_["query_string"], metadata_["error"]);

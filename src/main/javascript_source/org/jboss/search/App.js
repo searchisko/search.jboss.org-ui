@@ -82,7 +82,7 @@ org.jboss.search.App = function() {
 
     // init Status window (consider doing it earlier)
     var status_window = /** @type {!HTMLDivElement} */ (goog.dom.getElement('status_window'));
-    var status = new org.jboss.search.page.element.Status(status_window);
+    var status = new org.jboss.search.page.element.Status(status_window, 4);
     status.show('Initialization...');
 
     var log = goog.debug.Logger.getLogger('org.jboss.search.App');
@@ -265,7 +265,6 @@ org.jboss.search.App = function() {
         .addCallback(function(){
             setTimeout(function(){
                 status.hide();
-                status.setProgressValue(0);
             },200);
         })
         // start history pooling loop after initialization is finished
@@ -316,7 +315,7 @@ org.jboss.search.App = function() {
             projectFilter.init();
         })
         .addCallback(function() {
-            status.setProgressValue(1);
+            status.increaseProgress();
             asyncInit.setProjectFilterDone();
         });
 
@@ -351,7 +350,7 @@ org.jboss.search.App = function() {
             lookup_.setAuthorFilter(authorFilter);
         })
         .addCallback(function() {
-            status.setProgressValue(0.33);
+            status.increaseProgress();
             asyncInit.setAuthorFilterDone();
         });
 
@@ -383,7 +382,7 @@ org.jboss.search.App = function() {
 			lookup_.setContentFilter(contentFilter);
 		})
 		.addCallback(function() {
-//			status.setProgressValue(0.33);
+			status.increaseProgress();
 			asyncInit.setContentFilterDone();
 		});
 
@@ -424,7 +423,7 @@ org.jboss.search.App = function() {
         // second register listener on the date filter
         .addCallback(
             goog.bind(function() {
-                status.setProgressValue(0.66);
+                status.increaseProgress();
                 this.searchPage.registerListenerOnDateFilterChanges(lookup_.getDateFilter());
                 asyncInit.setDateFilterDone();
             },this)

@@ -49,6 +49,12 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
 //    console.log("response",response);
     var output = {};
 
+	// ==========================================
+	// Took in ms
+	// ==========================================
+	var took = response.took || "n/a ";
+	output.took = took;
+
     // ==========================================
     // Actual page
     // ==========================================

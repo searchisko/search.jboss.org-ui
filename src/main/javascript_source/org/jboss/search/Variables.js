@@ -32,7 +32,8 @@ org.jboss.search.Variables = {
 	 * @type {string}
 	 * @const
 	 */
-	API_URL_BASE_DCP : 'http://dcp-dev.jboss.org:8080',
+//	API_URL_BASE_DCP : 'http://dcp-dev.jboss.org:8080',
+	API_URL_BASE_DCP : 'http://dcp-jbossorgdev.rhcloud.com',
 
 	/**
 	 * Number of search results per page (is also used for pagination navigation calculations).

@@ -29,6 +29,7 @@ goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.search.LookUp');
 
+goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.history.EventType');
 goog.require('goog.Disposable');
@@ -40,8 +41,10 @@ goog.require('goog.debug.Logger');
 
 /**
  * Create a new instance of Logging.
- * It listens on history objects for NAVIGATE event and checks if 'log' URL fragment parameter is provided.
- * If yes then it creates appropriate logging window and starts capturing on it.
+ * If "log parameter" is found in URL fragment then logging is enabled. Supported values are "console" and "fancyWindow".
+ * <p>
+ * It registers a lister on goog.History object as well as investigate window.location.hash value at time of creation.
+ * If supported log parameter is found then it creates appropriate logging window and starts capturing on it.
  * @constructor
  * @extends {goog.Disposable}
  */
@@ -49,15 +52,19 @@ org.jboss.search.logging.Logging = function() {
     goog.Disposable.call(this);
     this.navigationController_ = goog.bind(function (e) {
         var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
-        var log = parsedFragment.getLog();
-        if (goog.isDef(log)) {
-            this.startLogging(log);
-        } else {
-            this.stopLogging();
-        }
+        var logType = parsedFragment.getLog();
+		this.setLoggingType_(logType);
     }, this);
     var history = org.jboss.search.LookUp.getInstance().getHistory();
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, this.navigationController_);
+
+	var window = /** @type {!Window} */ (goog.dom.getWindow());
+	if (goog.isDefAndNotNull(window) && window.location && window.location.hash) {
+		var hash = window.location.hash;
+		var parsedFragment = org.jboss.search.util.fragmentParser.parse(hash);
+		var logType = parsedFragment.getLog();
+		this.setLoggingType_(logType);
+	}
 
     /**
      * @private
@@ -158,6 +165,19 @@ org.jboss.search.logging.Logging.prototype.enableFancyWindow_ = function() {
     }
     this.fancyWindow_.setEnabled(true);
     this.fancyWindow_.init();
+};
+
+/**
+ *
+ * @param {string|undefined} logType
+ * @private
+ */
+org.jboss.search.logging.Logging.prototype.setLoggingType_ = function(logType) {
+	if (goog.isDef(logType)) {
+		this.startLogging(logType);
+	} else {
+		this.stopLogging();
+	}
 };
 
 /**

@@ -55,7 +55,7 @@ function testStatus() {
 
     setUp();
 
-    var status =new  org.jboss.search.page.element.Status(div);
+    var status =new  org.jboss.search.page.element.Status(div, 5);
 
     assertTrue(status != null);
 
@@ -64,17 +64,14 @@ function testStatus() {
 
     status.show(status1);
 
-    var val = 0;
-    var step = 0.2;
     var interval = 300;
     var iv = setInterval(function(){
-        val += step;
-        status.setProgressValue(val);
+        status.increaseProgress();
     },300);
     var animationFinished = false;
     var testCheck = false;
 
-    setInterval(function(){ testCheck = true }, ((1/step)*interval)+interval+100 /* 100 = safety */);
+    setInterval(function(){ testCheck = true }, ((1/0.2)*interval)+interval+100 /* 100 = safety */);
 
     /*
     waifForCondition(

@@ -47,6 +47,7 @@ QueryEventMetadata.prototype.error;
 function SearchResults() {};
 SearchResults.prototype.actual_page;  // computed by normalize.js
 SearchResults.prototype.user_query;   // computed by normalize.js
+SearchResults.prototype.took;
 SearchResults.prototype.time_out;
 SearchResults.prototype.uuid;
 SearchResults.prototype.hits;

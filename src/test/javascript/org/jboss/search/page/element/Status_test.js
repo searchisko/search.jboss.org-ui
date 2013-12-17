@@ -46,9 +46,9 @@ var tearDown = function() {
  */
 var testBasicStatus = function() {
 
-    var status = new org.jboss.search.page.element.Status(div);
+    var status = new org.jboss.search.page.element.Status(div, 2);
 
-    status.setProgressValue(0.5);
+    status.increaseProgress();
     assertEquals(0.5, status.getProgressValue());
 
     status.setStatus('Loading...');
@@ -64,19 +64,15 @@ var testBasicStatus = function() {
  */
 var testStatusProgressValueRange = function() {
 
-    var status = new org.jboss.search.page.element.Status(div);
+    var status = new org.jboss.search.page.element.Status(div, 4);
 
-    status.setProgressValue(0.5);
-    assertEquals(0.5, status.getProgressValue());
+    status.increaseProgress(1);
+    assertEquals(0.25, status.getProgressValue());
 
-    status.setProgressValue(-0.5);
-    assertEquals(0, status.getProgressValue());
+    status.increaseProgress(2);
+    assertEquals(0.75, status.getProgressValue());
 
-    status.setProgressValue(1);
-    assertEquals(1, status.getProgressValue());
-
-    status.setProgressValue(0);
-    status.setProgressValue(2);
+    status.increaseProgress(2);
     assertEquals(1, status.getProgressValue());
 
     status.dispose();
