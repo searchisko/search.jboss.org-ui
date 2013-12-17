@@ -49,7 +49,7 @@ org.jboss.search.logging.Logging = function() {
     goog.Disposable.call(this);
     this.navigationController_ = goog.bind(function (e) {
         var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
-        var log = parsedFragment[org.jboss.search.util.fragmentParser.INTERNAL_param.LOG];
+        var log = parsedFragment.getLog();
         if (goog.isDef(log)) {
             this.startLogging(log);
         } else {
