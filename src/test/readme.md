@@ -36,6 +36,11 @@ When `mvm clean test` (or `mvn clean jstd:test`) is run, then all these tests ar
 
 These tests are driven by configuration file called [`jsTestDriver.conf`](https://github.com/jbossorg/search-web-ui/blob/master/jsTestDriver.conf) and dependency list in this configuration file can be generated/updated using [`printJSTDdeps.sh`](https://github.com/jbossorg/search-web-ui/blob/master/printJSTDdeps.sh) script.
 
+For more info about IntelliJ IDEA support of JavaScript unit testing see:
+
+- [Installation of JsTestDriver IntelliJ plugin](http://confluence.jetbrains.com/display/WI/Installation+of+JsTestDriver+IntelliJ+plugin)
+- [JavaScript Unit Testing](http://www.jetbrains.com/editors/javascript_editor.jsp?ide=idea#JavaScript_Unit_Testing)
+
 # How to implement Javascript tests
 
 The typical process of implementing a new javascript test is to add a new test under `src/test/javascript` package. Then implement a new `src/test/html` wrapper for it (which allows quick and immediate execution of the test).
