@@ -72,17 +72,21 @@ org.jboss.search.page.element.SearchFieldHandler = function(field, callbackDelay
 
     /** @private */ this.keyHandlers_ = goog.isObject(opt_keyHandlers) ? opt_keyHandlers : {};
 
-    /** @private */ this.keyListenerId_;
+    /**
+	 * @type {goog.events.Key}
+	 * @private
+	 */
+	this.keyListenerId_;
 
     /**
      * Listen to changes on search field.
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.changeListenerId_;
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.blurListenerId_;

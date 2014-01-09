@@ -25,6 +25,7 @@
 goog.provide('org.jboss.search.suggestions.query.view.View');
 goog.require('org.jboss.search.suggestions.templates');
 
+goog.require('goog.events.BrowserEvent');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.object');
@@ -77,12 +78,13 @@ org.jboss.search.suggestions.query.view.View = function(div) {
     goog.dom.classes.add(this.div_, 'hidden');
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.clickListenerId_ = goog.events.listen(this.div_,
         goog.events.EventType.CLICK,
-        function(/** @type {goog.events.BrowserEvent} */ event) {
+        function(event) {
+			var e = /** @type {goog.events.BrowserEvent} */ (event);
             // There might be some listener that hides suggestions in the top level (for example at the document level)
             // thus we must stop propagation of clicks in order to prevent such collision.
             // If needed we could fire custom event.
@@ -94,14 +96,15 @@ org.jboss.search.suggestions.query.view.View = function(div) {
         });
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.mouseOverListenerId_ = goog.events.listen(
         this.div_,
         goog.events.EventType.MOUSEOVER,
-        function(/** @type {goog.events.BrowserEvent} */ e) {
-            if (goog.isDefAndNotNull(e.target)) {
+        function(event) {
+			var e = /** @type {goog.events.BrowserEvent} */ (event);
+			if (goog.isDefAndNotNull(e.target)) {
                 // Note:
                 // I was not able to get JSDoc right on the following two lines!
                 // Also I had to remove JSDoc annotation for getIndexValue @param.

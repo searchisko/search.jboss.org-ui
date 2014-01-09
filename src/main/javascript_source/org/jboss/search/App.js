@@ -35,6 +35,7 @@ goog.require('org.jboss.search.page.SearchPage');
 goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.search.util.fragmentParser.UI_param_suffix');
+goog.require('org.jboss.search.util.ImageLoaderNet');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.service.QueryServiceXHR');
 goog.require('org.jboss.search.service.QueryServiceCached');
@@ -48,15 +49,12 @@ goog.require('goog.events.EventType');
 goog.require('goog.string');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
-goog.require('goog.net.ImageLoader');
 goog.require('goog.Disposable');
 goog.require('goog.History');
 goog.require('goog.Uri');
 
 goog.require('goog.debug.Logger');
 
-// Added to get rid of advanced compilation errors - Closure dependencies are broken ?
-goog.require('goog.net.XhrLite');
 /*
  The is used to get rid of compilation error
  [Goog.ERROR]: JSC_TYPE_PARSE_ERROR. Bad type annotation. Unknown type goog.debug.ErrorHandle ...
@@ -66,6 +64,7 @@ goog.require('goog.net.XhrLite');
  http://code.google.com/p/closure-library/wiki/FrequentlyAskedQuestions
  */
 goog.require('goog.debug.ErrorHandler');
+goog.require('goog.events.EventWrapper');
 
 /**
  * Constructor of the JBoss Search Application.
@@ -99,7 +98,7 @@ org.jboss.search.App = function() {
     var lookup_ = org.jboss.search.LookUp.getInstance();
 
     // setup ImageLoader that does pre-load images.
-    lookup_.setImageLoader(new goog.net.ImageLoader());
+    lookup_.setImageLoader(new org.jboss.search.util.ImageLoaderNet());
     // setup production QueryService (cached version)
     lookup_.setQueryService(
         new org.jboss.search.service.QueryServiceCached(

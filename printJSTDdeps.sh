@@ -6,8 +6,8 @@
 # Author: Lukas Vlcek (lvlcek@redhat.com)
 # ----------------------------------------------------------------------------
 
-./closure-library-r2388/closure/bin/build/closurebuilder.py \
-  --root=./closure-library-r2388 \
+./closure-library-99cd91/closure/bin/build/closurebuilder.py \
+  --root=./closure-library-99cd91 \
   --root=./src/main/javascript_source \
   --root=./src/test/jsTestDriver \
   \

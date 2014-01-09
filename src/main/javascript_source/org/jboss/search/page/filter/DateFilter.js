@@ -125,9 +125,9 @@ org.jboss.search.page.filter.DateFilter = function(element, date_histogram_eleme
             var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
             if (!keyEvent.repeat) {
                 if (keyEvent.keyCode == goog.events.KeyCodes.ESC) {
-                    if (e.target.id == this.date_from_field_.id && this.fromDatePicker_.popupDatePicker_.popup_.isVisible_) {
+                    if (e.target.id == this.date_from_field_.id && this.fromDatePicker_.getPopupDatePicker().isVisible()) {
                         this.fromDatePicker_.hidePopup();
-                    } else if (e.target.id == this.date_to_field_.id && this.toDatePicker_.popupDatePicker_.popup_.isVisible_) {
+                    } else if (e.target.id == this.date_to_field_.id && this.toDatePicker_.getPopupDatePicker().isVisible()) {
                         this.toDatePicker_.hidePopup();
                     } else if (!this.isCollapsed_()) {
                         this.fromDatePicker_.hidePopup();

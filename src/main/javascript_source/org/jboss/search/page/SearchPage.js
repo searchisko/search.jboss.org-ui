@@ -47,6 +47,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyEvent');
+goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
@@ -92,7 +93,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
     /**
      * Listener ID, this listener handles events for user query (the query based on text from main search field).
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.userQueryServiceDispatcherListenerId_ = goog.events.listen(
@@ -175,7 +176,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
     /**
      * Listener ID, this listener handles events for user query suggestions.
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.userSuggestionsQueryServiceDispatcherListenerId_ = goog.events.listen(
@@ -230,7 +231,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     /**
      * Listener ID, this listener is invoked when date filter interval is changed.
      * Client needs to remember that this listener can be initiated only after the date filter has been instantiated!
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.dateFilterIntervalSelectedId_;
@@ -238,13 +239,13 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     /**
      * Listener ID, this listener is invoked when date orderBy value is changed.
      * Client needs to remember that this listener can be initiated only after the date filter has been instantiated!
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.dateOrderByChangedId_;
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.xhrReadyListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.READY, function(e) {
@@ -252,7 +253,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     });
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.xhrCompleteListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.COMPLETE, function(e) {
@@ -260,7 +261,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     });
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.xhrErrorListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ERROR, function(e) {
@@ -268,7 +269,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     });
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.xhrAbortListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ABORT, function(e) {
@@ -300,7 +301,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     };
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.dateClickListenerId_ = goog.events.listen(this.elements_.getDate_filter_tab_div(),
@@ -311,7 +312,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     );
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.projectClickListenerId_ = goog.events.listen(this.elements_.getProject_filter_tab_div(),
@@ -322,7 +323,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     );
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.authorClickListenerId_ = goog.events.listen(this.elements_.getAuthor_filter_tab_div(),
@@ -333,7 +334,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     );
 
 	/**
-	 * @type {?number}
+	 * @type {goog.events.Key}
 	 * @private
 	 */
 	this.contentClickListenerId_ = goog.events.listen(this.elements_.getContent_filter_tab_div(),
@@ -344,14 +345,14 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 	);
 
     /**
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.contextClickListenerId_ = goog.events.listen(
         thiz_.context,
         goog.events.EventType.CLICK,
-        function(/** @type {goog.events.Event} */ e) {
-
+        function(event) {
+			var e = /** @type {goog.events.Event} */ (event);
 //            thiz_.log_.info("Context clicked: " + goog.debug.expose(e));
 
             // if search field is clicked then do not hide search suggestions
@@ -361,25 +362,25 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
             // if date filter (sub)element is clicked do not hide date filter
             if (e.target !== thiz_.elements_.getDate_filter_tab_div() &&
-                !goog.dom.contains(thiz_.elements_.getDate_filter_body_div(), e.target)) {
+                !goog.dom.contains(thiz_.elements_.getDate_filter_body_div(), /** @type {Node} */ (e.target))) {
                 thiz_.collapseDateFilter_();
             }
 
             // if project filter (sub)element is clicked do not hide project filter
             if (e.target !== thiz_.elements_.getProject_filter_tab_div() &&
-                !goog.dom.contains(thiz_.elements_.getProject_filter_body_div(), e.target)) {
+                !goog.dom.contains(thiz_.elements_.getProject_filter_body_div(), /** @type {Node} */ (e.target))) {
                 thiz_.collapseProjectFilter_();
             }
 
             // if author filter (sub)element is clicked do not hide author filter
             if (e.target !== thiz_.elements_.getAuthor_filter_tab_div() &&
-                !goog.dom.contains(thiz_.elements_.getAuthor_filter_body_div(), e.target)) {
+                !goog.dom.contains(thiz_.elements_.getAuthor_filter_body_div(), /** @type {Node} */ (e.target))) {
                 thiz_.collapseAuthorFilter_();
             }
 
 			// if content filter (sub)element is clicked do not hide content filter
 			if (e.target !== thiz_.elements_.getContent_filter_tab_div() &&
-				!goog.dom.contains(thiz_.elements_.getContent_filter_body_div(), e.target)) {
+				!goog.dom.contains(thiz_.elements_.getContent_filter_body_div(), /** @type {Node} */ (e.target))) {
 				thiz_.collapseContentFilter_();
 			}
 
@@ -389,7 +390,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
      * This listener can catch events when the user navigates to the query field by other means then clicking,
      * for example by TAB key or by selecting text in the field by cursor (does not fire click event).
      * We want to hide filter tabs in such case.
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.query_field_focus_id_ = goog.events.listen(
@@ -412,14 +413,15 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
     /**
      * ID of listener which catches user clicks on top of search results.
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.searchResultsClickId_ = goog.events.listen(
         this.elements_.getSearch_results_div(),
         goog.events.EventType.MOUSEUP,
-        goog.bind(function(/** @type {goog.events.Event} */ e) {
-            var element = e.target;
+        goog.bind(function(event) {
+			var e = /** @type {goog.events.Event} */ (event);
+            var element = /** @type {Element} */ (e.target);
             while (element) {
                 // user clicked individual search hit, we want to record click-stream
                 if (goog.dom.classes.has(element, org.jboss.search.Constants.CLICK_STREAM_CLASS)) {
@@ -463,14 +465,15 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
     /**
      * ID of listener which catches mouse over events for contributor icons.
-     * @type {?number}
+     * @type {goog.events.Key}
      * @private
      */
     this.contributorMouseOverId_ = goog.events.listen(
         this.elements_.getSearch_results_div(),
         goog.events.EventType.MOUSEOVER,
-        function(/** @type {goog.events.Event} */ e) {
-            var element = e.target;
+        function(event) {
+			var e = /** @type {goog.events.Event} */ (event);
+            var element = /** @type {Element} */ (e.target);
             while (element) {
                 // When mouse is over small contributor avatar then do two things:
                 // - change name to selected contributor

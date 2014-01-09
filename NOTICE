@@ -8,7 +8,11 @@
 
    This product includes the following software:
 
-   - Closure compiler & library (r2388)
+   - Closure compiler v20131014
+     https://developers.google.com/closure/
+     License: Apache License 2.0
+
+   - Closure library (commit hash 99cd91)
      https://developers.google.com/closure/
      License: Apache License 2.0
      

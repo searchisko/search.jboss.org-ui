@@ -26,9 +26,9 @@ Google Closure, Soy templates and jsTestDriver are all very interesting and powe
 - **Production:** When building production artifact, it is all automated and driven by Maven only (including automated javascript tests).
 - **Local development:** When you need to quickly open the application without compilation then all you have to do is to execute one or two shell scripts and then you can open `index.html` in browser.
 
-### Google Closure Version
+### Closure Tools Version
 
-It is important to keep all versions of [Google Closure](https://developers.google.com/closure) that are used during development in the sync.
+It is important to keep versions of individual parts of [Closure Tools](https://developers.google.com/closure) that are used during development in the sync.
 
 By Closure compiler version we mean **release** number as defined for Maven use:
 <http://code.google.com/p/closure-compiler/wiki/Maven#Releases>
@@ -40,19 +40,16 @@ By Closure compiler version we mean **release** number as defined for Maven use:
 #### Unit Testing via jsTestDriver
 
 Tests are implemented using [jsTestDriver](http://code.google.com/p/js-test-driver/). These tests are pure JavaScript executed in (captured) browser so we need to make sure
-browser can load needed parts of Closure library code. But Closure library is not released as a zip file, so the only option is to checkout source code directly from Closure library SVN using particular release (revision) number.
+browser can load needed parts of Closure library code. But Closure library is not "officially" released as a zip file, so the only option is to checkout source code directly from Closure library repository.
 
-For example is we use revision **r2388**:
+The other option is to download zip file from [closure-library](http://repo1.maven.org/maven2/com/github/jlgrock/javascript/closure-library/)
+which is used by ClosureJavascriptFramework.
 
-```
-svn export -r r2388 http://closure-library.googlecode.com/svn/trunk/ closure-library-r2388
-```
-
-then it is important to make sure correct paths are used in `jsTestDriver.conf`:
+Then it is important to make sure correct paths are used in `jsTestDriver.conf`:
 
 ```
 load:
-  - closure-library-r2388/closure/goog/base.js
+  - closure-library-99cd91/closure/goog/base.js
   - ... etc
 ```
 

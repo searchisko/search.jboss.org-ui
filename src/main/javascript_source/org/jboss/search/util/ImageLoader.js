@@ -17,33 +17,28 @@
  */
 
 /**
- * @fileoverview Custom extension of goog.net.ImageLoader that does not pre-load images.
+ * @fileoverview Image loader interface.
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
 goog.provide('org.jboss.search.util.ImageLoader');
 
-goog.require('goog.net.ImageLoader');
+/**
+ * ImageLoader interface. This allows for multiple implementations that can be switched
+ * in context. The idea is to provide custom ImageLoader implementations that are less resource intensive
+ * when network connectivity is slow or when used in mobile devices.
+ * @interface
+ */
+org.jboss.search.util.ImageLoader = function() {};
 
 /**
- * The default extension of <code>goog.net.ImageLoader</code>.
- * The surprise is that it does nothing (i.e. it does not load or pre-cache images), it is just a stub!
- * The idea is to provide custom ImageLoader implementation that is less resource intensive
- * when network connectivity is slow or when used in mobile devices.
- * @constructor
- * @extends {goog.net.ImageLoader}
+ * @param {string} id The ID of the image to load.
+ * @param {string|Image} image Either the source URL of the image or the HTML
+ *     image element itself (or any object with a {@code src} property, really).
  */
-org.jboss.search.util.ImageLoader = function() {
-    goog.net.ImageLoader.call(this);
-};
-goog.inherits(org.jboss.search.util.ImageLoader, goog.net.ImageLoader);
+org.jboss.search.util.ImageLoader.prototype.addImage = function(id, image) {};
 
-/** @inheritDoc */
-org.jboss.search.util.ImageLoader.prototype.disposeInternal = function() {
-    org.jboss.search.util.ImageLoader.superClass_.disposeInternal.call(this);
-};
-
-/** @override */
-org.jboss.search.util.ImageLoader.prototype.addImage = function(id, image) {
-    // do nothing...
-};
+/**
+ * Starts loading all images in the image loader.
+ */
+org.jboss.search.util.ImageLoader.prototype.start = function() {};
