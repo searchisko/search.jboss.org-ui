@@ -35,6 +35,8 @@ goog.require('goog.string');
 goog.require('goog.date.DateTime');
 goog.require('goog.events.EventTarget');
 
+goog.require('goog.debug.Logger');
+
 /**
  * Create a new Histogram instance.
  * @param {!HTMLElement} element
@@ -67,7 +69,13 @@ org.jboss.search.visualization.Histogram = function(element) {
      * @type {boolean}
      * @private
      */
-    this.init = false;
+    this.init_ = false;
+
+	/**
+	 * @type {!goog.debug.Logger}
+	 * @private
+	 */
+	this.log_ = goog.debug.Logger.getLogger('org.jboss.search.visualization.Histogram');
 };
 goog.inherits(org.jboss.search.visualization.Histogram, goog.events.EventTarget);
 
@@ -91,6 +99,8 @@ org.jboss.search.visualization.Histogram.prototype.disposeInternal = function() 
     this.width = null;
     this.height = null;
     this.brush = null;
+
+	delete this.log_;
 };
 
 /**
@@ -101,7 +111,7 @@ org.jboss.search.visualization.Histogram.prototype.disposeInternal = function() 
  */
 org.jboss.search.visualization.Histogram.prototype.initialize = function(css_class, w, h, opt_m) {
 
-    if (!this.init) {
+    if (!this.init_) {
         var margin = {top: 20, right: 20, bottom: 30, left: 40};
         var titleSize = {height: 20, margin:10};
         if (goog.isDef(opt_m)) {
@@ -189,7 +199,7 @@ org.jboss.search.visualization.Histogram.prototype.initialize = function(css_cla
             .attr("y", 0)
             .attr("height", this.height);
 
-        this.init = true;
+        this.init_ = true;
     }
 };
 
@@ -241,11 +251,11 @@ org.jboss.search.visualization.Histogram.prototype.brush_ = function() {
  */
 org.jboss.search.visualization.Histogram.prototype.update = function(data, interval) {
 
-    if (!this.init) {
+    if (!this.init_) {
         throw "Chart not initialized";
     }
 
-    var timeInterval = interval || "month";
+    /** @type {string} */ var timeInterval = interval || "month";
 
     if (timeInterval == "quarter") {
         timeInterval = "month";
@@ -254,25 +264,29 @@ org.jboss.search.visualization.Histogram.prototype.update = function(data, inter
     // update chart title, use plural form of interval
     this.title.text(function() { return "Matching contribution updates by " + (goog.string.endsWith(timeInterval, 's') ? timeInterval : timeInterval+'s') });
 
-    timeInterval = d3.time[timeInterval];
+    /** @type {!Object} */ var timeIntervalFN = d3.time[timeInterval];
+	this.log_.finest("timeInterval: [" + timeInterval + "]");
 
     var bandSize = 0;
 
     // only if we have data
     if (!goog.array.isEmpty(data)) {
-        var domain_min = timeInterval.floor(new Date(data[0].time));
-        var domain_max = timeInterval.ceil(new Date(data[data.length-1].time));
+        var domain_min = timeIntervalFN.floor(new Date(data[0].time));
+        var domain_max = timeIntervalFN.ceil(new Date(data[data.length-1].time));
 
         this.x.domain([domain_min, domain_max]);
         this.y.domain([0, d3.max(data, function(d) { return d.count; })]);
 
-        var bands = timeInterval.range(domain_min, domain_max).length;
-        var bandRange = (domain_max - domain_min)/bands;
-        bandSize = this.x(domain_min.getTime() + bandRange);
+        var bands = timeIntervalFN.range(domain_min, domain_max).length;
+		this.log_.finest("Number of bands: [" + bands + "]");
 
-        if ((bandSize * bands) >= this.width && bandSize > 1) {
-            bandSize--;
-        }
+        var bandRange = (domain_max - domain_min)/bands;
+		this.log_.finest("bandRange: [" + bandRange + "]");
+
+        bandSize = this.x(domain_min.getTime() + bandRange);
+        if ((bandSize * bands) >= this.width && bandSize > 1) { bandSize -= 1 }
+		if (bandSize == 0) { bandSize = 1 }
+		this.log_.finest("bandSize: [" + bandSize + "]");
     }
 
     // update both axis
