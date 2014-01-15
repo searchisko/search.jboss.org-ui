@@ -90,7 +90,8 @@ org.jboss.search.context.RequestParams = function(query_string, opt_page, opt_fr
 
 /**
  * Return a new instance of RequestParams based on provided requestParams instance and if any of other parameters is
- * defined and not null then it is setup as a new value in the new RequestParams instance.
+ * defined then it is setup as a new value in the new RequestParams instance. This means <code>null</code> values are
+ * allowed and can be used to wipe out original values.
  *
  * TODO: Rename to cloneAndOverride (that is what it does)
  * TODO: use defs instead of list of parameters
@@ -116,12 +117,12 @@ org.jboss.search.context.RequestParams.prototype.mixin = function(requestParams,
     var resetCaches_ = requestParams.getResetCaches();
 
     if (goog.isDefAndNotNull(opt_query_string)) { query_ = opt_query_string }
-    if (goog.isDefAndNotNull(opt_page)) { page_ = opt_page }
-    if (goog.isDefAndNotNull(opt_from)) { from_ = opt_from }
-    if (goog.isDefAndNotNull(opt_to)) { to_ = opt_to }
-    if (goog.isDefAndNotNull(opt_order)) { order_ = opt_order }
-    if (goog.isDefAndNotNull(opt_log)) { log_ = opt_log }
-    if (goog.isDefAndNotNull(opt_resetCaches)) { resetCaches_ = opt_resetCaches }
+    if (goog.isDef(opt_page)) { page_ = opt_page }
+    if (goog.isDef(opt_from)) { from_ = opt_from }
+    if (goog.isDef(opt_to)) { to_ = opt_to }
+    if (goog.isDef(opt_order)) { order_ = opt_order }
+    if (goog.isDef(opt_log)) { log_ = opt_log }
+    if (goog.isDef(opt_resetCaches)) { resetCaches_ = opt_resetCaches }
 
     return new org.jboss.search.context.RequestParams(
         query_, page_, from_, to_, order_, log_, resetCaches_

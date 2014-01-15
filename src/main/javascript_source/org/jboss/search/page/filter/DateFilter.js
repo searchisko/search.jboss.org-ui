@@ -27,6 +27,7 @@ goog.require('org.jboss.search.visualization.Histogram');
 goog.require('org.jboss.search.LookUp');
 goog.require('org.jboss.search.context.RequestParams.Order');
 goog.require('org.jboss.search.page.filter.DateOrderByChanged');
+goog.require('org.jboss.search.page.filter.DateRangeChanged');
 
 goog.require('goog.object');
 goog.require('goog.date.Date');
@@ -164,39 +165,25 @@ org.jboss.search.page.filter.DateFilter = function(element, date_histogram_eleme
 
     // Listen for changes of FROM date
     this.fromDateChangedListenerId_ = goog.events.listen(
-        this.fromDatePicker_.getDatePicker(),
+        this.fromDatePicker_.getPopupDatePicker(),
         goog.ui.DatePicker.Events.CHANGE,
         goog.bind(function(e) {
             var event = /** @type {goog.ui.DatePickerEvent} */ (e);
-            var nd = event.date;
-//            var od = org.jboss.search.LookUp.getInstance().getRequestParams().getFrom();
-//            console.log("from nd, od", nd, od);
-//            if (
-//                    (!goog.isDefAndNotNull(od) && goog.isDefAndNotNull(nd)) ||
-//                    (goog.isDefAndNotNull(od) && !goog.isDefAndNotNull(nd)) ||
-//                    (goog.isDefAndNotNull(od) && goog.isDefAndNotNull(nd) && (goog.date.Date.compare(nd,od) != 0))
-//                ){
-//                console.log("FROM changed", nd);
-//            }
+			/** @type {goog.date.DateTime|null} */ var nd = event.date ? new goog.date.DateTime(event.date) : null;
+			var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
+			this.dispatchEvent(new org.jboss.search.page.filter.DateRangeChanged(nd, rp.getTo()));
         }, this)
     );
 
     // Listen for changes of TO date
     this.toDateChangedListenerId_ = goog.events.listen(
-        this.toDatePicker_.getDatePicker(),
+        this.toDatePicker_.getPopupDatePicker(),
         goog.ui.DatePicker.Events.CHANGE,
         goog.bind(function(e) {
             var event = /** @type {goog.ui.DatePickerEvent} */ (e);
-            var nd = event.date;
-//            var od = org.jboss.search.LookUp.getInstance().getRequestParams().getTo();
-//            console.log("to nd, od", nd, od);
-//            if (
-//                (!goog.isDefAndNotNull(od) && goog.isDefAndNotNull(nd)) ||
-//                    (goog.isDefAndNotNull(od) && !goog.isDefAndNotNull(nd)) ||
-//                    (goog.isDefAndNotNull(od) && goog.isDefAndNotNull(nd) && (goog.date.Date.compare(nd,od) != 0))
-//                ){
-//                console.log("TO changed", nd);
-//            }
+            /** @type {goog.date.DateTime|null} */ var nd = event.date ? new goog.date.DateTime(event.date) : null;
+			var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
+			this.dispatchEvent(new org.jboss.search.page.filter.DateRangeChanged(rp.getFrom(), nd));
         }, this)
     );
 
@@ -298,7 +285,8 @@ org.jboss.search.page.filter.DateFilter.prototype.getHistogramChart = function()
 };
 
 /**
- * Display new <code>from</code> date in the web form.
+ * Setup and display a new <code>from</code> date in the web form.
+ * This will internally fire a date picker CHANGE event.
  * @param {goog.date.DateTime|undefined} from
  */
 org.jboss.search.page.filter.DateFilter.prototype.setFromDate = function(from) {
@@ -310,15 +298,36 @@ org.jboss.search.page.filter.DateFilter.prototype.setFromDate = function(from) {
 };
 
 /**
- * Display new <code>to</code> date in the web form.
+ * Change value in the <code>from</code> field.
+ * Does not really change the date value and does not fire CHANGE event.
+ * @param {goog.date.DateTime} value
+ */
+org.jboss.search.page.filter.DateFilter.prototype.setFromValue = function(value) {
+	var s = this.formatter_.format(value);
+	this.fromDatePicker_.setInputValue(s);
+};
+
+/**
+ * Setup and display a new <code>to</code> date in the web form.
+ * This will internally fire a date picker CHANGE event.
  * @param {goog.date.DateTime|undefined} to
  */
 org.jboss.search.page.filter.DateFilter.prototype.setToDate = function(to) {
-    if (goog.isDateLike(to)) {
+	if (goog.isDateLike(to)) {
         this.toDatePicker_.setDate(new goog.date.Date(to));
     } else {
         this.toDatePicker_.setDate(null);
     }
+};
+
+/**
+ * Change value in the <code>to</code> field.
+ * Does not really change the date value and does not fire CHANGE event.
+ * @param {goog.date.DateTime} value
+ */
+org.jboss.search.page.filter.DateFilter.prototype.setToValue = function(value) {
+	var s = this.formatter_.format(value);
+	this.toDatePicker_.setInputValue(s);
 };
 
 /**

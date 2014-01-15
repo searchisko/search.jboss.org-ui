@@ -125,8 +125,10 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     // update date filter fields in date filter
                     var filter = org.jboss.search.LookUp.getInstance().getDateFilter();
                     if (goog.isDefAndNotNull(filter)) {
-                        filter.setFromDate(requestParams_.getFrom());
-                        filter.setToDate(requestParams_.getTo());
+						var from_ = requestParams_.getFrom();
+						var to_ = requestParams_.getTo();
+						if (goog.isDef(from_)) { filter.setFromValue(from_) }
+						if (goog.isDef(to_)) { filter.setToValue(to_) }
                         filter.setOrder(requestParams_.getOrder());
                     }
                     break;
@@ -243,6 +245,14 @@ org.jboss.search.page.SearchPage = function(context, elements) {
      * @private
      */
     this.dateOrderByChangedId_;
+
+	/**
+	 * Listener ID, this listener is invoked when selected date range is changed. I.e. FROM or TO or both dates changes.
+	 * Client needs to remember that this listener can be initiated only after the date filter has been instantiated!
+	 * @type {goog.events.Key}
+	 * @private
+	 */
+	this.dateRangeChangedId_;
 
     /**
      * @type {goog.events.Key}
@@ -589,6 +599,9 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     if (goog.isDefAndNotNull(this.dateOrderByChangedId_)) {
         goog.events.unlistenByKey(this.dateOrderByChangedId_);
     }
+	if (goog.isDefAndNotNull(this.dateRangeChangedId_)) {
+		goog.events.unlistenByKey(this.dateRangeChangedId_);
+	}
 
     // Remove references to COM objects.
 
@@ -644,8 +657,8 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
                 goog.bind(function(e) {
                     var event = /** @type {org.jboss.search.visualization.IntervalSelected} */ (e);
                     // update dates in the web form
-                    dateFilter.setFromDate(event.getFrom());
-                    dateFilter.setToDate(event.getTo());
+                    dateFilter.setFromValue(event.getFrom());
+                    dateFilter.setToValue(event.getTo());
                     // if last, then fire an event
                     if (event.isLast()) {
                         var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
@@ -681,6 +694,26 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
                 }
             }, this)
         );
+
+		// register listener on date range changes
+		this.dateRangeChangedId_ = goog.events.listen(
+			dateFilter,
+			org.jboss.search.page.filter.DateFilterEventType.DATE_RANGE_CHANGED,
+			goog.bind(function(e){
+				var event = /** @type {org.jboss.search.page.filter.DateRangeChanged} */ (e);
+				var from = event.getFrom();
+				var to = event.getTo();
+				if (goog.isDef(from) || goog.isDef(to)) {
+					var rp = org.jboss.search.LookUp.getInstance().getRequestParams();
+					if (goog.isDefAndNotNull(rp)) {
+						rp = rp.mixin(rp, undefined, undefined, from, to);
+						this.dispatchEvent(
+							new org.jboss.search.page.event.QuerySubmitted(rp)
+						);
+					}
+				}
+			}, this)
+		);
     }
 };
 

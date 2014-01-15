@@ -27,5 +27,6 @@ goog.require('goog.events');
 
 /** @enum {string} */
 org.jboss.search.page.filter.DateFilterEventType = {
-    DATE_ORDER_BY_CHANGED : goog.events.getUniqueId('date_order_by_changed')
+    DATE_ORDER_BY_CHANGED : goog.events.getUniqueId('date_order_by_changed'),
+    DATE_RANGE_CHANGED : goog.events.getUniqueId('date_range_changed')
 };
