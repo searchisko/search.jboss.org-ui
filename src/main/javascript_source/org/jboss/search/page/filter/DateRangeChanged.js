@@ -27,6 +27,10 @@ goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('goog.events.Event');
 
 /**
+ * Event represents change in date filter caused by selection in InputDatePicker.
+ * Granularity of both the from and to constructor parameters is kept up to days, anything below (hours, minutes,
+ * seconds and millis) is dropped.
+ *
  * @param {goog.date.DateTime|undefined} from
  * @param {goog.date.DateTime|undefined} to
  * @constructor
@@ -46,6 +50,20 @@ org.jboss.search.page.filter.DateRangeChanged = function(from, to) {
 	 * @private
 	 */
 	this.to_ = goog.isDef(to) ? to : null;
+
+	if (goog.isDefAndNotNull(this.from_)) {
+		this.from_.setHours(0);
+		this.from_.setMinutes(0);
+		this.from_.setSeconds(0);
+		this.from_.setMilliseconds(0);
+	}
+
+	if (goog.isDefAndNotNull(this.to_)) {
+		this.to_.setHours(0);
+		this.to_.setMinutes(0);
+		this.to_.setSeconds(0);
+		this.to_.setMilliseconds(0);
+	}
 };
 goog.inherits(org.jboss.search.page.filter.DateRangeChanged, goog.events.Event);
 

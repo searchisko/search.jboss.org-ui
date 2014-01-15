@@ -33,6 +33,10 @@ goog.require('goog.events.Event');
  * until the client considers the selection final.
  * Typical use case is that while the 'last' is 'false' we want to update some small bits in the UI, but once
  * user finishes selection, the 'last' is 'true' and we want to do something more expensive (e.g. start a new query).
+ * <p/>
+ * Granularity of both the from and to constructor parameters is kept up to days, anything below (hours, minutes,
+ * seconds and millis) is dropped.
+ *
  * @param {!goog.date.DateTime} from
  * @param {!goog.date.DateTime} to
  * @param {boolean} last
@@ -59,6 +63,20 @@ org.jboss.search.visualization.IntervalSelected = function(from, to, last) {
      * @private
      */
     this.last_ = last || false;
+
+	if (goog.isDefAndNotNull(this.from_)) {
+		this.from_.setHours(0);
+		this.from_.setMinutes(0);
+		this.from_.setSeconds(0);
+		this.from_.setMilliseconds(0);
+	}
+
+	if (goog.isDefAndNotNull(this.to_)) {
+		this.to_.setHours(0);
+		this.to_.setMinutes(0);
+		this.to_.setSeconds(0);
+		this.to_.setMilliseconds(0);
+	}
 };
 goog.inherits(org.jboss.search.visualization.IntervalSelected, goog.events.Event);
 

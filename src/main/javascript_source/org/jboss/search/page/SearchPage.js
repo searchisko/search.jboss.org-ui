@@ -673,7 +673,6 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
                     }
                 }, this)
             );
-            // TODO: subscribe for manual updates of date filter fields
         }
 
         // register listener on date orderBy changes
@@ -695,7 +694,7 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
             }, this)
         );
 
-		// register listener on date range changes
+		// register listener on date range changes caused by manual date selection
 		this.dateRangeChangedId_ = goog.events.listen(
 			dateFilter,
 			org.jboss.search.page.filter.DateFilterEventType.DATE_RANGE_CHANGED,
