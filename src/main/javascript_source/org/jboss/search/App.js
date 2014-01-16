@@ -36,7 +36,7 @@ goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.search.util.fragmentParser.UI_param_suffix');
 goog.require('org.jboss.search.util.ImageLoaderNet');
-goog.require('org.jboss.search.suggestions.event.EventType');
+goog.require('org.jboss.search.service.QueryServiceEventType');
 goog.require('org.jboss.search.service.QueryServiceXHR');
 goog.require('org.jboss.search.service.QueryServiceCached');
 goog.require('org.jboss.search.InitDeferred');
@@ -217,7 +217,8 @@ org.jboss.search.App = function() {
 
     this.searchPage = new org.jboss.search.page.SearchPage(searchPageContext, searchPageElements);
 
-    this.searchEventListenerId_ = goog.events.listen(this.searchPage,
+    this.searchEventListenerId_ = goog.events.listen(
+		this.searchPage,
         org.jboss.search.page.event.EventType.QUERY_SUBMITTED,
         function (e) {
             var event = /** @type {org.jboss.search.page.event.QuerySubmitted} */ (e);
@@ -459,13 +460,23 @@ org.jboss.search.App = function() {
     dateFilterDeferred.callback({});
 
     // TODO experiment
-    this.finish_ = goog.events.listen(this.searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_FINISH, function(){
-        goog.dom.classes.add(spinner_div, const_.HIDDEN);
-    });
+    this.finish_ = goog.events.listen(
+		lookup_.getQueryServiceDispatcher(),
+		[
+			org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED,
+			org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED,
+			org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR
+		],
+		function(){
+        	goog.dom.classes.add(spinner_div, const_.HIDDEN);
+    	});
 
-    this.start_ = goog.events.listen(this.searchPage, org.jboss.search.suggestions.event.EventType.SEARCH_START, function(){
-        goog.dom.classes.remove(spinner_div, const_.HIDDEN);
-    });
+    this.start_ = goog.events.listen(
+		lookup_.getQueryServiceDispatcher(),
+		org.jboss.search.service.QueryServiceEventType.SEARCH_START,
+		function(){
+        	goog.dom.classes.remove(spinner_div, const_.HIDDEN);
+    	});
 
 };
 goog.inherits(org.jboss.search.App, goog.Disposable);
