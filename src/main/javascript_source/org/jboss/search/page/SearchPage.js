@@ -115,6 +115,13 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     org.jboss.search.LookUp.getInstance().setRequestParams(requestParams);
                     break;
 
+				/*
+					As soon as user query is started we update couple of HTML elements:
+					 - user query field
+					 - date filter: from date field
+					 - date filter: to date field
+					 - date filter: order box
+				 */
                 case org.jboss.search.service.QueryServiceEventType.SEARCH_START:
                     var metadata_ = event.getMetadata();
                     /** @type {org.jboss.search.context.RequestParams} */
@@ -127,8 +134,8 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     if (goog.isDefAndNotNull(filter)) {
 						var from_ = requestParams_.getFrom();
 						var to_ = requestParams_.getTo();
-						if (goog.isDef(from_)) { filter.setFromValue(from_) }
-						if (goog.isDef(to_)) { filter.setToValue(to_) }
+						filter.setFromValue(goog.isDefAndNotNull(from_) ? from_ : null);
+						filter.setToValue(goog.isDefAndNotNull(to_) ? to_ : null);
                         filter.setOrder(requestParams_.getOrder());
                     }
                     break;

@@ -290,11 +290,7 @@ org.jboss.search.page.filter.DateFilter.prototype.getHistogramChart = function()
  * @param {goog.date.DateTime|undefined} from
  */
 org.jboss.search.page.filter.DateFilter.prototype.setFromDate = function(from) {
-    if (goog.isDateLike(from)) {
-        this.fromDatePicker_.setDate(new goog.date.Date(from));
-    } else {
-        this.fromDatePicker_.setDate(null);
-    }
+	this.setTargetDate_(from, this.fromDatePicker_);
 };
 
 /**
@@ -303,8 +299,7 @@ org.jboss.search.page.filter.DateFilter.prototype.setFromDate = function(from) {
  * @param {goog.date.DateTime} value
  */
 org.jboss.search.page.filter.DateFilter.prototype.setFromValue = function(value) {
-	var s = this.formatter_.format(value);
-	this.fromDatePicker_.setInputValue(s);
+	this.setTargetValue_(value, this.fromDatePicker_);
 };
 
 /**
@@ -313,11 +308,7 @@ org.jboss.search.page.filter.DateFilter.prototype.setFromValue = function(value)
  * @param {goog.date.DateTime|undefined} to
  */
 org.jboss.search.page.filter.DateFilter.prototype.setToDate = function(to) {
-	if (goog.isDateLike(to)) {
-        this.toDatePicker_.setDate(new goog.date.Date(to));
-    } else {
-        this.toDatePicker_.setDate(null);
-    }
+	this.setTargetDate_(to, this.toDatePicker_);
 };
 
 /**
@@ -326,8 +317,32 @@ org.jboss.search.page.filter.DateFilter.prototype.setToDate = function(to) {
  * @param {goog.date.DateTime} value
  */
 org.jboss.search.page.filter.DateFilter.prototype.setToValue = function(value) {
-	var s = this.formatter_.format(value);
-	this.toDatePicker_.setInputValue(s);
+	this.setTargetValue_(value, this.toDatePicker_);
+};
+
+/**
+ *
+ * @param {goog.date.DateTime|undefined} date
+ * @param {!goog.ui.InputDatePicker} datePicker
+ * @private
+ */
+org.jboss.search.page.filter.DateFilter.prototype.setTargetDate_ = function(date, datePicker) {
+	if (goog.isDateLike(date)) {
+		datePicker.setDate(new goog.date.Date(date));
+	} else {
+		datePicker.setDate(null);
+	}
+};
+
+/**
+ *
+ * @param {goog.date.DateTime} value
+ * @param {!goog.ui.InputDatePicker} datePicker
+ * @private
+ */
+org.jboss.search.page.filter.DateFilter.prototype.setTargetValue_ = function(value, datePicker) {
+	var s = goog.isNull(value) ? "" : this.formatter_.format(value);
+	datePicker.setInputValue(s);
 };
 
 /**
