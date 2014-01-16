@@ -86,7 +86,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     /** @private */ this.query_suggestions_model = {};
 
     /**
-     * @type {org.jboss.search.service.QueryServiceDispatcher}
+     * @type {!org.jboss.search.service.QueryServiceDispatcher}
      * @private
      */
     this.queryServiceDispatcher_ = org.jboss.search.LookUp.getInstance().getQueryServiceDispatcher();
