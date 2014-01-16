@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" href="../../../../searchPage/src/main/webapp/css/reset.css">
+	<link rel="stylesheet" href="../../../../searchPage/src/main/webapp/css/reset_override.css">
+	<link rel="stylesheet" href="../../../../searchPage/src/main/webapp/css/search_base.css">
+
+	<title>Contributor profile</title>
+</head>
+<body>
+
+	<div id="header">
+		<div class="avatar">
+			<img src="http://www.gravatar.com/avatar/8672f1c3b11cc7390ec341ac25d7e88e?s=120&d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F8672f1c3b11cc7390ec341ac25d7e88e%2F120.png"
+				 height="120">
+		</div>
+		<div class="info">
+			<h3>Gavin King</h3>
+		</div>
+	</div>
+
+	<div id="report">
+		<!--
+			http://dcp-jbossorgdev.rhcloud.com/v1/rest/search?query=sys_contributors%3A%22Gavin%20King%20%3Cgavin%40hibernate.org%3E%22&field=sys_id&facet=top_contributors&facet=per_project_counts&facet=per_sys_type_counts&facet=activity_dates_histogram&size=0
+
+			http://dcp-jbossorgdev.rhcloud.com/v1/rest/search?contributor=Gavin%20King%20%3Cgavin%40hibernate.org%3E&field=sys_id&facet=top_contributors&facet=per_project_counts&facet=per_sys_type_counts&facet=activity_dates_histogram&size=0
+		-->
+	</div>
+
+	<script src="../../../../searchPage/src/main/webapp/js/lib/d3.v3.0.4/d3.v3.min.js" charset="UTF-8"></script>
+
+	<script>
+		var CLOSURE_NO_DEPS = true;
+		// var CLOSURE_BASE_PATH = ".";
+	</script>
+
+	<!-- SWITCH -->
+	<!-- in production -->
+	<!--<script type="text/javascript" src="javascript/compiled/___.js" charset="UTF-8"></script>-->
+
+	<!-- in development -->
+	<script type="text/javascript" src="profile-testing-only.js" charset="UTF-8"></script>
+	<!-- END -->
+
+</body>
+</html>

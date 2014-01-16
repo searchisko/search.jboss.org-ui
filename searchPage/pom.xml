@@ -1,0 +1,149 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.jboss.search.web-ui</groupId>
+    <artifactId>search-web-ui</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+
+    <parent>
+        <groupId>org.jboss.search</groupId>
+        <artifactId>web-ui</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.search</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+            <type>jsar</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>closure-testing-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+                <configuration>
+                    <prologue>${profile.prologue}</prologue>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>jsar-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+                <extensions>true</extensions>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.jstd-maven-plugin</groupId>
+                <artifactId>jstd-maven-plugin</artifactId>
+                <version>${jstd.plugin.version}</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <!-- You might need to adjust this depending on your OS.  On Mac,
+                         this will launch your default browser -->
+                    <browser>open</browser>
+
+                    <port>9876</port>
+                    <!--
+                        Specify config file path.
+
+                        Now we can run jsTestDriver tests both manually from command line
+                        using 'mvn jstd:test' and using IntelliJ IDEA jsTestDriver plugin seamlessly.
+                    -->
+                    <config>jsTestDriver.conf</config>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>run-tests</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!--
+                Perform LESS compilation
+                Using https://github.com/marceloverdijk/lesscss-maven-plugin
+                To run the compiler manually just execute: mvn lesscss:compile
+            -->
+            <plugin>
+                <groupId>org.lesscss</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <version>${lesscss-maven-plugin.version}</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/src/main/webapp/css/jbosscommunity</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
+                    <compress>true</compress>
+                    <includes>
+                        <include>bootstrap-default.less</include>
+                        <include>bootstrap-community.less</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>jenkins</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <!--
+                                ==========================================================
+                                Rename the final js file to the name that is used for the
+                                local testing. This way we do not have to change the code
+                                much. Going forward we need to do this in more general way.
+                                ==========================================================
+                            -->
+                           <execution>
+                               <id>rename-compiled-js-file</id>
+                               <phase>package</phase>
+                               <goals>
+                                   <goal>run</goal>
+                               </goals>
+                               <configuration>
+                                   <tasks>
+                                       <exec dir="${project.build.directory}/${project.build.finalName}/" executable="mv">
+                                           <arg line=" -vf javascript/generated/output/compiled/${project.build.finalName}-min.js search-testing-only.js"/>
+                                       </exec>
+                                   </tasks>
+                               </configuration>
+                           </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
