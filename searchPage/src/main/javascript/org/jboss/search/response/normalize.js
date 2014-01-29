@@ -25,6 +25,7 @@
 goog.provide('org.jboss.search.response');
 
 goog.require('org.jboss.search.Variables');
+goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.search.util.paginationGenerator');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.search.context.RequestParams');
@@ -230,12 +231,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             // ==========================================
             if (goog.isDefAndNotNull(date_last)) {
                 try {
-                fields.sys_last_activity_date_parsed =
-                    [
-                        // TODO: format according to browser locale
-                        [date_last.getUTCFullYear(),date_last.getUTCMonth()+1,date_last.getUTCDate()].join('-'),
-                        date_last.toUsTimeString(false, true, true)
-                    ].join(', ');
+                fields.sys_last_activity_date_parsed = org.jboss.core.util.dateTime.formatMediumDate(date_last);
                 } catch(e) {
                     // TODO: add logging!
                     // date parsing probably failed
@@ -249,12 +245,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                 try {
                     if (goog.isDateLike(date_last)) {
                         if (!date_created.equals(date_last)) {
-                            fields.sys_created_parsed =
-                                [
-                                    // TODO: format according to browser locale
-                                    [date_created.getUTCFullYear(),date_created.getUTCMonth()+1,date_created.getUTCDate()].join('-'),
-                                    date_created.toUsTimeString(false, true, true)
-                                ].join(', ');
+                            fields.sys_created_parsed = org.jboss.core.util.dateTime.formatMediumDate(date_created);
                         }
                     }
                 } catch(e) {

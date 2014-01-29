@@ -40,7 +40,7 @@ goog.require('goog.events.EventType');
 goog.require('goog.string');
 goog.require('goog.array');
 goog.require('org.jboss.core.service.Locator');
-goog.require("org.jboss.search.context.RequestParams");
+goog.require('org.jboss.search.context.RequestParams');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.context.RequestParams.Order');
 goog.require('org.jboss.search.list.project.Project');
@@ -131,6 +131,7 @@ org.jboss.search.App = function() {
     var content_filter_tab_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('content', second_filters_row_div));
 
     var search_results_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('search_results'));
+    var search_filters_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('active_search_filters'));
 
     // ================================================================
     // Define internal variables and objects
@@ -144,7 +145,7 @@ org.jboss.search.App = function() {
 		date_order,
 		project_filter_query_field, author_filter_query_field,
 		author_filter_items_div, project_filter_items_div,
-		search_results_div
+		search_results_div, search_filters_div
 	);
 
 	if (!searchPageElements.isValid()) {

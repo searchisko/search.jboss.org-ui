@@ -64,6 +64,7 @@ goog.require('org.jboss.search.service.QueryServiceDispatcher');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.suggestions.query.view.View');
 goog.require('org.jboss.search.util.urlGenerator');
+goog.require('org.jboss.search.util.searchFilterGenerator');
 
 /**
  * @param {EventTarget|goog.events.EventTarget} context element to catch click events and control behaviour of the UI. Typically, this is the document.
@@ -119,17 +120,26 @@ org.jboss.search.page.SearchPage = function(context, elements) {
             var event = /** @type {org.jboss.search.service.QueryServiceEvent} */ (e);
             switch (event.getType())
             {
+				/*
+				 	=====================================================
+					When new request parameters are available:
+					- update active filters section
+				 	=====================================================
+				 */
                 case org.jboss.search.service.QueryServiceEventType.NEW_REQUEST_PARAMETERS:
                     var requestParams = /** @type {org.jboss.search.context.RequestParams} */ (event.getMetadata());
                     org.jboss.core.service.Locator.getInstance().getLookup().setRequestParams(requestParams);
+					this.renderSearchFilters_();
                     break;
 
 				/*
+				 	=====================================================
 					As soon as user query is started we update couple of HTML elements:
 					 - user query field
 					 - date filter: from date field
 					 - date filter: to date field
 					 - date filter: order box
+				 	=====================================================
 				 */
                 case org.jboss.search.service.QueryServiceEventType.SEARCH_START:
                     var metadata_ = event.getMetadata();
@@ -159,13 +169,20 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     this.disposeUserEntertainment_();
                     break;
 
+				/*
+					=====================================================
+					When new search results are available:
+					- render HTML and display it.
+					- refresh filters that are visible (expanded)
+				 	=====================================================
+				 */
                 case  org.jboss.search.service.QueryServiceEventType.SEARCH_SUCCEEDED:
                     var response = event.getMetadata();
 //                    console.log("response > ",response);
                     this.log_.info("Search request succeeded, took " + response["took"] + "ms, uuid [" +response["uuid"] + "]");
 					org.jboss.core.service.Locator.getInstance().getLookup().setRecentQueryResultData(response);
 					// render new HTML for search results first
-                    this.renderQueryResponse_();
+                    this.renderSearchResults_();
                     this.enableSearchResults_();
 					// refresh histogram chart only if filter expanded
 					var dateFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getDateFilter();
@@ -746,7 +763,7 @@ org.jboss.search.page.SearchPage.prototype.runSearch = function(requestParams) {
  * It assumes the search results are stored in the lookup.
  * @private
  */
-org.jboss.search.page.SearchPage.prototype.renderQueryResponse_ = function() {
+org.jboss.search.page.SearchPage.prototype.renderSearchResults_ = function() {
     var normalizedResponse = org.jboss.core.service.Locator.getInstance().getLookup().getRecentQueryResultData();
     try {
         // generate HTML for search results
@@ -755,10 +772,29 @@ org.jboss.search.page.SearchPage.prototype.renderQueryResponse_ = function() {
         // pre-load avatar images
         this.preLoadAvatarImages_(normalizedResponse);
     } catch(error) {
-        // Something went wrong when generating search results
+        // Something went wrong when generating HTML output
         // TODO fire event (with error)
         this.log_.severe("Something went wrong",error);
     }
+};
+
+/**
+ * Render HTML representation of search filters.
+ * It assumes the search filters are stored in the lookup.
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.renderSearchFilters_ = function() {
+	var requestParams = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
+	var searchFilters = org.jboss.search.util.searchFilterGenerator.generateFilters(requestParams);
+	try {
+		// generate HTML for search filters
+		var html = org.jboss.search.page.templates.search_filters({filters:searchFilters});
+		this.elements_.getSearch_filters_div().innerHTML = html;
+	} catch(error) {
+		// Something went wrong when generating HTML output
+		// TODO fire event (with error)
+		this.log_.severe("Something went wrong",error);
+	}
 };
 
 /**

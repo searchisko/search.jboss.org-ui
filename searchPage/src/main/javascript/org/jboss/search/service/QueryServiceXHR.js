@@ -35,6 +35,7 @@ goog.require('org.jboss.search.service.QueryService');
 goog.require('org.jboss.search.service.QueryServiceDispatcher');
 
 goog.require('goog.Uri');
+goog.require('goog.array');
 goog.require('goog.net.XhrManager');
 goog.require('goog.net.XhrManager.Event');
 goog.require('goog.string');
@@ -84,8 +85,11 @@ org.jboss.search.service.QueryServiceXHR.prototype.disposeInternal = function() 
 /** @override */
 org.jboss.search.service.QueryServiceXHR.prototype.userQuery = function(requestParams) {
 
-    this.getXHRManager_().abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
-    this.dispatcher_.dispatchUserQueryAbort();
+	var ids = this.getXHRManager_().getOutstandingRequestIds();
+	if (goog.array.contains(ids, org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID)) {
+		this.getXHRManager_().abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
+		this.dispatcher_.dispatchUserQueryAbort();
+	}
 
     var searchURI_ = this.searchURI_.clone();
     var query_url_string_ = org.jboss.search.util.urlGenerator.searchUrl(searchURI_, requestParams);
@@ -126,8 +130,11 @@ org.jboss.search.service.QueryServiceXHR.prototype.userQuery = function(requestP
 /** @override */
 org.jboss.search.service.QueryServiceXHR.prototype.userSuggestionQuery = function(query_string) {
 
-    this.getXHRManager_().abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
-//    this.dispatcher_.dispatchUserSuggestionsQueryAbort();
+	var ids = this.getXHRManager_().getOutstandingRequestIds();
+	if (goog.array.contains(ids, org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID)) {
+		this.getXHRManager_().abort(org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID, true);
+//	    this.dispatcher_.dispatchUserSuggestionsQueryAbort();
+	}
 
     if (!goog.isDefAndNotNull(query_string) || goog.string.isEmptySafe(query_string)) {
         // TODO: for now this is used as a workaround to enable suggestions hiding when query is empty

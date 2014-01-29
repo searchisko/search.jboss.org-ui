@@ -25,9 +25,11 @@
 
 goog.provide('org.jboss.core.service.LookUpImpl');
 
+goog.require('org.jboss.core.Variables');
 goog.require('org.jboss.core.service.LookUp');
 goog.require('goog.History');
 goog.require('goog.net.XhrManager');
+goog.require('goog.i18n.DateTimeFormat');
 goog.require('org.jboss.core.util.ImageLoader');
 goog.require('org.jboss.core.util.ImageLoaderNoop');
 
@@ -56,6 +58,32 @@ org.jboss.core.service.LookUpImpl = function() {
 	 * @private
 	 */
 	this.imageLoader_;
+
+	/**
+	 * @type {goog.i18n.DateTimeFormat}
+	 */
+	this.shortDateFormatter_;
+
+	/**
+	 * @type {goog.i18n.DateTimeFormat}
+	 */
+	this.mediumDateFormatter_;
+};
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.getShortDateFormatter = function () {
+	if (!goog.isDefAndNotNull(this.shortDateFormatter_)) {
+		this.shortDateFormatter_ = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.SHORT_DATE_FORMAT);
+	}
+	return this.shortDateFormatter_;
+};
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.getMediumDateFormatter = function () {
+	if (!goog.isDefAndNotNull(this.mediumDateFormatter_)) {
+		this.mediumDateFormatter_ = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.MEDIUM_DATE_FORMAT);
+	}
+	return this.mediumDateFormatter_;
 };
 
 /** @inheritDoc */

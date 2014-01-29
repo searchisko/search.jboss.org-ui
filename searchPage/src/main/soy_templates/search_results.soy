@@ -18,6 +18,40 @@
 {/template}
 
 /**
+ * Search filters DIV.
+ *
+ * @param filters
+ */
+{template .search_filters}
+	{if isNonnull($filters?.dateFilter)}
+        <div class="active_filter">{call .date_filter data="$filters.dateFilter" /}{call .filter_close /}</div>
+    {/if}
+{/template}
+
+/**
+ */
+{template .filter_close}
+<span class="active_filter_close">[X]</span>
+{/template}
+
+/**
+ * @param from
+ * @param to
+ * @param order
+ */
+{template .date_filter}
+	{if isNonnull($from)}
+		<span>From: {$from} </span>
+	{/if}
+	{if isNonnull($to)}
+		<span>To: {$to} </span>
+	{/if}
+	{if isNonnull($order)}
+		<span>Order: {$order} </span>
+	{/if}
+{/template}
+
+/**
  * Search results DIV.
  *
  * @param user_query

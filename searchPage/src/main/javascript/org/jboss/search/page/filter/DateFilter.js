@@ -23,12 +23,12 @@
 
 goog.provide('org.jboss.search.page.filter.DateFilter');
 
-goog.require("goog.events.Event");
-goog.require("goog.events.EventType");
-goog.require("goog.events.KeyCodes");
-goog.require("goog.events.KeyEvent");
-goog.require("goog.ui.DatePicker.Events");
-goog.require("goog.ui.DatePickerEvent");
+goog.require('goog.events.Event');
+goog.require('goog.events.EventType');
+goog.require('goog.events.KeyCodes');
+goog.require('goog.events.KeyEvent');
+goog.require('goog.ui.DatePicker.Events');
+goog.require('goog.ui.DatePickerEvent');
 goog.require('goog.array');
 goog.require('goog.date.Date');
 goog.require('goog.date.DateTime');
@@ -43,7 +43,8 @@ goog.require('goog.i18n.DateTimeParse');
 goog.require('goog.object');
 goog.require('goog.ui.InputDatePicker');
 goog.require('goog.ui.LabelInput');
-goog.require("org.jboss.search.page.filter.ProjectFilter");
+goog.require('org.jboss.search.page.filter.ProjectFilter');
+goog.require('org.jboss.core.Variables');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.search.context.RequestParams.Order');
 goog.require('org.jboss.search.page.filter.DateOrderByChanged');
@@ -156,15 +157,16 @@ org.jboss.search.page.filter.DateFilter = function(element, date_histogram_eleme
     /**
      * Create and init input date pickers
      */
-    this.PATTERN_ = "MM'/'dd'/'yyyy"; // TODO get local?
-    this.formatter_ = new goog.i18n.DateTimeFormat(this.PATTERN_);
-    this.parser_ = new goog.i18n.DateTimeParse(this.PATTERN_);
+    var PATTERN_ = org.jboss.core.Variables.SHORT_DATE_FORMAT;
+	/** @type {!goog.i18n.DateTimeFormat} */
+    this.formatter_ = org.jboss.core.service.Locator.getInstance().getLookup().getShortDateFormatter();
+    var parser_ = new goog.i18n.DateTimeParse(PATTERN_);
 
-    this.fromDatePicker_ = new goog.ui.InputDatePicker(this.formatter_, this.parser_);
+    this.fromDatePicker_ = new goog.ui.InputDatePicker(this.formatter_, parser_);
     this.fromDatePicker_.setPopupParentElement(this.element_);
     this.fromDatePicker_.decorate(this.date_from_field_);
 
-    this.toDatePicker_ = new goog.ui.InputDatePicker(this.formatter_, this.parser_);
+    this.toDatePicker_ = new goog.ui.InputDatePicker(this.formatter_, parser_);
     this.toDatePicker_.setPopupParentElement(this.element_);
     this.toDatePicker_.decorate(this.date_to_field_);
 

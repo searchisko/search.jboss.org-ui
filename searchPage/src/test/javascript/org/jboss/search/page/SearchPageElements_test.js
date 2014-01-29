@@ -70,6 +70,7 @@ var testValidParameters = function() {
 	var project_filter_items_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
 
     var search_results_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var search_filters_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
 
     var elements = new org.jboss.search.page.SearchPageElements(
         query_field, spinner_div, clear_query_div, query_suggestions_div,
@@ -79,7 +80,7 @@ var testValidParameters = function() {
         date_order,
         project_filter_query_field, author_filter_query_field,
 		author_filter_items_div, project_filter_items_div,
-        search_results_div
+        search_results_div, search_filters_div
     );
     assertTrue(elements.isValid());
 

@@ -53,7 +53,9 @@ org.jboss.search.service.QueryServiceEventType = {
 	SEARCH_ERROR: goog.events.getUniqueId('search_error'),
 
 	// ----------------------------------------------
-	// Request parameters for the last successful query
+	// Request parameters for the last successful query.
+	// Do not be confused by the name "new", in fact they can be
+	// identical to the previous request parameters.
 	// ----------------------------------------------
 
 	NEW_REQUEST_PARAMETERS: goog.events.getUniqueId('new_request_params'),
