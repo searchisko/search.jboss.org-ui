@@ -7,7 +7,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-
     <parent>
         <groupId>org.jboss.search</groupId>
         <artifactId>web-ui</artifactId>
@@ -16,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jboss.search</groupId>
+            <groupId>org.jboss.search.web-ui</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
             <type>jsar</type>
@@ -27,17 +26,17 @@
         <plugins>
             <plugin>
                 <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>jsar-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+                <extensions>true</extensions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
                 <artifactId>closure-testing-maven-plugin</artifactId>
                 <version>${jsframework.version}</version>
                 <configuration>
                     <prologue>${profile.prologue}</prologue>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.jlgrock.javascript-framework</groupId>
-                <artifactId>jsar-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <extensions>true</extensions>
             </plugin>
             <plugin>
                 <groupId>com.googlecode.jstd-maven-plugin</groupId>

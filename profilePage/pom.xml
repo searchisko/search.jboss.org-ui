@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jboss.search</groupId>
+            <groupId>org.jboss.search.web-ui</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
             <type>jsar</type>
