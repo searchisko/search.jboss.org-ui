@@ -28,8 +28,10 @@ goog.require('org.jboss.search.logging.Logging');
 
 	new org.jboss.core.service.Locator(new org.jboss.search.service.LookUp());
 
-    new org.jboss.search.logging.Logging(
-		org.jboss.core.service.Locator.getInstance().getLookup().getHistory()
-	);
+	if (goog.DEBUG) {
+		new org.jboss.search.logging.Logging(
+			org.jboss.core.service.Locator.getInstance().getLookup().getHistory()
+		);
+	}
     new org.jboss.search.App();
 }

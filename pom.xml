@@ -77,14 +77,29 @@
 
     <profiles>
 
+        <!-- No JS optimization. -->
+        <profile>
+            <id>whitespace</id>
+            <properties>
+                <!--<closure.compiler.level>SIMPLE_OPTIMIZATIONS</closure.compiler.level>-->
+                <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>
+                <!--<closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>-->
+                <profile.prologue><![CDATA[
+                <script>
+                    goog.require('goog.testing.ContinuationTestCase');
+                    goog.require('goog.testing.jsunit');
+                </script>
+                ]]></profile.prologue>
+            </properties>
+        </profile>
+
+        <!-- Advanced JS optimization and stripping out goog.DEBUG and WTF.ENABLED parts. -->
         <profile>
             <id>advanced</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <!--<closure.compiler.level>SIMPLE_OPTIMIZATIONS</closure.compiler.level>-->
-                <!--<closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>-->
                 <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
                 <profile.prologue><![CDATA[
                 <script>
@@ -93,6 +108,29 @@
                 </script>
                 ]]></profile.prologue>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.jlgrock.javascript-framework</groupId>
+                        <artifactId>closure-compiler-maven-plugin</artifactId>
+                        <version>${jsframework.version}</version>
+                        <configuration>
+                            <defines>
+                                <define>
+                                    <defineName>goog.ENABLE_DEBUG_LOADER</defineName>
+                                    <value>false</value>
+                                    <valueType>boolean</valueType>
+                                </define>
+                                <define>
+                                    <defineName>goog.DEBUG</defineName>
+                                    <value>false</value>
+                                    <valueType>boolean</valueType>
+                                </define>
+                            </defines>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
 
         <!--
@@ -113,6 +151,29 @@
                 </script>
                 ]]></profile.prologue>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.jlgrock.javascript-framework</groupId>
+                        <artifactId>closure-compiler-maven-plugin</artifactId>
+                        <version>${jsframework.version}</version>
+                        <configuration>
+                            <defines>
+                                <define>
+                                    <defineName>goog.ENABLE_DEBUG_LOADER</defineName>
+                                    <value>false</value>
+                                    <valueType>boolean</valueType>
+                                </define>
+                                <define>
+                                    <defineName>goog.DEBUG</defineName>
+                                    <value>false</value>
+                                    <valueType>boolean</valueType>
+                                </define>
+                            </defines>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
