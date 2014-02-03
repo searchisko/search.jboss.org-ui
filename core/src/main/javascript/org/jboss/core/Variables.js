@@ -30,7 +30,8 @@ org.jboss.core.Variables = {
 	 * @type {string}
 	 * @const
 	 */
-	SHORT_DATE_FORMAT : "MM/dd/yyyy",
+//	SHORT_DATE_FORMAT : "MM/dd/yyyy",
+	SHORT_DATE_FORMAT : "yyyy-MM-dd",
 
 	/**
 	 * Medium date format.

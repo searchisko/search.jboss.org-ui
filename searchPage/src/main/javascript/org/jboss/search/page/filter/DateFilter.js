@@ -44,7 +44,6 @@ goog.require('goog.object');
 goog.require('goog.ui.InputDatePicker');
 goog.require('goog.ui.LabelInput');
 goog.require('org.jboss.search.page.filter.ProjectFilter');
-goog.require('org.jboss.core.Variables');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.search.context.RequestParams.Order');
 goog.require('org.jboss.search.page.filter.DateOrderByChanged');
@@ -157,10 +156,9 @@ org.jboss.search.page.filter.DateFilter = function(element, date_histogram_eleme
     /**
      * Create and init input date pickers
      */
-    var PATTERN_ = org.jboss.core.Variables.SHORT_DATE_FORMAT;
 	/** @type {!goog.i18n.DateTimeFormat} */
     this.formatter_ = org.jboss.core.service.Locator.getInstance().getLookup().getShortDateFormatter();
-    var parser_ = new goog.i18n.DateTimeParse(PATTERN_);
+    var parser_ = org.jboss.core.service.Locator.getInstance().getLookup().getShortDateParser();
 
     this.fromDatePicker_ = new goog.ui.InputDatePicker(this.formatter_, parser_);
     this.fromDatePicker_.setPopupParentElement(this.element_);

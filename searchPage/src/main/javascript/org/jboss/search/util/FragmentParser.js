@@ -26,6 +26,7 @@ goog.provide('org.jboss.search.util.fragmentParser.UI_param');
 goog.provide('org.jboss.search.util.fragmentParser.UI_param_suffix');
 goog.provide('org.jboss.search.util.fragmentParser.INTERNAL_param');
 
+goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.search.context.RequestParams');
 goog.require('org.jboss.search.context.RequestParams.Order');
 
@@ -124,7 +125,7 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
                             goog.string.removeAt(part, 0, p_.FROM.length)
                         )
                     );
-                    parsed[intp_.FROM] = goog.date.fromIsoString(fromDateTime_);
+                    parsed[intp_.FROM] = org.jboss.core.util.dateTime.parseShortDate(fromDateTime_);
                 } catch (error) {
                     // TODO: log?
                 }
@@ -137,7 +138,7 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
                             goog.string.removeAt(part, 0, p_.TO.length)
                         )
                     );
-                    parsed[intp_.TO] = goog.date.fromIsoString(toDateTime_);
+                    parsed[intp_.TO] = org.jboss.core.util.dateTime.parseShortDate(toDateTime_);
                 } catch (error) {
                     // TODO: log?
                 }

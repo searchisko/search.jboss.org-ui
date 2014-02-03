@@ -30,6 +30,7 @@ goog.require('org.jboss.core.service.LookUp');
 goog.require('goog.History');
 goog.require('goog.net.XhrManager');
 goog.require('goog.i18n.DateTimeFormat');
+goog.require('goog.i18n.DateTimeParse');
 goog.require('org.jboss.core.util.ImageLoader');
 goog.require('org.jboss.core.util.ImageLoaderNoop');
 
@@ -61,13 +62,21 @@ org.jboss.core.service.LookUpImpl = function() {
 
 	/**
 	 * @type {goog.i18n.DateTimeFormat}
+	 * @private
 	 */
 	this.shortDateFormatter_;
 
 	/**
 	 * @type {goog.i18n.DateTimeFormat}
+	 * @private
 	 */
 	this.mediumDateFormatter_;
+
+	/**
+	 * @type {goog.i18n.DateTimeParse}
+	 * @private
+	 */
+	this.shortDateParser_;
 };
 
 /** @inheritDoc */
@@ -114,4 +123,12 @@ org.jboss.core.service.LookUpImpl.prototype.getImageLoader = function () {
 org.jboss.core.service.LookUpImpl.prototype.setImageLoader = function (imageLoader) {
 	// TODO: make sure to dispose all resources kept by imageLoader_ if it is already set.
 	this.imageLoader_ = imageLoader;
+};
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.getShortDateParser = function() {
+	if (!goog.isDefAndNotNull(this.shortDateParser_)) {
+		this.shortDateParser_ = new goog.i18n.DateTimeParse(org.jboss.core.Variables.SHORT_DATE_FORMAT);
+	}
+	return this.shortDateParser_;
 };

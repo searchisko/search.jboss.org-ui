@@ -40,6 +40,7 @@ goog.require('goog.events.EventType');
 goog.require('goog.string');
 goog.require('goog.array');
 goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.search.context.RequestParams');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.context.RequestParams.Order');
@@ -176,13 +177,13 @@ org.jboss.search.App = function() {
 
         // use 'from' if available
         if (goog.isDefAndNotNull(requestParams.getFrom()) && goog.isDateLike(requestParams.getFrom())) {
-            var from_ = requestParams.getFrom().toXmlDateTime(true);
+            var from_ = org.jboss.core.util.dateTime.formatShortDate(requestParams.getFrom());
             token.push([p_.FROM,goog.string.urlEncode(from_)].join(''));
         }
 
         // use 'to' if available
         if (goog.isDefAndNotNull(requestParams.getTo()) && goog.isDateLike(requestParams.getTo())) {
-            var to_ = requestParams.getTo().toXmlDateTime(true);
+            var to_ = org.jboss.core.util.dateTime.formatShortDate(requestParams.getTo());
             token.push([p_.TO,goog.string.urlEncode(to_)].join(''));
         }
 

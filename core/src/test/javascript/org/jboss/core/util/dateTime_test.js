@@ -75,7 +75,7 @@ var testDateFormatter = function() {
 	var formatter = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.SHORT_DATE_FORMAT);
 	formatterDate = org.jboss.core.util.dateTime.format(dt,formatter);
 
-	assertEquals("12/06/2006", formatterDate);
+	assertEquals("2006-12-06", formatterDate);
 
 	var formatter = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.MEDIUM_DATE_FORMAT);
 	formatterDate = org.jboss.core.util.dateTime.format(dt,formatter);
@@ -89,7 +89,7 @@ var testShortDateFormatter = function() {
 	var dt = new goog.date.fromIsoString("2006-12-06T10:04:02+01:00");
 	formatterDate = org.jboss.core.util.dateTime.formatShortDate(dt);
 
-	assertEquals("12/06/2006", formatterDate);
+	assertEquals("2006-12-06", formatterDate);
 };
 
 var testMediumDateFormatter = function() {

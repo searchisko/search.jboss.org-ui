@@ -33,6 +33,7 @@ goog.provide('org.jboss.core.service.LookUp');
 goog.require('goog.History');
 goog.require('goog.net.XhrManager');
 goog.require('goog.i18n.DateTimeFormat');
+goog.require('goog.i18n.DateTimeParse');
 goog.require('org.jboss.core.util.ImageLoader');
 
 /**
@@ -79,4 +80,9 @@ org.jboss.core.service.LookUp.prototype.getShortDateFormatter = function() {};
  * @return {!goog.i18n.DateTimeFormat}
  */
 org.jboss.core.service.LookUp.prototype.getMediumDateFormatter = function() {};
+
+/**
+ * @return {!goog.i18n.DateTimeParse}
+ */
+org.jboss.core.service.LookUp.prototype.getShortDateParser = function() {};
 
