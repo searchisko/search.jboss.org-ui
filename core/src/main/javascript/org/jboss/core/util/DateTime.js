@@ -82,3 +82,15 @@ org.jboss.core.util.dateTime.formatMediumDate = function(dateTime) {
 	);
 	return str.replace(/PM$/, "pm").replace(/AM$/, "am");
 };
+
+/**
+ * Parse string into goog.date.DateTime. It assumes the string uses {@link org.jboss.core.Variables.SHORT_DATE_FORMAT}.
+ *
+ * @param {string} shortDateString
+ * @return {goog.date.DateTime}
+ */
+org.jboss.core.util.dateTime.parseShortDate = function(shortDateString) {
+	var date = new goog.date.DateTime();
+	org.jboss.core.service.Locator.getInstance().getLookup().getShortDateParser().parse(shortDateString, date);
+	return date;
+};

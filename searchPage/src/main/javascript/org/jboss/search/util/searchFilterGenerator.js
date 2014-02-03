@@ -30,17 +30,30 @@ goog.require('org.jboss.core.util.dateTime');
 /**
  *
  * @param {!org.jboss.search.context.RequestParams} requestParams
- * @return {*}
+ * @return {Object}
  */
 org.jboss.search.util.searchFilterGenerator.generateFilters = function(requestParams) {
 	var filters = {};
 	// date filter
 	if (goog.isDef(requestParams.getFrom()) || goog.isDef(requestParams.getTo()) || goog.isDef(requestParams.getOrder())) {
 		var filter = {};
+		filter["type"] = org.jboss.search.util.searchFilterGenerator.activeFilterType.DATE;
 		if (goog.isDef(requestParams.getFrom())) { filter["from"] = org.jboss.core.util.dateTime.formatShortDate(requestParams.getFrom()) }
 		if (goog.isDef(requestParams.getTo())) { filter["to"] = org.jboss.core.util.dateTime.formatShortDate(requestParams.getTo()) }
 		if (goog.isDef(requestParams.getOrder())) { filter["order"] = requestParams.getOrder() }
 		filters['dateFilter'] = filter;
 	}
 	return filters;
+};
+
+/**
+ * Supported active filter types.
+ * Note: these values are propagated into HTML code (as a value of HTML Element attribute).
+ * @enum {string}
+ */
+org.jboss.search.util.searchFilterGenerator.activeFilterType = {
+	DATE : "d",
+	PROJECT : "p",
+	CONTRIBUTOR : "c",
+	CONTENT_TYPE : "ct"
 };

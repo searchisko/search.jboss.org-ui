@@ -38,7 +38,7 @@ goog.require('goog.date.DateTime');
  * @param {number=} opt_page
  * @param {goog.date.DateTime=} opt_from
  * @param {goog.date.DateTime=} opt_to
- * @param {org.jboss.search.context.RequestParams.Order=} opt_order
+ * @param {?org.jboss.search.context.RequestParams.Order=} opt_order
  * @param {string=} opt_log
  * @param {boolean=} opt_resetCaches
  * @constructor
@@ -70,7 +70,7 @@ org.jboss.search.context.RequestParams = function(query_string, opt_page, opt_fr
     this.to_ = opt_to;
 
     /**
-     * @type {org.jboss.search.context.RequestParams.Order|undefined}
+     * @type {?org.jboss.search.context.RequestParams.Order|undefined}
      * @private
      */
     this.order_ = opt_order;
@@ -95,13 +95,14 @@ org.jboss.search.context.RequestParams = function(query_string, opt_page, opt_fr
  *
  * TODO: Rename to cloneAndOverride (that is what it does)
  * TODO: use defs instead of list of parameters
+ * TODO: it is very hard to use this method correctly, reimplement it!
  *
  * @param {!org.jboss.search.context.RequestParams} requestParams
  * @param {string=} opt_query_string
  * @param {number=} opt_page
  * @param {goog.date.DateTime=} opt_from
  * @param {goog.date.DateTime=} opt_to
- * @param {org.jboss.search.context.RequestParams.Order=} opt_order
+ * @param {?org.jboss.search.context.RequestParams.Order=} opt_order
  * @param {string=} opt_log
  * @param {boolean=} opt_resetCaches
  * @return {!org.jboss.search.context.RequestParams}
@@ -158,7 +159,7 @@ org.jboss.search.context.RequestParams.prototype.getTo = function() {
 };
 
 /**
- * @returns {org.jboss.search.context.RequestParams.Order|undefined}
+ * @returns {?org.jboss.search.context.RequestParams.Order|undefined}
  */
 org.jboss.search.context.RequestParams.prototype.getOrder = function() {
     return this.order_;

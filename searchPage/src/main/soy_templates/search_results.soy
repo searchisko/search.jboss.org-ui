@@ -24,14 +24,15 @@
  */
 {template .search_filters}
 	{if isNonnull($filters?.dateFilter)}
-        <div class="active_filter">{call .date_filter data="$filters.dateFilter" /}{call .filter_close /}</div>
+        <div class="active_filter">{call .date_filter data="$filters.dateFilter" /}{call .filter_close data="$filters.dateFilter" /}</div>
     {/if}
 {/template}
 
 /**
+ * @param type
  */
 {template .filter_close}
-<span class="active_filter_close">[X]</span>
+<span class="active_filter_close" asft_="{$type}">[X]</span>
 {/template}
 
 /**

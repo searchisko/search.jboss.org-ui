@@ -139,6 +139,20 @@ org.jboss.search.Constants = {
      */
     CLICK_STREAM_CLASS: "cs_",
 
+	/**
+	 * Class of close buttons used in active search filters.
+	 * @type {string}
+	 * @const
+	 */
+	ACTIVE_SEARCH_FILTER_CLOSE: "active_filter_close",
+
+	/**
+	 * Element attribute name used to hold active search filter type.
+	 * @type {string}
+	 * @const
+	 */
+	ACTIVE_SEARCH_FILTER_TYPE: "asft_",
+
     /**
      * Used in elements to catch mouseover events.
      * @type {string}

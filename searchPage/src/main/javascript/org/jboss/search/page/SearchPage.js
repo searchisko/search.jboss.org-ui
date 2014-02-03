@@ -454,8 +454,42 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     );
 
 
+	/**
+	 * ID of listener which catches user clicks inside active search filters.
+	 * @type {goog.events.Key}
+	 * @private
+	 */
+	this.activeSearchFiltersClickId_ = goog.events.listen(
+		this.elements_.getSearch_filters_div(),
+		goog.events.EventType.MOUSEUP,
+		goog.bind(function(event) {
+			var e = /** @type {goog.events.Event} */ (event);
+			var element = /** @type {Element} */ (e.target);
+			if (goog.dom.classes.has(element, org.jboss.search.Constants.ACTIVE_SEARCH_FILTER_CLOSE)) {
+				var activeSearchFilterType = element.getAttribute(org.jboss.search.Constants.ACTIVE_SEARCH_FILTER_TYPE);
+				if (activeSearchFilterType) {
+					switch (activeSearchFilterType)
+					{
+						case org.jboss.search.util.searchFilterGenerator.activeFilterType.DATE:
+							/** @type {?org.jboss.search.context.RequestParams} */ var params = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
+							if (goog.isDefAndNotNull(params)) {
+								// reset date filter related fields, but also page field
+								params = params.mixin(params, undefined, undefined, null, null, null);
+								this.dispatchEvent(
+									new org.jboss.search.page.event.QuerySubmitted(params)
+								);
+							}
+							break;
+						default:
+							// ignore, unsupported active filter type...
+					}
+				}
+			}
+		}, this)
+	);
+
     /**
-     * ID of listener which catches user clicks on top of search results.
+     * ID of listener which catches user clicks inside search results.
      * @type {goog.events.Key}
      * @private
      */
@@ -620,6 +654,7 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
     goog.events.unlistenByKey(this.xhrErrorListenerId_);
     goog.events.unlistenByKey(this.xhrAbortListenerId_);
     goog.events.unlistenByKey(this.query_field_focus_id_);
+    goog.events.unlistenByKey(this.activeSearchFiltersClickId_);
     goog.events.unlistenByKey(this.searchResultsClickId_);
     goog.events.unlistenByKey(this.contributorMouseOverId_);
     goog.events.unlistenByKey(this.userQueryServiceDispatcherListenerId_);
@@ -787,7 +822,7 @@ org.jboss.search.page.SearchPage.prototype.renderSearchFilters_ = function() {
 	var requestParams = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
 	var searchFilters = org.jboss.search.util.searchFilterGenerator.generateFilters(requestParams);
 	try {
-		// generate HTML for search filters
+		// generate HTML for active search filters
 		var html = org.jboss.search.page.templates.search_filters({filters:searchFilters});
 		this.elements_.getSearch_filters_div().innerHTML = html;
 	} catch(error) {

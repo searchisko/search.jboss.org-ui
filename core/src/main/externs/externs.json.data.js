@@ -145,9 +145,16 @@ TopContributorFacet.prototype.gURL16;	// computed or modified by normalize.js
  * @interface
  */
 function filterItem() {};
-filterItem.did_you_mean_items;
-filterItem.items;
-filterItem.items.name;
-filterItem.items.code;
-filterItem.items.fields;
-filterItem.items.highlight;
+filterItem.prototype.did_you_mean_items;
+filterItem.prototype.items;
+filterItem.prototype.items.name;
+filterItem.prototype.items.code;
+filterItem.prototype.items.fields;
+filterItem.prototype.items.highlight;
+
+function activeSearchFilter() {};
+activeSearchFilter.prototype.dateFilter;
+activeSearchFilter.prototype.type;
+activeSearchFilter.prototype.from;
+activeSearchFilter.prototype.to;
+activeSearchFilter.prototype.order;
