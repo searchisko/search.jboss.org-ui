@@ -25,7 +25,6 @@ goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.service.LookUpImpl');
 goog.require('org.jboss.core.Variables');
 goog.require('org.jboss.core.util.dateTime');
-goog.require('goog.date');
 goog.require('goog.date.DateTime');
 goog.require('goog.i18n.DateTimeFormat');
 
@@ -45,12 +44,12 @@ var tearDownPage = function() {
 
 var testFloorToDays = function() {
 
-	var dt = new goog.date.fromIsoString("2006-12-06T10:04:02+01:00");
+	var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
 	var ndt = org.jboss.core.util.dateTime.floorToDays(dt);
 
 	assertEquals(2006,dt.getYear());
 	assertEquals(11,dt.getMonth());
-	assertEquals(3,dt.getDay());
+	assertEquals(6,dt.getDate());
 	assertEquals(10,dt.getHours());
 	assertEquals(4,dt.getMinutes());
 	assertEquals(2,dt.getSeconds());
@@ -58,7 +57,7 @@ var testFloorToDays = function() {
 
 	assertEquals(2006,ndt.getYear());
 	assertEquals(11,ndt.getMonth());
-	assertEquals(3,ndt.getDay());
+	assertEquals(6,ndt.getDate());
 	assertEquals(0,ndt.getHours());
 	assertEquals(0,ndt.getMinutes());
 	assertEquals(0,ndt.getSeconds());
@@ -70,7 +69,7 @@ var testFloorToDays = function() {
 var testDateFormatter = function() {
 
 	/** @type {string} */ var formatterDate;
-	var dt = new goog.date.fromIsoString("2006-12-06T10:04:02+01:00");
+	var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
 
 	var formatter = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.SHORT_DATE_FORMAT);
 	formatterDate = org.jboss.core.util.dateTime.format(dt,formatter);
@@ -86,7 +85,7 @@ var testDateFormatter = function() {
 var testShortDateFormatter = function() {
 
 	/** @type {string} */ var formatterDate;
-	var dt = new goog.date.fromIsoString("2006-12-06T10:04:02+01:00");
+	var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
 	formatterDate = org.jboss.core.util.dateTime.formatShortDate(dt);
 
 	assertEquals("2006-12-06", formatterDate);
@@ -95,7 +94,7 @@ var testShortDateFormatter = function() {
 var testMediumDateFormatter = function() {
 
 	/** @type {string} */ var formatterDate;
-	var dt = new goog.date.fromIsoString("2006-12-06T10:04:02+01:00");
+	var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
 	formatterDate = org.jboss.core.util.dateTime.formatMediumDate(dt);
 
 	assertEquals("2006-12-6, 10:04am", formatterDate);

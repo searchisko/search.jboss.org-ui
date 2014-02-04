@@ -71,12 +71,14 @@ org.jboss.core.service.LookUp.prototype.setImageLoader = function(imageLoader) {
 
 /**
  * DateFormatter using {@link org.jboss.core.Variables.SHORT_DATE_FORMAT}.
+ * Formatter uses local client time zone.
  * @return {!goog.i18n.DateTimeFormat}
  */
 org.jboss.core.service.LookUp.prototype.getShortDateFormatter = function() {};
 
 /**
  * DateFormatter using {@link org.jboss.core.Variables.MEDIUM_DATE_FORMAT}.
+ * Formatter uses local client time zone.
  * @return {!goog.i18n.DateTimeFormat}
  */
 org.jboss.core.service.LookUp.prototype.getMediumDateFormatter = function() {};
