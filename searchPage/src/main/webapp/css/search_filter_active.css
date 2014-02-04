@@ -40,6 +40,14 @@
 	color: rgb(99, 99, 99);
 }
 
+.active_filter span {
+	padding: 0 4px;
+}
+
+.active_filter .active_filter_title {
+	font-weight: bold;
+}
+
 .active_filter_close {
 	cursor: pointer;
 	float: right;

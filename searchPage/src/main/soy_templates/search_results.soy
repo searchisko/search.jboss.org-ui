@@ -24,7 +24,7 @@
  */
 {template .search_filters}
 	{if isNonnull($filters?.dateFilter)}
-        <div class="active_filter">{call .date_filter data="$filters.dateFilter" /}{call .filter_close data="$filters.dateFilter" /}</div>
+        <div class="active_filter"><span class="active_filter_title">Date filters &gt;</span>{call .date_filter data="$filters.dateFilter" /}{call .filter_close data="$filters.dateFilter" /}</div>
     {/if}
 {/template}
 
@@ -32,7 +32,7 @@
  * @param type
  */
 {template .filter_close}
-<span class="active_filter_close" asft_="{$type}">[X]</span>
+<span class="active_filter_close" asft_="{$type}" title="Clear filters">[X]</span>
 {/template}
 
 /**
@@ -42,13 +42,13 @@
  */
 {template .date_filter}
 	{if isNonnull($from)}
-		<span>From: {$from} </span>
+		<span>From: {$from}{if isNonnull($to) or isNonnull($order)},{/if}</span>
 	{/if}
 	{if isNonnull($to)}
-		<span>To: {$to} </span>
+		<span>To: {$to}{if isNonnull($order)},{/if}</span>
 	{/if}
 	{if isNonnull($order)}
-		<span>Order: {$order} </span>
+		<span>Order: {$order}</span>
 	{/if}
 {/template}
 
