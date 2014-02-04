@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-goog.require('org.jboss.search.util.urlGenerator');
 goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParamsFactory');
+goog.require('org.jboss.search.util.urlGenerator');
 goog.require('goog.Uri');
 goog.require('goog.testing.jsunit');
 
@@ -52,7 +53,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.core.context.RequestParams(' ')
+		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString(' ').build()
     );
     assertEquals(
         [
@@ -69,7 +70,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.core.context.RequestParams("dummy")
+		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build()
     );
     assertEquals(
         [
@@ -86,7 +87,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.core.context.RequestParams("dummy", 20)
+		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').setPage(20).build()
     );
     assertEquals(
         [
@@ -104,7 +105,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.core.context.RequestParams("dummy"),
+		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
         [''], false
     );
     assertEquals(
@@ -121,7 +122,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.core.context.RequestParams("dummy"),
+		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
         [], false);
     assertEquals(
         [
@@ -136,7 +137,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.core.context.RequestParams("dummy"),
+		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
         []);
     assertEquals(
         [

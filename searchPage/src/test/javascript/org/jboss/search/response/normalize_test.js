@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-goog.require('org.jboss.search.response');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParamsFactory');
+goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.service.LookUpImplWithProjects');
 
 goog.require('goog.string');
@@ -44,7 +45,7 @@ var testNormalizeSearchResponse = function() {
         }
     };
 
-    var requestParams = new org.jboss.core.context.RequestParams('test');
+    var requestParams = org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('test').build();
 
     var data;
     try {

@@ -26,9 +26,10 @@ goog.provide('org.jboss.search.util.urlGenerator.QueryParams');
 goog.provide('org.jboss.search.util.urlGenerator.QueryParams.SortBy');
 
 goog.require('goog.Uri');
-goog.require('org.jboss.search.Variables');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParams.Order');
+goog.require('org.jboss.core.context.RequestParamsFactory');
+goog.require('org.jboss.search.Variables');
 
 /**
  * These are the names of URL params used for search service.
@@ -79,7 +80,8 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
     var params = org.jboss.search.util.urlGenerator.QueryParams;
 
     if (!goog.isDefAndNotNull(requestParams)) {
-        requestParams = new org.jboss.core.context.RequestParams('');
+        requestParams = org.jboss.core.context.RequestParamsFactory.getInstance()
+			.reset().setQueryString('').build();
     }
     var query = requestParams.getQueryString();
     if (!goog.isDefAndNotNull(requestParams.getQueryString())) { query = '' }

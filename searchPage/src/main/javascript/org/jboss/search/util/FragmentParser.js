@@ -29,6 +29,7 @@ goog.provide('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParams.Order');
+goog.require('org.jboss.core.context.RequestParamsFactory');
 
 goog.require('goog.array');
 goog.require('goog.object');
@@ -169,12 +170,13 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
             }
         });
     }
-    return new org.jboss.core.context.RequestParams(
-        parsed[intp_.QUERY],
-        parsed[intp_.PAGE],
-        parsed[intp_.FROM],
-        parsed[intp_.TO],
-        parsed[intp_.ORDER_BY],
-        parsed[intp_.LOG]
-    );
+	return org.jboss.core.context.RequestParamsFactory.getInstance()
+		.reset()
+		.setQueryString(parsed[intp_.QUERY])
+		.setPage(parsed[intp_.PAGE])
+		.setFrom(parsed[intp_.FROM])
+		.setTo(parsed[intp_.TO])
+		.setOrder(parsed[intp_.ORDER_BY])
+		.setLog(parsed[intp_.LOG])
+		.build();
 };

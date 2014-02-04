@@ -17,33 +17,37 @@
  */
 
 /**
- * @fileoverview Object is used to hold request parameters.
+ * @fileoverview {@link RequestParams} object represents client request parameters.
  *
- * The idea is to have a reference of these values in case we need to send a new query with small
+ * The idea is to have a reference of these values in case we need to (re)send a new query with small
  * parameter changes. For example, user changes date filter (selects a new interval) then we need
- * to send a new request (via QueryService) and we need to get the latest values of the rest of the
- * parameters.
+ * to send a new request and we need to get the most recent values of previous request parameters.
+ * <p/>
+ * There is convenient factory method {@link RequestParamsFactory} that is used to create a new instances.
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
 goog.provide('org.jboss.core.context.RequestParams');
 goog.provide('org.jboss.core.context.RequestParams.Order');
+goog.provide('org.jboss.core.context.RequestParamsFactory');
 
 goog.require('goog.date.DateTime');
 
 /**
+ * Request parameters. Do not create instances directly, use {@link RequestParamsFactory} instead.
  *
  * @param {string} query_string
- * @param {number=} opt_page
- * @param {goog.date.DateTime=} opt_from
- * @param {goog.date.DateTime=} opt_to
- * @param {?org.jboss.core.context.RequestParams.Order=} opt_order
- * @param {string=} opt_log
- * @param {boolean=} opt_resetCaches
+ * @param {?number} page
+ * @param {?goog.date.DateTime} from
+ * @param {?goog.date.DateTime} to
+ * @param {org.jboss.core.context.RequestParams.Order} order
+ * @param {?string} log
+ * @param {?boolean} resetCaches
  * @constructor
+ * @private
  */
-org.jboss.core.context.RequestParams = function(query_string, opt_page, opt_from, opt_to, opt_order, opt_log, opt_resetCaches) {
+org.jboss.core.context.RequestParams = function(query_string, page, from, to, order, log, resetCaches) {
 
     /**
      * @type {string}
@@ -52,132 +56,91 @@ org.jboss.core.context.RequestParams = function(query_string, opt_page, opt_from
     this.query_string_ = query_string;
 
     /**
-     * @type {number|undefined}
+     * @type {number|null}
      * @private
      */
-    this.page_ = opt_page;
+    this.page_ = page;
 
     /**
-     * @type {goog.date.DateTime|undefined}
+     * @type {goog.date.DateTime|null}
      * @private
      */
-    this.from_ = opt_from;
+    this.from_ = from;
 
     /**
-     * @type {goog.date.DateTime|undefined}
+     * @type {goog.date.DateTime|null}
      * @private
      */
-    this.to_ = opt_to;
+    this.to_ = to;
 
     /**
-     * @type {?org.jboss.core.context.RequestParams.Order|undefined}
+     * @type {org.jboss.core.context.RequestParams.Order}
      * @private
      */
-    this.order_ = opt_order;
+    this.order_ = order;
 
     /**
-     * @type {string|undefined}
+     * @type {string|null}
      * @private
      */
-    this.log_ = opt_log;
+    this.log_ = log;
 
     /**
-     * @type {boolean|undefined}
+     * @type {boolean|null}
      * @private
      */
-    this.resetCaches_ = opt_resetCaches;
-};
-
-/**
- * Return a new instance of RequestParams based on provided requestParams instance and if any of other parameters is
- * defined then it is setup as a new value in the new RequestParams instance. This means <code>null</code> values are
- * allowed and can be used to wipe out original values.
- *
- * TODO: Rename to cloneAndOverride (that is what it does)
- * TODO: use defs instead of list of parameters
- * TODO: it is very hard to use this method correctly, reimplement it!
- *
- * @param {!org.jboss.core.context.RequestParams} requestParams
- * @param {string=} opt_query_string
- * @param {number=} opt_page
- * @param {goog.date.DateTime=} opt_from
- * @param {goog.date.DateTime=} opt_to
- * @param {?org.jboss.core.context.RequestParams.Order=} opt_order
- * @param {string=} opt_log
- * @param {boolean=} opt_resetCaches
- * @return {!org.jboss.core.context.RequestParams}
- */
-org.jboss.core.context.RequestParams.prototype.mixin = function(requestParams, opt_query_string, opt_page, opt_from, opt_to, opt_order, opt_log, opt_resetCaches) {
-
-    var query_ = requestParams.getQueryString();
-    var page_ = requestParams.getPage();
-    var from_ = requestParams.getFrom();
-    var to_ = requestParams.getTo();
-    var order_ = requestParams.getOrder();
-    var log_ = requestParams.getLog();
-    var resetCaches_ = requestParams.getResetCaches();
-
-    if (goog.isDefAndNotNull(opt_query_string)) { query_ = opt_query_string }
-    if (goog.isDef(opt_page)) { page_ = opt_page }
-    if (goog.isDef(opt_from)) { from_ = opt_from }
-    if (goog.isDef(opt_to)) { to_ = opt_to }
-    if (goog.isDef(opt_order)) { order_ = opt_order }
-    if (goog.isDef(opt_log)) { log_ = opt_log }
-    if (goog.isDef(opt_resetCaches)) { resetCaches_ = opt_resetCaches }
-
-    return new org.jboss.core.context.RequestParams(
-        query_, page_, from_, to_, order_, log_, resetCaches_
-    );
+    this.resetCaches_ = resetCaches;
 };
 
 /**
  * @return {string}
  */
 org.jboss.core.context.RequestParams.prototype.getQueryString = function() {
-    return this.query_string_;
+	return this.query_string_;
 };
 
 /**
- * @return {number|undefined}
+ * @return {number|null}
  */
 org.jboss.core.context.RequestParams.prototype.getPage = function() {
-    return this.page_;
+	return this.page_;
 };
 
 /**
- * @return {goog.date.DateTime|undefined}
+ * @return {goog.date.DateTime|null}
  */
 org.jboss.core.context.RequestParams.prototype.getFrom = function() {
-    return (this.from_ instanceof Date) ? new goog.date.DateTime(this.from_) : this.from_;
+	return (this.from_ instanceof Date) ? new goog.date.DateTime(this.from_) : this.from_;
 };
 
 /**
- * @return {goog.date.DateTime|undefined}
+ * @return {goog.date.DateTime|null}
  */
 org.jboss.core.context.RequestParams.prototype.getTo = function() {
-    return (this.to_ instanceof Date) ? new goog.date.DateTime(this.to_) : this.to_;
+	return (this.to_ instanceof Date) ? new goog.date.DateTime(this.to_) : this.to_;
 };
 
 /**
- * @returns {?org.jboss.core.context.RequestParams.Order|undefined}
+ * @returns {org.jboss.core.context.RequestParams.Order}
  */
 org.jboss.core.context.RequestParams.prototype.getOrder = function() {
-    return this.order_;
+	return this.order_;
 };
 
 /**
- * @return {string|undefined}
+ * @return {string|null}
  */
 org.jboss.core.context.RequestParams.prototype.getLog = function() {
-    return this.log_;
+	return this.log_;
 };
 
 /**
- * @returns {boolean|undefined}
+ * @returns {boolean|null}
  */
 org.jboss.core.context.RequestParams.prototype.getResetCaches = function() {
-    return this.resetCaches_;
+	return this.resetCaches_;
 };
+
 
 /**
  * Available values of the 'order' URL request parameter.
@@ -185,7 +148,185 @@ org.jboss.core.context.RequestParams.prototype.getResetCaches = function() {
  * @enum {string}
  */
 org.jboss.core.context.RequestParams.Order = {
-    SCORE : "score",
-    NEW_FIRST : "new_first",
-    OLD_FIRST : "old_first"
+	SCORE : "score",
+	NEW_FIRST : "new_first",
+	OLD_FIRST : "old_first"
+};
+
+
+/**
+ * Factory that provides fluent API for creating {@link RequestParams} instances.
+ * This factory is global singleton, use {@code getInstance} method to get instance of it.
+ * <p/>
+ * Example of usage:
+ * <code>
+ *     var requestParams1 = org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString("Hello").setPage(2).build();
+ *     // use can use existing RequestParams instance to generate a new instance with slightly update values:
+ *     requestParams2 = org.jboss.core.context.RequestParamsFactory.getInstance().reset().copy(requestParams1).setPage(null).build();
+ * </code>
+ *
+ * @constructor
+ */
+org.jboss.core.context.RequestParamsFactory = function() {
+
+	/**
+	 * @type {string}
+	 * @private
+	 */
+	this.query_string_;
+
+	/**
+	 * @type {number|null}
+	 * @private
+	 */
+	this.page_;
+
+	/**
+	 * @type {goog.date.DateTime|null}
+	 * @private
+	 */
+	this.from_;
+
+	/**
+	 * @type {goog.date.DateTime|null}
+	 * @private
+	 */
+	this.to_;
+
+	/**
+	 * @type {org.jboss.core.context.RequestParams.Order}
+	 * @private
+	 */
+	this.order_;
+
+	/**
+	 * @type {string|null}
+	 * @private
+	 */
+	this.log_;
+
+	/**
+	 * @type {boolean|null}
+	 * @private
+	 */
+	this.resetCaches_;
+
+	// reset internal state
+	this.reset();
+};
+// Make this factory a global singleton. We do not expect that we would need
+// to mock it so there is no need to add it into LookUp.
+goog.addSingletonGetter(org.jboss.core.context.RequestParamsFactory);
+
+/**
+ *
+ * @returns {!org.jboss.core.context.RequestParams}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.build = function() {
+	var rp = new org.jboss.core.context.RequestParams(
+		this.query_string_, this.page_, this.from_, this.to_, this.order_, this.log_, this.resetCaches_
+	);
+	this.reset();
+	return rp;
+};
+
+/**
+ * Reset all internal members, this is typically called before building a new {@link RequestParams}.
+ * @return {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.reset = function() {
+	this.query_string_ = "";
+	this.page_ = 1;
+	this.from_ = null;
+	this.to_ = null;
+	this.order_ = org.jboss.core.context.RequestParams.Order.SCORE;
+	this.log_ = null;
+	this.resetCaches_ = null;
+	return this;
+};
+
+/**
+ *
+ * @param {!org.jboss.core.context.RequestParams} requestParams
+ * @return {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.copy = function(requestParams) {
+	this.query_string_ = requestParams.getQueryString();
+	this.page_ = requestParams.getPage();
+	this.from_ = requestParams.getFrom();
+	this.to_ = requestParams.getTo();
+	this.order_ = requestParams.getOrder();
+	this.log_ = requestParams.getLog();
+	this.resetCaches_ = requestParams.getResetCaches();
+	return this;
+};
+
+/**
+ * Set new query string value, <code>null</code> value is not allowed.
+ * @param {string} queryString
+ * @return {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setQueryString = function(queryString) {
+	this.query_string_ = queryString;
+	return this;
+};
+
+/**
+ * Set new page value, <code>null</code> is allowed.
+ * @param {?number} page
+ * @return {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setPage = function(page) {
+	this.page_ = page;
+	return this;
+};
+
+/**
+ * Set new from value, <code>null</code> is allowed.
+ * @param {?goog.date.DateTime} from
+ * @return {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setFrom = function(from) {
+	this.from_ = from;
+	return this;
+};
+
+/**
+ * Set new to value, <code>null</code> is allowed.
+ * @param {?goog.date.DateTime} to
+ * @return {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setTo = function(to) {
+	this.to_ = to;
+	return this;
+};
+
+/**
+ * Set new order value.
+ * @param {!org.jboss.core.context.RequestParams.Order} order
+ * @return {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setOrder = function(order) {
+	this.order_ = order;
+	return this;
+};
+
+/**
+ * Set new log value, <code>null</code> is allowed.
+ * @param {?string} log
+ * @return {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setLog = function(log) {
+	this.log_ = log;
+	return this;
+};
+
+/**
+ * Set new resetCaches value, <code>null</code> is allowed.
+ * @param {?boolean} resetCaches
+ * @return {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setResetCaches = function(resetCaches) {
+	this.resetCaches_ = resetCaches;
+	return this;
 };

@@ -53,8 +53,8 @@ goog.require('goog.debug.Logger');
 org.jboss.search.logging.Logging = function(history) {
     goog.Disposable.call(this);
     this.navigationController_ = goog.bind(function (e) {
-        var parsedFragment = org.jboss.search.util.fragmentParser.parse(e.token);
-        var logType = parsedFragment.getLog();
+        var requestParams = org.jboss.search.util.fragmentParser.parse(e.token);
+        var logType = requestParams.getLog();
 		this.setLoggingType_(logType);
     }, this);
     this.historyListenerId_ = goog.events.listen(history, goog.history.EventType.NAVIGATE, this.navigationController_);
@@ -62,8 +62,8 @@ org.jboss.search.logging.Logging = function(history) {
 	var window = /** @type {!Window} */ (goog.dom.getWindow());
 	if (goog.isDefAndNotNull(window) && window.location && window.location.hash) {
 		var hash = window.location.hash;
-		var parsedFragment = org.jboss.search.util.fragmentParser.parse(hash);
-		var logType = parsedFragment.getLog();
+		var requestParams = org.jboss.search.util.fragmentParser.parse(hash);
+		var logType = requestParams.getLog();
 		this.setLoggingType_(logType);
 	}
 
@@ -170,11 +170,11 @@ org.jboss.search.logging.Logging.prototype.enableFancyWindow_ = function() {
 
 /**
  *
- * @param {string|undefined} logType
+ * @param {string|null} logType
  * @private
  */
 org.jboss.search.logging.Logging.prototype.setLoggingType_ = function(logType) {
-	if (goog.isDef(logType)) {
+	if (goog.isDefAndNotNull(logType)) {
 		this.startLogging(logType);
 	} else {
 		this.stopLogging();
