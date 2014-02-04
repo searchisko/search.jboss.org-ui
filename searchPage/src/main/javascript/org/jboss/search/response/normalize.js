@@ -28,7 +28,7 @@ goog.require('org.jboss.search.Variables');
 goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.search.util.paginationGenerator');
 goog.require('org.jboss.core.service.Locator');
-goog.require('org.jboss.search.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams');
 
 goog.require('goog.date');
 goog.require('goog.date.DateTime');
@@ -43,7 +43,7 @@ goog.require('goog.memoize');
 /**
  * It returns normalized and sanitized search response.
  * @param {!Object} response raw response from search API.
- * @param {!org.jboss.search.context.RequestParams} requestParams
+ * @param {!org.jboss.core.context.RequestParams} requestParams
  * @return {!Object}
  */
 org.jboss.search.response.normalizeSearchResponse = function(response, requestParams) {

@@ -27,8 +27,8 @@ goog.provide('org.jboss.search.util.fragmentParser.UI_param_suffix');
 goog.provide('org.jboss.search.util.fragmentParser.INTERNAL_param');
 
 goog.require('org.jboss.core.util.dateTime');
-goog.require('org.jboss.search.context.RequestParams');
-goog.require('org.jboss.search.context.RequestParams.Order');
+goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams.Order');
 
 goog.require('goog.array');
 goog.require('goog.object');
@@ -79,7 +79,7 @@ org.jboss.search.util.fragmentParser.UI_param_suffix = {
 /**
  * Extract named parameters from URL fragment and return them as an object.
  * @param {string=} opt_fragment
- * @return {!org.jboss.search.context.RequestParams}
+ * @return {!org.jboss.core.context.RequestParams}
  */
 org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
 
@@ -150,9 +150,9 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
                         goog.string.removeAt(part, 0, p_.ORDER_BY.length)
                     )
                     ).toLowerCase();
-                // orderBy should NOT equals to {@link org.jboss.search.context.RequestParams.Order.SCORE}
-                if (goog.object.containsValue(org.jboss.search.context.RequestParams.Order, orderBy_) &&
-                    orderBy_ != org.jboss.search.context.RequestParams.Order.SCORE) {
+                // orderBy should NOT equals to {@link org.jboss.core.context.RequestParams.Order.SCORE}
+                if (goog.object.containsValue(org.jboss.core.context.RequestParams.Order, orderBy_) &&
+                    orderBy_ != org.jboss.core.context.RequestParams.Order.SCORE) {
                     parsed[intp_.ORDER_BY] = orderBy_;
                 }
             } else
@@ -169,7 +169,7 @@ org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
             }
         });
     }
-    return new org.jboss.search.context.RequestParams(
+    return new org.jboss.core.context.RequestParams(
         parsed[intp_.QUERY],
         parsed[intp_.PAGE],
         parsed[intp_.FROM],

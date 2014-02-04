@@ -24,12 +24,12 @@
 
 goog.provide('org.jboss.search.util.searchFilterGenerator');
 
-goog.require('org.jboss.search.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.util.dateTime');
 
 /**
  *
- * @param {!org.jboss.search.context.RequestParams} requestParams
+ * @param {!org.jboss.core.context.RequestParams} requestParams
  * @return {Object}
  */
 org.jboss.search.util.searchFilterGenerator.generateFilters = function(requestParams) {

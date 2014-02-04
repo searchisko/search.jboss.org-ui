@@ -41,9 +41,10 @@ goog.require('goog.string');
 goog.require('goog.array');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.util.dateTime');
-goog.require('org.jboss.search.context.RequestParams');
+goog.require('org.jboss.core.util.ImageLoaderNet');
+goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams.Order');
 goog.require('org.jboss.search.Constants');
-goog.require('org.jboss.search.context.RequestParams.Order');
 goog.require('org.jboss.search.list.project.Project');
 goog.require("org.jboss.search.page.event.EventType");
 goog.require("org.jboss.search.page.event.QuerySubmitted");
@@ -57,7 +58,6 @@ goog.require("org.jboss.search.page.SearchPageElements");
 goog.require('org.jboss.search.service.QueryServiceCached');
 goog.require('org.jboss.search.service.QueryServiceEventType');
 goog.require('org.jboss.search.service.QueryServiceXHR');
-goog.require('org.jboss.core.util.ImageLoaderNet');
 goog.require('org.jboss.search.util.fragmentParser');
 goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.search.util.fragmentParser.UI_param_suffix');
@@ -162,7 +162,7 @@ org.jboss.search.App = function() {
      * Basically, this function is called by the search page; whenever user selects or input search query this function
      * gets called. It changes URL fragment and thus calls navigatorController.
      *
-     * @param {!org.jboss.search.context.RequestParams} requestParams
+     * @param {!org.jboss.core.context.RequestParams} requestParams
      */
     var urlSetFragmentFunction = function(requestParams) {
         var p_ = org.jboss.search.util.fragmentParser.UI_param_suffix;
@@ -187,15 +187,15 @@ org.jboss.search.App = function() {
             token.push([p_.TO,goog.string.urlEncode(to_)].join(''));
         }
 
-        // use 'order' if available and NOT equals to {@link org.jboss.search.context.RequestParams.Order.SCORE}
+        // use 'order' if available and NOT equals to {@link org.jboss.core.context.RequestParams.Order.SCORE}
         if (goog.isDefAndNotNull(requestParams.getOrder())) {
-            if (requestParams.getOrder() != org.jboss.search.context.RequestParams.Order.SCORE) {
+            if (requestParams.getOrder() != org.jboss.core.context.RequestParams.Order.SCORE) {
                 token.push([p_.ORDER_BY,goog.string.urlEncode(requestParams.getOrder())].join(''));
             }
         }
 
         // if log was used in previous call, keep it
-        /** @type {org.jboss.search.context.RequestParams} */
+        /** @type {org.jboss.core.context.RequestParams} */
         var requestParams_ = org.jboss.search.util.fragmentParser.parse(history_.getToken());
         var log = requestParams_.getLog();
         if (goog.isDefAndNotNull(log) && !goog.string.isEmpty(log)) {
@@ -221,7 +221,7 @@ org.jboss.search.App = function() {
     // navigation controller
     var navigationController = goog.bind(function (e) {
         // e.isNavigate (true if value in browser address bar is changed manually)
-        /** @type {org.jboss.search.context.RequestParams} */
+        /** @type {org.jboss.core.context.RequestParams} */
         var requestParams = org.jboss.search.util.fragmentParser.parse(e.token);
         if (goog.isDefAndNotNull(requestParams.getQueryString())) {
             this.searchPage.runSearch(requestParams);

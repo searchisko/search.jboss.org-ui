@@ -45,12 +45,12 @@ goog.require('goog.events.KeyEvent');
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require("org.jboss.core.visualization.IntervalSelected");
-goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.visualization.HistogramEventType');
+goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.context.RequestParams');
 goog.require("org.jboss.search.page.filter.DateRangeChanged");
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.Variables');
-goog.require('org.jboss.search.context.RequestParams');
 goog.require('org.jboss.search.page.SearchPageElements');
 goog.require('org.jboss.search.page.UserIdle');
 goog.require('org.jboss.search.page.element.SearchFieldHandler');
@@ -127,7 +127,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 				 	=====================================================
 				 */
                 case org.jboss.search.service.QueryServiceEventType.NEW_REQUEST_PARAMETERS:
-                    var requestParams = /** @type {org.jboss.search.context.RequestParams} */ (event.getMetadata());
+                    var requestParams = /** @type {org.jboss.core.context.RequestParams} */ (event.getMetadata());
                     org.jboss.core.service.Locator.getInstance().getLookup().setRequestParams(requestParams);
 					this.renderSearchFilters_();
                     break;
@@ -143,7 +143,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 				 */
                 case org.jboss.search.service.QueryServiceEventType.SEARCH_START:
                     var metadata_ = event.getMetadata();
-                    /** @type {org.jboss.search.context.RequestParams} */
+                    /** @type {org.jboss.core.context.RequestParams} */
                     var requestParams_ = metadata_["requestParams"];
                     this.log_.info("Search request for ["+requestParams_.getQueryString()+"] started. URL: ["+metadata_["url"]+"]");
                     this.setUserQuery_(requestParams_.getQueryString());
@@ -329,7 +329,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                 // TODO get query_string from model at the selectedIndex position
                 thiz_.dispatchEvent(
                     new org.jboss.search.page.event.QuerySubmitted(
-                        new org.jboss.search.context.RequestParams("option was selected by pointer (index: "+selectedIndex+")",1)
+                        new org.jboss.core.context.RequestParams("option was selected by pointer (index: "+selectedIndex+")",1)
                     )
                 );
 
@@ -471,7 +471,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 					switch (activeSearchFilterType)
 					{
 						case org.jboss.search.util.searchFilterGenerator.activeFilterType.DATE:
-							/** @type {?org.jboss.search.context.RequestParams} */ var params = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
+							/** @type {?org.jboss.core.context.RequestParams} */ var params = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
 							if (goog.isDefAndNotNull(params)) {
 								// reset date filter related fields, but also page field
 								params = params.mixin(params, undefined, undefined, null, null, null);
@@ -786,7 +786,7 @@ org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges =
 
 /**
  * Set user query and execute the query.
- * @param {!org.jboss.search.context.RequestParams} requestParams
+ * @param {!org.jboss.core.context.RequestParams} requestParams
  */
 org.jboss.search.page.SearchPage.prototype.runSearch = function(requestParams) {
     var queryService = org.jboss.core.service.Locator.getInstance().getLookup().getQueryService();
@@ -988,7 +988,7 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
             var query = this.elements_.getQuery_field().value;
             this.dispatchEvent(
                 new org.jboss.search.page.event.QuerySubmitted(
-                    new org.jboss.search.context.RequestParams(query,1)
+                    new org.jboss.core.context.RequestParams(query,1)
                 )
             );
         } else if (selectedIndex == 0) {
@@ -996,7 +996,7 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
             var query = this.elements_.getQuery_field().value;
             this.dispatchEvent(
                 new org.jboss.search.page.event.QuerySubmitted(
-                    new org.jboss.search.context.RequestParams(query,1)
+                    new org.jboss.core.context.RequestParams(query,1)
                 )
             );
         } else if (selectedIndex > 0) {
@@ -1004,7 +1004,7 @@ org.jboss.search.page.SearchPage.prototype.getPresetKeyHandlers_ = function() {
             // TODO get query_string from model at the selectedIndex position
             this.dispatchEvent(
                 new org.jboss.search.page.event.QuerySubmitted(
-                    new org.jboss.search.context.RequestParams("option was selected by keys (index: "+selectedIndex+")",1)
+                    new org.jboss.core.context.RequestParams("option was selected by keys (index: "+selectedIndex+")",1)
                 )
             );
         }

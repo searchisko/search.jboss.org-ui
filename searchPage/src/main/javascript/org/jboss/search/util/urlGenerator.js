@@ -27,8 +27,8 @@ goog.provide('org.jboss.search.util.urlGenerator.QueryParams.SortBy');
 
 goog.require('goog.Uri');
 goog.require('org.jboss.search.Variables');
-goog.require('org.jboss.search.context.RequestParams');
-goog.require('org.jboss.search.context.RequestParams.Order');
+goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams.Order');
 
 /**
  * These are the names of URL params used for search service.
@@ -62,7 +62,7 @@ org.jboss.search.util.urlGenerator.QueryParams.SortBy = {
  * Note it directly modifies provided `rootUri` so you may want use clone.
  *
  * @param {goog.Uri|string} rootUri
- * @param {!org.jboss.search.context.RequestParams} requestParams
+ * @param {!org.jboss.core.context.RequestParams} requestParams
  * @param {Array.<string>=} opt_fields
  * @param {boolean=} opt_highlighting
  * @return {string|null}
@@ -79,7 +79,7 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
     var params = org.jboss.search.util.urlGenerator.QueryParams;
 
     if (!goog.isDefAndNotNull(requestParams)) {
-        requestParams = new org.jboss.search.context.RequestParams('');
+        requestParams = new org.jboss.core.context.RequestParams('');
     }
     var query = requestParams.getQueryString();
     if (!goog.isDefAndNotNull(requestParams.getQueryString())) { query = '' }
@@ -130,14 +130,14 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
 
     var orderBy = requestParams.getOrder();
     if (goog.isDef(orderBy) && goog.isString(orderBy)) {
-        if (goog.object.containsValue(org.jboss.search.context.RequestParams.Order, orderBy)) {
+        if (goog.object.containsValue(org.jboss.core.context.RequestParams.Order, orderBy)) {
             // order by score is the default
-            if (org.jboss.search.context.RequestParams.Order.SCORE != orderBy) {
+            if (org.jboss.core.context.RequestParams.Order.SCORE != orderBy) {
                 switch (orderBy) {
-                    case org.jboss.search.context.RequestParams.Order.NEW_FIRST:
+                    case org.jboss.core.context.RequestParams.Order.NEW_FIRST:
                         rootUri.setParameterValue(params.ORDER_BY, org.jboss.search.util.urlGenerator.QueryParams.SortBy.NEW);
                         break;
-                    case org.jboss.search.context.RequestParams.Order.OLD_FIRST:
+                    case org.jboss.core.context.RequestParams.Order.OLD_FIRST:
                         rootUri.setParameterValue(params.ORDER_BY, org.jboss.search.util.urlGenerator.QueryParams.SortBy.OLD);
                         break;
                 }

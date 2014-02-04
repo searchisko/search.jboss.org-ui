@@ -27,7 +27,7 @@ goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('goog.events.Event');
 
 /**
- * @param {!org.jboss.search.context.RequestParams.Order} orderBy
+ * @param {!org.jboss.core.context.RequestParams.Order} orderBy
  * @constructor
  * @extends {goog.events.Event}
  */
@@ -35,7 +35,7 @@ org.jboss.search.page.filter.DateOrderByChanged = function(orderBy) {
     goog.events.Event.call(this, org.jboss.search.page.filter.DateFilterEventType.DATE_ORDER_BY_CHANGED);
 
     /**
-     * @type {!org.jboss.search.context.RequestParams.Order}
+     * @type {!org.jboss.core.context.RequestParams.Order}
      * @private
      */
     this.orderBy_ = orderBy;
@@ -43,7 +43,7 @@ org.jboss.search.page.filter.DateOrderByChanged = function(orderBy) {
 goog.inherits(org.jboss.search.page.filter.DateOrderByChanged, goog.events.Event);
 
 /**
- * @return {!org.jboss.search.context.RequestParams.Order}
+ * @return {!org.jboss.core.context.RequestParams.Order}
  */
 org.jboss.search.page.filter.DateOrderByChanged.prototype.getOrderBy = function() {
     return this.orderBy_;

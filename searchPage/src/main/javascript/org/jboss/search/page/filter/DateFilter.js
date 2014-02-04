@@ -43,12 +43,12 @@ goog.require('goog.i18n.DateTimeParse');
 goog.require('goog.object');
 goog.require('goog.ui.InputDatePicker');
 goog.require('goog.ui.LabelInput');
-goog.require('org.jboss.search.page.filter.ProjectFilter');
+goog.require('org.jboss.core.visualization.Histogram');
 goog.require('org.jboss.core.service.Locator');
-goog.require('org.jboss.search.context.RequestParams.Order');
+goog.require('org.jboss.core.context.RequestParams.Order');
+goog.require('org.jboss.search.page.filter.ProjectFilter');
 goog.require('org.jboss.search.page.filter.DateOrderByChanged');
 goog.require('org.jboss.search.page.filter.DateRangeChanged');
-goog.require('org.jboss.core.visualization.Histogram');
 
 /**
  * Create a new instance of Date Filter. Initialize histogram chart and date pickers.
@@ -352,13 +352,13 @@ org.jboss.search.page.filter.DateFilter.prototype.setTargetValue_ = function(val
 
 /**
  * Set appropriate order type in the <code>select</code> element.
- * @param {org.jboss.search.context.RequestParams.Order|undefined} order
- * {@see org.jboss.search.context.RequestParams.Order}
+ * @param {org.jboss.core.context.RequestParams.Order|undefined} order
+ * {@see org.jboss.core.context.RequestParams.Order}
  */
 org.jboss.search.page.filter.DateFilter.prototype.setOrder = function(order) {
     if (!goog.isDef(order)) {
         // default
-        goog.dom.forms.setValue(this.order_by_select_element_, org.jboss.search.context.RequestParams.Order.SCORE);
+        goog.dom.forms.setValue(this.order_by_select_element_, org.jboss.core.context.RequestParams.Order.SCORE);
     } else {
         goog.dom.forms.setValue(this.order_by_select_element_, order);
     }

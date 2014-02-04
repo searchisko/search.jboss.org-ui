@@ -27,7 +27,7 @@ goog.provide('org.jboss.search.service.QueryServiceDispatcher');
 
 goog.require('org.jboss.search.service.QueryServiceEventType');
 goog.require('org.jboss.search.service.QueryServiceEvent');
-goog.require('org.jboss.search.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams');
 goog.require('goog.events.EventTarget');
 
 /**
@@ -61,11 +61,11 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryAbort
  * Dispatches SEARCH_START event.
  * Event metadata format:
  * {
- *   requestParams: {!org.jboss.search.context.RequestParams},
+ *   requestParams: {!org.jboss.core.context.RequestParams},
  *   url: "Request URL"
  * }
  *
- * @param {!org.jboss.search.context.RequestParams} requestParams
+ * @param {!org.jboss.core.context.RequestParams} requestParams
  * @param {string} query_url_string
  */
 org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryStart = function(requestParams, query_url_string) {
@@ -127,9 +127,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryError
 
 /**
  * Dispatches NEW_REQUEST_PARAMETERS.
- * Event contains {@link org.jboss.search.context.RequestParams}
+ * Event contains {@link org.jboss.core.context.RequestParams}
  *
- * @param {org.jboss.search.context.RequestParams} requestParameters
+ * @param {org.jboss.core.context.RequestParams} requestParameters
  */
 org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchNewRequestParameters = function(requestParameters) {
     var event = new org.jboss.search.service.QueryServiceEvent(

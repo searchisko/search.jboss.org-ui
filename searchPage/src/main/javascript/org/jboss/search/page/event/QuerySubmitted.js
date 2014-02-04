@@ -27,7 +27,7 @@ goog.require('org.jboss.search.page.event.EventType');
 goog.require('goog.events.Event');
 
 /**
- * @param {!org.jboss.search.context.RequestParams} requestParams
+ * @param {!org.jboss.core.context.RequestParams} requestParams
  * @constructor
  * @extends {goog.events.Event}
  */
@@ -35,7 +35,7 @@ org.jboss.search.page.event.QuerySubmitted = function(requestParams) {
     goog.events.Event.call(this, org.jboss.search.page.event.EventType.QUERY_SUBMITTED);
 
     /**
-     * @type {!org.jboss.search.context.RequestParams}
+     * @type {!org.jboss.core.context.RequestParams}
      * @private
      */
     this.requestParams_ = requestParams;
@@ -43,7 +43,7 @@ org.jboss.search.page.event.QuerySubmitted = function(requestParams) {
 goog.inherits(org.jboss.search.page.event.QuerySubmitted, goog.events.Event);
 
 /**
- * @return {!org.jboss.search.context.RequestParams}
+ * @return {!org.jboss.core.context.RequestParams}
  */
 org.jboss.search.page.event.QuerySubmitted.prototype.getRequestParams = function() {
     return this.requestParams_;

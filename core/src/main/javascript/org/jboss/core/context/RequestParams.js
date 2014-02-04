@@ -27,8 +27,8 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.context.RequestParams');
-goog.provide('org.jboss.search.context.RequestParams.Order');
+goog.provide('org.jboss.core.context.RequestParams');
+goog.provide('org.jboss.core.context.RequestParams.Order');
 
 goog.require('goog.date.DateTime');
 
@@ -38,12 +38,12 @@ goog.require('goog.date.DateTime');
  * @param {number=} opt_page
  * @param {goog.date.DateTime=} opt_from
  * @param {goog.date.DateTime=} opt_to
- * @param {?org.jboss.search.context.RequestParams.Order=} opt_order
+ * @param {?org.jboss.core.context.RequestParams.Order=} opt_order
  * @param {string=} opt_log
  * @param {boolean=} opt_resetCaches
  * @constructor
  */
-org.jboss.search.context.RequestParams = function(query_string, opt_page, opt_from, opt_to, opt_order, opt_log, opt_resetCaches) {
+org.jboss.core.context.RequestParams = function(query_string, opt_page, opt_from, opt_to, opt_order, opt_log, opt_resetCaches) {
 
     /**
      * @type {string}
@@ -70,7 +70,7 @@ org.jboss.search.context.RequestParams = function(query_string, opt_page, opt_fr
     this.to_ = opt_to;
 
     /**
-     * @type {?org.jboss.search.context.RequestParams.Order|undefined}
+     * @type {?org.jboss.core.context.RequestParams.Order|undefined}
      * @private
      */
     this.order_ = opt_order;
@@ -97,17 +97,17 @@ org.jboss.search.context.RequestParams = function(query_string, opt_page, opt_fr
  * TODO: use defs instead of list of parameters
  * TODO: it is very hard to use this method correctly, reimplement it!
  *
- * @param {!org.jboss.search.context.RequestParams} requestParams
+ * @param {!org.jboss.core.context.RequestParams} requestParams
  * @param {string=} opt_query_string
  * @param {number=} opt_page
  * @param {goog.date.DateTime=} opt_from
  * @param {goog.date.DateTime=} opt_to
- * @param {?org.jboss.search.context.RequestParams.Order=} opt_order
+ * @param {?org.jboss.core.context.RequestParams.Order=} opt_order
  * @param {string=} opt_log
  * @param {boolean=} opt_resetCaches
- * @return {!org.jboss.search.context.RequestParams}
+ * @return {!org.jboss.core.context.RequestParams}
  */
-org.jboss.search.context.RequestParams.prototype.mixin = function(requestParams, opt_query_string, opt_page, opt_from, opt_to, opt_order, opt_log, opt_resetCaches) {
+org.jboss.core.context.RequestParams.prototype.mixin = function(requestParams, opt_query_string, opt_page, opt_from, opt_to, opt_order, opt_log, opt_resetCaches) {
 
     var query_ = requestParams.getQueryString();
     var page_ = requestParams.getPage();
@@ -125,7 +125,7 @@ org.jboss.search.context.RequestParams.prototype.mixin = function(requestParams,
     if (goog.isDef(opt_log)) { log_ = opt_log }
     if (goog.isDef(opt_resetCaches)) { resetCaches_ = opt_resetCaches }
 
-    return new org.jboss.search.context.RequestParams(
+    return new org.jboss.core.context.RequestParams(
         query_, page_, from_, to_, order_, log_, resetCaches_
     );
 };
@@ -133,49 +133,49 @@ org.jboss.search.context.RequestParams.prototype.mixin = function(requestParams,
 /**
  * @return {string}
  */
-org.jboss.search.context.RequestParams.prototype.getQueryString = function() {
+org.jboss.core.context.RequestParams.prototype.getQueryString = function() {
     return this.query_string_;
 };
 
 /**
  * @return {number|undefined}
  */
-org.jboss.search.context.RequestParams.prototype.getPage = function() {
+org.jboss.core.context.RequestParams.prototype.getPage = function() {
     return this.page_;
 };
 
 /**
  * @return {goog.date.DateTime|undefined}
  */
-org.jboss.search.context.RequestParams.prototype.getFrom = function() {
+org.jboss.core.context.RequestParams.prototype.getFrom = function() {
     return (this.from_ instanceof Date) ? new goog.date.DateTime(this.from_) : this.from_;
 };
 
 /**
  * @return {goog.date.DateTime|undefined}
  */
-org.jboss.search.context.RequestParams.prototype.getTo = function() {
+org.jboss.core.context.RequestParams.prototype.getTo = function() {
     return (this.to_ instanceof Date) ? new goog.date.DateTime(this.to_) : this.to_;
 };
 
 /**
- * @returns {?org.jboss.search.context.RequestParams.Order|undefined}
+ * @returns {?org.jboss.core.context.RequestParams.Order|undefined}
  */
-org.jboss.search.context.RequestParams.prototype.getOrder = function() {
+org.jboss.core.context.RequestParams.prototype.getOrder = function() {
     return this.order_;
 };
 
 /**
  * @return {string|undefined}
  */
-org.jboss.search.context.RequestParams.prototype.getLog = function() {
+org.jboss.core.context.RequestParams.prototype.getLog = function() {
     return this.log_;
 };
 
 /**
  * @returns {boolean|undefined}
  */
-org.jboss.search.context.RequestParams.prototype.getResetCaches = function() {
+org.jboss.core.context.RequestParams.prototype.getResetCaches = function() {
     return this.resetCaches_;
 };
 
@@ -184,7 +184,7 @@ org.jboss.search.context.RequestParams.prototype.getResetCaches = function() {
  * They must match values of HTML select option elements.
  * @enum {string}
  */
-org.jboss.search.context.RequestParams.Order = {
+org.jboss.core.context.RequestParams.Order = {
     SCORE : "score",
     NEW_FIRST : "new_first",
     OLD_FIRST : "old_first"

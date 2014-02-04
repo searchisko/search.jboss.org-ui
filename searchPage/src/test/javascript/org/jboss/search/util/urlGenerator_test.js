@@ -17,7 +17,7 @@
  */
 
 goog.require('org.jboss.search.util.urlGenerator');
-goog.require('org.jboss.search.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams');
 goog.require('goog.Uri');
 goog.require('goog.testing.jsunit');
 
@@ -52,7 +52,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.search.context.RequestParams(' ')
+        new org.jboss.core.context.RequestParams(' ')
     );
     assertEquals(
         [
@@ -69,7 +69,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.search.context.RequestParams("dummy")
+        new org.jboss.core.context.RequestParams("dummy")
     );
     assertEquals(
         [
@@ -86,7 +86,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.search.context.RequestParams("dummy", 20)
+        new org.jboss.core.context.RequestParams("dummy", 20)
     );
     assertEquals(
         [
@@ -104,7 +104,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.search.context.RequestParams("dummy"),
+        new org.jboss.core.context.RequestParams("dummy"),
         [''], false
     );
     assertEquals(
@@ -121,7 +121,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.search.context.RequestParams("dummy"),
+        new org.jboss.core.context.RequestParams("dummy"),
         [], false);
     assertEquals(
         [
@@ -136,7 +136,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-        new org.jboss.search.context.RequestParams("dummy"),
+        new org.jboss.core.context.RequestParams("dummy"),
         []);
     assertEquals(
         [

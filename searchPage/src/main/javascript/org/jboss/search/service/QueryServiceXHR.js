@@ -26,10 +26,10 @@
 
 goog.provide('org.jboss.search.service.QueryServiceXHR');
 
+goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.util.urlGenerator');
-goog.require('org.jboss.search.context.RequestParams');
-goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.service.QueryService');
 goog.require('org.jboss.search.service.QueryServiceDispatcher');

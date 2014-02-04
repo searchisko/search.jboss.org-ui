@@ -18,7 +18,7 @@
 
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.core.service.Locator');
-goog.require('org.jboss.search.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.search.service.LookUpImplWithProjects');
 
 goog.require('goog.string');
@@ -44,7 +44,7 @@ var testNormalizeSearchResponse = function() {
         }
     };
 
-    var requestParams = new org.jboss.search.context.RequestParams('test');
+    var requestParams = new org.jboss.core.context.RequestParams('test');
 
     var data;
     try {

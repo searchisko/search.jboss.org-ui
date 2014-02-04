@@ -24,7 +24,7 @@
 goog.provide('org.jboss.search.service.QueryService');
 
 goog.require('org.jboss.search.service.QueryServiceDispatcher');
-goog.require('org.jboss.search.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams');
 
 /**
  * @param {!org.jboss.search.service.QueryServiceDispatcher} dispatcher
@@ -34,7 +34,7 @@ org.jboss.search.service.QueryService = function(dispatcher) {};
 
 /**
  * Execute user query. This is used for the main search field that can contain any user input.
- * @param {!org.jboss.search.context.RequestParams} requestParams
+ * @param {!org.jboss.core.context.RequestParams} requestParams
  */
 org.jboss.search.service.QueryService.prototype.userQuery = function(requestParams){};
 

@@ -30,7 +30,7 @@ goog.require("org.jboss.search.page.filter.DateFilter");
 goog.require("org.jboss.search.page.filter.ProjectFilter");
 goog.require("org.jboss.search.service.QueryService");
 goog.require("org.jboss.search.service.QueryServiceDispatcher");
-goog.require('org.jboss.search.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.service.LookUpImpl');
 
 /**
@@ -91,7 +91,7 @@ org.jboss.search.service.LookUp = function() {
 	this.contentFilter_;
 
 	/**
-	 * @type {?org.jboss.search.context.RequestParams}
+	 * @type {?org.jboss.core.context.RequestParams}
 	 * @private
 	 */
 	this.requestParams_ = null;
@@ -235,14 +235,14 @@ org.jboss.search.service.LookUp.prototype.getRecentQueryResultData = function() 
 };
 
 /**
- * @param {org.jboss.search.context.RequestParams} requestParams
+ * @param {org.jboss.core.context.RequestParams} requestParams
  */
 org.jboss.search.service.LookUp.prototype.setRequestParams = function(requestParams) {
 	this.requestParams_ = requestParams;
 };
 
 /**
- * @return {?org.jboss.search.context.RequestParams}
+ * @return {?org.jboss.core.context.RequestParams}
  */
 org.jboss.search.service.LookUp.prototype.getRequestParams = function() {
 	return this.requestParams_;
