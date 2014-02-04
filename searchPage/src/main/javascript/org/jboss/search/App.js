@@ -495,6 +495,9 @@ org.jboss.search.App.prototype.disposeInternal = function() {
     // Call the superclass's disposeInternal() method.
     org.jboss.search.App.superClass_.disposeInternal.call(this);
 
+	// dispose Locator (does not implement Disposable API)
+	org.jboss.core.service.Locator.dispose();
+
     // Dispose of all Disposable objects owned by this class.
     goog.dispose(this.searchPage);
 
@@ -507,5 +510,4 @@ org.jboss.search.App.prototype.disposeInternal = function() {
 
     // Remove references to COM objects.
     // Remove references to DOM nodes, which are COM objects in IE.
-    // TODO ^^
 };

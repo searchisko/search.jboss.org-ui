@@ -1,5 +1,4 @@
-/**
- * @preserve
+/*
  * JBoss, Home of Professional Open Source
  * Copyright 2012 Red Hat Inc. and/or its affiliates and other contributors
  * as indicated by the @authors tag. All rights reserved.
@@ -17,12 +16,15 @@
  * limitations under the License.
  */
 
-goog.provide('init.profile');
+/*
+    ======================================================================
+    Override some style in original Meyer's CSS reset.
 
-//goog.require('org.jboss.search.logging.Logging');
-goog.require('org.jboss.profile.App');
+    Why this? See link below:
+    http://stackoverflow.com/questions/6813750/any-ideas-why-strong-tag-doesnt-work-but-css-does
+    ======================================================================
+*/
 
-{
-//	new org.jboss.search.logging.Logging();
-	new org.jboss.profile.App();
+strong, b {
+    font-weight: bold;
 }

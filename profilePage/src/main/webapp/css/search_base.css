@@ -1,5 +1,4 @@
-/**
- * @preserve
+/*
  * JBoss, Home of Professional Open Source
  * Copyright 2012 Red Hat Inc. and/or its affiliates and other contributors
  * as indicated by the @authors tag. All rights reserved.
@@ -17,12 +16,26 @@
  * limitations under the License.
  */
 
-goog.provide('init.profile');
+/*
+    ======================================================================
+    The base HTML styling on top of CSS reset.
+    ======================================================================
+*/
 
-//goog.require('org.jboss.search.logging.Logging');
-goog.require('org.jboss.profile.App');
+* {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
 
-{
-//	new org.jboss.search.logging.Logging();
-	new org.jboss.profile.App();
+body {
+
+    /* TODO: need to update when on smaller screen (mobile devices...) */
+    min-width: 640px;
+
+    background-color: #eee;
+    font-size: 100%;
+    /* Try to use Lucida Grande if possible */
+    font-family:"Lucida Sans Unicode","Lucida Grande","Lucida Sans",Verdana,Arial,sans-serif;
+    /* Less complex and often recommended alternative: "Lucida Sans Unicode", "Lucida Grande", sans-serif */
 }

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # ----------------------------------------------------------------------------
-# A script to generate a single Javascript file that is used by the profile page (profile.html)
+# A script to generate a single Javascript file that is used by the profile page (index.html)
 # for development. It contains concatenated scripts in correct order.
 #
 # Author: Lukas Vlcek (lvlcek@redhat.com)
@@ -28,5 +28,5 @@ echo "# ---------------------------------------"
 echo "# Success:"
 echo "# src/main/webapp/profile-testing-only.js was generated"
 echo "# to open the application in web browser (on Mac OSX) execute:"
-echo "# open ./src/main/webapp/profile.html"
+echo "# open ./src/main/webapp/index.html"
 echo "# ---------------------------------------"

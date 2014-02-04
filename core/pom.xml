@@ -12,6 +12,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <description>Set of various utilities that are used by other modules.</description>
+
     <build>
         <plugins>
             <plugin>

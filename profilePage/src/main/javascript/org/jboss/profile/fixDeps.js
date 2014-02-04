@@ -32,10 +32,9 @@
 
 goog.provide('org.jboss.search.profile.fixDeps');
 
-//goog.require('goog.Uri');
-//goog.require('goog.debug.ErrorHandler');
-//goog.require('goog.events.ListenableType');
-//goog.require('goog.events.EventWrapper');
-//goog.require('goog.events.EventHandler');
+goog.require('goog.debug.ErrorHandler');
+goog.require('goog.events.EventWrapper');
+goog.require('goog.events.EventHandler');
+goog.require('goog.events.EventTarget');
 
 {}
