@@ -55,18 +55,6 @@ org.jboss.search.service.LookUp = function() {
 	this.projectArray_;
 
 	/**
-	 * @type {org.jboss.core.service.query.QueryService}
-	 * @private
-	 */
-	this.queryService_;
-
-	/**
-	 * @type {org.jboss.core.service.query.QueryServiceDispatcher}
-	 * @private
-	 */
-	this.queryServiceDispatcher_;
-
-	/**
 	 * @type {org.jboss.search.page.filter.ProjectFilter}
 	 * @private
 	 */
@@ -135,31 +123,6 @@ org.jboss.search.service.LookUp.prototype.getProjectArray = function() {
  */
 org.jboss.search.service.LookUp.prototype.setProjectArray = function(projectArray) {
 	this.projectArray_ = projectArray;
-};
-
-/**
- * @param {org.jboss.core.service.query.QueryService} queryService
- */
-org.jboss.search.service.LookUp.prototype.setQueryService = function(queryService) {
-	this.queryService_ = queryService;
-};
-
-/**
- * @return {org.jboss.core.service.query.QueryService}
- */
-org.jboss.search.service.LookUp.prototype.getQueryService = function() {
-	return this.queryService_;
-};
-
-/**
- * Return QueryServiceDispatcher.
- * @return {!org.jboss.core.service.query.QueryServiceDispatcher}
- */
-org.jboss.search.service.LookUp.prototype.getQueryServiceDispatcher = function() {
-	if (!goog.isDefAndNotNull(this.queryServiceDispatcher_)) {
-		this.queryServiceDispatcher_ = new org.jboss.core.service.query.QueryServiceDispatcher();
-	}
-	return this.queryServiceDispatcher_;
 };
 
 /**

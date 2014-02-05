@@ -25,14 +25,17 @@
 
 goog.provide('org.jboss.core.service.LookUpImpl');
 
+goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
+goog.require('org.jboss.core.service.query.QueryService');
 goog.require('org.jboss.core.Variables');
 goog.require('org.jboss.core.service.LookUp');
-goog.require('goog.History');
-goog.require('goog.net.XhrManager');
-goog.require('goog.i18n.DateTimeFormat');
-goog.require('goog.i18n.DateTimeParse');
 goog.require('org.jboss.core.util.ImageLoader');
 goog.require('org.jboss.core.util.ImageLoaderNoop');
+
+goog.require('goog.History');
+goog.require('goog.i18n.DateTimeFormat');
+goog.require('goog.i18n.DateTimeParse');
+goog.require('goog.net.XhrManager');
 
 /**
  * LookUp implementation that provides just basic services (XhrManager, History and ImageLoader).
@@ -77,6 +80,18 @@ org.jboss.core.service.LookUpImpl = function() {
 	 * @private
 	 */
 	this.shortDateParser_;
+
+	/**
+	 * @type {org.jboss.core.service.query.QueryService}
+	 * @private
+	 */
+	this.queryService_;
+
+	/**
+	 * @type {org.jboss.core.service.query.QueryServiceDispatcher}
+	 * @private
+	 */
+	this.queryServiceDispatcher_;
 };
 
 /** @inheritDoc */
@@ -131,4 +146,22 @@ org.jboss.core.service.LookUpImpl.prototype.getShortDateParser = function() {
 		this.shortDateParser_ = new goog.i18n.DateTimeParse(org.jboss.core.Variables.SHORT_DATE_FORMAT);
 	}
 	return this.shortDateParser_;
+};
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.setQueryService = function(queryService) {
+	this.queryService_ = queryService;
+};
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.getQueryService = function() {
+	return this.queryService_;
+};
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.getQueryServiceDispatcher = function() {
+	if (!goog.isDefAndNotNull(this.queryServiceDispatcher_)) {
+		this.queryServiceDispatcher_ = new org.jboss.core.service.query.QueryServiceDispatcher();
+	}
+	return this.queryServiceDispatcher_;
 };

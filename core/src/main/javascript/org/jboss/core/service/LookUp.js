@@ -30,11 +30,14 @@
 
 goog.provide('org.jboss.core.service.LookUp');
 
+goog.require('org.jboss.core.service.query.QueryService');
+goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
+goog.require('org.jboss.core.util.ImageLoader');
+
 goog.require('goog.History');
-goog.require('goog.net.XhrManager');
 goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.i18n.DateTimeParse');
-goog.require('org.jboss.core.util.ImageLoader');
+goog.require('goog.net.XhrManager');
 
 /**
  * @interface
@@ -88,3 +91,18 @@ org.jboss.core.service.LookUp.prototype.getMediumDateFormatter = function() {};
  */
 org.jboss.core.service.LookUp.prototype.getShortDateParser = function() {};
 
+/**
+ * @param {org.jboss.core.service.query.QueryService} queryService
+ */
+org.jboss.core.service.LookUp.prototype.setQueryService = function(queryService) {};
+
+/**
+ * @return {org.jboss.core.service.query.QueryService}
+ */
+org.jboss.core.service.LookUp.prototype.getQueryService = function() {};
+
+/**
+ * Return QueryServiceDispatcher.
+ * @return {!org.jboss.core.service.query.QueryServiceDispatcher}
+ */
+org.jboss.core.service.LookUp.prototype.getQueryServiceDispatcher = function() {};
