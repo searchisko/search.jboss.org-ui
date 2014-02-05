@@ -23,16 +23,16 @@
 
 goog.provide('org.jboss.search.service.QueryServiceCached');
 
-goog.require('org.jboss.search.service.QueryService');
+goog.require('org.jboss.core.service.query.QueryService');
 
 /**
- * @param {!org.jboss.search.service.QueryService} queryService
+ * @param {!org.jboss.core.service.query.QueryService} queryService
  * @constructor
- * @implements {org.jboss.search.service.QueryService}
+ * @implements {org.jboss.core.service.query.QueryService}
  */
 org.jboss.search.service.QueryServiceCached = function(queryService) {
     /**
-     * @type {org.jboss.search.service.QueryService}
+     * @type {org.jboss.core.service.query.QueryService}
      * @private
      */
     this.queryService_ = queryService;

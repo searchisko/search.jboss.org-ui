@@ -30,7 +30,7 @@ goog.require("goog.net.EventType");
 goog.require('goog.net.XhrManager');
 goog.require("org.jboss.search.page.filter.DateFilter");
 goog.require("org.jboss.search.page.filter.DateOrderByChanged");
-goog.require("org.jboss.search.service.QueryServiceEvent");
+goog.require("org.jboss.core.service.query.QueryServiceEvent");
 goog.require('goog.Uri');
 goog.require('goog.async.Delay');
 goog.require('goog.debug.Logger');
@@ -61,8 +61,8 @@ goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.request');
 goog.require('org.jboss.search.response');
-goog.require('org.jboss.search.service.QueryServiceEventType');
-goog.require('org.jboss.search.service.QueryServiceDispatcher');
+goog.require('org.jboss.core.service.query.QueryServiceEventType');
+goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.suggestions.query.view.View');
 goog.require('org.jboss.search.util.urlGenerator');
@@ -98,7 +98,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     /** @private */ this.query_suggestions_model = {};
 
     /**
-     * @type {!org.jboss.search.service.QueryServiceDispatcher}
+     * @type {!org.jboss.core.service.query.QueryServiceDispatcher}
      * @private
      */
     this.queryServiceDispatcher_ = org.jboss.core.service.Locator.getInstance().getLookup().getQueryServiceDispatcher();
@@ -111,15 +111,15 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     this.userQueryServiceDispatcherListenerId_ = goog.events.listen(
         this.queryServiceDispatcher_,
         [
-            org.jboss.search.service.QueryServiceEventType.NEW_REQUEST_PARAMETERS,
-            org.jboss.search.service.QueryServiceEventType.SEARCH_START,
-            org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED,
-            org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED,
-            org.jboss.search.service.QueryServiceEventType.SEARCH_SUCCEEDED,
-            org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR
+            org.jboss.core.service.query.QueryServiceEventType.NEW_REQUEST_PARAMETERS,
+            org.jboss.core.service.query.QueryServiceEventType.SEARCH_START,
+            org.jboss.core.service.query.QueryServiceEventType.SEARCH_ABORTED,
+            org.jboss.core.service.query.QueryServiceEventType.SEARCH_FINISHED,
+            org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED,
+            org.jboss.core.service.query.QueryServiceEventType.SEARCH_ERROR
         ],
         goog.bind(function(e) {
-            var event = /** @type {org.jboss.search.service.QueryServiceEvent} */ (e);
+            var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
             switch (event.getType())
             {
 				/*
@@ -128,7 +128,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 					- update active filters section
 				 	=====================================================
 				 */
-                case org.jboss.search.service.QueryServiceEventType.NEW_REQUEST_PARAMETERS:
+                case org.jboss.core.service.query.QueryServiceEventType.NEW_REQUEST_PARAMETERS:
                     var requestParams = /** @type {org.jboss.core.context.RequestParams} */ (event.getMetadata());
                     org.jboss.core.service.Locator.getInstance().getLookup().setRequestParams(requestParams);
 					this.renderSearchFilters_();
@@ -143,7 +143,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 					 - date filter: order box
 				 	=====================================================
 				 */
-                case org.jboss.search.service.QueryServiceEventType.SEARCH_START:
+                case org.jboss.core.service.query.QueryServiceEventType.SEARCH_START:
                     var metadata_ = event.getMetadata();
                     /** @type {org.jboss.core.context.RequestParams} */
                     var requestParams_ = metadata_["requestParams"];
@@ -161,12 +161,12 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     }
                     break;
 
-                case  org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED:
+                case  org.jboss.core.service.query.QueryServiceEventType.SEARCH_ABORTED:
                     this.log_.fine("Search request aborted");
                     this.enableSearchResults_();
                     break;
 
-                case  org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED:
+                case  org.jboss.core.service.query.QueryServiceEventType.SEARCH_FINISHED:
                     this.log_.info("Search request finished");
                     this.disposeUserEntertainment_();
                     break;
@@ -178,7 +178,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 					- refresh filters that are visible (expanded)
 				 	=====================================================
 				 */
-                case  org.jboss.search.service.QueryServiceEventType.SEARCH_SUCCEEDED:
+                case  org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED:
                     var response = event.getMetadata();
 //                    console.log("response > ",response);
                     this.log_.info("Search request succeeded, took " + response["took"] + "ms, uuid [" +response["uuid"] + "]");
@@ -197,7 +197,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 					if (goog.isDefAndNotNull(projectFilter_)) { projectFilter_.refreshItems(false) }
                     break;
 
-                case  org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR:
+                case  org.jboss.core.service.query.QueryServiceEventType.SEARCH_ERROR:
                     this.log_.info("Search request error");
 					org.jboss.core.service.Locator.getInstance().getLookup().setRecentQueryResultData(null);
                     var metadata_ = event.getMetadata();
@@ -219,27 +219,27 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     this.userSuggestionsQueryServiceDispatcherListenerId_ = goog.events.listen(
         this.queryServiceDispatcher_,
         [
-//            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_START,
-            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ABORTED,
-//            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_FINISHED,
-            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_SUCCEEDED,
-            org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR
+//            org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_START,
+            org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_ABORTED,
+//            org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_FINISHED,
+            org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_SUCCEEDED,
+            org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR
         ],
         goog.bind(function(e) {
-            var event = /** @type {org.jboss.search.service.QueryServiceEvent} */ (e);
+            var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
             switch (event.getType())
             {
-//                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_START:
+//                case org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_START:
 //                    break;
 
-                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ABORTED:
+                case org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_ABORTED:
                     this.hideAndCleanSuggestionsElementAndModel_();
                     break;
 
-//                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_FINISHED:
+//                case org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_FINISHED:
 //                    break;
 
-                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_SUCCEEDED:
+                case org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_SUCCEEDED:
                     var response = /** @type {!Object} */ (event.getMetadata());
                     var model = /** @type {!Object} */ (goog.object.get(response, "model", {}));
                     this.query_suggestions_model = this.parseQuerySuggestionsModel_(model);
@@ -255,7 +255,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     }
                     break;
 
-                case org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR:
+                case org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR:
                     this.hideAndCleanSuggestionsElementAndModel_();
                     break;
 

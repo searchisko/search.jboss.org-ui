@@ -23,10 +23,10 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.service.QueryServiceDispatcher');
+goog.provide('org.jboss.core.service.query.QueryServiceDispatcher');
 
-goog.require('org.jboss.search.service.QueryServiceEventType');
-goog.require('org.jboss.search.service.QueryServiceEvent');
+goog.require('org.jboss.core.service.query.QueryServiceEventType');
+goog.require('org.jboss.core.service.query.QueryServiceEvent');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('goog.events.EventTarget');
 
@@ -35,24 +35,24 @@ goog.require('goog.events.EventTarget');
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.jboss.search.service.QueryServiceDispatcher = function() {
+org.jboss.core.service.query.QueryServiceDispatcher = function() {
     goog.events.EventTarget.call(this);
 
 };
-goog.inherits(org.jboss.search.service.QueryServiceDispatcher, goog.events.EventTarget);
+goog.inherits(org.jboss.core.service.query.QueryServiceDispatcher, goog.events.EventTarget);
 
 /** @inheritDoc */
-org.jboss.search.service.QueryServiceDispatcher.prototype.disposeInternal = function() {
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.disposeInternal = function() {
     // Call the superclass's disposeInternal() method.
-    org.jboss.search.service.QueryServiceDispatcher.superClass_.disposeInternal.call(this);
+    org.jboss.core.service.query.QueryServiceDispatcher.superClass_.disposeInternal.call(this);
 };
 
 /**
  * Dispatches SEARCH_ABORTED event.
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryAbort = function() {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQueryAbort = function() {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_ABORTED
     );
     this.dispatchEvent(event);
 };
@@ -68,9 +68,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryAbort
  * @param {!org.jboss.core.context.RequestParams} requestParams
  * @param {string} query_url_string
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryStart = function(requestParams, query_url_string) {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_START,
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQueryStart = function(requestParams, query_url_string) {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_START,
         {
             requestParams: requestParams,
             url: query_url_string
@@ -82,9 +82,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryStart
 /**
  * Dispatches SEARCH_FINISHED event.
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryFinished = function() {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQueryFinished = function() {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_FINISHED
     );
     this.dispatchEvent(event);
 };
@@ -95,9 +95,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryFinis
  *
  * @param {Object|undefined} responseData normalized response data
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQuerySucceeded = function(responseData) {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_SUCCEEDED,
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQuerySucceeded = function(responseData) {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED,
         responseData
     );
     this.dispatchEvent(event);
@@ -114,9 +114,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQuerySucce
  * @param {string} query_string
  * @param {Object} error
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryError = function(query_string, error) {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR,
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQueryError = function(query_string, error) {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_ERROR,
         {
             query_string: query_string,
             error: error
@@ -131,9 +131,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserQueryError
  *
  * @param {org.jboss.core.context.RequestParams} requestParameters
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchNewRequestParameters = function(requestParameters) {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.NEW_REQUEST_PARAMETERS,
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchNewRequestParameters = function(requestParameters) {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.NEW_REQUEST_PARAMETERS,
         requestParameters
     );
     this.dispatchEvent(event);
@@ -142,9 +142,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchNewRequestPara
 /**
  * Dispatches SEARCH_SUGGESTIONS_ABORTED event.
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryAbort = function() {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ABORTED
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryAbort = function() {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_ABORTED
     );
     this.dispatchEvent(event);
 };
@@ -160,9 +160,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestion
  * @param {string} query_string
  * @param {string} query_url_string
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryStart = function(query_string, query_url_string) {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_START,
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryStart = function(query_string, query_url_string) {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_START,
         {
             query_string: query_string,
             url: query_url_string
@@ -174,9 +174,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestion
 /**
  * Dispatches SEARCH_SUGGESTIONS_FINISHED event.
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryFinished = function() {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_FINISHED
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryFinished = function() {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_FINISHED
     );
     this.dispatchEvent(event);
 };
@@ -186,9 +186,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestion
  *
  * @param {{ model: Object, view: Object}|undefined} responseData response data (model and view data)
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQuerySucceeded = function(responseData) {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_SUCCEEDED,
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQuerySucceeded = function(responseData) {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_SUCCEEDED,
         responseData
     );
     this.dispatchEvent(event);
@@ -205,9 +205,9 @@ org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestion
  * @param {string} query_string
  * @param {Object} error
  */
-org.jboss.search.service.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryError = function(query_string, error) {
-    var event = new org.jboss.search.service.QueryServiceEvent(
-        org.jboss.search.service.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR,
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryError = function(query_string, error) {
+    var event = new org.jboss.core.service.query.QueryServiceEvent(
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR,
         {
             query_string: query_string,
             error: error

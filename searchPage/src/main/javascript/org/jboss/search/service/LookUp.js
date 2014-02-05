@@ -28,8 +28,8 @@ goog.require("org.jboss.search.page.filter.AuthorFilter");
 goog.require("org.jboss.search.page.filter.ContentFilter");
 goog.require("org.jboss.search.page.filter.DateFilter");
 goog.require("org.jboss.search.page.filter.ProjectFilter");
-goog.require("org.jboss.search.service.QueryService");
-goog.require("org.jboss.search.service.QueryServiceDispatcher");
+goog.require("org.jboss.core.service.query.QueryService");
+goog.require("org.jboss.core.service.query.QueryServiceDispatcher");
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.service.LookUpImpl');
 
@@ -55,13 +55,13 @@ org.jboss.search.service.LookUp = function() {
 	this.projectArray_;
 
 	/**
-	 * @type {org.jboss.search.service.QueryService}
+	 * @type {org.jboss.core.service.query.QueryService}
 	 * @private
 	 */
 	this.queryService_;
 
 	/**
-	 * @type {org.jboss.search.service.QueryServiceDispatcher}
+	 * @type {org.jboss.core.service.query.QueryServiceDispatcher}
 	 * @private
 	 */
 	this.queryServiceDispatcher_;
@@ -138,14 +138,14 @@ org.jboss.search.service.LookUp.prototype.setProjectArray = function(projectArra
 };
 
 /**
- * @param {org.jboss.search.service.QueryService} queryService
+ * @param {org.jboss.core.service.query.QueryService} queryService
  */
 org.jboss.search.service.LookUp.prototype.setQueryService = function(queryService) {
 	this.queryService_ = queryService;
 };
 
 /**
- * @return {org.jboss.search.service.QueryService}
+ * @return {org.jboss.core.service.query.QueryService}
  */
 org.jboss.search.service.LookUp.prototype.getQueryService = function() {
 	return this.queryService_;
@@ -153,11 +153,11 @@ org.jboss.search.service.LookUp.prototype.getQueryService = function() {
 
 /**
  * Return QueryServiceDispatcher.
- * @return {!org.jboss.search.service.QueryServiceDispatcher}
+ * @return {!org.jboss.core.service.query.QueryServiceDispatcher}
  */
 org.jboss.search.service.LookUp.prototype.getQueryServiceDispatcher = function() {
 	if (!goog.isDefAndNotNull(this.queryServiceDispatcher_)) {
-		this.queryServiceDispatcher_ = new org.jboss.search.service.QueryServiceDispatcher();
+		this.queryServiceDispatcher_ = new org.jboss.core.service.query.QueryServiceDispatcher();
 	}
 	return this.queryServiceDispatcher_;
 };

@@ -21,8 +21,8 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.service.QueryServiceEventType');
-goog.provide('org.jboss.search.service.QueryServiceEvent');
+goog.provide('org.jboss.core.service.query.QueryServiceEventType');
+goog.provide('org.jboss.core.service.query.QueryServiceEvent');
 
 goog.require('goog.events');
 goog.require('goog.events.Event');
@@ -31,7 +31,7 @@ goog.require('goog.events.Event');
  * Event types for QueryService.
  * @enum {string}
  */
-org.jboss.search.service.QueryServiceEventType = {
+org.jboss.core.service.query.QueryServiceEventType = {
 
 	// ----------------------------------------------
 	// User query events
@@ -81,16 +81,16 @@ org.jboss.search.service.QueryServiceEventType = {
 };
 
 /**
- * @param {org.jboss.search.service.QueryServiceEventType} type Event type
+ * @param {org.jboss.core.service.query.QueryServiceEventType} type Event type
  * @param {Object=} opt_metadata Event metadata
  * @constructor
  * @extends {goog.events.Event}
  */
-org.jboss.search.service.QueryServiceEvent = function(type, opt_metadata) {
+org.jboss.core.service.query.QueryServiceEvent = function(type, opt_metadata) {
 	goog.events.Event.call(this, type);
 
 	/**
-	 * @type {org.jboss.search.service.QueryServiceEventType}
+	 * @type {org.jboss.core.service.query.QueryServiceEventType}
 	 * @private
 	 */
 	this.type_ = type;
@@ -101,18 +101,18 @@ org.jboss.search.service.QueryServiceEvent = function(type, opt_metadata) {
 	 */
 	this.metadata_ = opt_metadata;
 };
-goog.inherits(org.jboss.search.service.QueryServiceEvent, goog.events.Event);
+goog.inherits(org.jboss.core.service.query.QueryServiceEvent, goog.events.Event);
 
 /**
- * @return {org.jboss.search.service.QueryServiceEventType}
+ * @return {org.jboss.core.service.query.QueryServiceEventType}
  */
-org.jboss.search.service.QueryServiceEvent.prototype.getType = function() {
+org.jboss.core.service.query.QueryServiceEvent.prototype.getType = function() {
 	return this.type_;
 };
 
 /**
  * @return {Object|undefined}
  */
-org.jboss.search.service.QueryServiceEvent.prototype.getMetadata = function() {
+org.jboss.core.service.query.QueryServiceEvent.prototype.getMetadata = function() {
 	return this.metadata_;
 };

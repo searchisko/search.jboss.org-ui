@@ -59,7 +59,7 @@ goog.require('org.jboss.search.page.filter.ProjectFilter');
 goog.require('org.jboss.search.page.SearchPage');
 goog.require("org.jboss.search.page.SearchPageElements");
 goog.require('org.jboss.search.service.QueryServiceCached');
-goog.require('org.jboss.search.service.QueryServiceEventType');
+goog.require('org.jboss.core.service.query.QueryServiceEventType');
 goog.require('org.jboss.search.service.QueryServiceXHR');
 
 /**
@@ -471,9 +471,9 @@ org.jboss.search.App = function() {
     this.finish_ = goog.events.listen(
 		lookup_.getQueryServiceDispatcher(),
 		[
-			org.jboss.search.service.QueryServiceEventType.SEARCH_FINISHED,
-			org.jboss.search.service.QueryServiceEventType.SEARCH_ABORTED,
-			org.jboss.search.service.QueryServiceEventType.SEARCH_ERROR
+			org.jboss.core.service.query.QueryServiceEventType.SEARCH_FINISHED,
+			org.jboss.core.service.query.QueryServiceEventType.SEARCH_ABORTED,
+			org.jboss.core.service.query.QueryServiceEventType.SEARCH_ERROR
 		],
 		function(){
         	goog.dom.classes.add(spinner_div, const_.HIDDEN);
@@ -481,7 +481,7 @@ org.jboss.search.App = function() {
 
     this.start_ = goog.events.listen(
 		lookup_.getQueryServiceDispatcher(),
-		org.jboss.search.service.QueryServiceEventType.SEARCH_START,
+		org.jboss.core.service.query.QueryServiceEventType.SEARCH_START,
 		function(){
         	goog.dom.classes.remove(spinner_div, const_.HIDDEN);
     	});

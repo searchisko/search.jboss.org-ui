@@ -31,8 +31,8 @@ goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.util.urlGenerator');
 goog.require('org.jboss.search.Constants');
-goog.require('org.jboss.search.service.QueryService');
-goog.require('org.jboss.search.service.QueryServiceDispatcher');
+goog.require('org.jboss.core.service.query.QueryService');
+goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
@@ -43,9 +43,9 @@ goog.require('goog.Disposable');
 
 /**
  * Create a new instance.
- * @param {!org.jboss.search.service.QueryServiceDispatcher} dispatcher
+ * @param {!org.jboss.core.service.query.QueryServiceDispatcher} dispatcher
  * @constructor
- * @implements {org.jboss.search.service.QueryService}
+ * @implements {org.jboss.core.service.query.QueryService}
  * @extends {goog.Disposable}
  */
 org.jboss.search.service.QueryServiceXHR = function(dispatcher) {
@@ -53,7 +53,7 @@ org.jboss.search.service.QueryServiceXHR = function(dispatcher) {
     goog.Disposable.call(this);
 
     /**
-     * @type {!org.jboss.search.service.QueryServiceDispatcher}
+     * @type {!org.jboss.core.service.query.QueryServiceDispatcher}
      * @private
      */
     this.dispatcher_ = dispatcher;

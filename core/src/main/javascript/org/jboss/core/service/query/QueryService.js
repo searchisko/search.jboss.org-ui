@@ -21,25 +21,25 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.service.QueryService');
+goog.provide('org.jboss.core.service.query.QueryService');
 
-goog.require('org.jboss.search.service.QueryServiceDispatcher');
+goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require('org.jboss.core.context.RequestParams');
 
 /**
- * @param {!org.jboss.search.service.QueryServiceDispatcher} dispatcher
+ * @param {!org.jboss.core.service.query.QueryServiceDispatcher} dispatcher
  * @interface
  */
-org.jboss.search.service.QueryService = function(dispatcher) {};
+org.jboss.core.service.query.QueryService = function(dispatcher) {};
 
 /**
  * Execute user query. This is used for the main search field that can contain any user input.
  * @param {!org.jboss.core.context.RequestParams} requestParams
  */
-org.jboss.search.service.QueryService.prototype.userQuery = function(requestParams){};
+org.jboss.core.service.query.QueryService.prototype.userQuery = function(requestParams){};
 
 /**
  * Execute user suggestion query. This is fired for type ahead queries while user types in a query into the main search field.
  * @param {string} query_string user query
  */
-org.jboss.search.service.QueryService.prototype.userSuggestionQuery = function(query_string){};
+org.jboss.core.service.query.QueryService.prototype.userSuggestionQuery = function(query_string){};

@@ -31,7 +31,7 @@
 // see https://groups.google.com/forum/?fromgroups=#!topic/closure-templates-discuss/dRgUIbp84iw
 
 /**
- * Metadata in {@link org.jboss.search.service.QueryServiceEvent}
+ * Metadata in {@link org.jboss.core.service.query.QueryServiceEvent}
  * @interface
  */
 function QueryEventMetadata() {};
