@@ -21,10 +21,10 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.util.fragmentParser');
-goog.provide('org.jboss.search.util.fragmentParser.UI_param');
-goog.provide('org.jboss.search.util.fragmentParser.UI_param_suffix');
-goog.provide('org.jboss.search.util.fragmentParser.INTERNAL_param');
+goog.provide('org.jboss.core.util.fragmentParser');
+goog.provide('org.jboss.core.util.fragmentParser.UI_param');
+goog.provide('org.jboss.core.util.fragmentParser.UI_param_suffix');
+goog.provide('org.jboss.core.util.fragmentParser.INTERNAL_param');
 
 goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.core.context.RequestParams');
@@ -42,7 +42,7 @@ goog.require('goog.date.DateTime');
  * when generating Searchisko REST API call.
  * @enum {string}
  */
-org.jboss.search.util.fragmentParser.INTERNAL_param = {
+org.jboss.core.util.fragmentParser.INTERNAL_param = {
     QUERY : "query",
     PAGE  : "page",
     FROM  : "from",
@@ -55,7 +55,7 @@ org.jboss.search.util.fragmentParser.INTERNAL_param = {
  * URL fragment parameters used in the web UI.
  * @enum {string}
  */
-org.jboss.search.util.fragmentParser.UI_param = {
+org.jboss.core.util.fragmentParser.UI_param = {
     QUERY : "q",
     PAGE  : "page",
     FROM  : "from",
@@ -68,13 +68,13 @@ org.jboss.search.util.fragmentParser.UI_param = {
  * URL fragment parameters used in the web UI with '=' suffix
  * @enum {string}
  */
-org.jboss.search.util.fragmentParser.UI_param_suffix = {
-    QUERY : org.jboss.search.util.fragmentParser.UI_param.QUERY+"=",
-    PAGE  : org.jboss.search.util.fragmentParser.UI_param.PAGE+"=",
-    FROM  : org.jboss.search.util.fragmentParser.UI_param.FROM+"=",
-    TO    : org.jboss.search.util.fragmentParser.UI_param.TO+"=",
-    ORDER_BY : org.jboss.search.util.fragmentParser.UI_param.ORDER_BY+"=",
-    LOG   : org.jboss.search.util.fragmentParser.UI_param.LOG+"="
+org.jboss.core.util.fragmentParser.UI_param_suffix = {
+    QUERY : org.jboss.core.util.fragmentParser.UI_param.QUERY+"=",
+    PAGE  : org.jboss.core.util.fragmentParser.UI_param.PAGE+"=",
+    FROM  : org.jboss.core.util.fragmentParser.UI_param.FROM+"=",
+    TO    : org.jboss.core.util.fragmentParser.UI_param.TO+"=",
+    ORDER_BY : org.jboss.core.util.fragmentParser.UI_param.ORDER_BY+"=",
+    LOG   : org.jboss.core.util.fragmentParser.UI_param.LOG+"="
 };
 
 /**
@@ -82,14 +82,14 @@ org.jboss.search.util.fragmentParser.UI_param_suffix = {
  * @param {string=} opt_fragment
  * @return {!org.jboss.core.context.RequestParams}
  */
-org.jboss.search.util.fragmentParser.parse = function(opt_fragment) {
+org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
 
     var parsed = {};
-    var intp_ = org.jboss.search.util.fragmentParser.INTERNAL_param;
+    var intp_ = org.jboss.core.util.fragmentParser.INTERNAL_param;
 
     if (goog.isDef(opt_fragment) && !goog.string.isEmptySafe(opt_fragment)) {
         var parts = goog.string.trim(/** @type {string} */ (opt_fragment)).split('&');
-        var p_ = org.jboss.search.util.fragmentParser.UI_param_suffix;
+        var p_ = org.jboss.core.util.fragmentParser.UI_param_suffix;
 
         goog.array.forEach(parts, function(part){
 

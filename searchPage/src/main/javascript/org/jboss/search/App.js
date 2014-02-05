@@ -44,6 +44,9 @@ goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.core.util.ImageLoaderNet');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParams.Order');
+goog.require('org.jboss.core.util.fragmentParser');
+goog.require('org.jboss.core.util.fragmentParser.INTERNAL_param');
+goog.require('org.jboss.core.util.fragmentParser.UI_param_suffix');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.list.project.Project');
 goog.require("org.jboss.search.page.event.EventType");
@@ -58,9 +61,6 @@ goog.require("org.jboss.search.page.SearchPageElements");
 goog.require('org.jboss.search.service.QueryServiceCached');
 goog.require('org.jboss.search.service.QueryServiceEventType');
 goog.require('org.jboss.search.service.QueryServiceXHR');
-goog.require('org.jboss.search.util.fragmentParser');
-goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
-goog.require('org.jboss.search.util.fragmentParser.UI_param_suffix');
 
 /**
  * Constructor of the application for the search page.
@@ -165,7 +165,7 @@ org.jboss.search.App = function() {
      * @param {!org.jboss.core.context.RequestParams} requestParams
      */
     var urlSetFragmentFunction = function(requestParams) {
-        var p_ = org.jboss.search.util.fragmentParser.UI_param_suffix;
+        var p_ = org.jboss.core.util.fragmentParser.UI_param_suffix;
 
         // always use query
         var token = [[p_.QUERY,goog.string.urlEncode(requestParams.getQueryString())].join('')];
@@ -196,7 +196,7 @@ org.jboss.search.App = function() {
 
         // if log was used in previous call, keep it
         /** @type {org.jboss.core.context.RequestParams} */
-        var requestParams_ = org.jboss.search.util.fragmentParser.parse(history_.getToken());
+        var requestParams_ = org.jboss.core.util.fragmentParser.parse(history_.getToken());
         var log = requestParams_.getLog();
         if (goog.isDefAndNotNull(log) && !goog.string.isEmpty(log)) {
             token.push([p_.LOG, goog.string.urlEncode(log)].join(''));
@@ -222,7 +222,7 @@ org.jboss.search.App = function() {
     var navigationController = goog.bind(function (e) {
         // e.isNavigate (true if value in browser address bar is changed manually)
         /** @type {org.jboss.core.context.RequestParams} */
-        var requestParams = org.jboss.search.util.fragmentParser.parse(e.token);
+        var requestParams = org.jboss.core.util.fragmentParser.parse(e.token);
         if (goog.isDefAndNotNull(requestParams.getQueryString())) {
             this.searchPage.runSearch(requestParams);
         } else {

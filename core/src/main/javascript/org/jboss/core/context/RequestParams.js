@@ -24,6 +24,12 @@
  * to send a new request and we need to get the most recent values of previous request parameters.
  * <p/>
  * There is convenient factory method {@link RequestParamsFactory} that is used to create a new instances.
+ * <p/>
+ * There is utility class {@link org.jboss.core.util.fragmentParser} that can parse URL fragment and create
+ * new RequestParams entity based on values found in it.
+ *
+ * @see RequestParamsFactory
+ * @see fragmentParser
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */

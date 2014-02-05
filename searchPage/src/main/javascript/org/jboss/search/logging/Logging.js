@@ -25,8 +25,8 @@
 goog.provide('org.jboss.search.logging.Logging');
 goog.provide('org.jboss.search.logging.Logging.Type');
 
-goog.require('org.jboss.search.util.fragmentParser');
-goog.require('org.jboss.search.util.fragmentParser.INTERNAL_param');
+goog.require('org.jboss.core.util.fragmentParser');
+goog.require('org.jboss.core.util.fragmentParser.INTERNAL_param');
 
 goog.require('goog.dom');
 goog.require('goog.events');
@@ -53,7 +53,7 @@ goog.require('goog.debug.Logger');
 org.jboss.search.logging.Logging = function(history) {
     goog.Disposable.call(this);
     this.navigationController_ = goog.bind(function (e) {
-        var requestParams = org.jboss.search.util.fragmentParser.parse(e.token);
+        var requestParams = org.jboss.core.util.fragmentParser.parse(e.token);
         var logType = requestParams.getLog();
 		this.setLoggingType_(logType);
     }, this);
@@ -62,7 +62,7 @@ org.jboss.search.logging.Logging = function(history) {
 	var window = /** @type {!Window} */ (goog.dom.getWindow());
 	if (goog.isDefAndNotNull(window) && window.location && window.location.hash) {
 		var hash = window.location.hash;
-		var requestParams = org.jboss.search.util.fragmentParser.parse(hash);
+		var requestParams = org.jboss.core.util.fragmentParser.parse(hash);
 		var logType = requestParams.getLog();
 		this.setLoggingType_(logType);
 	}
