@@ -47,6 +47,7 @@ goog.require('org.jboss.core.context.RequestParams.Order');
 goog.require('org.jboss.core.util.fragmentParser');
 goog.require('org.jboss.core.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.core.util.fragmentParser.UI_param_suffix');
+goog.require('org.jboss.core.service.query.QueryServiceEventType');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.list.project.Project');
 goog.require("org.jboss.search.page.event.EventType");
@@ -58,9 +59,8 @@ goog.require('org.jboss.search.page.filter.DateFilter');
 goog.require('org.jboss.search.page.filter.ProjectFilter');
 goog.require('org.jboss.search.page.SearchPage');
 goog.require("org.jboss.search.page.SearchPageElements");
-goog.require('org.jboss.search.service.QueryServiceCached');
-goog.require('org.jboss.core.service.query.QueryServiceEventType');
-goog.require('org.jboss.search.service.QueryServiceXHR');
+goog.require('org.jboss.search.service.query.QueryServiceCached');
+goog.require('org.jboss.search.service.query.QueryServiceXHR');
 
 /**
  * Constructor of the application for the search page.
@@ -92,8 +92,8 @@ org.jboss.search.App = function() {
     lookup_.setImageLoader(new org.jboss.core.util.ImageLoaderNet());
     // setup production QueryService (cached version)
     lookup_.setQueryService(
-        new org.jboss.search.service.QueryServiceCached(
-            new org.jboss.search.service.QueryServiceXHR( lookup_.getQueryServiceDispatcher() )
+        new org.jboss.search.service.query.QueryServiceCached(
+            new org.jboss.search.service.query.QueryServiceXHR( lookup_.getQueryServiceDispatcher() )
         )
     );
 

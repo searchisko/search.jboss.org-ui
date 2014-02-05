@@ -21,7 +21,7 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.service.QueryServiceCached');
+goog.provide('org.jboss.search.service.query.QueryServiceCached');
 
 goog.require('org.jboss.core.service.query.QueryService');
 
@@ -30,7 +30,7 @@ goog.require('org.jboss.core.service.query.QueryService');
  * @constructor
  * @implements {org.jboss.core.service.query.QueryService}
  */
-org.jboss.search.service.QueryServiceCached = function(queryService) {
+org.jboss.search.service.query.QueryServiceCached = function(queryService) {
     /**
      * @type {org.jboss.core.service.query.QueryService}
      * @private
@@ -39,13 +39,13 @@ org.jboss.search.service.QueryServiceCached = function(queryService) {
 };
 
 /** @override */
-org.jboss.search.service.QueryServiceCached.prototype.userQuery = function(requestParams) {
+org.jboss.search.service.query.QueryServiceCached.prototype.userQuery = function(requestParams) {
     // TODO: implement caching
     this.queryService_.userQuery(requestParams);
 };
 
 /** @override */
-org.jboss.search.service.QueryServiceCached.prototype.userSuggestionQuery = function(query_string) {
+org.jboss.search.service.query.QueryServiceCached.prototype.userSuggestionQuery = function(query_string) {
     // TODO: implement caching
     this.queryService_.userSuggestionQuery(query_string);
 };

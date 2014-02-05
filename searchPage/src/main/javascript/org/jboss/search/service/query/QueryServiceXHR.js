@@ -24,15 +24,15 @@
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.service.QueryServiceXHR');
+goog.provide('org.jboss.search.service.query.QueryServiceXHR');
 
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.service.query.QueryService');
+goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.util.urlGenerator');
 goog.require('org.jboss.search.Constants');
-goog.require('org.jboss.core.service.query.QueryService');
-goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
@@ -48,7 +48,7 @@ goog.require('goog.Disposable');
  * @implements {org.jboss.core.service.query.QueryService}
  * @extends {goog.Disposable}
  */
-org.jboss.search.service.QueryServiceXHR = function(dispatcher) {
+org.jboss.search.service.query.QueryServiceXHR = function(dispatcher) {
 
     goog.Disposable.call(this);
 
@@ -70,12 +70,12 @@ org.jboss.search.service.QueryServiceXHR = function(dispatcher) {
      */
     this.searchSuggestionsURI_ = goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_QUERY);
 };
-goog.inherits(org.jboss.search.service.QueryServiceXHR, goog.Disposable);
+goog.inherits(org.jboss.search.service.query.QueryServiceXHR, goog.Disposable);
 
 /** @inheritDoc */
-org.jboss.search.service.QueryServiceXHR.prototype.disposeInternal = function() {
+org.jboss.search.service.query.QueryServiceXHR.prototype.disposeInternal = function() {
     // Call the superclass's disposeInternal() method.
-    org.jboss.search.service.QueryServiceXHR.superClass_.disposeInternal.call(this);
+    org.jboss.search.service.query.QueryServiceXHR.superClass_.disposeInternal.call(this);
 
     delete this.dispatcher_;
     delete this.searchURI_;
@@ -83,7 +83,7 @@ org.jboss.search.service.QueryServiceXHR.prototype.disposeInternal = function() 
 };
 
 /** @override */
-org.jboss.search.service.QueryServiceXHR.prototype.userQuery = function(requestParams) {
+org.jboss.search.service.query.QueryServiceXHR.prototype.userQuery = function(requestParams) {
 
 	var ids = this.getXHRManager_().getOutstandingRequestIds();
 	if (goog.array.contains(ids, org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID)) {
@@ -128,7 +128,7 @@ org.jboss.search.service.QueryServiceXHR.prototype.userQuery = function(requestP
 };
 
 /** @override */
-org.jboss.search.service.QueryServiceXHR.prototype.userSuggestionQuery = function(query_string) {
+org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = function(query_string) {
 
 	var ids = this.getXHRManager_().getOutstandingRequestIds();
 	if (goog.array.contains(ids, org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID)) {
@@ -199,6 +199,6 @@ org.jboss.search.service.QueryServiceXHR.prototype.userSuggestionQuery = functio
  * @return {!goog.net.XhrManager}
  * @private
  */
-org.jboss.search.service.QueryServiceXHR.prototype.getXHRManager_ = function() {
+org.jboss.search.service.query.QueryServiceXHR.prototype.getXHRManager_ = function() {
     return org.jboss.core.service.Locator.getInstance().getLookup().getXhrManager();
 };

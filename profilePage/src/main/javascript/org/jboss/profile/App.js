@@ -26,7 +26,7 @@
 goog.provide('org.jboss.profile.App');
 
 
-//goog.require("org.jboss.search.service.QueryServiceCached");
+//goog.require("org.jboss.search.service.query.QueryServiceCached");
 goog.require('goog.Disposable');
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
@@ -56,8 +56,8 @@ org.jboss.profile.App = function() {
 
 	// setup production QueryService (cached version)
 //	lookup_.setQueryService(
-//		new org.jboss.search.service.QueryServiceCached(
-//			new org.jboss.search.service.QueryServiceXHR( lookup_.getQueryServiceDispatcher() )
+//		new org.jboss.search.service.query.QueryServiceCached(
+//			new org.jboss.search.service.query.QueryServiceXHR( lookup_.getQueryServiceDispatcher() )
 //		)
 //	);
 
