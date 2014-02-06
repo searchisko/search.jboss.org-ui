@@ -463,6 +463,16 @@ org.jboss.search.App = function() {
     dateFilterDeferred.callback({});
 
 	// ================================================================
+	// Pre-load images used in UI
+	// ================================================================
+
+	lookup_.getImageLoader().addImage("wait16trans", "image/icons/wait16trans.gif");
+	lookup_.getImageLoader().addImage("arrowUp", "image/icons/arrow_sans_up_16_717171.png");
+	lookup_.getImageLoader().addImage("arrowDown", "image/icons/arrow_sans_down_16_717171.png");
+//	lookup_.getImageLoader().addImage("toolbar_find", "image/icons/toolbar_find.png");
+	lookup_.getImageLoader().start();
+
+	// ================================================================
 	// A shortcut
 	// ================================================================
 	var const_ = org.jboss.search.Constants;
