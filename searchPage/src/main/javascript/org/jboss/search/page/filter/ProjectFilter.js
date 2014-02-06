@@ -29,8 +29,8 @@ goog.require("goog.events.KeyEvent");
 goog.require("goog.net.XhrManager.Event");
 goog.require("goog.object");
 goog.require("org.jboss.core.service.Locator");
+goog.require("org.jboss.core.util.urlGenerator");
 goog.require("org.jboss.search.response");
-goog.require("org.jboss.search.util.urlGenerator");
 goog.require('goog.Disposable');
 goog.require('goog.Uri');
 goog.require('goog.events');
@@ -199,7 +199,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.getSuggestions = function(q
         return;
     }
 
-    var query_url_string = /** @type {string} */ (org.jboss.search.util.urlGenerator.projectNameSuggestionsUrl(this.getProjectSuggestionsUri(), query, 20));
+    var query_url_string = /** @type {string} */ (org.jboss.core.util.urlGenerator.projectNameSuggestionsUrl(this.getProjectSuggestionsUri(), query, 20));
 
     xhrManager.send(
         org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID,

@@ -18,15 +18,17 @@
 
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParamsFactory');
-goog.require('org.jboss.search.util.urlGenerator');
+goog.require('org.jboss.core.util.urlGenerator');
 goog.require('goog.Uri');
 goog.require('goog.testing.jsunit');
+
+var searchResultsPerPage_ = 10;
 
 var testSearchUrlGenerator = function() {
 
     var root = "http://localhost:1234";
     var url = new goog.Uri(root);
-    var g_ = org.jboss.search.util.urlGenerator;
+    var g_ = org.jboss.core.util.urlGenerator;
 
     var urlString;
 
@@ -53,7 +55,8 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString(' ').build()
+		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString(' ').build(),
+		searchResultsPerPage_
     );
     assertEquals(
         [
@@ -70,7 +73,8 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build()
+		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
+		searchResultsPerPage_
     );
     assertEquals(
         [
@@ -87,7 +91,8 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').setPage(20).build()
+		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').setPage(20).build(),
+		searchResultsPerPage_
     );
     assertEquals(
         [
@@ -106,6 +111,7 @@ var testSearchUrlGenerator = function() {
     urlString = g_.searchUrl(
         url.clone(),
 		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
+		searchResultsPerPage_,
         [''], false
     );
     assertEquals(
@@ -123,6 +129,7 @@ var testSearchUrlGenerator = function() {
     urlString = g_.searchUrl(
         url.clone(),
 		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
+		searchResultsPerPage_,
         [], false);
     assertEquals(
         [
@@ -138,6 +145,7 @@ var testSearchUrlGenerator = function() {
     urlString = g_.searchUrl(
         url.clone(),
 		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
+		searchResultsPerPage_,
         []);
     assertEquals(
         [
@@ -155,7 +163,7 @@ var testProjectSuggestionsUrlGenerator = function() {
 
     var root = "http://localhost:1234";
     var url = new goog.Uri(root);
-    var g_ = org.jboss.search.util.urlGenerator;
+    var g_ = org.jboss.core.util.urlGenerator;
 
 
     var urlString;
@@ -202,7 +210,7 @@ var testClickStreamUrlGenerator = function() {
 
     var root = "http://localhost:1234";
     var url = new goog.Uri(root);
-    var g_ = org.jboss.search.util.urlGenerator;
+    var g_ = org.jboss.core.util.urlGenerator;
 
 
     var urlString;

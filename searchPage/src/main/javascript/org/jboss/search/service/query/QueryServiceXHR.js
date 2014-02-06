@@ -30,9 +30,10 @@ goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.service.query.QueryService');
 goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
+goog.require('org.jboss.core.util.urlGenerator');
 goog.require('org.jboss.search.response');
-goog.require('org.jboss.search.util.urlGenerator');
 goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.search.Variables');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
@@ -43,6 +44,7 @@ goog.require('goog.Disposable');
 
 /**
  * Create a new instance.
+ *
  * @param {!org.jboss.core.service.query.QueryServiceDispatcher} dispatcher
  * @constructor
  * @implements {org.jboss.core.service.query.QueryService}
@@ -92,7 +94,7 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userQuery = function(re
 	}
 
     var searchURI_ = this.searchURI_.clone();
-    var query_url_string_ = org.jboss.search.util.urlGenerator.searchUrl(searchURI_, requestParams);
+    var query_url_string_ = org.jboss.core.util.urlGenerator.searchUrl(searchURI_, requestParams, org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE);
 
     if (!goog.isNull(query_url_string_)) {
         this.dispatcher_.dispatchUserQueryStart(requestParams, query_url_string_);

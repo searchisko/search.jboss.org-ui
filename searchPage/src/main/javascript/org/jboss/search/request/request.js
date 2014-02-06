@@ -25,7 +25,7 @@ goog.provide('org.jboss.search.request');
 
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.core.service.Locator');
-goog.require('org.jboss.search.util.urlGenerator');
+goog.require('org.jboss.core.util.urlGenerator');
 
 goog.require('goog.Uri');
 
@@ -38,7 +38,7 @@ goog.require('goog.Uri');
  * @param {string=} opt_session
  */
 org.jboss.search.request.writeClickStreamStatistics = function(uri, uuid, id, opt_session) {
-    var url_string = org.jboss.search.util.urlGenerator.clickStreamUrl(uri, uuid, id, opt_session);
+    var url_string = org.jboss.core.util.urlGenerator.clickStreamUrl(uri, uuid, id, opt_session);
     if (!goog.isNull(url_string)) {
         var xhr = org.jboss.core.service.Locator.getInstance().getLookup().getXhrManager();
         xhr.send(

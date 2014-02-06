@@ -21,22 +21,21 @@
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
-goog.provide('org.jboss.search.util.urlGenerator');
-goog.provide('org.jboss.search.util.urlGenerator.QueryParams');
-goog.provide('org.jboss.search.util.urlGenerator.QueryParams.SortBy');
-
-goog.require('goog.Uri');
+goog.provide('org.jboss.core.util.urlGenerator');
+goog.provide('org.jboss.core.util.urlGenerator.QueryParams');
+goog.provide('org.jboss.core.util.urlGenerator.QueryParams.SortBy');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParams.Order');
 goog.require('org.jboss.core.context.RequestParamsFactory');
-goog.require('org.jboss.search.Variables');
+
+goog.require('goog.Uri');
 
 /**
  * These are the names of URL params used for search service.
  * Match the search API {@see http://docs.jbossorg.apiary.io/#searchapi}
  * @enum {string}
  */
-org.jboss.search.util.urlGenerator.QueryParams = {
+org.jboss.core.util.urlGenerator.QueryParams = {
     QUERY : 'query',
     FROM  : 'from',
     SIZE  : 'size',
@@ -53,7 +52,7 @@ org.jboss.search.util.urlGenerator.QueryParams = {
  * Match the search API {@see http://docs.jbossorg.apiary.io/#searchapi}
  * @enum {string}
  */
-org.jboss.search.util.urlGenerator.QueryParams.SortBy = {
+org.jboss.core.util.urlGenerator.QueryParams.SortBy = {
     NEW : 'new',
     OLD : 'old'
 };
@@ -63,12 +62,13 @@ org.jboss.search.util.urlGenerator.QueryParams.SortBy = {
  * Note it directly modifies provided `rootUri` so you may want use clone.
  *
  * @param {goog.Uri|string} rootUri
- * @param {!org.jboss.core.context.RequestParams} requestParams
+ * @param {org.jboss.core.context.RequestParams} requestParams
+ * @param {number} search_results_per_page
  * @param {Array.<string>=} opt_fields
  * @param {boolean=} opt_highlighting
  * @return {string|null}
  */
-org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, opt_fields, opt_highlighting) {
+org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, search_results_per_page, opt_fields, opt_highlighting) {
 
     if (goog.isNull(rootUri)) { return null }
 
@@ -77,7 +77,7 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
     }
 
     // shortcut
-    var params = org.jboss.search.util.urlGenerator.QueryParams;
+    var params = org.jboss.core.util.urlGenerator.QueryParams;
 
     if (!goog.isDefAndNotNull(requestParams)) {
         requestParams = org.jboss.core.context.RequestParamsFactory.getInstance()
@@ -110,7 +110,7 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
     var page = requestParams.getPage();
     if (goog.isDef(page) && goog.isNumber(page)) {
         if (page > 1) {
-            rootUri.setParameterValue(params.FROM,(Math.round(page-1)*org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE))
+            rootUri.setParameterValue(params.FROM,( Math.round(page-1) * search_results_per_page ))
         }
     }
 
@@ -137,10 +137,10 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
             if (org.jboss.core.context.RequestParams.Order.SCORE != orderBy) {
                 switch (orderBy) {
                     case org.jboss.core.context.RequestParams.Order.NEW_FIRST:
-                        rootUri.setParameterValue(params.ORDER_BY, org.jboss.search.util.urlGenerator.QueryParams.SortBy.NEW);
+                        rootUri.setParameterValue(params.ORDER_BY, org.jboss.core.util.urlGenerator.QueryParams.SortBy.NEW);
                         break;
                     case org.jboss.core.context.RequestParams.Order.OLD_FIRST:
-                        rootUri.setParameterValue(params.ORDER_BY, org.jboss.search.util.urlGenerator.QueryParams.SortBy.OLD);
+                        rootUri.setParameterValue(params.ORDER_BY, org.jboss.core.util.urlGenerator.QueryParams.SortBy.OLD);
                         break;
                 }
             }
@@ -159,7 +159,7 @@ org.jboss.search.util.urlGenerator.searchUrl = function(rootUri, requestParams, 
  * @param {number=} opt_size
  * @return {string|null}
  */
-org.jboss.search.util.urlGenerator.projectNameSuggestionsUrl = function(rootUri, opt_query, opt_size) {
+org.jboss.core.util.urlGenerator.projectNameSuggestionsUrl = function(rootUri, opt_query, opt_size) {
 
     if (goog.isNull(rootUri)) { return null }
 
@@ -168,7 +168,7 @@ org.jboss.search.util.urlGenerator.projectNameSuggestionsUrl = function(rootUri,
     }
 
     // shortcut
-    var params = org.jboss.search.util.urlGenerator.QueryParams;
+    var params = org.jboss.core.util.urlGenerator.QueryParams;
 
     if (goog.isNull(opt_query) || !goog.isDef(opt_query)) { opt_query = '' }
     rootUri.setParameterValue(params.QUERY, opt_query);
@@ -190,7 +190,7 @@ org.jboss.search.util.urlGenerator.projectNameSuggestionsUrl = function(rootUri,
  * @param {string=} opt_session
  * @return {string|null}
  */
-org.jboss.search.util.urlGenerator.clickStreamUrl = function(rootUri, uuid, id, opt_session) {
+org.jboss.core.util.urlGenerator.clickStreamUrl = function(rootUri, uuid, id, opt_session) {
 
     if (goog.isNull(rootUri)) { return null }
 

@@ -65,7 +65,7 @@ goog.require('org.jboss.core.service.query.QueryServiceEventType');
 goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.suggestions.query.view.View');
-goog.require('org.jboss.search.util.urlGenerator');
+goog.require('org.jboss.core.util.urlGenerator');
 goog.require('org.jboss.search.util.searchFilterGenerator');
 
 /**
