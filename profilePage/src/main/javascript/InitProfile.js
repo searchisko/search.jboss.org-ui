@@ -19,10 +19,19 @@
 
 goog.provide('init.profile');
 
-//goog.require('org.jboss.search.logging.Logging');
+goog.require("org.jboss.core.service.Locator");
+goog.require("org.jboss.profile.service.LookUp");
 goog.require('org.jboss.profile.App');
+//goog.require('org.jboss.search.logging.Logging');
 
 {
-//	new org.jboss.search.logging.Logging();
+	new org.jboss.core.service.Locator(new org.jboss.profile.service.LookUp());
+
+//	if (goog.DEBUG) {
+//		new org.jboss.search.logging.Logging(
+//			org.jboss.core.service.Locator.getInstance().getLookup().getHistory()
+//		);
+//	}
+
 	new org.jboss.profile.App();
 }

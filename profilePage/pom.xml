@@ -30,6 +30,14 @@
                 <version>${jsframework.version}</version>
                 <extensions>true</extensions>
             </plugin>
+            <plugin>
+                <groupId>com.github.jlgrock.javascript-framework</groupId>
+                <artifactId>closure-testing-maven-plugin</artifactId>
+                <version>${jsframework.version}</version>
+                <configuration>
+                    <prologue>${profile.prologue}</prologue>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

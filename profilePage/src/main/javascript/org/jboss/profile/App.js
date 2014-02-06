@@ -33,6 +33,7 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.profile.service.query.QueryServiceXHR');
 
 /**
  * @extends {goog.Disposable}
@@ -55,11 +56,11 @@ org.jboss.profile.App = function() {
 	var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
 
 	// setup production QueryService (cached version)
-//	lookup_.setQueryService(
+	lookup_.setQueryService(
 //		new org.jboss.search.service.query.QueryServiceCached(
-//			new org.jboss.search.service.query.QueryServiceXHR( lookup_.getQueryServiceDispatcher() )
+			new org.jboss.profile.service.query.QueryServiceXHR( lookup_.getQueryServiceDispatcher() )
 //		)
-//	);
+	);
 
 };
 goog.inherits(org.jboss.profile.App, goog.Disposable);
