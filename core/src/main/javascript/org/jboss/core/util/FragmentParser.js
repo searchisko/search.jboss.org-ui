@@ -47,6 +47,7 @@ org.jboss.core.util.fragmentParser.INTERNAL_param = {
     PAGE  : "page",
     FROM  : "from",
     TO    : "to",
+	CONTRIBUTOR : "contributor",
     ORDER_BY : "sortBy",
     LOG   : "log"
 };
@@ -60,6 +61,7 @@ org.jboss.core.util.fragmentParser.UI_param = {
     PAGE  : "page",
     FROM  : "from",
     TO    : "to",
+    CONTRIBUTOR : "contributor",
     ORDER_BY : "orderBy",
     LOG   : "log"
 };
@@ -73,6 +75,7 @@ org.jboss.core.util.fragmentParser.UI_param_suffix = {
     PAGE  : org.jboss.core.util.fragmentParser.UI_param.PAGE+"=",
     FROM  : org.jboss.core.util.fragmentParser.UI_param.FROM+"=",
     TO    : org.jboss.core.util.fragmentParser.UI_param.TO+"=",
+	CONTRIBUTOR : org.jboss.core.util.fragmentParser.UI_param.CONTRIBUTOR+"=",
     ORDER_BY : org.jboss.core.util.fragmentParser.UI_param.ORDER_BY+"=",
     LOG   : org.jboss.core.util.fragmentParser.UI_param.LOG+"="
 };
@@ -84,8 +87,11 @@ org.jboss.core.util.fragmentParser.UI_param_suffix = {
  */
 org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
 
-    var parsed = {};
     var intp_ = org.jboss.core.util.fragmentParser.INTERNAL_param;
+    var parsed = {};
+
+	// pre-initialize items that can have multiple values
+	parsed[intp_.CONTRIBUTOR] = /** @type {Array.<string>} */ [];
 
     if (goog.isDef(opt_fragment) && !goog.string.isEmptySafe(opt_fragment)) {
         var parts = goog.string.trim(/** @type {string} */ (opt_fragment)).split('&');
@@ -144,6 +150,17 @@ org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
                     // TODO: log?
                 }
             } else
+			// ------------------- CONTRIBUTOR ----------------------
+			if (goog.string.caseInsensitiveStartsWith(part, p_.CONTRIBUTOR)) {
+				var contributor = goog.string.trim(
+					goog.string.urlDecode(
+						goog.string.removeAt(part, 0, p_.CONTRIBUTOR.length)
+					)
+				);
+				if (!goog.string.isEmptySafe(contributor)) {
+					parsed[intp_.CONTRIBUTOR].push(contributor)
+				}
+			} else
             // ------------------- ORDER_BY ----------------------
             if (goog.string.caseInsensitiveStartsWith(part, p_.ORDER_BY)) {
                 var orderBy_ = goog.string.trim(
@@ -170,12 +187,17 @@ org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
             }
         });
     }
+
+	// dedup items with multiple values
+	goog.array.removeDuplicates(parsed[intp_.CONTRIBUTOR]);
+
 	return org.jboss.core.context.RequestParamsFactory.getInstance()
 		.reset()
 		.setQueryString(parsed[intp_.QUERY])
 		.setPage(parsed[intp_.PAGE])
 		.setFrom(parsed[intp_.FROM])
 		.setTo(parsed[intp_.TO])
+		.setContributors(parsed[intp_.CONTRIBUTOR])
 		.setOrder(parsed[intp_.ORDER_BY])
 		.setLog(parsed[intp_.LOG])
 		.build();

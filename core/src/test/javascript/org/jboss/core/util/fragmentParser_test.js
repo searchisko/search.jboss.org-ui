@@ -60,7 +60,7 @@ var testFragmentParserForPageValue = function() {
     assertUndefined('Works for invalid input', requestParams.getPage());
 
     requestParams = org.jboss.core.util.fragmentParser.parse('page=10');
-    assertEquals('Works for invalid input', 10, requestParams.getPage());
+    assertEquals('Works for valid input', 10, requestParams.getPage());
 };
 
 var testFragmentParserForLogValue = function() {
@@ -72,4 +72,22 @@ var testFragmentParserForLogValue = function() {
 
     requestParams = org.jboss.core.util.fragmentParser.parse('log=dummy');
     assertEquals('dummy', requestParams.getLog());
+};
+
+var testFragmentParserForContributorValues = function() {
+
+	var requestParams;
+
+	requestParams = org.jboss.core.util.fragmentParser.parse('contributor=');
+	assertEquals('Works for undefined input', 0, requestParams.getContributors().length);
+
+	requestParams = org.jboss.core.util.fragmentParser.parse('contributor=++John%20Doe%20%3Cjohn.doe%40domain.com%3E++');
+	assertEquals('URL decode and trim input', 1, requestParams.getContributors().length);
+	assertEquals('URL decode and trim input', "John Doe <john.doe@domain.com>", requestParams.getContributors()[0]);
+
+	requestParams = org.jboss.core.util.fragmentParser.parse('contributor=1&contributor=+&contributor=2');
+	assertEquals('Works for fine for multiple values', 2, requestParams.getContributors().length);
+
+	requestParams = org.jboss.core.util.fragmentParser.parse('contributor=1++&contributor=2&contributor=++1');
+	assertEquals('Dedup multiple values', 2, requestParams.getContributors().length);
 };

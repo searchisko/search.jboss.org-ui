@@ -362,7 +362,7 @@ org.jboss.core.context.RequestParamsFactory.prototype.setDefaultOrder = function
 /**
  * Set new contributors.
  *
- * @param contributors
+ * @param {Array.<string>|null} contributors
  * @returns {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setContributors = function(contributors) {
