@@ -91,7 +91,7 @@ org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
     var parsed = {};
 
 	// pre-initialize items that can have multiple values
-	parsed[intp_.CONTRIBUTOR] = /** @type {Array.<string>} */ [];
+	parsed[intp_.CONTRIBUTOR] = /** @type {Array.<string>} */ ([]);
 
     if (goog.isDef(opt_fragment) && !goog.string.isEmptySafe(opt_fragment)) {
         var parts = goog.string.trim(/** @type {string} */ (opt_fragment)).split('&');
