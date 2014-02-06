@@ -24,10 +24,14 @@
 goog.provide('org.jboss.core.util.urlGenerator');
 goog.provide('org.jboss.core.util.urlGenerator.QueryParams');
 goog.provide('org.jboss.core.util.urlGenerator.QueryParams.SortBy');
+goog.provide('org.jboss.core.util.urlGenerator.OptFields');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParams.Order');
 goog.require('org.jboss.core.context.RequestParamsFactory');
 
+goog.require('goog.array');
+goog.require('goog.date.DateTime');
+goog.require('goog.object');
 goog.require('goog.Uri');
 
 /**
@@ -44,7 +48,10 @@ org.jboss.core.util.urlGenerator.QueryParams = {
     HIGHLIGHTS : 'query_highlight',
     ACTIVITY_DATE_FROM : 'activity_date_from',
     ACTIVITY_DATE_TO   : 'activity_date_to',
-    ORDER_BY : 'sortBy'
+    ORDER_BY : 'sortBy',
+	CONTRIBUTOR : 'contributor',
+	PROJECT : 'tag',
+	TAG : 'project'
 };
 
 /**
@@ -58,17 +65,29 @@ org.jboss.core.util.urlGenerator.QueryParams.SortBy = {
 };
 
 /**
- * Generate URL that is used to get search results.
+ * @typedef {{
+ *   fields: (Array.<string>|undefined),
+ *   highlighting: (boolean|undefined),
+ *   size: (number|undefined)
+ * }}
+ */
+org.jboss.core.util.urlGenerator.OptFields;
+
+/**
+ * Generate URL that is used to request search results from Searchisko.
+ * By default search results are tailored for the main search web page. This means returned document hits contain fields
+ * that are required by the search results page. Several aspects of the results can be customized via opt_settings
+ * parameter.
+ * <p/>
  * Note it directly modifies provided `rootUri` so you may want use clone.
  *
  * @param {goog.Uri|string} rootUri
  * @param {org.jboss.core.context.RequestParams} requestParams
  * @param {number} search_results_per_page
- * @param {Array.<string>=} opt_fields
- * @param {boolean=} opt_highlighting
+ * @param {org.jboss.core.util.urlGenerator.OptFields=} opt_settings
  * @return {string|null}
  */
-org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, search_results_per_page, opt_fields, opt_highlighting) {
+org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, search_results_per_page, opt_settings) {
 
     if (goog.isNull(rootUri)) { return null }
 
@@ -87,8 +106,8 @@ org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, se
     if (!goog.isDefAndNotNull(requestParams.getQueryString())) { query = '' }
     rootUri.setParameterValue(params.QUERY, query);
 
-    if (goog.isDef(opt_fields) && goog.isArray(opt_fields)) {
-        rootUri.setParameterValues(params.FIELD, opt_fields)
+    if (goog.isDef(opt_settings) && goog.isArray(opt_settings.fields)) {
+        rootUri.setParameterValues(params.FIELD, opt_settings.fields)
     } else {
         rootUri.setParameterValues(params.FIELD,
 			["sys_type","sys_id","sys_title","sys_contributors","sys_project","sys_project_name",
@@ -96,8 +115,8 @@ org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, se
 		)
     }
 
-    if (goog.isBoolean(opt_highlighting)) {
-        rootUri.setParameterValue(params.HIGHLIGHTS, opt_highlighting)
+    if (goog.isDef(opt_settings) && goog.isBoolean(opt_settings.highlighting) && goog.isBoolean(opt_settings.highlighting)) {
+        rootUri.setParameterValue(params.HIGHLIGHTS, opt_settings.highlighting)
     } else {
         rootUri.setParameterValue(params.HIGHLIGHTS, "true")
     }
@@ -146,6 +165,22 @@ org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, se
             }
         }
     }
+
+	var contributors = requestParams.getContributors();
+	if (goog.isDef(contributors) && contributors.length > 0) {
+			rootUri.setParameterValues(params.CONTRIBUTOR, contributors)
+	}
+
+	if (goog.isDef(opt_settings) && goog.isNumber(opt_settings.size)) {
+		if (opt_settings.size > 0) {
+			// notice the hardcoded upper limit on the size
+			rootUri.setParameterValue(params.SIZE, opt_settings.size > 100 ? "100" : opt_settings.size.toString(10));
+		}
+		if (opt_settings.size == 0) {
+			rootUri.setParameterValue(params.SIZE, "0" );
+		}
+		// ignore negative values
+	}
 
     return rootUri.toString();
 };

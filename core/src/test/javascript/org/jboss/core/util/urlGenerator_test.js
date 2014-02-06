@@ -19,7 +19,9 @@
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParamsFactory');
 goog.require('org.jboss.core.util.urlGenerator');
+goog.require('org.jboss.core.util.urlGenerator.OptFields');
 goog.require('goog.Uri');
+goog.require('goog.string');
 goog.require('goog.testing.jsunit');
 
 var searchResultsPerPage_ = 10;
@@ -29,6 +31,7 @@ var testSearchUrlGenerator = function() {
     var root = "http://localhost:1234";
     var url = new goog.Uri(root);
     var g_ = org.jboss.core.util.urlGenerator;
+	var rpf_ = org.jboss.core.context.RequestParamsFactory.getInstance();
 
     var urlString;
 
@@ -55,7 +58,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString(' ').build(),
+		rpf_.reset().setQueryString(' ').build(),
 		searchResultsPerPage_
     );
     assertEquals(
@@ -73,7 +76,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
+		rpf_.reset().setQueryString('dummy').build(),
 		searchResultsPerPage_
     );
     assertEquals(
@@ -91,7 +94,7 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').setPage(20).build(),
+		rpf_.reset().setQueryString('dummy').setPage(20).build(),
 		searchResultsPerPage_
     );
     assertEquals(
@@ -110,9 +113,9 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
+		rpf_.reset().setQueryString('dummy').build(),
 		searchResultsPerPage_,
-        [''], false
+		{ fields: [''], highlighting: false }
     );
     assertEquals(
         [
@@ -128,9 +131,10 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
+		rpf_.reset().setQueryString('dummy').build(),
 		searchResultsPerPage_,
-        [], false);
+		{ fields: [], highlighting: false }
+	);
     assertEquals(
         [
             root,
@@ -144,9 +148,10 @@ var testSearchUrlGenerator = function() {
 
     urlString = g_.searchUrl(
         url.clone(),
-		org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('dummy').build(),
+		rpf_.reset().setQueryString('dummy').build(),
 		searchResultsPerPage_,
-        []);
+		{ fields: [] }
+	);
     assertEquals(
         [
             root,
@@ -157,6 +162,83 @@ var testSearchUrlGenerator = function() {
             ].join('&')
         ].join('?'),
         urlString);
+
+	// contributors
+	urlString = g_.searchUrl(
+		url.clone(),
+		rpf_.reset().setQueryString("test").setContributors(["john.doe1@domain.com","john.doe2@domain.com"]).build(),
+		searchResultsPerPage_,
+		{ fields: [] }
+	);
+	assertEquals(
+		[
+			root,
+			[
+				"query=test",
+				"query_highlight=true",
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram",
+				"contributor=" + goog.string.urlEncode("john.doe1@domain.com"),
+				"contributor=" + goog.string.urlEncode("john.doe2@domain.com")
+			].join('&')
+
+		].join('?'),
+		urlString);
+
+	// size parameter
+	urlString = g_.searchUrl(
+		url.clone(),
+		rpf_.reset().setQueryString('dummy').build(),
+		searchResultsPerPage_,
+		{ fields: [], size: 0 }
+	);
+	assertEquals(
+		[
+			root,
+			[
+				"query=dummy",
+				"query_highlight=true",
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram",
+				"size=0"
+			].join('&')
+		].join('?'),
+		urlString);
+
+	// size parameter has an upper limit
+	urlString = g_.searchUrl(
+		url.clone(),
+		rpf_.reset().setQueryString('dummy').build(),
+		searchResultsPerPage_,
+		{ fields: [], size: 9999 }
+	);
+	assertEquals(
+		[
+			root,
+			[
+				"query=dummy",
+				"query_highlight=true",
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram",
+				"size=100"
+			].join('&')
+		].join('?'),
+		urlString);
+
+	// negative value of size parameter not allowed and is silently ignored
+	urlString = g_.searchUrl(
+		url.clone(),
+		rpf_.reset().setQueryString('dummy').build(),
+		searchResultsPerPage_,
+		{ fields: [], size: -1 }
+	);
+	assertEquals(
+		[
+			root,
+			[
+				"query=dummy",
+				"query_highlight=true",
+				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
+			].join('&')
+		].join('?'),
+		urlString);
 };
 
 var testProjectSuggestionsUrlGenerator = function() {
