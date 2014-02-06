@@ -350,6 +350,16 @@ org.jboss.core.context.RequestParamsFactory.prototype.setOrder = function(order)
 };
 
 /**
+ * Set default order.
+ *
+ * @returns {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setDefaultOrder = function() {
+	this.order_ = org.jboss.core.context.RequestParams.Order.SCORE;
+	return this;
+};
+
+/**
  * Set new contributors.
  *
  * @param contributors
