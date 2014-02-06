@@ -195,6 +195,16 @@ org.jboss.search.App = function() {
             }
         }
 
+		// use 'contributor'(s) if available
+		if (goog.isDefAndNotNull(requestParams.getContributors()) && requestParams.getContributors().length > 0) {
+			goog.array.forEach(
+				requestParams.getContributors(),
+				function(contributor) {
+					token.push([p_.CONTRIBUTOR,goog.string.urlEncode(contributor)].join(''));
+				}
+			)
+		}
+
         // if log was used in previous call, keep it
         /** @type {org.jboss.core.context.RequestParams} */
         var requestParams_ = org.jboss.core.util.fragmentParser.parse(history_.getToken());
