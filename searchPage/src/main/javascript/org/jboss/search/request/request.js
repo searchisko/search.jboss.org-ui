@@ -23,9 +23,10 @@
 
 goog.provide('org.jboss.search.request');
 
-goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.util.urlGenerator');
+goog.require('org.jboss.search.Constants');
 
 goog.require('goog.Uri');
 
@@ -45,7 +46,7 @@ org.jboss.search.request.writeClickStreamStatistics = function(uri, uuid, id, op
             org.jboss.search.Constants.WRITE_CLICK_STREAM_STATS_ID,
             // setting the parameter value clears previously set value (that is what we want!)
             url_string,
-            org.jboss.search.Constants.POST,
+            org.jboss.core.Constants.POST,
             "", // post_data
             {}, // headers_map
             org.jboss.search.Constants.WRITE_STATS_REQUEST_PRIORITY

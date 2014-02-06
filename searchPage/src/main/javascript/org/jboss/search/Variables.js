@@ -17,9 +17,7 @@
  */
 
 /**
- * @fileoverview System variables that can vary depending on target deployment.
- * This should contain variables that need to be configured and thus should not
- * be part of @link org.jboss.search.Constants.
+ * @fileoverview Variables that can vary depending on target deployment.
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */

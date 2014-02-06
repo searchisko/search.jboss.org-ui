@@ -23,24 +23,24 @@
 
 goog.provide('org.jboss.search.page.filter.ProjectFilter');
 
-
-goog.require("goog.async.Delay");
-goog.require("goog.events.KeyEvent");
-goog.require("goog.net.XhrManager.Event");
-goog.require("goog.object");
 goog.require("org.jboss.core.service.Locator");
 goog.require("org.jboss.core.util.urlGenerator");
+goog.require("org.jboss.core.Constants");
 goog.require("org.jboss.search.response");
-goog.require('goog.Disposable');
-goog.require('goog.Uri');
-goog.require('goog.events');
-goog.require('goog.events.KeyCodes');
-goog.require('goog.events.KeyHandler');
-goog.require('goog.events.KeyHandler.EventType');
-goog.require('goog.string');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('org.jboss.search.page.filter.templates');
+goog.require("goog.async.Delay");
+goog.require('goog.Disposable');
+goog.require('goog.events');
+goog.require('goog.events.KeyCodes');
+goog.require("goog.events.KeyEvent");
+goog.require('goog.events.KeyHandler');
+goog.require('goog.events.KeyHandler.EventType');
+goog.require("goog.object");
+goog.require("goog.net.XhrManager.Event");
+goog.require('goog.string');
+goog.require('goog.Uri');
 
 /**
  * Create a new project filter.
@@ -204,7 +204,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.getSuggestions = function(q
     xhrManager.send(
         org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID,
         query_url_string,
-        org.jboss.search.Constants.GET,
+        org.jboss.core.Constants.GET,
         "", // post_data
         {}, // headers_map
         org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_PRIORITY,

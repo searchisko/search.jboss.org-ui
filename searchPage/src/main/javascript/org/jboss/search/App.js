@@ -48,6 +48,7 @@ goog.require('org.jboss.core.util.fragmentParser');
 goog.require('org.jboss.core.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.core.util.fragmentParser.UI_param_suffix');
 goog.require('org.jboss.core.service.query.QueryServiceEventType');
+goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.list.project.Project');
 goog.require("org.jboss.search.page.event.EventType");
@@ -265,24 +266,24 @@ org.jboss.search.App = function() {
                 searchPageElements.getProject_filter_body_div(),
                 searchPageElements.getProject_filter_query_field(),
 				searchPageElements.getProject_filter_items_div(),
-				function() { return goog.dom.classes.has(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN) },
+				function() { return goog.dom.classes.has(searchPageElements.getProject_filter_body_div(), org.jboss.core.Constants.HIDDEN) },
                 function() {
-                    goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.add(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.remove(searchPageElements.getContent_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getProject_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getContent_filter_tab_div(), org.jboss.core.Constants.SELECTED);
 
-                    goog.dom.classes.remove(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-                    goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-                    goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-                    goog.dom.classes.add(searchPageElements.getContent_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.remove(searchPageElements.getProject_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getContent_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 
                     searchPageElements.getProject_filter_query_field().focus();
                     searchPageElements.getAuthor_filter_query_field().blur();
                 },
                 function() {
-                    goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.core.Constants.HIDDEN);
                     searchPageElements.getProject_filter_query_field().blur();
                 }
             );
@@ -300,24 +301,24 @@ org.jboss.search.App = function() {
                 searchPageElements.getAuthor_filter_body_div(),
                 searchPageElements.getAuthor_filter_query_field(),
                 searchPageElements.getAuthor_filter_items_div(),
-				function() { return goog.dom.classes.has(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN) },
+				function() { return goog.dom.classes.has(searchPageElements.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN) },
                 function() {
-                    goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.add(searchPageElements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.remove(searchPageElements.getContent_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getAuthor_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getContent_filter_tab_div(), org.jboss.core.Constants.SELECTED);
 
-                    goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-                    goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-                    goog.dom.classes.add(searchPageElements.getContent_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getContent_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 
                     searchPageElements.getProject_filter_query_field().blur();
                     searchPageElements.getAuthor_filter_query_field().focus();
                 },
                 function() {
-                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
                     searchPageElements.getAuthor_filter_query_field().blur();
                 }
             );
@@ -333,22 +334,22 @@ org.jboss.search.App = function() {
 			var contentFilter = new org.jboss.search.page.filter.ContentFilter(
 				searchPageElements.getContent_filter_body_div(),
 				function() {
-					goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-					goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-					goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-					goog.dom.classes.add(searchPageElements.getContent_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+					goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+					goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+					goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+					goog.dom.classes.add(searchPageElements.getContent_filter_tab_div(), org.jboss.core.Constants.SELECTED);
 
-					goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-					goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-					goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-					goog.dom.classes.remove(searchPageElements.getContent_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+					goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+					goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+					goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+					goog.dom.classes.remove(searchPageElements.getContent_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 
 					searchPageElements.getProject_filter_query_field().blur(); // TODO needed?
 					searchPageElements.getAuthor_filter_query_field().blur();  // TODO needed?
 				},
 				function() {
-					goog.dom.classes.remove(searchPageElements.getContent_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-					goog.dom.classes.add(searchPageElements.getContent_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+					goog.dom.classes.remove(searchPageElements.getContent_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+					goog.dom.classes.add(searchPageElements.getContent_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 					// blur not needed now
 				}
 			);
@@ -368,24 +369,24 @@ org.jboss.search.App = function() {
                 searchPageElements.getDate_filter_from_field(),
                 searchPageElements.getDate_filter_to_field(),
                 searchPageElements.getDate_order(),
-                function() { return goog.dom.classes.has(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN) },
+                function() { return goog.dom.classes.has(searchPageElements.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN) },
                 function() {
-                    goog.dom.classes.add(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.remove(searchPageElements.getContent_filter_tab_div(), org.jboss.search.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getProject_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getAuthor_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.remove(searchPageElements.getContent_filter_tab_div(), org.jboss.core.Constants.SELECTED);
 
-                    goog.dom.classes.remove(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-                    goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-                    goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
-                    goog.dom.classes.add(searchPageElements.getContent_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.remove(searchPageElements.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getProject_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+                    goog.dom.classes.add(searchPageElements.getContent_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 
                     searchPageElements.getProject_filter_query_field().blur();
                     searchPageElements.getAuthor_filter_query_field().blur();
                 },
                 function() {
-                    goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.search.Constants.SELECTED);
-                    goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+                    goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
+                    goog.dom.classes.add(searchPageElements.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN);
                     // blur not needed now
                 }
             );
@@ -429,14 +430,14 @@ org.jboss.search.App = function() {
 		.addCallback(function(res){
 			history_.setEnabled(true);
 			query_field.placeholder="Search";
-			query_field.removeAttribute(org.jboss.search.Constants.DISABLED);
+			query_field.removeAttribute(org.jboss.core.Constants.DISABLED);
 		});
 
     // fire XHR to load project list data
     lookup_.getXhrManager().send(
         org.jboss.search.Constants.LOAD_PROJECT_LIST_REQUEST_ID,
         goog.Uri.parse(org.jboss.search.Constants.API_URL_PROJECT_LIST_QUERY).toString(),
-        org.jboss.search.Constants.GET,
+        org.jboss.core.Constants.GET,
         "", // post_data
         {}, // headers_map
         org.jboss.search.Constants.LOAD_LIST_PRIORITY,
@@ -475,7 +476,7 @@ org.jboss.search.App = function() {
 	// ================================================================
 	// A shortcut
 	// ================================================================
-	var const_ = org.jboss.search.Constants;
+	var const_ = org.jboss.core.Constants;
 
     // TODO experiment
     this.finish_ = goog.events.listen(

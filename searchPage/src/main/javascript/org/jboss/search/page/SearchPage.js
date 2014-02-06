@@ -50,6 +50,10 @@ goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParams.Order');
 goog.require('org.jboss.core.context.RequestParamsFactory');
+goog.require('org.jboss.core.Constants');
+goog.require('org.jboss.core.util.urlGenerator');
+goog.require('org.jboss.core.service.query.QueryServiceEventType');
+goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require("org.jboss.search.page.filter.DateRangeChanged");
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.Variables');
@@ -61,11 +65,8 @@ goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.request');
 goog.require('org.jboss.search.response');
-goog.require('org.jboss.core.service.query.QueryServiceEventType');
-goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require('org.jboss.search.suggestions.event.EventType');
 goog.require('org.jboss.search.suggestions.query.view.View');
-goog.require('org.jboss.core.util.urlGenerator');
 goog.require('org.jboss.search.util.searchFilterGenerator');
 
 /**
@@ -922,12 +923,12 @@ org.jboss.search.page.SearchPage.prototype.disposeUserEntertainment_ = function(
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.disableSearchResults_ = function () {
-    goog.dom.classes.add(this.elements_.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
+    goog.dom.classes.add(this.elements_.getSearch_results_div(), org.jboss.core.Constants.DISABLED);
 };
 
 /** @private */
 org.jboss.search.page.SearchPage.prototype.enableSearchResults_ = function () {
-    goog.dom.classes.remove(this.elements_.getSearch_results_div(), org.jboss.search.Constants.DISABLED);
+    goog.dom.classes.remove(this.elements_.getSearch_results_div(), org.jboss.core.Constants.DISABLED);
 };
 
 /**
@@ -1076,7 +1077,7 @@ org.jboss.search.page.SearchPage.prototype.parseQuerySuggestionsModel_ = functio
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded_ = function () {
-    return !goog.dom.classes.has(this.elements_.getDate_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements_.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 };
 
 /**
@@ -1084,7 +1085,7 @@ org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded_ = function () {
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isProjectFilterExpanded_ = function () {
-    return !goog.dom.classes.has(this.elements_.getProject_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements_.getProject_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 };
 
 /**
@@ -1092,7 +1093,7 @@ org.jboss.search.page.SearchPage.prototype.isProjectFilterExpanded_ = function (
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded_ = function () {
-    return !goog.dom.classes.has(this.elements_.getAuthor_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements_.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 };
 
 /**
@@ -1100,7 +1101,7 @@ org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded_ = function ()
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isContentFilterExpanded_ = function () {
-	return !goog.dom.classes.has(this.elements_.getContent_filter_body_div(), org.jboss.search.Constants.HIDDEN);
+	return !goog.dom.classes.has(this.elements_.getContent_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 };
 
 /** @private */

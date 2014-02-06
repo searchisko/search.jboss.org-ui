@@ -21,81 +21,18 @@
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
-goog.provide('org.jboss.search.Constants');
+goog.provide('org.jboss.profile.Constants');
 
-goog.require('org.jboss.search.Variables');
+goog.require('org.jboss.profile.Variables');
 
-org.jboss.search.Constants = {
-
-    /**
-     * Used as an identifier to abort or/and send the search suggestions request.
-     * @type {string}
-     * @const
-     */
-    SEARCH_SUGGESTIONS_REQUEST_ID: "1",
-
-    /**
-     * Used as an identifier to abort or/and send the project suggestions request.
-     * @type {string}
-     * @const
-     */
-    PROJECT_SUGGESTIONS_REQUEST_ID: "2",
+org.jboss.profile.Constants = {
 
     /**
      * Used as an identifier to abort or/and send the query search request.
      * @type {string}
      * @const
      */
-    SEARCH_QUERY_REQUEST_ID: "3",
-
-    /**
-     * Used as an identifier to abort or/and send the query search request.
-     * @type {string}
-     * @const
-     */
-    LOAD_PROJECT_LIST_REQUEST_ID: "4",
-
-    /**
-     * Used as an identifier to abort or/and send the query click stream writes.
-     * @type {string}
-     * @const
-     */
-    WRITE_CLICK_STREAM_STATS_ID: "5",
-
-    /**
-     * Priority of initialization.
-     * @type {number}
-     * @const
-     */
-    LOAD_LIST_PRIORITY: 5,
-
-    /**
-     * Priority of search suggestions requests. (It should be higher then query search requests.)
-     * @type {number}
-     * @const
-     */
-    SEARCH_SUGGESTIONS_REQUEST_PRIORITY: 10,
-
-    /**
-     * Priority of project suggestions requests.
-     * @type {number}
-     * @const
-     */
-    PROJECT_SUGGESTIONS_REQUEST_PRIORITY: 10,
-
-    /**
-     * Priority of query search requests. (It should be lower then search suggestions requests.)
-     * @type {number}
-     * @const
-     */
-    SEARCH_QUERY_REQUEST_PRIORITY: 20,
-
-    /**
-     * Priority of write stats requests. (It should be lower then search suggestions requests.)
-     * @type {number}
-     * @const
-     */
-    WRITE_STATS_REQUEST_PRIORITY: 30,
+    SEARCH_QUERY_REQUEST_ID: "1",
 
     /**
      * Used in elements to declare that they can be used to watch for click stream analysis.

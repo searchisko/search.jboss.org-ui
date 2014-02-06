@@ -28,7 +28,7 @@
 
 goog.provide('org.jboss.search.page.element.Status');
 
-goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.core.Constants');
 
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
@@ -124,7 +124,7 @@ org.jboss.search.page.element.Status.prototype.increaseProgress = function(opt_c
 org.jboss.search.page.element.Status.prototype.show = function(opt_status) {
 	this.log_.info("show status, progress [" + this.getProgressValue() + "]");
     this.setStatus(opt_status);
-    goog.dom.classes.remove(this.topDiv_, org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.remove(this.topDiv_, org.jboss.core.Constants.HIDDEN);
 };
 
 /**
@@ -132,7 +132,7 @@ org.jboss.search.page.element.Status.prototype.show = function(opt_status) {
  */
 org.jboss.search.page.element.Status.prototype.hide = function() {
 	this.log_.info("hide status");
-    goog.dom.classes.add(this.topDiv_, org.jboss.search.Constants.HIDDEN);
+    goog.dom.classes.add(this.topDiv_, org.jboss.core.Constants.HIDDEN);
 };
 
 /**

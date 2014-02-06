@@ -31,6 +31,7 @@ goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.service.query.QueryService');
 goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require('org.jboss.core.util.urlGenerator');
+goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.search.response');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.Variables');
@@ -102,7 +103,7 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userQuery = function(re
             org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID,
             // setting the parameter value clears previously set value (that is what we want!)
             query_url_string_,
-            org.jboss.search.Constants.GET,
+            org.jboss.core.Constants.GET,
             "", // post_data
             {}, // headers_map
             org.jboss.search.Constants.SEARCH_QUERY_REQUEST_PRIORITY,
@@ -152,7 +153,7 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = f
             org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID,
             // setting the parameter value clears previously set value (that is what we want!)
             query_url_string_,
-            org.jboss.search.Constants.GET,
+            org.jboss.core.Constants.GET,
             "", // post_data
             {}, // headers_map
             org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_PRIORITY,
