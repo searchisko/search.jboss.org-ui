@@ -125,13 +125,14 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 				/*
 				 	=====================================================
 					When new request parameters are available:
+					- store them into LookUp
 					- update active filters section
 				 	=====================================================
 				 */
                 case org.jboss.core.service.query.QueryServiceEventType.NEW_REQUEST_PARAMETERS:
                     var requestParams = /** @type {org.jboss.core.context.RequestParams} */ (event.getMetadata());
                     org.jboss.core.service.Locator.getInstance().getLookup().setRequestParams(requestParams);
-					this.renderSearchFilters_();
+//					this.renderSearchFilters_();
                     break;
 
 				/*
