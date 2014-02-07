@@ -161,8 +161,8 @@ org.jboss.search.App = function() {
 
     /**
      * Sets given query string to URL fragment.
-     * Basically, this function is called by the search page; whenever user selects or input search query this function
-     * gets called. It changes URL fragment and thus calls navigatorController.
+	 * Basically, this function is called by the app whenever user selects or input search query.
+	 * It changes URL fragment and thus calls navigatorController.
      *
      * @param {!org.jboss.core.context.RequestParams} requestParams
      */

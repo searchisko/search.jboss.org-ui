@@ -25,15 +25,18 @@
 
 goog.provide('org.jboss.profile.App');
 
-
-//goog.require("org.jboss.search.service.query.QueryServiceCached");
+goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.util.fragmentGenerator');
+goog.require('org.jboss.core.util.fragmentParser');
+goog.require('org.jboss.profile.service.query.QueryServiceXHR');
 goog.require('goog.Disposable');
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
-goog.require('org.jboss.core.service.Locator');
-goog.require('org.jboss.profile.service.query.QueryServiceXHR');
+goog.require('goog.History');
+goog.require('goog.history.EventType');
 
 /**
  * @extends {goog.Disposable}
@@ -62,6 +65,53 @@ org.jboss.profile.App = function() {
 //		)
 	);
 
+	// ================================================================
+	// Get necessary HTML elements
+	// ================================================================
+
+	// ...
+
+	// ================================================================
+	// Define internal variables and objects
+	// ================================================================
+
+	/** @type {goog.History} */ var history_ = lookup_.getHistory();
+
+	/**
+	 * Sets given query string to URL fragment.
+	 * Basically, this function is called by the app whenever user selects or input search query.
+	 * It changes URL fragment and thus calls navigatorController.
+	 *
+	 * @param {!org.jboss.core.context.RequestParams} requestParams
+	 */
+	var urlSetFragmentFunction = function(requestParams) {
+		history_.setToken(
+			org.jboss.core.util.fragmentGenerator.generate(requestParams,
+				org.jboss.core.util.fragmentParser.parse(history_.getToken())
+			)
+		);
+	};
+
+	// ...
+
+	// navigation controller
+	var navigationController = goog.bind(function (e) {
+		// e.isNavigate (true if value in browser address bar is changed manually)
+		/** @type {org.jboss.core.context.RequestParams} */
+		var requestParams = org.jboss.core.util.fragmentParser.parse(e.token);
+		if (goog.isDefAndNotNull(requestParams.getQueryString())) {
+//			this.searchPage.runSearch(requestParams);
+			console.log("+>>>", requestParams);
+		} else {
+//			this.searchPage.clearSearchResults();
+			console.log("->>>", requestParams);
+		}
+	}, this);
+
+	// activate URL History manager
+	this.historyListenerId_ = goog.events.listen(history_, goog.history.EventType.NAVIGATE, navigationController);
+	history_.setEnabled(true);
+
 };
 goog.inherits(org.jboss.profile.App, goog.Disposable);
 
@@ -77,7 +127,8 @@ org.jboss.profile.App.prototype.disposeInternal = function() {
 	// Dispose of all Disposable objects owned by this class.
 //	goog.dispose(this.___);
 
-	// Remove listeners added by this class.
+	// Remove listeners added by this class
+	goog.events.unlistenByKey(this.historyListenerId_);
 	goog.events.unlistenByKey(this.unloadId_);
 
 	// Remove references to COM objects.
