@@ -82,6 +82,7 @@
                 Using https://github.com/marceloverdijk/lesscss-maven-plugin
                 To run the compiler manually just execute: mvn lesscss:compile
             -->
+            <!--
             <plugin>
                 <groupId>org.lesscss</groupId>
                 <artifactId>lesscss-maven-plugin</artifactId>
@@ -103,7 +104,7 @@
                     </execution>
                 </executions>
             </plugin>
-
+            -->
         </plugins>
     </build>
 
