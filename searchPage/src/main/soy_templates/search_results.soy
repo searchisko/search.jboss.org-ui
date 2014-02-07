@@ -108,7 +108,13 @@
                 {/if}
                 <div class="link cs_" hn_="{$position_on_page}"><a href="{$fields.sys_url_view}">{$fields.sys_url_view_tr}</a></div>
                 <div class="snippet">
-                    <span class="date">{if isNonnull($fields.sys_created_parsed)}{$fields.sys_created_parsed}&nbsp;-&nbsp;{/if}{$fields.sys_last_activity_date_parsed}&nbsp;- </span>
+                    <span class="date">
+                    	{if isNonnull($fields.sys_created_parsed)}
+                    		Created:&nbsp;{$fields.sys_created_parsed},&nbsp;Last&nbsp;Updated:&nbsp;
+						{elseif isNonnull($fields.sys_last_activity_date_parsed)}
+							Created:&nbsp;
+						{/if}
+						{$fields.sys_last_activity_date_parsed},&nbsp;</span>
                     {if isNonnull($fields?.sys_project)}
                         {if isNonnull($fields?.sys_project_full_name)}
                             <span class="sys_project">{$fields.sys_project_full_name}

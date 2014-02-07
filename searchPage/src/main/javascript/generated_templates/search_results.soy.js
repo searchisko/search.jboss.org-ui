@@ -89,15 +89,15 @@ org.jboss.search.page.templates.search_results = function(opt_data, opt_ignored)
  * @notypecheck
  */
 org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
-  var output = '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(((opt_data.fields.sys_contributors_view == null) ? null : (opt_data.fields.sys_contributors_view[0] == null) ? null : opt_data.fields.sys_contributors_view[0].gURL40) != null ? ((opt_data.fields.sys_contributors_view == null) ? null : (opt_data.fields.sys_contributors_view[0] == null) ? null : opt_data.fields.sys_contributors_view[0].gURL40) : 'image/test/generic.png') + '"></p></div><div class="main">' + ((((opt_data.highlight == null) ? null : opt_data.highlight.sys_title) != null) ? '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.sys_url_view) + '">' + soy.$$filterNoAutoescape(opt_data.highlight.sys_title) + '</a></div>' : '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.sys_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.sys_title) + '</a></div>') + '<div class="link cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.sys_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.sys_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + ((opt_data.fields.sys_created_parsed != null) ? soy.$$escapeHtml(opt_data.fields.sys_created_parsed) + '&nbsp;-&nbsp;' : '') + soy.$$escapeHtml(opt_data.fields.sys_last_activity_date_parsed) + '&nbsp;- </span>' + ((((opt_data.fields == null) ? null : opt_data.fields.sys_project) != null) ? ((((opt_data.fields == null) ? null : opt_data.fields.sys_project_full_name) != null) ? '<span class="sys_project">' + soy.$$escapeHtml(opt_data.fields.sys_project_full_name) : '<span class="sys_project">' + soy.$$escapeHtml(opt_data.fields.sys_project)) + ((((opt_data.fields == null) ? null : opt_data.fields.sys_project) != null && ((opt_data.fields == null) ? null : opt_data.fields.sys_type) != null) ? ' / ' : '') + '</span>' : '') + ((((opt_data.fields == null) ? null : opt_data.fields.sys_type) != null) ? '<span class="sys_type">' + soy.$$escapeHtml(opt_data.fields.sys_type) + '</span>' : '');
+  var output = '<div class="hit"><div class="left"><p class="avatar"><img src="' + soy.$$escapeHtml(((opt_data.fields.sys_contributors_view == null) ? null : (opt_data.fields.sys_contributors_view[0] == null) ? null : opt_data.fields.sys_contributors_view[0].gURL40) != null ? ((opt_data.fields.sys_contributors_view == null) ? null : (opt_data.fields.sys_contributors_view[0] == null) ? null : opt_data.fields.sys_contributors_view[0].gURL40) : 'image/test/generic.png') + '"></p></div><div class="main">' + ((((opt_data.highlight == null) ? null : opt_data.highlight.sys_title) != null) ? '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.sys_url_view) + '">' + soy.$$filterNoAutoescape(opt_data.highlight.sys_title) + '</a></div>' : '<div class="title cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.sys_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.sys_title) + '</a></div>') + '<div class="link cs_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '"><a href="' + soy.$$escapeHtml(opt_data.fields.sys_url_view) + '">' + soy.$$escapeHtml(opt_data.fields.sys_url_view_tr) + '</a></div><div class="snippet"><span class="date">' + ((opt_data.fields.sys_created_parsed != null) ? 'Created:&nbsp;' + soy.$$escapeHtml(opt_data.fields.sys_created_parsed) + ',&nbsp;Last&nbsp;Updated:&nbsp;' : (opt_data.fields.sys_last_activity_date_parsed != null) ? 'Created:&nbsp;' : '') + soy.$$escapeHtml(opt_data.fields.sys_last_activity_date_parsed) + ',&nbsp;</span>' + ((((opt_data.fields == null) ? null : opt_data.fields.sys_project) != null) ? ((((opt_data.fields == null) ? null : opt_data.fields.sys_project_full_name) != null) ? '<span class="sys_project">' + soy.$$escapeHtml(opt_data.fields.sys_project_full_name) : '<span class="sys_project">' + soy.$$escapeHtml(opt_data.fields.sys_project)) + ((((opt_data.fields == null) ? null : opt_data.fields.sys_project) != null && ((opt_data.fields == null) ? null : opt_data.fields.sys_type) != null) ? ' / ' : '') + '</span>' : '') + ((((opt_data.fields == null) ? null : opt_data.fields.sys_type) != null) ? '<span class="sys_type">' + soy.$$escapeHtml(opt_data.fields.sys_type) + '</span>' : '');
   if (((opt_data.highlight == null) ? null : opt_data.highlight.sys_description) != null || ((opt_data.fields == null) ? null : opt_data.fields.sys_description_tr) != null || ((opt_data.highlight == null) ? null : (opt_data.highlight.sys_content_plaintext == null) ? null : opt_data.highlight.sys_content_plaintext.length) > 0) {
     output += '<div class="description">';
     if (((opt_data.highlight == null) ? null : (opt_data.highlight.sys_content_plaintext == null) ? null : opt_data.highlight.sys_content_plaintext.length) > 0) {
-      var content_snippetList187 = opt_data.highlight.sys_content_plaintext;
-      var content_snippetListLen187 = content_snippetList187.length;
-      for (var content_snippetIndex187 = 0; content_snippetIndex187 < content_snippetListLen187; content_snippetIndex187++) {
-        var content_snippetData187 = content_snippetList187[content_snippetIndex187];
-        output += (content_snippetIndex187 < 2) ? soy.$$filterNoAutoescape(content_snippetData187) + '&nbsp;&hellip; ' : '';
+      var content_snippetList190 = opt_data.highlight.sys_content_plaintext;
+      var content_snippetListLen190 = content_snippetList190.length;
+      for (var content_snippetIndex190 = 0; content_snippetIndex190 < content_snippetListLen190; content_snippetIndex190++) {
+        var content_snippetData190 = content_snippetList190[content_snippetIndex190];
+        output += (content_snippetIndex190 < 2) ? soy.$$filterNoAutoescape(content_snippetData190) + '&nbsp;&hellip; ' : '';
       }
     } else if (((opt_data.highlight == null) ? null : opt_data.highlight.sys_description) != null) {
       output += soy.$$filterNoAutoescape(opt_data.highlight.sys_description);
@@ -108,42 +108,42 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
   }
   if (((opt_data.highlight == null) ? null : opt_data.highlight.comment_body) != null) {
     output += '<div class="children comments">Comments:<ul>';
-    var commentList204 = opt_data.highlight.comment_body;
-    var commentListLen204 = commentList204.length;
-    for (var commentIndex204 = 0; commentIndex204 < commentListLen204; commentIndex204++) {
-      var commentData204 = commentList204[commentIndex204];
-      output += '<li>' + soy.$$filterNoAutoescape(commentData204) + '&nbsp;&hellip;</li>';
+    var commentList207 = opt_data.highlight.comment_body;
+    var commentListLen207 = commentList207.length;
+    for (var commentIndex207 = 0; commentIndex207 < commentListLen207; commentIndex207++) {
+      var commentData207 = commentList207[commentIndex207];
+      output += '<li>' + soy.$$filterNoAutoescape(commentData207) + '&nbsp;&hellip;</li>';
     }
     output += '</ul></div>';
   }
   if (((opt_data.highlight == null) ? null : opt_data.highlight['message_attachments.content']) != null) {
     output += '<div class="children attachments">Attachments:<ul>';
-    var attachmentList214 = opt_data.highlight['message_attachments.content'];
-    var attachmentListLen214 = attachmentList214.length;
-    for (var attachmentIndex214 = 0; attachmentIndex214 < attachmentListLen214; attachmentIndex214++) {
-      var attachmentData214 = attachmentList214[attachmentIndex214];
-      output += '<li>' + soy.$$filterNoAutoescape(attachmentData214) + '&nbsp;&hellip;</li>';
+    var attachmentList217 = opt_data.highlight['message_attachments.content'];
+    var attachmentListLen217 = attachmentList217.length;
+    for (var attachmentIndex217 = 0; attachmentIndex217 < attachmentListLen217; attachmentIndex217++) {
+      var attachmentData217 = attachmentList217[attachmentIndex217];
+      output += '<li>' + soy.$$filterNoAutoescape(attachmentData217) + '&nbsp;&hellip;</li>';
     }
     output += '</ul></div>';
   }
   if (((opt_data.fields == null) ? null : (opt_data.fields.sys_tags_view == null) ? null : opt_data.fields.sys_tags_view.length) > 0) {
     output += '<div class="tags_list">Tags:';
-    var tagList224 = opt_data.fields.sys_tags_view;
-    var tagListLen224 = tagList224.length;
-    for (var tagIndex224 = 0; tagIndex224 < tagListLen224; tagIndex224++) {
-      var tagData224 = tagList224[tagIndex224];
-      output += '<span> ' + soy.$$escapeHtml(tagData224) + ((! (tagIndex224 == tagListLen224 - 1)) ? ',' : '') + '</span>';
+    var tagList227 = opt_data.fields.sys_tags_view;
+    var tagListLen227 = tagList227.length;
+    for (var tagIndex227 = 0; tagIndex227 < tagListLen227; tagIndex227++) {
+      var tagData227 = tagList227[tagIndex227];
+      output += '<span> ' + soy.$$escapeHtml(tagData227) + ((! (tagIndex227 == tagListLen227 - 1)) ? ',' : '') + '</span>';
     }
     output += '</div>';
   }
   output += '</div>';
   if (((opt_data.fields == null) ? null : opt_data.fields.sys_contributors_view) != null) {
     output += '<div class="contributors_list">';
-    var cList237 = opt_data.fields.sys_contributors_view;
-    var cListLen237 = cList237.length;
-    for (var cIndex237 = 0; cIndex237 < cListLen237; cIndex237++) {
-      var cData237 = cList237[cIndex237];
-      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex237) + '"><img src="' + soy.$$escapeHtml(cData237.gURL16) + '"></span>';
+    var cList240 = opt_data.fields.sys_contributors_view;
+    var cListLen240 = cList240.length;
+    for (var cIndex240 = 0; cIndex240 < cListLen240; cIndex240++) {
+      var cData240 = cList240[cIndex240];
+      output += '<span class="ct_" hn_="' + soy.$$escapeHtml(opt_data.position_on_page) + '" cn_="' + soy.$$escapeHtml(cIndex240) + '"><img src="' + soy.$$escapeHtml(cData240.gURL16) + '"></span>';
     }
     output += ((((opt_data.fields == null) ? null : opt_data.fields.sys_contributors_view.length) > 0) ? '<span class="selected_contributor_name">&#8212; <span class="value">' + soy.$$escapeHtml(opt_data.fields.sys_contributors_view[0].name) + '</span></span>' : '') + '</div>';
   }

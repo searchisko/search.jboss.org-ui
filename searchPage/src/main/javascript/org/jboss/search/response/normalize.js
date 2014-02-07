@@ -231,7 +231,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
             // ==========================================
             if (goog.isDefAndNotNull(date_last)) {
                 try {
-                fields.sys_last_activity_date_parsed = org.jboss.core.util.dateTime.formatMediumDate(date_last);
+                fields.sys_last_activity_date_parsed = org.jboss.core.util.dateTime.formatShortDate(date_last);
                 } catch(e) {
                     // TODO: add logging!
                     // date parsing probably failed
@@ -245,7 +245,7 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                 try {
                     if (goog.isDateLike(date_last)) {
                         if (!date_created.equals(date_last)) {
-                            fields.sys_created_parsed = org.jboss.core.util.dateTime.formatMediumDate(date_created);
+                            fields.sys_created_parsed = org.jboss.core.util.dateTime.formatShortDate(date_created);
                         }
                     }
                 } catch(e) {
