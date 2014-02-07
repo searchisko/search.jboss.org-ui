@@ -17,16 +17,34 @@
  */
 
 /**
- * @fileoverview Event types for search page events.
+ * @fileoverview
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
 
-goog.provide('org.jboss.search.page.event.EventType');
+goog.provide('org.jboss.search.page.event.ContributorIdSelected');
 
-goog.require('goog.events');
+goog.require('org.jboss.search.page.event.EventType');
+goog.require('goog.events.Event');
 
-/** @enum {string} */
-org.jboss.search.page.event.EventType = {
-    QUERY_SUBMITTED : goog.events.getUniqueId('query_submitted'),
-    CONTRIBUTOR_ID_SELECTED : goog.events.getUniqueId('contributor_id_selected')
+/**
+ * @param {!string} contributorId
+ * @constructor
+ * @extends {goog.events.Event}
+ */
+org.jboss.search.page.event.ContributorIdSelected = function(contributorId) {
+	goog.events.Event.call(this, org.jboss.search.page.event.EventType.CONTRIBUTOR_ID_SELECTED);
+
+	/**
+	 * @type {!string}
+	 * @private
+	 */
+	this.contributorId_ = contributorId;
+};
+goog.inherits(org.jboss.search.page.event.ContributorIdSelected, goog.events.Event);
+
+/**
+ * @return {!string}
+ */
+org.jboss.search.page.event.ContributorIdSelected.prototype.getContributorId = function() {
+	return this.contributorId_;
 };

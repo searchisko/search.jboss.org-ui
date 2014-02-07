@@ -61,6 +61,7 @@ goog.require('org.jboss.search.page.SearchPageElements');
 goog.require('org.jboss.search.page.UserIdle');
 goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('org.jboss.search.page.event.QuerySubmitted');
+goog.require('org.jboss.search.page.event.ContributorIdSelected');
 goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.request');
@@ -545,6 +546,31 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                     }
                     break;
                 }
+				// user clicked avatar image, open profile app
+				if (goog.dom.classes.has(element, org.jboss.search.Constants.CONTRIBUTOR_CLASS)) {
+					var hitNumber = element.getAttribute(org.jboss.search.Constants.HIT_NUMBER);
+					var contributorNumber = element.getAttribute(org.jboss.search.Constants.CONTRIBUTOR_NUMBER);
+					if (hitNumber && contributorNumber) {
+						/** @preserveTry */
+						try { hitNumber = +hitNumber; contributorNumber = +contributorNumber;  } catch(err) { /* ignore */ }
+						if (goog.isNumber(hitNumber) && goog.isNumber(contributorNumber)) {
+							var rd_ = org.jboss.core.service.Locator.getInstance().getLookup().getRecentQueryResultData();
+							/** @preserveTry */
+							try {
+								var c_ = rd_['hits']['hits'][hitNumber]['fields']['sys_contributors'];
+								var contributorId = goog.isArray(c_) ? c_[contributorNumber] : c_;
+								this.log_.fine("Opening profile for [" + contributorId + "]");
+								this.dispatchEvent(
+									new org.jboss.search.page.event.ContributorIdSelected(contributorId)
+								);
+							} catch (err) {
+								this.log_.warning("Can not open profile", err);
+							}
+						}
+					}
+					break;
+				}
+				// step one level up ...
                 element = goog.dom.getParentElement(element);
             }
         }, this)

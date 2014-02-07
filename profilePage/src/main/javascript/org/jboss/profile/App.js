@@ -101,10 +101,10 @@ org.jboss.profile.App = function() {
 		var requestParams = org.jboss.core.util.fragmentParser.parse(e.token);
 		if (goog.isDefAndNotNull(requestParams.getQueryString())) {
 //			this.searchPage.runSearch(requestParams);
-			console.log("+>>>", requestParams);
+//			console.log("+>>>", requestParams);
 		} else {
 //			this.searchPage.clearSearchResults();
-			console.log("->>>", requestParams);
+//			console.log("->>>", requestParams);
 		}
 	}, this);
 

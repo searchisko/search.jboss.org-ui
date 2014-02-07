@@ -35,6 +35,13 @@ org.jboss.search.Variables = {
 	API_URL_BASE_DCP : 'http://dcp-jbossorgdev.rhcloud.com',
 
 	/**
+	 * Base URL of Profile app.
+	 * @type {string}
+	 * @const
+	 */
+	PROFILE_APP_BASE_URL : '../../../../profilePage/src/main/webapp/index.html',
+
+	/**
 	 * Number of search results per page (is also used for pagination navigation calculations).
 	 * @type {number}
 	 * @const

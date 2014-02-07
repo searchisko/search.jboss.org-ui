@@ -39,10 +39,12 @@ goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.string');
 goog.require('goog.array');
+goog.require('goog.window');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.core.util.ImageLoaderNet');
 goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParamsFactory');
 goog.require('org.jboss.core.context.RequestParams.Order');
 goog.require('org.jboss.core.util.fragmentGenerator');
 goog.require('org.jboss.core.util.fragmentParser');
@@ -51,9 +53,11 @@ goog.require('org.jboss.core.util.fragmentParser.UI_param_suffix');
 goog.require('org.jboss.core.service.query.QueryServiceEventType');
 goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.search.Variables');
 goog.require('org.jboss.search.list.project.Project');
 goog.require("org.jboss.search.page.event.EventType");
 goog.require("org.jboss.search.page.event.QuerySubmitted");
+goog.require("org.jboss.search.page.event.ContributorIdSelected");
 goog.require('org.jboss.search.page.element.Status');
 goog.require('org.jboss.search.page.filter.AuthorFilter');
 goog.require('org.jboss.search.page.filter.ContentFilter');
@@ -179,11 +183,25 @@ org.jboss.search.App = function() {
 
     this.searchEventListenerId_ = goog.events.listen(
 		this.searchPage,
-        org.jboss.search.page.event.EventType.QUERY_SUBMITTED,
+        [
+			org.jboss.search.page.event.EventType.QUERY_SUBMITTED,
+			org.jboss.search.page.event.EventType.CONTRIBUTOR_ID_SELECTED
+		],
         function (e) {
-            var event = /** @type {org.jboss.search.page.event.QuerySubmitted} */ (e);
-            var qp_ = event.getRequestParams();
-            urlSetFragmentFunction(qp_);
+			if (e instanceof org.jboss.search.page.event.QuerySubmitted) {
+				var event = /** @type {org.jboss.search.page.event.QuerySubmitted} */ (e);
+				var qp_ = event.getRequestParams();
+				urlSetFragmentFunction(qp_);
+			}
+			if (e instanceof org.jboss.search.page.event.ContributorIdSelected) {
+				var event = /** @type {org.jboss.search.page.event.ContributorIdSelected} */ (e);
+				var urlFragment = org.jboss.core.util.fragmentGenerator.generate(
+					org.jboss.core.context.RequestParamsFactory.getInstance().reset().setContributors([event.getContributorId()]).build()
+				);
+				var uri = [org.jboss.search.Variables.PROFILE_APP_BASE_URL, urlFragment].join("#");
+//				console.log(uri);
+				goog.window.open(uri);
+			}
         }
     );
 
