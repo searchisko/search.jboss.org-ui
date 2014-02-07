@@ -51,7 +51,7 @@
 }
 
 .statistics {
-    margin: 20px 0 20px 60px;
+    margin: 20px 0 30px 60px;
     color: gray;
     font-size: 0.75em;
 }
@@ -86,8 +86,10 @@
 }
 
 .hit_spacer {
-    height: 40px;
+    height: 30px;
     clear: both;
+	margin-bottom: 30px;
+	border-bottom: #DADADA 1px solid;
 }
 
 .hit > .main > .title {
