@@ -25,20 +25,25 @@
 
 goog.provide('org.jboss.profile.App');
 
-goog.require('org.jboss.core.service.Locator');
-goog.require('org.jboss.core.context.RequestParams');
-goog.require('org.jboss.core.context.RequestParamsFactory');
-goog.require('org.jboss.core.util.fragmentGenerator');
-goog.require('org.jboss.core.util.fragmentParser');
-goog.require('org.jboss.profile.service.query.QueryServiceXHR');
 goog.require('goog.Disposable');
+goog.require('goog.History');
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
-goog.require('goog.string');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
-goog.require('goog.History');
 goog.require('goog.history.EventType');
+goog.require('goog.string');
+goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParamsFactory');
+goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.util.emailName');
+goog.require('org.jboss.core.util.fragmentGenerator');
+goog.require('org.jboss.core.util.fragmentParser');
+goog.require('org.jboss.core.util.gravatar');
+goog.require("org.jboss.profile.Constants");
+goog.require('org.jboss.profile.service.query.QueryServiceXHR');
+goog.require('org.jboss.profile.widget.ProfileWidget');
+goog.require('org.jboss.profile.widget.ProfileWidgetElements');
 
 /**
  * @extends {goog.Disposable}
@@ -71,11 +76,21 @@ org.jboss.profile.App = function() {
 	// Get necessary HTML elements
 	// ================================================================
 
-	// ...
+	var avatar_div    = /** @type {!HTMLDivElement} */ (goog.dom.getElement('avatar_container'));
+	var name_div    = /** @type {!HTMLDivElement} */ (goog.dom.getElement('name_container'));
+	var contributions_div    = /** @type {!HTMLDivElement} */ (goog.dom.getElement('contributions_chart'));
 
 	// ================================================================
 	// Define internal variables and objects
 	// ================================================================
+
+	this.widgetElements_ = new org.jboss.profile.widget.ProfileWidgetElements(
+		avatar_div, name_div, contributions_div
+	);
+
+	if (!this.widgetElements_.isValid()) {
+		throw new Error('Missing some HTML elements!');
+	}
 
 	/** @type {goog.History} */ var history_ = lookup_.getHistory();
 
@@ -94,6 +109,9 @@ org.jboss.profile.App = function() {
 		);
 	};
 
+	var widgetContext = goog.getObjectByName('document');
+	this.profileWidget_ = new org.jboss.profile.widget.ProfileWidget(widgetContext, this.widgetElements_);
+
 	// ...
 
 	// navigation controller
@@ -105,6 +123,10 @@ org.jboss.profile.App = function() {
 		if (!goog.string.isEmptySafe(contributor)) {
 			var sanitizedParams = org.jboss.core.context.RequestParamsFactory.getInstance().reset().setContributors([contributor]).build();
 			lookup_.getQueryService().userQuery(sanitizedParams);
+
+			// update contributor info in DOM
+			this.profileWidget_.setContributorName(org.jboss.core.util.emailName.extractNameFromMail(contributor));
+			this.profileWidget_.setAvatarImage(org.jboss.core.util.gravatar.gravatarURI(contributor, org.jboss.profile.Constants.AVATAR_HEIGHT));
 		}
 	}, this);
 
@@ -125,7 +147,8 @@ org.jboss.profile.App.prototype.disposeInternal = function() {
 	org.jboss.core.service.Locator.dispose();
 
 	// Dispose of all Disposable objects owned by this class.
-//	goog.dispose(this.___);
+	goog.dispose(this.widgetElements_);
+	goog.dispose(this.profileWidget_);
 
 	// Remove listeners added by this class
 	goog.events.unlistenByKey(this.historyListenerId_);

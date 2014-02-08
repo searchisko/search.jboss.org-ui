@@ -1,0 +1,9 @@
+#avatar_container {
+	height: 180px;
+	/*background-color: gray;*/
+}
+
+/* if avatar img is not large enough, stretch it! */
+#avatar_container > img {
+	height: 180px;
+}

@@ -23,14 +23,13 @@
 
 goog.provide('org.jboss.search.page.SearchPage');
 
-
-goog.require("goog.array");
-goog.require("goog.events.Key");
-goog.require("goog.net.EventType");
+goog.require('goog.array');
+goog.require('goog.events.Key');
+goog.require('goog.net.EventType');
 goog.require('goog.net.XhrManager');
-goog.require("org.jboss.search.page.filter.DateFilter");
-goog.require("org.jboss.search.page.filter.DateOrderByChanged");
-goog.require("org.jboss.core.service.query.QueryServiceEvent");
+goog.require('org.jboss.search.page.filter.DateFilter');
+goog.require('org.jboss.search.page.filter.DateOrderByChanged');
+goog.require('org.jboss.core.service.query.QueryServiceEvent');
 goog.require('goog.Uri');
 goog.require('goog.async.Delay');
 goog.require('goog.debug.Logger');
@@ -44,7 +43,7 @@ goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyEvent');
 goog.require('goog.object');
 goog.require('goog.string');
-goog.require("org.jboss.core.visualization.IntervalSelected");
+goog.require('org.jboss.core.visualization.IntervalSelected');
 goog.require('org.jboss.core.visualization.HistogramEventType');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.context.RequestParams');

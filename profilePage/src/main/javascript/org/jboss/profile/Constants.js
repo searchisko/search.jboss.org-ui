@@ -34,7 +34,18 @@ org.jboss.profile.Constants = {
      */
     SEARCH_QUERY_REQUEST_ID: "1",
 
+	/**
+	 *
+	 * @type {number}
+	 * @const
+	 */
 	SEARCH_QUERY_REQUEST_PRIORITY: 2,
+
+	/**
+	 * @type {number}
+	 * @const
+	 */
+	AVATAR_HEIGHT : 180,
 
     /**
      * @see http://docs.jbossorg.apiary.io/#searchapi
