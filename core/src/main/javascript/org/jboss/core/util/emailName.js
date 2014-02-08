@@ -17,30 +17,28 @@
  */
 
 /**
- * @fileoverview Constants used all over the place.
+ * @fileoverview Static email name utilities.
  *
  * @author Lukas Vlcek (lvlcek@redhat.com)
  */
-goog.provide('org.jboss.profile.Constants');
 
-goog.require('org.jboss.profile.Variables');
+goog.provide('org.jboss.core.util.emailName');
 
-org.jboss.profile.Constants = {
+goog.require('goog.string');
+goog.require('goog.format.EmailAddress');
 
-    /**
-     * Used as an identifier to abort or/and send the query search request.
-     * @type {string}
-     * @const
-     */
-    SEARCH_QUERY_REQUEST_ID: "1",
-
-	SEARCH_QUERY_REQUEST_PRIORITY: 2,
-
-    /**
-     * @see http://docs.jbossorg.apiary.io/#searchapi
-     * @type {string}
-     * @const
-     */
-    API_URL_SEARCH_QUERY: [org.jboss.profile.Variables.API_URL_BASE_DCP,'/v1/rest','/search'].join('')
-
+/**
+ * Try to extract name from email address. If not possible return original email value.
+ * @param {string} email
+ * @return {string}
+ */
+org.jboss.core.util.emailName.extractNameFromMail = function(email) {
+	var email_ = goog.isDefAndNotNull(email) ? email : "";
+	var parsed = goog.format.EmailAddress.parse(email_);
+	var e = parsed.getName();
+	if (goog.string.isEmptySafe(e)) {
+		return parsed.getAddress();
+	} else {
+		return e;
+	}
 };

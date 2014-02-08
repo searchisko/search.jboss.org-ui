@@ -24,11 +24,13 @@
  */
 goog.provide('org.jboss.search.response');
 
-goog.require('org.jboss.search.Variables');
 goog.require('org.jboss.core.util.dateTime');
-goog.require('org.jboss.search.util.paginationGenerator');
+goog.require('org.jboss.core.util.gravatar');
+goog.require('org.jboss.core.util.emailName');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.search.Variables');
+goog.require('org.jboss.search.util.paginationGenerator');
 
 goog.require('goog.date');
 goog.require('goog.date.DateTime');
@@ -36,9 +38,6 @@ goog.require('goog.object');
 goog.require('goog.array');
 goog.require('goog.string');
 goog.require('goog.format.EmailAddress');
-goog.require('goog.crypt');
-goog.require('goog.crypt.Md5');
-goog.require('goog.memoize');
 
 /**
  * It returns normalized and sanitized search response.
@@ -152,9 +151,9 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
                     fields.sys_contributors_view = [];
 
                     goog.array.forEach(cont_,function(c){
-                        var name = org.jboss.search.response.extractNameFromMail(c).valueOf();
-                        var gravatarURL16 = org.jboss.search.response.gravatarURI_Memo(c,16).valueOf();
-                        var gravatarURL40 = org.jboss.search.response.gravatarURI_Memo(c,40).valueOf();
+                        var name = org.jboss.core.util.emailName.extractNameFromMail(c).valueOf();
+                        var gravatarURL16 = org.jboss.core.util.gravatar.gravatarURI_Memo(c,16).valueOf();
+                        var gravatarURL40 = org.jboss.core.util.gravatar.gravatarURI_Memo(c,40).valueOf();
                         fields.sys_contributors_view.push({'name': name, 'gURL16': gravatarURL16, 'gURL40': gravatarURL40});
                     });
                 }
@@ -311,8 +310,8 @@ org.jboss.search.response.normalizeSearchResponse = function(response, requestPa
 	if (goog.isDefAndNotNull(contributors_facet)) {
 		if (goog.isArray(contributors_facet.terms) && contributors_facet.terms.length > 0) {
 			goog.array.forEach(contributors_facet.terms, function(item, index, array){
-				var name = org.jboss.search.response.extractNameFromMail(item.term).valueOf();
-				var gravatarURL16 = org.jboss.search.response.gravatarURI_Memo(item.term,16).valueOf();
+				var name = org.jboss.core.util.emailName.extractNameFromMail(item.term).valueOf();
+				var gravatarURL16 = org.jboss.core.util.gravatar.gravatarURI_Memo(item.term,16).valueOf();
 				item.name = name;
 				item.gURL16 = gravatarURL16;
 			});
@@ -388,76 +387,3 @@ org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams,
 
     return output;
 };
-
-/**
- * @type {goog.crypt.Md5}
- * @private
- */
-org.jboss.search.response.md5_ = new goog.crypt.Md5();
-
-/**
- * Try to extract name from email address. If not possible return original email value.
- * @param {string} email
- * @return {string}
- */
-org.jboss.search.response.extractNameFromMail = function(email) {
-    var email_ = goog.isDefAndNotNull(email) ? email : "";
-    var parsed = goog.format.EmailAddress.parse(email_);
-    var e = parsed.getName();
-    if (goog.string.isEmptySafe(e)) {
-        return parsed.getAddress();
-    } else {
-        return e;
-    }
-};
-
-/**
- * Implements Gravatar HASH function.
- * {@see https://en.gravatar.com/site/implement/hash/}
- * @param {string} email
- * @return {string}
- */
-org.jboss.search.response.gravatarEmailHash = function(email) {
-    var email_ = goog.isDefAndNotNull(email) ? email : "";
-    if (goog.isFunction(email.toLowerCase)) { email_ = email_.toLowerCase() }
-    var e = goog.format.EmailAddress.parse(email_).getAddress();
-    var md5 = org.jboss.search.response.md5_;
-    md5.reset();
-    md5.update(e);
-    e = goog.crypt.byteArrayToHex(md5.digest());
-    return e;
-};
-
-/**
- * Memoized version of {@see gravatarEmailHash}.
- * @type {function(string): string}
- */
-org.jboss.search.response.gravatarEmailHash_Memo = goog.memoize(org.jboss.search.response.gravatarEmailHash);
-
-/**
- * Return complete URL link to the Gravatar image.
- * {@see https://en.gravatar.com/site/implement/images/}
- * @param {string} email
- * @param {number=} opt_size defaults to 40px
- * @return {String}
- */
-org.jboss.search.response.gravatarURI = function(email, opt_size) {
-
-    var size = opt_size;
-    if (!goog.isNumber(size)) {
-        size = 40;
-    }
-    var hash = org.jboss.search.response.gravatarEmailHash_Memo(email);
-    return new String(
-        [
-            ["http://www.gravatar.com/avatar/",hash,"?s=",size].join(''),
-            ["d=",goog.string.urlEncode(["https://community.jboss.org/gravatar/",hash,"/",size,".png"].join(''))].join('')
-        ].join('&')
-    );
-};
-
-/**
- * Memoized version of {@see gravatarURI}.
- * @type {function(string, number=): String}
- */
-org.jboss.search.response.gravatarURI_Memo = goog.memoize(org.jboss.search.response.gravatarURI);

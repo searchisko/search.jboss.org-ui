@@ -27,12 +27,14 @@ goog.provide('org.jboss.profile.App');
 
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParamsFactory');
 goog.require('org.jboss.core.util.fragmentGenerator');
 goog.require('org.jboss.core.util.fragmentParser');
 goog.require('org.jboss.profile.service.query.QueryServiceXHR');
 goog.require('goog.Disposable');
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
+goog.require('goog.string');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.History');
@@ -99,12 +101,10 @@ org.jboss.profile.App = function() {
 		// e.isNavigate (true if value in browser address bar is changed manually)
 		/** @type {org.jboss.core.context.RequestParams} */
 		var requestParams = org.jboss.core.util.fragmentParser.parse(e.token);
-		if (goog.isDefAndNotNull(requestParams.getQueryString())) {
-//			this.searchPage.runSearch(requestParams);
-//			console.log("+>>>", requestParams);
-		} else {
-//			this.searchPage.clearSearchResults();
-//			console.log("->>>", requestParams);
+		var contributor = requestParams.getContributors().length > 0 ? requestParams.getContributors()[0] : "";
+		if (!goog.string.isEmptySafe(contributor)) {
+			var sanitizedParams = org.jboss.core.context.RequestParamsFactory.getInstance().reset().setContributors([contributor]).build();
+			lookup_.getQueryService().userQuery(sanitizedParams);
 		}
 	}, this);
 

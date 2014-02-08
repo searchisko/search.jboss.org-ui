@@ -35,8 +35,10 @@ goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require('org.jboss.core.util.urlGenerator');
 goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.profile.Constants');
+goog.require('org.jboss.profile.Variables');
 goog.require('goog.array');
 goog.require('goog.net.XhrManager');
+goog.require('goog.net.XhrManager.Event');
 goog.require('goog.Uri');
 goog.require('goog.Disposable');
 
@@ -86,14 +88,41 @@ org.jboss.profile.service.query.QueryServiceXHR.prototype.userQuery = function (
 		this.dispatcher_.dispatchUserQueryAbort();
 	}
 
-	// sanitize requestParams
-	var rp_ = org.jboss.core.context.RequestParamsFactory.getInstance().reset().copy(requestParams)
-		.setFrom(null).setTo(null).setPage(1).setDefaultOrder().build();
-
 	var searchURI_ = this.searchURI_.clone();
-	var query_url_string_ = org.jboss.core.util.urlGenerator.searchUrl(searchURI_, rp_, 0,
+	var query_url_string_ = org.jboss.core.util.urlGenerator.searchUrl(searchURI_, requestParams, 0,
 		{ fields: [], highlighting: false, size: 0});
 
+	if (!goog.isNull(query_url_string_)) {
+		this.dispatcher_.dispatchUserQueryStart(requestParams, query_url_string_);
+		this.getXHRManager_().send(
+			org.jboss.profile.Constants.SEARCH_QUERY_REQUEST_ID,
+			// setting the parameter value clears previously set value (that is what we want!)
+			query_url_string_,
+			org.jboss.core.Constants.GET,
+			"", // post_data
+			{}, // headers_map
+			org.jboss.profile.Constants.SEARCH_QUERY_REQUEST_PRIORITY,
+			// callback, The only param is the event object from the COMPLETE event.
+			goog.bind(function(e) {
+				this.dispatcher_.dispatchUserQueryFinished();
+				var event = /** @type {goog.net.XhrManager.Event} */ (e);
+				if (event.target.isSuccess()) {
+					try {
+						this.dispatcher_.dispatchNewRequestParameters(requestParams);
+						var response = event.target.getResponseJson();
+//						console.log(response);
+//						var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(response, requestParams);
+//						this.dispatcher_.dispatchUserQuerySucceeded(normalizedResponse);
+					} catch (err) {
+						this.dispatcher_.dispatchUserQueryError(requestParams.getQueryString(), err);
+					}
+				} else {
+					// We failed getting search results data
+					this.dispatcher_.dispatchUserQueryError(requestParams.getQueryString(), event.target.getLastError());
+				}
+			}, this)
+		);
+	}
 };
 
 /**

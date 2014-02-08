@@ -127,7 +127,6 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userQuery = function(re
             }, this)
         );
     }
-
 };
 
 /** @override */
