@@ -25,6 +25,7 @@
 
 goog.provide('org.jboss.profile.App');
 
+goog.require("org.jboss.core.service.query.QueryServiceEvent");
 goog.require('goog.Disposable');
 goog.require('goog.History');
 goog.require('goog.debug.Logger');
@@ -33,6 +34,8 @@ goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.history.EventType');
 goog.require('goog.string');
+goog.require("org.jboss.core.service.query.QueryServiceEventType");
+goog.require("org.jboss.profile.Constants");
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParamsFactory');
 goog.require('org.jboss.core.service.Locator');
@@ -40,7 +43,6 @@ goog.require('org.jboss.core.util.emailName');
 goog.require('org.jboss.core.util.fragmentGenerator');
 goog.require('org.jboss.core.util.fragmentParser');
 goog.require('org.jboss.core.util.gravatar');
-goog.require("org.jboss.profile.Constants");
 goog.require('org.jboss.profile.service.query.QueryServiceXHR');
 goog.require('org.jboss.profile.widget.ProfileWidget');
 goog.require('org.jboss.profile.widget.ProfileWidgetElements');
@@ -134,6 +136,19 @@ org.jboss.profile.App = function() {
 	this.historyListenerId_ = goog.events.listen(history_, goog.history.EventType.NAVIGATE, navigationController);
 	history_.setEnabled(true);
 
+	this.contributorDataAvailableId_ = goog.events.listen(
+		lookup_.getQueryServiceDispatcher(),
+		[
+			org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED
+		],
+		function(e) {
+			var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
+			var facets = event.getMetadata()['facets'];
+			var interval = event.getMetadata()['activity_dates_histogram_interval'];
+			this.profileWidget_.updateContributionsHistogramChart(facets['activity_dates_histogram']['entries'], interval);
+		}, false, this
+	);
+
 };
 goog.inherits(org.jboss.profile.App, goog.Disposable);
 
@@ -152,6 +167,7 @@ org.jboss.profile.App.prototype.disposeInternal = function() {
 
 	// Remove listeners added by this class
 	goog.events.unlistenByKey(this.historyListenerId_);
+	goog.events.unlistenByKey(this.contributorDataAvailableId_);
 	goog.events.unlistenByKey(this.unloadId_);
 
 	// Remove references to COM objects.

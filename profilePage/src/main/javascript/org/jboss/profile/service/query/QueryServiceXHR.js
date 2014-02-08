@@ -113,6 +113,7 @@ org.jboss.profile.service.query.QueryServiceXHR.prototype.userQuery = function (
 //						console.log(response);
 //						var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(response, requestParams);
 //						this.dispatcher_.dispatchUserQuerySucceeded(normalizedResponse);
+						this.dispatcher_.dispatchUserQuerySucceeded(response);
 					} catch (err) {
 						this.dispatcher_.dispatchUserQueryError(requestParams.getQueryString(), err);
 					}
