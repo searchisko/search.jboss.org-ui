@@ -1,3 +1,9 @@
+body {
+	text-align: center;
+	font-size: 10pt;
+	margin: 20px 10px 10px 10px;
+}
+
 #avatar_container {
 	height: 180px;
 	/*background-color: gray;*/
@@ -6,4 +12,29 @@
 /* if avatar img is not large enough, stretch it! */
 #avatar_container > img {
 	height: 180px;
+}
+
+#name_container {
+	margin: 8px 0 8px 0;
+	/*font-weight: bold;*/
+	color: #0480be;
+	font-family: "Georgia", "Times New Roman", Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	font-size: 180%;
+}
+
+h3 {
+	font-size: 130%;
+	margin: 15px 0 10px 0;
+	text-decoration: underline;
+}
+
+table {
+	margin-left:auto;
+	margin-right:auto;
+	text-align: left;
+}
+
+td {
+	padding: 0 20px 0 20px;
 }

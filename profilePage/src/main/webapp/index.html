@@ -14,7 +14,9 @@
 <body>
 
 	<div id="header">
-		<h3>Contributor Profile:</h3>
+		<!--
+			Idea: display social links for contributor
+		-->
 		<div id="avatar_container">
 			<div></div>
 		</div>
@@ -24,12 +26,28 @@
 	</div>
 
 	<div id="report">
-		<div id="contributions_chart"/>
+		<div id="contributions_chart"></div>
 		<!--
 			http://dcp-jbossorgdev.rhcloud.com/v1/rest/search?query=sys_contributors%3A%22Gavin%20King%20%3Cgavin%40hibernate.org%3E%22&field=sys_id&facet=top_contributors&facet=per_project_counts&facet=per_sys_type_counts&facet=activity_dates_histogram&size=0
-
 			http://dcp-jbossorgdev.rhcloud.com/v1/rest/search?contributor=Gavin%20King%20%3Cgavin%40hibernate.org%3E&field=sys_id&facet=top_contributors&facet=per_project_counts&facet=per_sys_type_counts&facet=activity_dates_histogram&size=0
 		-->
+		<table>
+			<tr>
+				<td>
+					<div>
+						<h3>Projects:</h3>
+						<div id="top_projects"></div>
+					</div>
+				</td>
+				<td>
+					<div>
+						<h3>Top Collaborators:</h3>
+						<div id="top_collaborators"></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+
 	</div>
 
 	<script src="../../../../searchPage/src/main/webapp/js/lib/d3.v3.0.4/d3.v3.min.js" charset="UTF-8"></script>

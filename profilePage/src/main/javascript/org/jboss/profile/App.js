@@ -25,7 +25,9 @@
 
 goog.provide('org.jboss.profile.App');
 
-goog.require("org.jboss.core.service.query.QueryServiceEvent");
+goog.require("goog.array");
+goog.require("org.jboss.core.service.query.QueryServiceEventType");
+goog.require("org.jboss.profile.Constants");
 goog.require('goog.Disposable');
 goog.require('goog.History');
 goog.require('goog.debug.Logger');
@@ -34,8 +36,7 @@ goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.history.EventType');
 goog.require('goog.string');
-goog.require("org.jboss.core.service.query.QueryServiceEventType");
-goog.require("org.jboss.profile.Constants");
+goog.require("org.jboss.core.service.query.QueryServiceEvent");
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParamsFactory');
 goog.require('org.jboss.core.service.Locator');
@@ -78,16 +79,19 @@ org.jboss.profile.App = function() {
 	// Get necessary HTML elements
 	// ================================================================
 
-	var avatar_div    = /** @type {!HTMLDivElement} */ (goog.dom.getElement('avatar_container'));
-	var name_div    = /** @type {!HTMLDivElement} */ (goog.dom.getElement('name_container'));
-	var contributions_div    = /** @type {!HTMLDivElement} */ (goog.dom.getElement('contributions_chart'));
+	var avatar_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('avatar_container'));
+	var name_div   = /** @type {!HTMLDivElement} */ (goog.dom.getElement('name_container'));
+	var contributions_div     = /** @type {!HTMLDivElement} */ (goog.dom.getElement('contributions_chart'));
+	var top_collaborators_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('top_collaborators'));
+	var top_projects_div      = /** @type {!HTMLDivElement} */ (goog.dom.getElement('top_projects'));
 
 	// ================================================================
 	// Define internal variables and objects
 	// ================================================================
 
 	this.widgetElements_ = new org.jboss.profile.widget.ProfileWidgetElements(
-		avatar_div, name_div, contributions_div
+		avatar_div, name_div, contributions_div,
+		top_collaborators_div, top_projects_div
 	);
 
 	if (!this.widgetElements_.isValid()) {
@@ -123,7 +127,8 @@ org.jboss.profile.App = function() {
 		var requestParams = org.jboss.core.util.fragmentParser.parse(e.token);
 		var contributor = requestParams.getContributors().length > 0 ? requestParams.getContributors()[0] : "";
 		if (!goog.string.isEmptySafe(contributor)) {
-			var sanitizedParams = org.jboss.core.context.RequestParamsFactory.getInstance().reset().setContributors([contributor]).build();
+			var sanitizedParams = org.jboss.core.context.RequestParamsFactory.getInstance()
+				.reset().setQueryString('sys_contributors:"'+contributor+'"').setContributors([contributor]).build();
 			lookup_.getQueryService().userQuery(sanitizedParams);
 
 			// update contributor info in DOM
@@ -143,9 +148,33 @@ org.jboss.profile.App = function() {
 		],
 		function(e) {
 			var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
-			var facets = event.getMetadata()['facets'];
-			var interval = event.getMetadata()['activity_dates_histogram_interval'];
-			this.profileWidget_.updateContributionsHistogramChart(facets['activity_dates_histogram']['entries'], interval);
+
+			// TODO: quick and ugly code (re-implement correctly going forward)
+			try {
+				var facets = event.getMetadata()['facets'];
+//				console.log(facets);
+				// update histogram
+				var interval = event.getMetadata()['activity_dates_histogram_interval'];
+				this.profileWidget_.updateContributionsHistogramChart(facets['activity_dates_histogram']['entries'], interval);
+
+				// contributors
+				var contributors = /** @type {Array} */ (facets['top_contributors']['terms']);
+				goog.array.forEach (contributors, function(c){
+					var id = c['term'];
+					var name = org.jboss.core.util.emailName.extractNameFromMail(id).valueOf();
+					var gravatarURL16 = org.jboss.core.util.gravatar.gravatarURI_Memo(id,16).valueOf();
+					c['gURL16'] = gravatarURL16;
+					c['name'] = name;
+				});
+				this.renderTopContributors_(contributors);
+
+				// projects
+				var projects = /** @type {Array} */ (facets['per_project_counts']['terms']);
+				this.renderTopProjects_(projects);
+			} catch (err) {
+//				console.log(err);
+			}
+
 		}, false, this
 	);
 
@@ -172,4 +201,42 @@ org.jboss.profile.App.prototype.disposeInternal = function() {
 
 	// Remove references to COM objects.
 	// Remove references to DOM nodes, which are COM objects in IE.
+};
+
+/**
+ * TODO: remove
+ * @param {Array} data
+ * @private
+ */
+org.jboss.profile.App.prototype.renderTopContributors_ = function(data) {
+//	console.log(data);
+	goog.dom.removeChildren(this.widgetElements_.getTop_collaborators_div());
+	goog.array.forEach(data, function(c, i){
+		if (i > 30) return;
+		var div = goog.dom.createDom("div");
+		goog.dom.appendChild(div, goog.dom.createDom("img", { "class": "avatar", "src": c.gURL16 }));
+		goog.dom.appendChild(div, goog.dom.createTextNode(c.name + " ("+ c.count+")"));
+		goog.dom.appendChild(
+			this.widgetElements_.getTop_collaborators_div(),
+			div
+		)
+	}, this);
+};
+
+/**
+ * TODO: remove
+ * @param {Array} data
+ * @private
+ */
+org.jboss.profile.App.prototype.renderTopProjects_ = function(data) {
+//	console.log(data);
+	goog.dom.removeChildren(this.widgetElements_.getTop_projects_div());
+	goog.array.forEach(data, function(p){
+		var div = goog.dom.createDom("div");
+		goog.dom.appendChild(div, goog.dom.createTextNode(p['term'] /*+ " ("+ p.count+")"*/));
+		goog.dom.appendChild(
+			this.widgetElements_.getTop_projects_div(),
+			div
+		)
+	}, this);
 };

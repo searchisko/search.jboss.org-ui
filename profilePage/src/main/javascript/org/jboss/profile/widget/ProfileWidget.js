@@ -22,7 +22,7 @@ org.jboss.profile.widget.ProfileWidget = function(context, elements) {
 	 * @type {org.jboss.core.visualization.Histogram}
 	 * @private
 	 */
-	this.histogram_chart_ = new org.jboss.core.visualization.Histogram(this.elements_.contributions_div);
+	this.histogram_chart_ = new org.jboss.core.visualization.Histogram(this.elements_.getContributions_div());
 
 };
 goog.inherits(org.jboss.profile.widget.ProfileWidget, goog.events.EventTarget);
@@ -41,7 +41,7 @@ org.jboss.profile.widget.ProfileWidget.prototype.disposeInternal = function() {
  * @param {string} name
  */
 org.jboss.profile.widget.ProfileWidget.prototype.setContributorName = function(name) {
-	this.elements_.name_div.innerHTML = name;
+	this.elements_.getName_div().innerHTML = name;
 };
 
 /**
@@ -49,8 +49,8 @@ org.jboss.profile.widget.ProfileWidget.prototype.setContributorName = function(n
  * @param {String} avatarURI
  */
 org.jboss.profile.widget.ProfileWidget.prototype.setAvatarImage = function(avatarURI) {
-	goog.dom.removeChildren(this.elements_.avatar_div);
-	goog.dom.append(this.elements_.avatar_div, goog.dom.createDom("img", { "class": "avatar", "src": avatarURI.toString() }));
+	goog.dom.removeChildren(this.elements_.getAvatar_div());
+	goog.dom.append(this.elements_.getAvatar_div(), goog.dom.createDom("img", { "class": "avatar", "src": avatarURI.toString() }));
 };
 
 /**
