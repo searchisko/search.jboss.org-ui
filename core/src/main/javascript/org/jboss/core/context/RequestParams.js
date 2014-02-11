@@ -49,12 +49,15 @@ goog.require('goog.date.DateTime');
  * @param {?goog.date.DateTime} to
  * @param {org.jboss.core.context.RequestParams.Order} order
  * @param {?Array.<string>} contributors
+ * @param {?Array.<string>} projects
+ * @param {?Array.<string>} contentTypes
  * @param {?string} log
  * @param {?boolean} resetCaches
  * @constructor
  * @private
  */
-org.jboss.core.context.RequestParams = function(query_string, page, from, to, order, contributors, log, resetCaches) {
+org.jboss.core.context.RequestParams = function(query_string, page, from, to, order, contributors,
+												projects, contentTypes, log, resetCaches) {
 
     /**
      * @type {string}
@@ -91,6 +94,18 @@ org.jboss.core.context.RequestParams = function(query_string, page, from, to, or
 	 * @private
 	 */
 	this.contributors_ = contributors;
+
+	/**
+	 * @type {?Array.<string>}
+	 * @private
+	 */
+	this.projects_ = projects;
+
+	/**
+	 * @type {?Array.<string>}
+	 * @private
+	 */
+	this.contentTypes_ = contentTypes;
 
     /**
      * @type {string|null}
@@ -145,6 +160,20 @@ org.jboss.core.context.RequestParams.prototype.getOrder = function() {
  */
 org.jboss.core.context.RequestParams.prototype.getContributors = function() {
 	return this.contributors_;
+};
+
+/**
+ * @return {Array.<string>|null}
+ */
+org.jboss.core.context.RequestParams.prototype.getProjects = function() {
+	return this.projects_;
+};
+
+/**
+ * @return {Array.<string>|null}
+ */
+org.jboss.core.context.RequestParams.prototype.getContentTypes = function() {
+	return this.contentTypes_;
 };
 
 /**
@@ -226,6 +255,18 @@ org.jboss.core.context.RequestParamsFactory = function() {
 	this.contributors_;
 
 	/**
+	 * @type {Array.<string>|null}
+	 * @private
+	 */
+	this.projects_;
+
+	/**
+	 * @type {Array.<string>|null}
+	 * @private
+	 */
+	this.contentTypes_;
+
+	/**
 	 * @type {string|null}
 	 * @private
 	 */
@@ -251,7 +292,8 @@ goog.addSingletonGetter(org.jboss.core.context.RequestParamsFactory);
 org.jboss.core.context.RequestParamsFactory.prototype.build = function() {
 	var rp = new org.jboss.core.context.RequestParams(
 		this.query_string_, this.page_, this.from_, this.to_, this.order_,
-		this.contributors_, this.log_, this.resetCaches_
+		this.contributors_, this.projects_, this.contentTypes_,
+		this.log_, this.resetCaches_
 	);
 	this.reset();
 	return rp;
@@ -269,6 +311,8 @@ org.jboss.core.context.RequestParamsFactory.prototype.reset = function() {
 	this.to_ = null;
 	this.order_ = org.jboss.core.context.RequestParams.Order.SCORE;
 	this.contributors_ = [];
+	this.projects_ = [];
+	this.contentTypes_ = [];
 	this.log_ = null;
 	this.resetCaches_ = null;
 	return this;
@@ -289,6 +333,8 @@ org.jboss.core.context.RequestParamsFactory.prototype.copy = function(requestPar
 	this.to_ = requestParams.getTo();
 	this.order_ = requestParams.getOrder();
 	this.contributors_ = requestParams.getContributors();
+	this.projects_ = requestParams.getProjects();
+	this.contentTypes_ = requestParams.getContentTypes();
 	this.log_ = requestParams.getLog();
 	this.resetCaches_ = requestParams.getResetCaches();
 	return this;
@@ -367,6 +413,28 @@ org.jboss.core.context.RequestParamsFactory.prototype.setDefaultOrder = function
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setContributors = function(contributors) {
 	this.contributors_ = contributors;
+	return this;
+};
+
+/**
+ * Set new projects.
+ *
+ * @param {Array.<string>|null} projects
+ * @returns {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setProjects = function(projects) {
+	this.projects_ = projects;
+	return this;
+};
+
+/**
+ * Set new contentTypes
+ *
+ * @param {Array.<string>|null} contentTypes
+ * @returns {org.jboss.core.context.RequestParamsFactory}
+ */
+org.jboss.core.context.RequestParamsFactory.prototype.setContentTypes = function(contentTypes) {
+	this.contentTypes_ = contentTypes;
 	return this;
 };
 

@@ -37,7 +37,12 @@ var testFragmentGenerator = function() {
 	requestParams = org.jboss.core.context.RequestParamsFactory.getInstance().reset()
 		.setQueryString("test").setContributors(["c1", "c2", "c3"]).build();
 	urlFragment = org.jboss.core.util.fragmentGenerator.generate(requestParams);
-	assertEquals("q=test&contributor=c1&contributor=c2&contributor=c3", urlFragment);
+	assertEquals("q=test&people=c1&people=c2&people=c3", urlFragment);
+
+	requestParams = org.jboss.core.context.RequestParamsFactory.getInstance().reset()
+		.setQueryString("test").setContributors(["c1"]).setProjects(["p1","p1","p2"]).setContentTypes(["t1","t2"]).build();
+	urlFragment = org.jboss.core.util.fragmentGenerator.generate(requestParams);
+	assertEquals("q=test&people=c1&technology=p1&technology=p2&type=t1&type=t2", urlFragment);
 };
 
 var testFragmentKeepLog = function() {

@@ -78,16 +78,34 @@ var testFragmentParserForContributorValues = function() {
 
 	var requestParams;
 
-	requestParams = org.jboss.core.util.fragmentParser.parse('contributor=');
+	requestParams = org.jboss.core.util.fragmentParser.parse('people=');
 	assertEquals('Works for undefined input', 0, requestParams.getContributors().length);
 
-	requestParams = org.jboss.core.util.fragmentParser.parse('contributor=++John%20Doe%20%3Cjohn.doe%40domain.com%3E++');
+	requestParams = org.jboss.core.util.fragmentParser.parse('people=++John%20Doe%20%3Cjohn.doe%40domain.com%3E++');
 	assertEquals('URL decode and trim input', 1, requestParams.getContributors().length);
 	assertEquals('URL decode and trim input', "John Doe <john.doe@domain.com>", requestParams.getContributors()[0]);
 
-	requestParams = org.jboss.core.util.fragmentParser.parse('contributor=1&contributor=+&contributor=2');
+	requestParams = org.jboss.core.util.fragmentParser.parse('people=1&people=+&people=2');
 	assertEquals('Works for fine for multiple values', 2, requestParams.getContributors().length);
 
-	requestParams = org.jboss.core.util.fragmentParser.parse('contributor=1++&contributor=2&contributor=++1');
+	requestParams = org.jboss.core.util.fragmentParser.parse('people=1++&people=2&people=++1');
 	assertEquals('Dedup multiple values', 2, requestParams.getContributors().length);
+};
+
+var testFragmentParserForContentTypeValues = function() {
+
+	var requestParams;
+
+	requestParams = org.jboss.core.util.fragmentParser.parse('type=');
+	assertEquals('Works for undefined input', 0, requestParams.getContentTypes().length);
+
+	requestParams = org.jboss.core.util.fragmentParser.parse('type=++xx++');
+	assertEquals('URL decode and trim input', 1, requestParams.getContentTypes().length);
+	assertEquals('URL decode and trim input', "xx", requestParams.getContentTypes()[0]);
+
+	requestParams = org.jboss.core.util.fragmentParser.parse('type=1&type=+&type=2');
+	assertEquals('Works for fine for multiple values', 2, requestParams.getContentTypes().length);
+
+	requestParams = org.jboss.core.util.fragmentParser.parse('type=1++&type=2&type=++1');
+	assertEquals('Dedup multiple values', 2, requestParams.getContentTypes().length);
 };

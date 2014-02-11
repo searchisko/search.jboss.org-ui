@@ -47,8 +47,10 @@ org.jboss.core.util.fragmentParser.INTERNAL_param = {
     PAGE  : "page",
     FROM  : "from",
     TO    : "to",
-	CONTRIBUTOR : "contributor",
-    ORDER_BY : "sortBy",
+	CONTRIBUTOR  : "contributor",
+	PROJECT      : "project",
+	CONTENT_TYPE : "type",
+    ORDER_BY     : "sortBy",
     LOG   : "log"
 };
 
@@ -61,8 +63,10 @@ org.jboss.core.util.fragmentParser.UI_param = {
     PAGE  : "page",
     FROM  : "from",
     TO    : "to",
-    CONTRIBUTOR : "contributor",
-    ORDER_BY : "orderBy",
+    CONTRIBUTOR  : "people",
+    PROJECT      : "technology",
+    CONTENT_TYPE : "type",
+    ORDER_BY     : "orderBy",
     LOG   : "log"
 };
 
@@ -75,8 +79,10 @@ org.jboss.core.util.fragmentParser.UI_param_suffix = {
     PAGE  : org.jboss.core.util.fragmentParser.UI_param.PAGE+"=",
     FROM  : org.jboss.core.util.fragmentParser.UI_param.FROM+"=",
     TO    : org.jboss.core.util.fragmentParser.UI_param.TO+"=",
-	CONTRIBUTOR : org.jboss.core.util.fragmentParser.UI_param.CONTRIBUTOR+"=",
-    ORDER_BY : org.jboss.core.util.fragmentParser.UI_param.ORDER_BY+"=",
+	CONTRIBUTOR  : org.jboss.core.util.fragmentParser.UI_param.CONTRIBUTOR+"=",
+	PROJECT      : org.jboss.core.util.fragmentParser.UI_param.PROJECT+"=",
+	CONTENT_TYPE : org.jboss.core.util.fragmentParser.UI_param.CONTENT_TYPE+"=",
+    ORDER_BY     : org.jboss.core.util.fragmentParser.UI_param.ORDER_BY+"=",
     LOG   : org.jboss.core.util.fragmentParser.UI_param.LOG+"="
 };
 
@@ -92,6 +98,8 @@ org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
 
 	// pre-initialize items that can have multiple values
 	parsed[intp_.CONTRIBUTOR] = /** @type {Array.<string>} */ ([]);
+	parsed[intp_.PROJECT] = /** @type {Array.<string>} */ ([]);
+	parsed[intp_.CONTENT_TYPE] = /** @type {Array.<string>} */ ([]);
 
     if (goog.isDef(opt_fragment) && !goog.string.isEmptySafe(opt_fragment)) {
         var parts = goog.string.trim(/** @type {string} */ (opt_fragment)).split('&');
@@ -161,6 +169,28 @@ org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
 					parsed[intp_.CONTRIBUTOR].push(contributor)
 				}
 			} else
+			// ------------------- PROJECT ----------------------
+			if (goog.string.caseInsensitiveStartsWith(part, p_.PROJECT)) {
+				var project = goog.string.trim(
+					goog.string.urlDecode(
+						goog.string.removeAt(part, 0, p_.PROJECT.length)
+					)
+				);
+				if (!goog.string.isEmptySafe(project)) {
+					parsed[intp_.PROJECT].push(project)
+				}
+			} else
+			// ------------------- CONTENT_TYPE ----------------------
+			if (goog.string.caseInsensitiveStartsWith(part, p_.CONTENT_TYPE)) {
+				var ct = goog.string.trim(
+					goog.string.urlDecode(
+						goog.string.removeAt(part, 0, p_.CONTENT_TYPE.length)
+					)
+				);
+				if (!goog.string.isEmptySafe(ct)) {
+					parsed[intp_.CONTENT_TYPE].push(ct)
+				}
+			} else
             // ------------------- ORDER_BY ----------------------
             if (goog.string.caseInsensitiveStartsWith(part, p_.ORDER_BY)) {
                 var orderBy_ = goog.string.trim(
@@ -190,6 +220,8 @@ org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
 
 	// dedup items with multiple values
 	goog.array.removeDuplicates(parsed[intp_.CONTRIBUTOR]);
+	goog.array.removeDuplicates(parsed[intp_.PROJECT]);
+	goog.array.removeDuplicates(parsed[intp_.CONTENT_TYPE]);
 
 	return org.jboss.core.context.RequestParamsFactory.getInstance()
 		.reset()
@@ -198,6 +230,8 @@ org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
 		.setFrom(parsed[intp_.FROM])
 		.setTo(parsed[intp_.TO])
 		.setContributors(parsed[intp_.CONTRIBUTOR])
+		.setProjects(parsed[intp_.PROJECT])
+		.setContentTypes(parsed[intp_.CONTENT_TYPE])
 		.setOrder(parsed[intp_.ORDER_BY])
 		.setLog(parsed[intp_.LOG])
 		.build();

@@ -50,8 +50,9 @@ org.jboss.core.util.urlGenerator.QueryParams = {
     ACTIVITY_DATE_TO   : 'activity_date_to',
     ORDER_BY : 'sortBy',
 	CONTRIBUTOR : 'contributor',
-	PROJECT : 'tag',
-	TAG : 'project'
+	CONTENT_TYPE : 'type',
+	PROJECT : 'project',
+	TAG : 'tag'
 };
 
 /**
@@ -166,9 +167,22 @@ org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, se
         }
     }
 
+	// contributors
 	var contributors = requestParams.getContributors();
 	if (goog.isDef(contributors) && contributors.length > 0) {
-			rootUri.setParameterValues(params.CONTRIBUTOR, contributors)
+		rootUri.setParameterValues(params.CONTRIBUTOR, contributors)
+	}
+
+	// projects
+	var projects = requestParams.getProjects();
+	if (goog.isDef(projects) && projects.length > 0) {
+		rootUri.setParameterValues(params.PROJECT, projects)
+	}
+
+	// content types
+	var contentTypes = requestParams.getContentTypes();
+	if (goog.isDef(contentTypes) && contentTypes.length > 0) {
+		rootUri.setParameterValues(params.CONTENT_TYPE, contentTypes)
 	}
 
 	if (goog.isDef(opt_settings) && goog.isNumber(opt_settings.size)) {
