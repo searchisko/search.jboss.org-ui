@@ -62,8 +62,6 @@ org.jboss.search.suggestions.query.view.View = function(div) {
      */
     this.selectable_elements_ = [];
 
-    // keep reference to this
-    var _thiz = this;
     /**
      * first selected item has index 0!
      * -1 means no value is selected.
@@ -87,17 +85,19 @@ org.jboss.search.suggestions.query.view.View = function(div) {
      */
     this.clickListenerId_ = goog.events.listen(this.div_,
         goog.events.EventType.CLICK,
-        function(event) {
-			var e = /** @type {goog.events.BrowserEvent} */ (event);
+        function(e) {
+			var event = /** @type {goog.events.BrowserEvent} */ (e);
             // There might be some listener that hides suggestions in the top level (for example at the document level)
             // thus we must stop propagation of clicks in order to prevent such collision.
             // If needed we could fire custom event.
             event.stopPropagation();
             // now call callback function if there is any defined for the click
-            if (goog.isFunction(_thiz.clickCallbackFunction_)) {
-                _thiz.clickCallbackFunction_(_thiz.getSelectedIndex());
+            if (goog.isFunction(this.clickCallbackFunction_)) {
+                this.clickCallbackFunction_(this.getSelectedIndex());
             }
-        });
+        },
+		false, this
+	);
 
     /**
      * @type {goog.events.Key}
@@ -115,12 +115,13 @@ org.jboss.search.suggestions.query.view.View = function(div) {
                 var t_ =  e.target;
                 var index = getIndexValue_(t_);
                 if (goog.isNumber(index)) {
-                    if (index != _thiz.getSelectedIndex()) {
-                        _thiz.select(index);
+                    if (index != this.getSelectedIndex()) {
+                        this.select(index);
                     }
                 }
             }
-        }
+        },
+		false, this
     );
 
     /**
