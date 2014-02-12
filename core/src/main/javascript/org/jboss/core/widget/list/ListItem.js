@@ -17,22 +17,49 @@
  */
 
 /**
- * @fileoverview Variables that can vary depending on target deployment.
+ * @fileoverview Single list item.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
-goog.provide('org.jboss.profile.Variables');
+goog.provide('org.jboss.core.widget.list.ListItem');
 
-org.jboss.profile.Variables = {
 
-	/**
-	 * Base URL of DCP API.
-	 * @type {string}
-	 * @const
-	 */
-//	API_URL_BASE_DCP : 'http://10.34.2.178:8080',
-//	API_URL_BASE_DCP : 'http://dcp-dev.jboss.org:8080',
-//	API_URL_BASE_DCP : 'http://dcp-jbossorgdev.rhcloud.com'
-	API_URL_BASE_DCP : 'http://dcp-stg.jboss.org'
 
+/**
+ *
+ * @param {string} id
+ * @param {string} value
+ * @constructor
+ */
+org.jboss.core.widget.list.ListItem = function(id, value) {
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.id_ = id;
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.value_ = value;
+};
+
+
+/**
+ *
+ * @return {string}
+ */
+org.jboss.core.widget.list.ListItem.prototype.getId = function() {
+  return this.id_;
+};
+
+
+/**
+ *
+ * @return {string}
+ */
+org.jboss.core.widget.list.ListItem.prototype.getValue = function() {
+  return this.value_;
 };

@@ -44,6 +44,7 @@
                 <version>${jsframework.version}</version>
                 <configuration>
                     <prologue>${profile.prologue}</prologue>
+                    <browserVersion>FF</browserVersion>
                 </configuration>
             </plugin>
 

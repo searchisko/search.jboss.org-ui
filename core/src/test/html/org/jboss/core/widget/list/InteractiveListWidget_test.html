@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Interactive test of ListWidget</title>
+	<style>
+		.list > div { border: 2px solid white;}
+		div.selected { border: 2px solid blue; }
+	</style>
+</head>
+<body>
+	<h3>Interactive manual testing</h3>
+	<input id="query_field" type="text">
+	<script src="../../../../../../../../../closure-library-99cd91/closure/goog/base.js"></script>
+	<script src="ListWidget_test_deps.js"></script>
+	<!--<script src="InteractiveListWidget_test.js"></script>-->
+	<script type="text/javascript">
+		goog.require('goog.events');
+		goog.require('goog.events.EventType');
+		goog.require('goog.events.KeyCodes');
+		goog.require('goog.events.KeyHandler');
+		goog.require('goog.events.KeyHandler.EventType');
+		goog.require('goog.dom');
+		goog.require('org.jboss.core.widget.list.ListWidgetFactory');
+		goog.require('org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener');
+		goog.require('org.jboss.core.widget.list.mouse.MouseListener');
+		goog.require('org.jboss.core.widget.list.EchoListControllerTest');
+	</script>
+	<script>
+
+		var hostingDom = goog.dom.createDom('div', "test_only");
+		goog.dom.appendChild(goog.dom.getDocument().body, hostingDom);
+
+		var inputField = /** @type {HTMLInputElement} */ (goog.dom.getElement("query_field"));
+		var keyboardListener_ = new org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener(inputField);
+        var mouseListener_ = new org.jboss.core.widget.list.mouse.MouseListener(hostingDom);
+
+		// use factory to create instance of ListController
+		var controller = org.jboss.core.widget.list.ListWidgetFactory.build({
+			lists: [
+				// the first item list is without caption (you can also omit the caption property at all)
+				// the second item list has caption
+				{key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1, caption: null},
+				{key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2, caption:"With Caption"}
+			],
+			controllerConstructor: org.jboss.core.widget.list.EchoListControllerTest,
+			additionalConstructorParams: [{delay:2000, repFactor:3}, {delay:0, repFactor:10}],
+			attach: hostingDom
+		});
+
+		controller.setKeyboardListener(keyboardListener_);
+        controller.setMouseListener(mouseListener_);
+		controller.input("Welcome!");
+
+		var inputFieldValue = inputField.value;
+
+		var listener_ = goog.events.listen(
+			new goog.events.KeyHandler(inputField),
+			[
+				goog.events.KeyHandler.EventType.KEY
+//				goog.events.EventType.CHANGE
+			],
+			function(e) {
+				// does not capture cut & paste events
+				if (goog.events.KeyCodes.isTextModifyingKeyEvent(/** @type {goog.events.BrowserEvent} */ (e))) {
+					setTimeout(
+						function(){
+							if (this.inputFieldValue != this.inputField.value) {
+								this.inputFieldValue = this.inputField.value;
+								controller.input(this.inputField.value);}
+						}, 0
+					);
+				}
+			},
+			false, this
+		);
+
+	</script>
+</body>
+</html>

@@ -23,24 +23,27 @@
 
 goog.provide('org.jboss.search.page.filter.ProjectFilter');
 
-goog.require("org.jboss.core.service.Locator");
-goog.require("org.jboss.core.util.urlGenerator");
-goog.require("org.jboss.core.Constants");
-goog.require("org.jboss.search.response");
+goog.require('goog.events.Event');
+goog.require('goog.events.EventType');
+goog.require('goog.events.Key');
+goog.require('org.jboss.core.Constants');
+goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.util.urlGenerator');
+goog.require('org.jboss.search.response');
+goog.require('goog.Uri');
+goog.require('goog.async.Delay');
+goog.require('goog.events');
+goog.require('goog.events.EventTarget');
+goog.require('goog.events.KeyCodes');
+goog.require('goog.events.KeyEvent');
+goog.require('goog.events.KeyHandler');
+goog.require('goog.events.KeyHandler.EventType');
+goog.require('goog.net.XhrManager.Event');
+goog.require('goog.object');
+goog.require('goog.string');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('org.jboss.search.page.filter.templates');
-goog.require("goog.async.Delay");
-goog.require('goog.Disposable');
-goog.require('goog.events');
-goog.require('goog.events.KeyCodes');
-goog.require("goog.events.KeyEvent");
-goog.require('goog.events.KeyHandler');
-goog.require('goog.events.KeyHandler.EventType');
-goog.require("goog.object");
-goog.require("goog.net.XhrManager.Event");
-goog.require('goog.string');
-goog.require('goog.Uri');
 
 /**
  * Create a new project filter.
@@ -52,10 +55,10 @@ goog.require('goog.Uri');
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
- * @extends {goog.Disposable}
+ * @extends {goog.events.EventTarget}
  */
 org.jboss.search.page.filter.ProjectFilter = function(element, query_field, project_filter_items_div, opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
-    goog.Disposable.call(this);
+	goog.events.EventTarget.call(this);
 
     /**
      * @type {!Function}
@@ -95,12 +98,26 @@ org.jboss.search.page.filter.ProjectFilter = function(element, query_field, proj
         null,
         this.getPresetKeyHandlers_()
     );
+
+	/** @type {goog.events.Key} */
+	this.projectClickListenerId_ = goog.events.listen(
+		this.items_div_,
+		goog.events.EventType.CLICK,
+		function(e) {
+			var event = /** @type {goog.events.Event} */ (e);
+//			console.log(e.target);
+//			this.dispatchEvent(event);
+		},
+		false, this
+	);
 };
-goog.inherits(org.jboss.search.page.filter.ProjectFilter, goog.Disposable);
+goog.inherits(org.jboss.search.page.filter.ProjectFilter, goog.events.EventTarget);
 
 /** @inheritDoc */
 org.jboss.search.page.filter.ProjectFilter.prototype.disposeInternal = function() {
     org.jboss.search.page.filter.ProjectFilter.superClass_.disposeInternal.call(this);
+
+	goog.events.unlistenByKey(this.projectClickListenerId_);
 
     goog.dispose(this.search_field_handler_);
 
