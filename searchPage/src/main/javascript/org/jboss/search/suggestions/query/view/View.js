@@ -23,20 +23,20 @@
  */
 
 goog.provide('org.jboss.search.suggestions.query.view.View');
-goog.require('org.jboss.search.suggestions.templates');
 
+goog.require('goog.Disposable');
+goog.require('org.jboss.core.Constants');
 goog.require('goog.array');
-goog.require('goog.events');
-goog.require('goog.events.Key');
-goog.require('goog.events.EventType');
-goog.require('goog.events.BrowserEvent');
+goog.require('goog.debug.Logger');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
+goog.require('goog.events');
+goog.require('goog.events.BrowserEvent');
+goog.require('goog.events.EventType');
+goog.require('goog.events.Key');
 goog.require('goog.object');
 goog.require('goog.string');
-goog.require("goog.Disposable");
-
-goog.require('goog.debug.Logger');
+goog.require('org.jboss.search.suggestions.templates');
 
 /**
  * Representation of query suggestions view.
@@ -55,6 +55,8 @@ org.jboss.search.suggestions.query.view.View = function(div) {
      * @private
      */
     this.div_ = div;
+	// make sure it is hidden
+	goog.dom.classes.add(this.div_, org.jboss.core.Constants.HIDDEN);
 
     /**
      * @type { {length: number} }
@@ -75,9 +77,6 @@ org.jboss.search.suggestions.query.view.View = function(div) {
      * @private
      */
     this.clickCallbackFunction_;
-
-    // make it hidden
-    goog.dom.classes.add(this.div_, 'hidden');
 
     /**
      * @type {goog.events.Key}
@@ -154,21 +153,21 @@ goog.inherits(org.jboss.search.suggestions.query.view.View, goog.Disposable);
  * @return {boolean} if the div element is visible (whether the hidden class is set)
  */
 org.jboss.search.suggestions.query.view.View.prototype.isVisible = function() {
-    return !(goog.dom.classes.has(this.div_, 'hidden'));
+    return !(goog.dom.classes.has(this.div_, org.jboss.core.Constants.HIDDEN));
 };
 
 /**
  * Show the div. Remove the class 'hidden'.
  */
 org.jboss.search.suggestions.query.view.View.prototype.hide = function() {
-    goog.dom.classes.add(this.div_, 'hidden');
+    goog.dom.classes.add(this.div_, org.jboss.core.Constants.HIDDEN);
 };
 
 /**
  * Hide the div. Add the class 'hidden'.
  */
 org.jboss.search.suggestions.query.view.View.prototype.show = function() {
-    goog.dom.classes.remove(this.div_, 'hidden');
+    goog.dom.classes.remove(this.div_, org.jboss.core.Constants.HIDDEN);
 };
 
 /**
@@ -215,13 +214,13 @@ org.jboss.search.suggestions.query.view.View.prototype.select = function(index) 
 
         // deselect currently selected
         if (this.getSelectedIndex() > -1) {
-            goog.dom.classes.remove(this.selectable_elements_[this.getSelectedIndex()], 'selected');
+            goog.dom.classes.remove(this.selectable_elements_[this.getSelectedIndex()], org.jboss.core.Constants.SELECTED);
             this.setSelectedIndex(-1);
         }
 
         // select a new one if possible
         if (this.selectable_elements_.length > 0 && this.selectable_elements_.length > index) {
-            goog.dom.classes.add(this.selectable_elements_[index], 'selected');
+            goog.dom.classes.add(this.selectable_elements_[index], org.jboss.core.Constants.SELECTED);
             this.setSelectedIndex(index);
         }
     }
