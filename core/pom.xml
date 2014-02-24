@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.jboss.search</groupId>
         <artifactId>web-ui</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.9.0</version>
     </parent>
 
     <description>Set of various utilities that are used by other modules.</description>
