@@ -63,6 +63,14 @@ When executed it builds `search-testing-only.js` or `profile-testing-only.js` wh
 generated, IntelliJ IDEA tries to parse them. This can take some time and IDE gets frozen until it is done with parsing. While these files are really not needed
 for any code completion it makes sense to use [Mark as Plain Text](http://www.jetbrains.com/idea/webhelp/excluding-files-from-project.html) option from context menu.
 
+#### Code Style Checking with gjslint
+
+For `gjslint` install instructions see [howto](https://developers.google.com/closure/utilities/docs/linter_howto).
+Once installed IntelliJ IDEA users can enable it in `Preferences > JavaScript > Code Quality Tools > Closure Linter`.
+
+For example on Mac systems the `gjslint` is by default installed under `/usr/local/bin/gjslint`. Configuration file
+`gjslint.conf` is located in the project root. Check `gjslint --help` for more options.
+
 ### Closure Templates
 
 To compile [Closure templates](https://developers.google.com/closure/templates/) (aka Soy Templates) into JavaScript run `compileClosureTemplates.sh`.
