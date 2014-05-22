@@ -31,7 +31,7 @@
  * @see RequestParamsFactory
  * @see fragmentParser
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.context.RequestParams');
@@ -39,6 +39,8 @@ goog.provide('org.jboss.core.context.RequestParams.Order');
 goog.provide('org.jboss.core.context.RequestParamsFactory');
 
 goog.require('goog.date.DateTime');
+
+
 
 /**
  * Request parameters. Do not create instances directly, use {@link RequestParamsFactory} instead.
@@ -54,140 +56,149 @@ goog.require('goog.date.DateTime');
  * @param {?string} log
  * @param {?boolean} resetCaches
  * @constructor
- * @private
  */
 org.jboss.core.context.RequestParams = function(query_string, page, from, to, order, contributors,
 												projects, contentTypes, log, resetCaches) {
 
-    /**
-     * @type {string}
-     * @private
-     */
-    this.query_string_ = query_string;
+  /**
+   * @type {string}
+   * @private
+   */
+  this.query_string_ = query_string;
 
-    /**
-     * @type {number|null}
-     * @private
-     */
-    this.page_ = page;
+  /**
+   * @type {?number}
+   * @private
+   */
+  this.page_ = page;
 
-    /**
-     * @type {goog.date.DateTime|null}
-     * @private
-     */
-    this.from_ = from;
+  /**
+   * @type {?goog.date.DateTime}
+   * @private
+   */
+  this.from_ = from;
 
-    /**
-     * @type {goog.date.DateTime|null}
-     * @private
-     */
-    this.to_ = to;
+  /**
+   * @type {?goog.date.DateTime}
+   * @private
+   */
+  this.to_ = to;
 
-    /**
-     * @type {org.jboss.core.context.RequestParams.Order}
-     * @private
-     */
-    this.order_ = order;
+  /**
+   * @type {org.jboss.core.context.RequestParams.Order}
+   * @private
+   */
+  this.order_ = order;
 
-	/**
-	 * @type {?Array.<string>}
-	 * @private
-	 */
-	this.contributors_ = contributors;
+  /**
+   * @type {?Array.<string>}
+   * @private
+   */
+  this.contributors_ = contributors;
 
-	/**
-	 * @type {?Array.<string>}
-	 * @private
-	 */
-	this.projects_ = projects;
+  /**
+   * @type {?Array.<string>}
+   * @private
+   */
+  this.projects_ = projects;
 
-	/**
-	 * @type {?Array.<string>}
-	 * @private
-	 */
-	this.contentTypes_ = contentTypes;
+  /**
+   * @type {?Array.<string>}
+   * @private
+   */
+  this.contentTypes_ = contentTypes;
 
-    /**
-     * @type {string|null}
-     * @private
-     */
-    this.log_ = log;
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.log_ = log;
 
-    /**
-     * @type {boolean|null}
-     * @private
-     */
-    this.resetCaches_ = resetCaches;
+  /**
+   * @type {?boolean}
+   * @private
+   */
+  this.resetCaches_ = resetCaches;
 };
+
 
 /**
  * @return {string}
  */
 org.jboss.core.context.RequestParams.prototype.getQueryString = function() {
-	return this.query_string_;
+  return this.query_string_;
 };
 
+
 /**
- * @return {number|null}
+ * @return {?number}
  */
 org.jboss.core.context.RequestParams.prototype.getPage = function() {
-	return this.page_;
+  return this.page_;
 };
 
+
 /**
- * @return {goog.date.DateTime|null}
+ * @return {?goog.date.DateTime}
  */
 org.jboss.core.context.RequestParams.prototype.getFrom = function() {
-	return (this.from_ instanceof Date) ? new goog.date.DateTime(this.from_) : this.from_;
+  return (this.from_ instanceof Date) ? new goog.date.DateTime(this.from_) : this.from_;
 };
 
+
 /**
- * @return {goog.date.DateTime|null}
+ * @return {?goog.date.DateTime}
  */
 org.jboss.core.context.RequestParams.prototype.getTo = function() {
-	return (this.to_ instanceof Date) ? new goog.date.DateTime(this.to_) : this.to_;
+  return (this.to_ instanceof Date) ? new goog.date.DateTime(this.to_) : this.to_;
 };
+
 
 /**
  * @return {org.jboss.core.context.RequestParams.Order}
  */
 org.jboss.core.context.RequestParams.prototype.getOrder = function() {
-	return this.order_;
+  return this.order_;
 };
+
 
 /**
  * @return {Array.<string>|null}
  */
 org.jboss.core.context.RequestParams.prototype.getContributors = function() {
-	return this.contributors_;
+  return this.contributors_;
 };
+
 
 /**
  * @return {Array.<string>|null}
  */
 org.jboss.core.context.RequestParams.prototype.getProjects = function() {
-	return this.projects_;
+  return this.projects_;
 };
+
 
 /**
  * @return {Array.<string>|null}
  */
 org.jboss.core.context.RequestParams.prototype.getContentTypes = function() {
-	return this.contentTypes_;
+  return this.contentTypes_;
 };
 
+
 /**
- * @return {string|null}
+ * @return {?string}
  */
 org.jboss.core.context.RequestParams.prototype.getLog = function() {
-	return this.log_;
+  return this.log_;
 };
 
+
 /**
- * @return {boolean|null}
+ * @return {?boolean}
  */
 org.jboss.core.context.RequestParams.prototype.getResetCaches = function() {
-	return this.resetCaches_;
+  return this.resetCaches_;
 };
 
 
@@ -197,10 +208,11 @@ org.jboss.core.context.RequestParams.prototype.getResetCaches = function() {
  * @enum {string}
  */
 org.jboss.core.context.RequestParams.Order = {
-	SCORE : "score",
-	NEW_FIRST : "new_first",
-	OLD_FIRST : "old_first"
+  SCORE: 'score',
+  NEW_FIRST: 'new_first',
+  OLD_FIRST: 'old_first'
 };
+
 
 
 /**
@@ -209,95 +221,106 @@ org.jboss.core.context.RequestParams.Order = {
  * <p/>
  * Example of usage:
  * <code>
- *     var requestParams1 = org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString("Hello").setPage(2).build();
+ *     var requestParams1 = org.jboss.core.context.RequestParamsFactory.getInstance()
+ *        .reset()
+ *        .setQueryString("Hello")
+ *        .setPage(2)
+ *        .build();
+ *
  *     // use can use existing RequestParams instance to generate a new instance with slightly update values:
- *     requestParams2 = org.jboss.core.context.RequestParamsFactory.getInstance().reset().copy(requestParams1).setPage(null).build();
+ *     requestParams2 = org.jboss.core.context.RequestParamsFactory.getInstance()
+ *        .reset()
+ *        .copy(requestParams1)
+ *        .setPage(null)
+ *        .build();
  * </code>
  *
  * @constructor
  */
 org.jboss.core.context.RequestParamsFactory = function() {
 
-	/**
-	 * @type {string}
-	 * @private
-	 */
-	this.query_string_;
+  /**
+   * @type {string}
+   * @private
+   */
+  this.query_string_;
 
-	/**
-	 * @type {number|null}
-	 * @private
-	 */
-	this.page_;
+  /**
+   * @type {?number}
+   * @private
+   */
+  this.page_;
 
-	/**
-	 * @type {goog.date.DateTime|null}
-	 * @private
-	 */
-	this.from_;
+  /**
+   * @type {?goog.date.DateTime}
+   * @private
+   */
+  this.from_;
 
-	/**
-	 * @type {goog.date.DateTime|null}
-	 * @private
-	 */
-	this.to_;
+  /**
+   * @type {?goog.date.DateTime}
+   * @private
+   */
+  this.to_;
 
-	/**
-	 * @type {org.jboss.core.context.RequestParams.Order}
-	 * @private
-	 */
-	this.order_;
+  /**
+   * @type {org.jboss.core.context.RequestParams.Order}
+   * @private
+   */
+  this.order_;
 
-	/**
-	 * @type {Array.<string>|null}
-	 * @private
-	 */
-	this.contributors_;
+  /**
+   * @type {?Array.<string>}
+   * @private
+   */
+  this.contributors_;
 
-	/**
-	 * @type {Array.<string>|null}
-	 * @private
-	 */
-	this.projects_;
+  /**
+   * @type {?Array.<string>}
+   * @private
+   */
+  this.projects_;
 
-	/**
-	 * @type {Array.<string>|null}
-	 * @private
-	 */
-	this.contentTypes_;
+  /**
+   * @type {?Array.<string>}
+   * @private
+   */
+  this.contentTypes_;
 
-	/**
-	 * @type {string|null}
-	 * @private
-	 */
-	this.log_;
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.log_;
 
-	/**
-	 * @type {boolean|null}
-	 * @private
-	 */
-	this.resetCaches_;
+  /**
+   * @type {?boolean}
+   * @private
+   */
+  this.resetCaches_;
 
-	// reset internal state
-	this.reset();
+  // reset internal state
+  this.reset();
 };
 // Make this factory a global singleton. We do not expect that we would need
 // to mock it so there is no need to add it into LookUp.
 goog.addSingletonGetter(org.jboss.core.context.RequestParamsFactory);
+
 
 /**
  *
  * @return {!org.jboss.core.context.RequestParams}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.build = function() {
-	var rp = new org.jboss.core.context.RequestParams(
-		this.query_string_, this.page_, this.from_, this.to_, this.order_,
-		this.contributors_, this.projects_, this.contentTypes_,
-		this.log_, this.resetCaches_
-	);
-	this.reset();
-	return rp;
+  var rp = new org.jboss.core.context.RequestParams(
+      this.query_string_, this.page_, this.from_, this.to_, this.order_,
+      this.contributors_, this.projects_, this.contentTypes_,
+      this.log_, this.resetCaches_
+      );
+  this.reset();
+  return rp;
 };
+
 
 /**
  * Reset all internal members, this is typically called before building a new {@link RequestParams}.
@@ -305,18 +328,19 @@ org.jboss.core.context.RequestParamsFactory.prototype.build = function() {
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.reset = function() {
-	this.query_string_ = "";
-	this.page_ = 1;
-	this.from_ = null;
-	this.to_ = null;
-	this.order_ = org.jboss.core.context.RequestParams.Order.SCORE;
-	this.contributors_ = [];
-	this.projects_ = [];
-	this.contentTypes_ = [];
-	this.log_ = null;
-	this.resetCaches_ = null;
-	return this;
+  this.query_string_ = '';
+  this.page_ = 1;
+  this.from_ = null;
+  this.to_ = null;
+  this.order_ = org.jboss.core.context.RequestParams.Order.SCORE;
+  this.contributors_ = [];
+  this.projects_ = [];
+  this.contentTypes_ = [];
+  this.log_ = null;
+  this.resetCaches_ = null;
+  return this;
 };
+
 
 /**
  * Copy all values from given RequestPrams object.  This method works like deep clone and overrides
@@ -327,18 +351,19 @@ org.jboss.core.context.RequestParamsFactory.prototype.reset = function() {
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.copy = function(requestParams) {
-	this.query_string_ = requestParams.getQueryString();
-	this.page_ = requestParams.getPage();
-	this.from_ = requestParams.getFrom();
-	this.to_ = requestParams.getTo();
-	this.order_ = requestParams.getOrder();
-	this.contributors_ = requestParams.getContributors();
-	this.projects_ = requestParams.getProjects();
-	this.contentTypes_ = requestParams.getContentTypes();
-	this.log_ = requestParams.getLog();
-	this.resetCaches_ = requestParams.getResetCaches();
-	return this;
+  this.query_string_ = requestParams.getQueryString();
+  this.page_ = requestParams.getPage();
+  this.from_ = requestParams.getFrom();
+  this.to_ = requestParams.getTo();
+  this.order_ = requestParams.getOrder();
+  this.contributors_ = requestParams.getContributors();
+  this.projects_ = requestParams.getProjects();
+  this.contentTypes_ = requestParams.getContentTypes();
+  this.log_ = requestParams.getLog();
+  this.resetCaches_ = requestParams.getResetCaches();
+  return this;
 };
+
 
 /**
  * Set new query string value, <code>null</code> value is not allowed.
@@ -347,9 +372,10 @@ org.jboss.core.context.RequestParamsFactory.prototype.copy = function(requestPar
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setQueryString = function(queryString) {
-	this.query_string_ = queryString;
-	return this;
+  this.query_string_ = queryString;
+  return this;
 };
+
 
 /**
  * Set new page value, <code>null</code> is allowed.
@@ -358,9 +384,10 @@ org.jboss.core.context.RequestParamsFactory.prototype.setQueryString = function(
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setPage = function(page) {
-	this.page_ = page;
-	return this;
+  this.page_ = page;
+  return this;
 };
+
 
 /**
  * Set new from value, <code>null</code> is allowed.
@@ -369,9 +396,10 @@ org.jboss.core.context.RequestParamsFactory.prototype.setPage = function(page) {
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setFrom = function(from) {
-	this.from_ = from;
-	return this;
+  this.from_ = from;
+  return this;
 };
+
 
 /**
  * Set new to value, <code>null</code> is allowed.
@@ -380,9 +408,10 @@ org.jboss.core.context.RequestParamsFactory.prototype.setFrom = function(from) {
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setTo = function(to) {
-	this.to_ = to;
-	return this;
+  this.to_ = to;
+  return this;
 };
+
 
 /**
  * Set new order value.
@@ -391,52 +420,57 @@ org.jboss.core.context.RequestParamsFactory.prototype.setTo = function(to) {
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setOrder = function(order) {
-	this.order_ = order;
-	return this;
+  this.order_ = order;
+  return this;
 };
+
 
 /**
  * Set default order.
  *
- * @returns {org.jboss.core.context.RequestParamsFactory}
+ * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setDefaultOrder = function() {
-	this.order_ = org.jboss.core.context.RequestParams.Order.SCORE;
-	return this;
+  this.order_ = org.jboss.core.context.RequestParams.Order.SCORE;
+  return this;
 };
+
 
 /**
  * Set new contributors.
  *
  * @param {Array.<string>|null} contributors
- * @returns {org.jboss.core.context.RequestParamsFactory}
+ * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setContributors = function(contributors) {
-	this.contributors_ = contributors;
-	return this;
+  this.contributors_ = contributors;
+  return this;
 };
+
 
 /**
  * Set new projects.
  *
  * @param {Array.<string>|null} projects
- * @returns {org.jboss.core.context.RequestParamsFactory}
+ * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setProjects = function(projects) {
-	this.projects_ = projects;
-	return this;
+  this.projects_ = projects;
+  return this;
 };
+
 
 /**
  * Set new contentTypes
  *
  * @param {Array.<string>|null} contentTypes
- * @returns {org.jboss.core.context.RequestParamsFactory}
+ * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setContentTypes = function(contentTypes) {
-	this.contentTypes_ = contentTypes;
-	return this;
+  this.contentTypes_ = contentTypes;
+  return this;
 };
+
 
 /**
  * Set new log value, <code>null</code> is allowed.
@@ -445,9 +479,10 @@ org.jboss.core.context.RequestParamsFactory.prototype.setContentTypes = function
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setLog = function(log) {
-	this.log_ = log;
-	return this;
+  this.log_ = log;
+  return this;
 };
+
 
 /**
  * Set new resetCaches value, <code>null</code> is allowed.
@@ -456,6 +491,6 @@ org.jboss.core.context.RequestParamsFactory.prototype.setLog = function(log) {
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setResetCaches = function(resetCaches) {
-	this.resetCaches_ = resetCaches;
-	return this;
+  this.resetCaches_ = resetCaches;
+  return this;
 };

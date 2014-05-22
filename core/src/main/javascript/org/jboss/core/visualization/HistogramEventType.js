@@ -18,14 +18,16 @@
 
 /**
  * @fileoverview Event types for Histogram chart.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.visualization.HistogramEventType');
 
 goog.require('goog.events');
 
+
 /** @enum {string} */
 org.jboss.core.visualization.HistogramEventType = {
-    INTERVAL_SELECTED : goog.events.getUniqueId('interval_selected')
-}
+  INTERVAL_SELECTED: goog.events.getUniqueId('interval_selected')
+};
+

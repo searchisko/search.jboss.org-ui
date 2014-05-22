@@ -20,22 +20,23 @@
  * @fileoverview Basic implementation of LookUp interface.  It is assumed that other modules will
  * extend this class and add more services according to their needs.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.service.LookUpImpl');
-
-goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
-goog.require('org.jboss.core.service.query.QueryService');
-goog.require('org.jboss.core.Variables');
-goog.require('org.jboss.core.service.LookUp');
-goog.require('org.jboss.core.util.ImageLoader');
-goog.require('org.jboss.core.util.ImageLoaderNoop');
 
 goog.require('goog.History');
 goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.i18n.DateTimeParse');
 goog.require('goog.net.XhrManager');
+goog.require('org.jboss.core.Variables');
+goog.require('org.jboss.core.service.LookUp');
+goog.require('org.jboss.core.service.query.QueryService');
+goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
+goog.require('org.jboss.core.util.ImageLoader');
+goog.require('org.jboss.core.util.ImageLoaderNoop');
+
+
 
 /**
  * LookUp implementation that provides just basic services (XhrManager, History and ImageLoader).
@@ -45,123 +46,133 @@ goog.require('goog.net.XhrManager');
  */
 org.jboss.core.service.LookUpImpl = function() {
 
-	/**
-	 * @type {goog.net.XhrManager}
-	 * @private
-	 */
-	this.xhrManager_;
+  /**
+   * @type {goog.net.XhrManager}
+   * @private
+   */
+  this.xhrManager_;
 
-	/**
-	 * @type {goog.History}
-	 * @private
-	 */
-	this.history_;
+  /**
+   * @type {goog.History}
+   * @private
+   */
+  this.history_;
 
-	/**
-	 * @type {org.jboss.core.util.ImageLoader}
-	 * @private
-	 */
-	this.imageLoader_;
+  /**
+   * @type {org.jboss.core.util.ImageLoader}
+   * @private
+   */
+  this.imageLoader_;
 
-	/**
-	 * @type {goog.i18n.DateTimeFormat}
-	 * @private
-	 */
-	this.shortDateFormatter_;
+  /**
+   * @type {goog.i18n.DateTimeFormat}
+   * @private
+   */
+  this.shortDateFormatter_;
 
-	/**
-	 * @type {goog.i18n.DateTimeFormat}
-	 * @private
-	 */
-	this.mediumDateFormatter_;
+  /**
+   * @type {goog.i18n.DateTimeFormat}
+   * @private
+   */
+  this.mediumDateFormatter_;
 
-	/**
-	 * @type {goog.i18n.DateTimeParse}
-	 * @private
-	 */
-	this.shortDateParser_;
+  /**
+   * @type {goog.i18n.DateTimeParse}
+   * @private
+   */
+  this.shortDateParser_;
 
-	/**
-	 * @type {org.jboss.core.service.query.QueryService}
-	 * @private
-	 */
-	this.queryService_;
+  /**
+   * @type {org.jboss.core.service.query.QueryService}
+   * @private
+   */
+  this.queryService_;
 
-	/**
-	 * @type {org.jboss.core.service.query.QueryServiceDispatcher}
-	 * @private
-	 */
-	this.queryServiceDispatcher_;
+  /**
+   * @type {org.jboss.core.service.query.QueryServiceDispatcher}
+   * @private
+   */
+  this.queryServiceDispatcher_;
 };
+
 
 /** @inheritDoc */
-org.jboss.core.service.LookUpImpl.prototype.getShortDateFormatter = function () {
-	if (!goog.isDefAndNotNull(this.shortDateFormatter_)) {
-		this.shortDateFormatter_ = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.SHORT_DATE_FORMAT);
-	}
-	return this.shortDateFormatter_;
+org.jboss.core.service.LookUpImpl.prototype.getShortDateFormatter = function() {
+  if (!goog.isDefAndNotNull(this.shortDateFormatter_)) {
+    this.shortDateFormatter_ = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.SHORT_DATE_FORMAT);
+  }
+  return this.shortDateFormatter_;
 };
 
-/** @inheritDoc */
-org.jboss.core.service.LookUpImpl.prototype.getMediumDateFormatter = function () {
-	if (!goog.isDefAndNotNull(this.mediumDateFormatter_)) {
-		this.mediumDateFormatter_ = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.MEDIUM_DATE_FORMAT);
-	}
-	return this.mediumDateFormatter_;
-};
 
 /** @inheritDoc */
-org.jboss.core.service.LookUpImpl.prototype.getXhrManager = function () {
-	if (!goog.isDefAndNotNull(this.xhrManager_)) {
-		this.xhrManager_ = new goog.net.XhrManager();
-	}
-	return this.xhrManager_;
+org.jboss.core.service.LookUpImpl.prototype.getMediumDateFormatter = function() {
+  if (!goog.isDefAndNotNull(this.mediumDateFormatter_)) {
+    this.mediumDateFormatter_ = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.MEDIUM_DATE_FORMAT);
+  }
+  return this.mediumDateFormatter_;
 };
 
-/** @inheritDoc */
-org.jboss.core.service.LookUpImpl.prototype.getHistory = function () {
-	if (!goog.isDefAndNotNull(this.history_)) {
-		this.history_ = new goog.History();
-	}
-	return this.history_;
-};
 
 /** @inheritDoc */
-org.jboss.core.service.LookUpImpl.prototype.getImageLoader = function () {
-	if (!goog.isDefAndNotNull(this.imageLoader_)) {
-		this.imageLoader_ = new org.jboss.core.util.ImageLoaderNoop();
-	}
-	return this.imageLoader_;
+org.jboss.core.service.LookUpImpl.prototype.getXhrManager = function() {
+  if (!goog.isDefAndNotNull(this.xhrManager_)) {
+    this.xhrManager_ = new goog.net.XhrManager();
+  }
+  return this.xhrManager_;
 };
 
+
 /** @inheritDoc */
-org.jboss.core.service.LookUpImpl.prototype.setImageLoader = function (imageLoader) {
-	// TODO: make sure to dispose all resources kept by imageLoader_ if it is already set.
-	this.imageLoader_ = imageLoader;
+org.jboss.core.service.LookUpImpl.prototype.getHistory = function() {
+  if (!goog.isDefAndNotNull(this.history_)) {
+    this.history_ = new goog.History();
+  }
+  return this.history_;
 };
+
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.getImageLoader = function() {
+  if (!goog.isDefAndNotNull(this.imageLoader_)) {
+    this.imageLoader_ = new org.jboss.core.util.ImageLoaderNoop();
+  }
+  return this.imageLoader_;
+};
+
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.setImageLoader = function(imageLoader) {
+  // TODO: make sure to dispose all resources kept by imageLoader_ if it is already set.
+  this.imageLoader_ = imageLoader;
+};
+
 
 /** @inheritDoc */
 org.jboss.core.service.LookUpImpl.prototype.getShortDateParser = function() {
-	if (!goog.isDefAndNotNull(this.shortDateParser_)) {
-		this.shortDateParser_ = new goog.i18n.DateTimeParse(org.jboss.core.Variables.SHORT_DATE_FORMAT);
-	}
-	return this.shortDateParser_;
+  if (!goog.isDefAndNotNull(this.shortDateParser_)) {
+    this.shortDateParser_ = new goog.i18n.DateTimeParse(org.jboss.core.Variables.SHORT_DATE_FORMAT);
+  }
+  return this.shortDateParser_;
 };
+
 
 /** @inheritDoc */
 org.jboss.core.service.LookUpImpl.prototype.setQueryService = function(queryService) {
-	this.queryService_ = queryService;
+  this.queryService_ = queryService;
 };
+
 
 /** @inheritDoc */
 org.jboss.core.service.LookUpImpl.prototype.getQueryService = function() {
-	return this.queryService_;
+  return this.queryService_;
 };
+
 
 /** @inheritDoc */
 org.jboss.core.service.LookUpImpl.prototype.getQueryServiceDispatcher = function() {
-	if (!goog.isDefAndNotNull(this.queryServiceDispatcher_)) {
-		this.queryServiceDispatcher_ = new org.jboss.core.service.query.QueryServiceDispatcher();
-	}
-	return this.queryServiceDispatcher_;
+  if (!goog.isDefAndNotNull(this.queryServiceDispatcher_)) {
+    this.queryServiceDispatcher_ = new org.jboss.core.service.query.QueryServiceDispatcher();
+  }
+  return this.queryServiceDispatcher_;
 };

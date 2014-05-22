@@ -25,16 +25,16 @@
  * There is a relevant test file in 'src/test/javascript' that is used as a shell to include this file into regular
  * unit test run.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.service.LocatorTest');
 
-goog.require('org.jboss.core.service.Locator');
-goog.require("org.jboss.core.service.LookUpImpl");
 goog.require('goog.string');
-
 goog.require('goog.testing.jsunit');
+goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.service.LookUpImpl');
+
 
 /*
 // Can not create Locator instance without passing Lookup instance into constructor.
@@ -57,55 +57,55 @@ org.jboss.core.service.LocatorTest.getLookupFails = function() {
 */
 
 org.jboss.core.service.LocatorTest.getInstanceFails = function() {
-	org.jboss.core.service.Locator.dispose();
-	assertThrows("Locator instance does not exist.", function() {
-		org.jboss.core.service.Locator.getInstance();
-	});
+  org.jboss.core.service.Locator.dispose();
+  assertThrows('Locator instance does not exist.', function() {
+    org.jboss.core.service.Locator.getInstance();
+  });
 };
 
 org.jboss.core.service.LocatorTest.locatorIsNotNull = function() {
-	org.jboss.core.service.Locator.dispose();
-	var lookup = new org.jboss.core.service.LookUpImpl();
-	var locator = new org.jboss.core.service.Locator(lookup);
-	assertNotNull(locator);
-	assertNotNull(org.jboss.core.service.Locator.getInstance());
-	assertNotNull(org.jboss.core.service.Locator.getInstance().getLookup());
+  org.jboss.core.service.Locator.dispose();
+  var lookup = new org.jboss.core.service.LookUpImpl();
+  var locator = new org.jboss.core.service.Locator(lookup);
+  assertNotNull(locator);
+  assertNotNull(org.jboss.core.service.Locator.getInstance());
+  assertNotNull(org.jboss.core.service.Locator.getInstance().getLookup());
 };
 
 org.jboss.core.service.LocatorTest.locatorIsSingleton = function() {
-	org.jboss.core.service.Locator.dispose();
-	var lookup = new org.jboss.core.service.LookUpImpl();
-	var locator1 = new org.jboss.core.service.Locator(lookup);
-	var locator2 = new org.jboss.core.service.Locator(lookup);
-	var locator3 = org.jboss.core.service.Locator.getInstance();
-	assertTrue(locator1 === locator2);
-	assertTrue(locator1 === locator3);
-	assertTrue(locator2 === locator3);
+  org.jboss.core.service.Locator.dispose();
+  var lookup = new org.jboss.core.service.LookUpImpl();
+  var locator1 = new org.jboss.core.service.Locator(lookup);
+  var locator2 = new org.jboss.core.service.Locator(lookup);
+  var locator3 = org.jboss.core.service.Locator.getInstance();
+  assertTrue(locator1 === locator2);
+  assertTrue(locator1 === locator3);
+  assertTrue(locator2 === locator3);
 };
 
 org.jboss.core.service.LocatorTest.lookupIsSingleton = function() {
-	org.jboss.core.service.Locator.dispose();
-	var lookup = new org.jboss.core.service.LookUpImpl();
-	new org.jboss.core.service.Locator(lookup);
-	assertTrue(lookup === org.jboss.core.service.Locator.getInstance().getLookup());
+  org.jboss.core.service.Locator.dispose();
+  var lookup = new org.jboss.core.service.LookUpImpl();
+  new org.jboss.core.service.Locator(lookup);
+  assertTrue(lookup === org.jboss.core.service.Locator.getInstance().getLookup());
 };
 
 org.jboss.core.service.LocatorTest.onlySingleLookupInstanceIsKeptAround = function() {
-	org.jboss.core.service.Locator.dispose();
-	var lookup1 = new org.jboss.core.service.LookUpImpl();
-	new org.jboss.core.service.Locator(lookup1);
-	var locator1 = org.jboss.core.service.Locator.getInstance();
-	var lookup2 = new org.jboss.core.service.LookUpImpl();
-	new org.jboss.core.service.Locator(lookup2);
-	var locator2 = org.jboss.core.service.Locator.getInstance();
+  org.jboss.core.service.Locator.dispose();
+  var lookup1 = new org.jboss.core.service.LookUpImpl();
+  new org.jboss.core.service.Locator(lookup1);
+  var locator1 = org.jboss.core.service.Locator.getInstance();
+  var lookup2 = new org.jboss.core.service.LookUpImpl();
+  new org.jboss.core.service.Locator(lookup2);
+  var locator2 = org.jboss.core.service.Locator.getInstance();
 
-	assertTrue(locator1 === locator2);
-	assertNotNull(lookup1);
-	assertNotNull(locator1.getLookup());
+  assertTrue(locator1 === locator2);
+  assertNotNull(lookup1);
+  assertNotNull(locator1.getLookup());
 
-	assertTrue(goog.isObject(lookup1));
-	assertTrue(goog.isObject(locator1.getLookup()));
-	assertObjectEquals(lookup1, locator1.getLookup());
-	assertTrue(lookup1 === locator1.getLookup());
-	assertTrue(lookup1 === locator2.getLookup());
+  assertTrue(goog.isObject(lookup1));
+  assertTrue(goog.isObject(locator1.getLookup()));
+  assertObjectEquals(lookup1, locator1.getLookup());
+  assertTrue(lookup1 === locator1.getLookup());
+  assertTrue(lookup1 === locator2.getLookup());
 };

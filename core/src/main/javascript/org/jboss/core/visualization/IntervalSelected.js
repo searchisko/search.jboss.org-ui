@@ -18,14 +18,17 @@
 
 /**
  * @fileoverview An event fired by Histogram when user selects new interval.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.visualization.IntervalSelected');
 
-goog.require('org.jboss.core.visualization.HistogramEventType');
 goog.require('goog.date.DateTime');
 goog.require('goog.events.Event');
+goog.require('org.jboss.core.visualization.HistogramEventType');
+
+
 
 /**
  * Create a new instance. It requires three arguments. First two Dates represent interval range.
@@ -45,59 +48,62 @@ goog.require('goog.events.Event');
  * @extends {goog.events.Event}
  */
 org.jboss.core.visualization.IntervalSelected = function(from, to, last) {
-    goog.events.Event.call(this, org.jboss.core.visualization.HistogramEventType.INTERVAL_SELECTED);
+  goog.events.Event.call(this, org.jboss.core.visualization.HistogramEventType.INTERVAL_SELECTED);
 
-    /**
-     * @type {!goog.date.DateTime}
-     * @private
-     */
-    this.from_ = from;
+  /**
+   * @type {!goog.date.DateTime}
+   * @private
+   */
+  this.from_ = from;
 
-    /**
-     * @type {!goog.date.DateTime}
-     * @private
-     */
-    this.to_ = to;
+  /**
+   * @type {!goog.date.DateTime}
+   * @private
+   */
+  this.to_ = to;
 
-    /**
-     * @type {boolean}
-     * @private
-     */
-    this.last_ = last || false;
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.last_ = last || false;
 
-	if (goog.isDefAndNotNull(this.from_)) {
-		this.from_.setHours(0);
-		this.from_.setMinutes(0);
-		this.from_.setSeconds(0);
-		this.from_.setMilliseconds(0);
-	}
+  if (goog.isDefAndNotNull(this.from_)) {
+    this.from_.setHours(0);
+    this.from_.setMinutes(0);
+    this.from_.setSeconds(0);
+    this.from_.setMilliseconds(0);
+  }
 
-	if (goog.isDefAndNotNull(this.to_)) {
-		this.to_.setHours(0);
-		this.to_.setMinutes(0);
-		this.to_.setSeconds(0);
-		this.to_.setMilliseconds(0);
-	}
+  if (goog.isDefAndNotNull(this.to_)) {
+    this.to_.setHours(0);
+    this.to_.setMinutes(0);
+    this.to_.setSeconds(0);
+    this.to_.setMilliseconds(0);
+  }
 };
 goog.inherits(org.jboss.core.visualization.IntervalSelected, goog.events.Event);
+
 
 /**
  * @return {!goog.date.DateTime}
  */
 org.jboss.core.visualization.IntervalSelected.prototype.getFrom = function() {
-    return this.from_;
+  return this.from_;
 };
+
 
 /**
  * @return {!goog.date.DateTime}
  */
 org.jboss.core.visualization.IntervalSelected.prototype.getTo = function() {
-    return this.to_;
+  return this.to_;
 };
+
 
 /**
  * @return {boolean}
  */
 org.jboss.core.visualization.IntervalSelected.prototype.isLast = function() {
-    return this.last_;
+  return this.last_;
 };

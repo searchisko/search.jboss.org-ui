@@ -19,10 +19,13 @@
 /**
  * @fileoverview Service Locator. It accepts LookUp instance as a constructor parameter and then
  * allows to access this LookUp instance via global singleton pattern.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.service.Locator');
+
+
 
 /**
  * Constructor of service Locator. Requires LookUp instance as an argument.
@@ -43,52 +46,55 @@ goog.provide('org.jboss.core.service.Locator');
  */
 org.jboss.core.service.Locator = function(lookup) {
 
-	if (org.jboss.core.service.Locator.instance_) {
-		return org.jboss.core.service.Locator.instance_;
-	}
+  if (org.jboss.core.service.Locator.instance_) {
+    return org.jboss.core.service.Locator.instance_;
+  }
 
-	/**
-	 * @type {!T}
-	 * @private
-	 */
-	this.lookup_ = lookup;
+  /**
+   * @type {!T}
+   * @private
+   */
+  this.lookup_ = lookup;
 
-	/**
-	 * @type {org.jboss.core.service.Locator}
-	 * @private
-	 */
-	org.jboss.core.service.Locator.instance_ = this;
+  /**
+   * @type {org.jboss.core.service.Locator}
+   * @private
+   */
+  org.jboss.core.service.Locator.instance_ = this;
 };
+
 
 /**
  * @return {org.jboss.core.service.Locator}
  */
 org.jboss.core.service.Locator.getInstance = function() {
-	if (!goog.isDef(org.jboss.core.service.Locator.instance_)){
-		throw new Error("Locator instance does not exist.");
-	}
-	return org.jboss.core.service.Locator.instance_;
+  if (!goog.isDef(org.jboss.core.service.Locator.instance_)) {
+    throw new Error('Locator instance does not exist.');
+  }
+  return org.jboss.core.service.Locator.instance_;
 };
+
 
 /**
  * @return {!T}
  */
-org.jboss.core.service.Locator.prototype.getLookup = function () {
-	// This method has to be defined on the prototype level otherwise template T is not recognized
-	// and "[Goog.ERROR]: JSC_TYPE_PARSE_ERROR. Bad type annotation. Unknown type T " is fired.
-	if (!goog.isDef(org.jboss.core.service.Locator.getInstance().lookup_)) {
-		throw new Error("Lookup not initiated.");
-	}
-	return org.jboss.core.service.Locator.getInstance().lookup_;
+org.jboss.core.service.Locator.prototype.getLookup = function() {
+  // This method has to be defined on the prototype level otherwise template T is not recognized
+  // and "[Goog.ERROR]: JSC_TYPE_PARSE_ERROR. Bad type annotation. Unknown type T " is fired.
+  if (!goog.isDef(org.jboss.core.service.Locator.getInstance().lookup_)) {
+    throw new Error('Lookup not initiated.');
+  }
+  return org.jboss.core.service.Locator.getInstance().lookup_;
 };
+
 
 /**
  * Disposes. This method should be used only in tests.
  */
 org.jboss.core.service.Locator.dispose = function() {
-	if (goog.isDef(org.jboss.core.service.Locator.instance_) &&
-		goog.isDef(org.jboss.core.service.Locator.getInstance().lookup_)) {
-		delete org.jboss.core.service.Locator.getInstance().lookup_;
-		delete org.jboss.core.service.Locator.instance_;
-	}
+  if (goog.isDef(org.jboss.core.service.Locator.instance_) &&
+      goog.isDef(org.jboss.core.service.Locator.getInstance().lookup_)) {
+    delete org.jboss.core.service.Locator.getInstance().lookup_;
+    delete org.jboss.core.service.Locator.instance_;
+  }
 };

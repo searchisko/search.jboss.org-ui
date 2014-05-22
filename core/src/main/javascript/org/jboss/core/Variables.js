@@ -19,25 +19,25 @@
 /**
  * @fileoverview System variables that can vary depending on target deployment.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 goog.provide('org.jboss.core.Variables');
 
 org.jboss.core.Variables = {
 
-	/**
-	 * Short date format.
-	 * @type {string}
-	 * @const
-	 */
-//	SHORT_DATE_FORMAT : "MM/dd/yyyy",
-	SHORT_DATE_FORMAT : "yyyy-MM-dd",
+  /**
+   * Short date format.
+   * @type {string}
+   * @const
+   */
+  // SHORT_DATE_FORMAT : "MM/dd/yyyy",
+  SHORT_DATE_FORMAT: 'yyyy-MM-dd',
 
-	/**
-	 * Medium date format.
-	 * @type {string}
-	 * @const
-	 */
-	MEDIUM_DATE_FORMAT : "yyyy-M-d, h:mma"
+  /**
+   * Medium date format.
+   * @type {string}
+   * @const
+   */
+  MEDIUM_DATE_FORMAT: 'yyyy-M-d, h:mma'
 
 };

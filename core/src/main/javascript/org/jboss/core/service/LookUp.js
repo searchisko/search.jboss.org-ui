@@ -25,24 +25,26 @@
  * {@link https://github.com/rhysbrettbowen/Loader}. A blog post about this can be found at
  * {@link http://modernjavascript.blogspot.cz/2012/10/dependency-injection-in-closure-ioc.html}.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.service.LookUp');
-
-goog.require('org.jboss.core.service.query.QueryService');
-goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
-goog.require('org.jboss.core.util.ImageLoader');
 
 goog.require('goog.History');
 goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.i18n.DateTimeParse');
 goog.require('goog.net.XhrManager');
+goog.require('org.jboss.core.service.query.QueryService');
+goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
+goog.require('org.jboss.core.util.ImageLoader');
+
+
 
 /**
  * @interface
  */
 org.jboss.core.service.LookUp = function() {};
+
 
 /**
  * Return instance of XhrManager.
@@ -51,12 +53,14 @@ org.jboss.core.service.LookUp = function() {};
  */
 org.jboss.core.service.LookUp.prototype.getXhrManager = function() {};
 
+
 /**
  * Return instance of goog.History.
  * It is a singleton instance at the application level.
  * @return {!goog.History}
  */
 org.jboss.core.service.LookUp.prototype.getHistory = function() {};
+
 
 /**
  * Return instance of ImageLoader.
@@ -67,10 +71,12 @@ org.jboss.core.service.LookUp.prototype.getHistory = function() {};
  */
 org.jboss.core.service.LookUp.prototype.getImageLoader = function() {};
 
+
 /**
  * @param {!org.jboss.core.util.ImageLoader} imageLoader
  */
 org.jboss.core.service.LookUp.prototype.setImageLoader = function(imageLoader) {};
+
 
 /**
  * DateFormatter using {@link org.jboss.core.Variables.SHORT_DATE_FORMAT}.
@@ -79,6 +85,7 @@ org.jboss.core.service.LookUp.prototype.setImageLoader = function(imageLoader) {
  */
 org.jboss.core.service.LookUp.prototype.getShortDateFormatter = function() {};
 
+
 /**
  * DateFormatter using {@link org.jboss.core.Variables.MEDIUM_DATE_FORMAT}.
  * Formatter uses local client time zone.
@@ -86,20 +93,24 @@ org.jboss.core.service.LookUp.prototype.getShortDateFormatter = function() {};
  */
 org.jboss.core.service.LookUp.prototype.getMediumDateFormatter = function() {};
 
+
 /**
  * @return {!goog.i18n.DateTimeParse}
  */
 org.jboss.core.service.LookUp.prototype.getShortDateParser = function() {};
+
 
 /**
  * @param {org.jboss.core.service.query.QueryService} queryService
  */
 org.jboss.core.service.LookUp.prototype.setQueryService = function(queryService) {};
 
+
 /**
  * @return {org.jboss.core.service.query.QueryService}
  */
 org.jboss.core.service.LookUp.prototype.getQueryService = function() {};
+
 
 /**
  * Return QueryServiceDispatcher.

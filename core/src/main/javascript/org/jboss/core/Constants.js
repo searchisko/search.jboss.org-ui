@@ -19,45 +19,45 @@
 /**
  * @fileoverview Constants used all over the place.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 goog.provide('org.jboss.core.Constants');
 
 org.jboss.core.Constants = {
 
-    /**
-     * HTTP GET request type.
-     * @type {string}
-     * @const
-     */
-    GET: "GET",
+  /**
+   * HTTP GET request type.
+   * @type {string}
+   * @const
+   */
+  GET: 'GET',
 
-    /**
-     * HTTP POST request type.
-     * @type {string}
-     * @const
-     */
-    POST: "POST",
+  /**
+   * HTTP POST request type.
+   * @type {string}
+   * @const
+   */
+  POST: 'POST',
 
-    /**
-     * Used in CSS.
-     * @type {string}
-     * @const
-     */
-    HIDDEN: "hidden",
+  /**
+   * Used in CSS.
+   * @type {string}
+   * @const
+   */
+  HIDDEN: 'hidden',
 
-    /**
-     * Used in CSS.
-     * @type {string}
-     * @const
-     */
-    SELECTED: "selected",
+  /**
+   * Used in CSS.
+   * @type {string}
+   * @const
+   */
+  SELECTED: 'selected',
 
-    /**
-     * Used in CSS and as an input element attribute.
-     * @type {string}
-     * @const
-     */
-    DISABLED: "disabled"
+  /**
+   * Used in CSS and as an input element attribute.
+   * @type {string}
+   * @const
+   */
+  DISABLED: 'disabled'
 
 };
