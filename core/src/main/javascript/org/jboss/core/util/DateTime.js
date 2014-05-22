@@ -18,15 +18,17 @@
 
 /**
  * @fileoverview Utility to round DateTime up to days.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.util.dateTime');
 
-goog.require('org.jboss.core.service.Locator');
-goog.require('goog.string');
 goog.require('goog.date.DateTime');
 goog.require('goog.i18n.DateTimeFormat');
+goog.require('goog.string');
+goog.require('org.jboss.core.service.Locator');
+
 
 /**
  * Floor given instance of DateTime down to days.  This means it drops everything below the days.
@@ -36,13 +38,14 @@ goog.require('goog.i18n.DateTimeFormat');
  * @return {!goog.date.DateTime}
  */
 org.jboss.core.util.dateTime.floorToDays = function(dateTime) {
-	var dt = dateTime.clone();
-	dt.setHours(0);
-	dt.setMinutes(0);
-	dt.setSeconds(0);
-	dt.setMilliseconds(0);
-	return dt;
+  var dt = dateTime.clone();
+  dt.setHours(0);
+  dt.setMinutes(0);
+  dt.setSeconds(0);
+  dt.setMilliseconds(0);
+  return dt;
 };
+
 
 /**
  * Format given DateTime using the formatter.
@@ -52,36 +55,39 @@ org.jboss.core.util.dateTime.floorToDays = function(dateTime) {
  * @return {string}
  */
 org.jboss.core.util.dateTime.format = function(dateTime, formatter) {
-	return formatter.format(dateTime);
+  return formatter.format(dateTime);
 };
+
 
 /**
  * Format given DateTime using predefined short date format.
  *
- * @param dateTime
+ * @param {goog.date.DateTime} dateTime
  * @return {string}
  */
 org.jboss.core.util.dateTime.formatShortDate = function(dateTime) {
-	return org.jboss.core.util.dateTime.format(dateTime,
-		org.jboss.core.service.Locator.getInstance().getLookup().getShortDateFormatter()
-	);
+  return org.jboss.core.util.dateTime.format(dateTime,
+      org.jboss.core.service.Locator.getInstance().getLookup().getShortDateFormatter()
+  );
 };
+
 
 /**
  * Format given DateTime using predefined medium date format.
- * Note that the {@link goog.i18n.DateTimeFormat} produces AM/PM markers (uppercased). We convert it to lowercase manually.
- * Just out of curiosity, there is a method {@link goog.date.DateTime#toUsTimeString(false, true, true)}
+ * Note that the {@link goog.i18n.DateTimeFormat} produces AM/PM markers (uppercased). We convert it to lowercase
+ * manually. Just out of curiosity, there is a method {@link goog.date.DateTime#toUsTimeString(false, true, true)}
  * which produces lowercased pm/am.
  *
- * @param dateTime
+ * @param {goog.date.DateTime} dateTime
  * @return {string}
  */
 org.jboss.core.util.dateTime.formatMediumDate = function(dateTime) {
-	var str = org.jboss.core.util.dateTime.format(dateTime,
-		org.jboss.core.service.Locator.getInstance().getLookup().getMediumDateFormatter()
-	);
-	return str.replace(/PM$/, "pm").replace(/AM$/, "am");
+  var str = org.jboss.core.util.dateTime.format(dateTime,
+      org.jboss.core.service.Locator.getInstance().getLookup().getMediumDateFormatter()
+      );
+  return str.replace(/PM$/, 'pm').replace(/AM$/, 'am');
 };
+
 
 /**
  * Parse string into goog.date.DateTime. It assumes the string uses {@link org.jboss.core.Variables.SHORT_DATE_FORMAT}.
@@ -90,7 +96,7 @@ org.jboss.core.util.dateTime.formatMediumDate = function(dateTime) {
  * @return {goog.date.DateTime}
  */
 org.jboss.core.util.dateTime.parseShortDate = function(shortDateString) {
-	var date = new goog.date.DateTime();
-	org.jboss.core.service.Locator.getInstance().getLookup().getShortDateParser().parse(shortDateString, date);
-	return date;
+  var date = new goog.date.DateTime();
+  org.jboss.core.service.Locator.getInstance().getLookup().getShortDateParser().parse(shortDateString, date);
+  return date;
 };

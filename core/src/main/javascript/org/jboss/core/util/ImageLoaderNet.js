@@ -18,14 +18,17 @@
 
 /**
  * @fileoverview Implementation of ImageLoader that do pre-load images.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.util.ImageLoaderNet');
 
-goog.require('org.jboss.core.util.ImageLoader');
 goog.require('goog.events.EventTarget');
 goog.require('goog.net.ImageLoader');
+goog.require('org.jboss.core.util.ImageLoader');
+
+
 
 /**
  * Construct new Image loader.  This image loader uses internal instance of {@see goog.net.ImageLoader}
@@ -36,29 +39,32 @@ goog.require('goog.net.ImageLoader');
  * @final
  */
 org.jboss.core.util.ImageLoaderNet = function() {
-	goog.events.EventTarget.call(this);
+  goog.events.EventTarget.call(this);
 
-	/**
-	 * @type {goog.net.ImageLoader}
-	 * @private
-	 */
-	this.imageLoader_ = new goog.net.ImageLoader();
+  /**
+   * @type {goog.net.ImageLoader}
+   * @private
+   */
+  this.imageLoader_ = new goog.net.ImageLoader();
 };
 goog.inherits(org.jboss.core.util.ImageLoaderNet, goog.events.EventTarget);
 
+
 /** @inheritDoc */
 org.jboss.core.util.ImageLoaderNet.prototype.disposeInternal = function() {
-	// Call the superclass's disposeInternal() method.
-	org.jboss.core.util.ImageLoaderNet.superClass_.disposeInternal.call(this);
-	goog.dispose(this.imageLoader_);
+  // Call the superclass's disposeInternal() method.
+  org.jboss.core.util.ImageLoaderNet.superClass_.disposeInternal.call(this);
+  goog.dispose(this.imageLoader_);
 };
 
-/** @inheritDoc */
-org.jboss.core.util.ImageLoaderNet.prototype.start = function () {
-	this.imageLoader_.start();
-};
 
 /** @inheritDoc */
-org.jboss.core.util.ImageLoaderNet.prototype.addImage = function (id, image) {
-	this.imageLoader_.addImage(id, image);
+org.jboss.core.util.ImageLoaderNet.prototype.start = function() {
+  this.imageLoader_.start();
+};
+
+
+/** @inheritDoc */
+org.jboss.core.util.ImageLoaderNet.prototype.addImage = function(id, image) {
+  this.imageLoader_.addImage(id, image);
 };

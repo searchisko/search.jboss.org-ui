@@ -19,13 +19,14 @@
 /**
  * @fileoverview Static email name utilities.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.util.emailName');
 
-goog.require('goog.string');
 goog.require('goog.format.EmailAddress');
+goog.require('goog.string');
+
 
 /**
  * Try to extract name from email address. If not possible return original email value.
@@ -33,12 +34,12 @@ goog.require('goog.format.EmailAddress');
  * @return {string}
  */
 org.jboss.core.util.emailName.extractNameFromMail = function(email) {
-	var email_ = goog.isDefAndNotNull(email) ? email : "";
-	var parsed = goog.format.EmailAddress.parse(email_);
-	var e = parsed.getName();
-	if (goog.string.isEmptySafe(e)) {
-		return parsed.getAddress();
-	} else {
-		return e;
-	}
+  var email_ = goog.isDefAndNotNull(email) ? email : '';
+  var parsed = goog.format.EmailAddress.parse(email_);
+  var e = parsed.getName();
+  if (goog.string.isEmptySafe(e)) {
+    return parsed.getAddress();
+  } else {
+    return e;
+  }
 };

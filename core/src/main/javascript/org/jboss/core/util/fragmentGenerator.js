@@ -18,17 +18,19 @@
 
 /**
  * @fileoverview Utility to parse URL fragment.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.util.fragmentGenerator');
 
-goog.require('org.jboss.core.context.RequestParams');
-goog.require('org.jboss.core.context.RequestParams.Order');
-goog.require('org.jboss.core.util.fragmentParser');
-goog.require('org.jboss.core.util.dateTime');
 goog.require('goog.array');
 goog.require('goog.string');
+goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParams.Order');
+goog.require('org.jboss.core.util.dateTime');
+goog.require('org.jboss.core.util.fragmentParser');
+
 
 /**
  * Construct URL fragment string based on provided requestParams.
@@ -41,77 +43,79 @@ goog.require('goog.string');
  */
 org.jboss.core.util.fragmentGenerator.generate = function(requestParams, opt_requestParams) {
 
-	var p_ = org.jboss.core.util.fragmentParser.UI_param_suffix;
+  var p_ = org.jboss.core.util.fragmentParser.UI_param_suffix;
 
-	// always use query
-	var token = [[p_.QUERY, goog.string.urlEncode(requestParams.getQueryString())].join('')];
+  // always use query
+  var token = [[p_.QUERY, goog.string.urlEncode(requestParams.getQueryString())].join('')];
 
-	// use 'page' if provided and greater then 1
-	if (goog.isDefAndNotNull(requestParams.getPage()) && requestParams.getPage() > 1) {
-		token.push([p_.PAGE, goog.string.urlEncode(requestParams.getPage())].join(''));
-	}
+  // use 'page' if provided and greater then 1
+  if (goog.isDefAndNotNull(requestParams.getPage()) && requestParams.getPage() > 1) {
+    token.push([p_.PAGE, goog.string.urlEncode(requestParams.getPage())].join(''));
+  }
 
-	// use 'from' if available
-	if (goog.isDefAndNotNull(requestParams.getFrom()) && goog.isDateLike(requestParams.getFrom())) {
-		var from_ = org.jboss.core.util.dateTime.formatShortDate(requestParams.getFrom());
-		token.push([p_.FROM, goog.string.urlEncode(from_)].join(''));
-	}
+  // use 'from' if available
+  if (goog.isDefAndNotNull(requestParams.getFrom()) && goog.isDateLike(requestParams.getFrom())) {
+    var from_ = org.jboss.core.util.dateTime.formatShortDate(requestParams.getFrom());
+    token.push([p_.FROM, goog.string.urlEncode(from_)].join(''));
+  }
 
-	// use 'to' if available
-	if (goog.isDefAndNotNull(requestParams.getTo()) && goog.isDateLike(requestParams.getTo())) {
-		var to_ = org.jboss.core.util.dateTime.formatShortDate(requestParams.getTo());
-		token.push([p_.TO, goog.string.urlEncode(to_)].join(''));
-	}
+  // use 'to' if available
+  if (goog.isDefAndNotNull(requestParams.getTo()) && goog.isDateLike(requestParams.getTo())) {
+    var to_ = org.jboss.core.util.dateTime.formatShortDate(requestParams.getTo());
+    token.push([p_.TO, goog.string.urlEncode(to_)].join(''));
+  }
 
-	// use 'order' if available and NOT equals to {@link org.jboss.core.context.RequestParams.Order.SCORE}
-	if (goog.isDefAndNotNull(requestParams.getOrder())) {
-		if (requestParams.getOrder() != org.jboss.core.context.RequestParams.Order.SCORE) {
-			token.push([p_.ORDER_BY, goog.string.urlEncode(requestParams.getOrder())].join(''));
-		}
-	}
+  // use 'order' if available and NOT equals to {@link org.jboss.core.context.RequestParams.Order.SCORE}
+  if (goog.isDefAndNotNull(requestParams.getOrder())) {
+    if (requestParams.getOrder() != org.jboss.core.context.RequestParams.Order.SCORE) {
+      token.push([p_.ORDER_BY, goog.string.urlEncode(requestParams.getOrder())].join(''));
+    }
+  }
 
-	// use 'contributor'(s) if available
-	if (goog.isDefAndNotNull(requestParams.getContributors()) && requestParams.getContributors().length > 0) {
-		var dedup = [];
-		goog.array.removeDuplicates(requestParams.getContributors(), dedup);
-		goog.array.forEach(
-			dedup,
-			function(contributor) {
-				token.push([p_.CONTRIBUTOR, goog.string.urlEncode(contributor)].join(''));
-			}
-		)
-	}
+  var dedup;
 
-	if (goog.isDefAndNotNull(requestParams.getProjects()) && requestParams.getProjects().length > 0) {
-		var dedup = [];
-		goog.array.removeDuplicates(requestParams.getProjects(), dedup);
-		goog.array.forEach(
-			dedup,
-			function(project) {
-				token.push([p_.PROJECT, goog.string.urlEncode(project)].join(''));
-			}
-		)
-	}
+  // use 'contributor'(s) if available
+  if (goog.isDefAndNotNull(requestParams.getContributors()) && requestParams.getContributors().length > 0) {
+    dedup = [];
+    goog.array.removeDuplicates(requestParams.getContributors(), dedup);
+    goog.array.forEach(
+        dedup,
+        function(contributor) {
+          token.push([p_.CONTRIBUTOR, goog.string.urlEncode(contributor)].join(''));
+        }
+    );
+  }
 
-	if (goog.isDefAndNotNull(requestParams.getContentTypes()) && requestParams.getContentTypes().length > 0) {
-		var dedup = [];
-		goog.array.removeDuplicates(requestParams.getContentTypes(), dedup);
-		goog.array.forEach(
-			dedup,
-			function(type) {
-				token.push([p_.CONTENT_TYPE, goog.string.urlEncode(type)].join(''));
-			}
-		)
-	}
+  if (goog.isDefAndNotNull(requestParams.getProjects()) && requestParams.getProjects().length > 0) {
+    dedup = [];
+    goog.array.removeDuplicates(requestParams.getProjects(), dedup);
+    goog.array.forEach(
+        dedup,
+        function(project) {
+          token.push([p_.PROJECT, goog.string.urlEncode(project)].join(''));
+        }
+    );
+  }
 
-	// if log was used in previous call, keep it
-	/** @type {org.jboss.core.context.RequestParams} */
-	if (goog.isDef(opt_requestParams)) {
-		var log = opt_requestParams.getLog();
-		if (goog.isDefAndNotNull(log) && !goog.string.isEmpty(log)) {
-			token.push([p_.LOG, goog.string.urlEncode(log)].join(''));
-		}
-	}
+  if (goog.isDefAndNotNull(requestParams.getContentTypes()) && requestParams.getContentTypes().length > 0) {
+    dedup = [];
+    goog.array.removeDuplicates(requestParams.getContentTypes(), dedup);
+    goog.array.forEach(
+        dedup,
+        function(type) {
+          token.push([p_.CONTENT_TYPE, goog.string.urlEncode(type)].join(''));
+        }
+    );
+  }
 
-	return token.join('&');
+  // if log was used in previous call, keep it
+  /** @type {org.jboss.core.context.RequestParams} */
+  if (goog.isDef(opt_requestParams)) {
+    var log = opt_requestParams.getLog();
+    if (goog.isDefAndNotNull(log) && !goog.string.isEmpty(log)) {
+      token.push([p_.LOG, goog.string.urlEncode(log)].join(''));
+    }
+  }
+
+  return token.join('&');
 };

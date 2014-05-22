@@ -18,12 +18,15 @@
 
 /**
  * @fileoverview Implementation of ImageLoader that does nothing.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.util.ImageLoaderNoop');
 
 goog.require('org.jboss.core.util.ImageLoader');
+
+
 
 /**
  * This ImageLoader implementation does nothing. I.e. no image pre-loading.
@@ -34,12 +37,14 @@ goog.require('org.jboss.core.util.ImageLoader');
  */
 org.jboss.core.util.ImageLoaderNoop = function() {};
 
-/** @inheritDoc */
-org.jboss.core.util.ImageLoaderNoop.prototype.start = function () {
-	// noop
-};
 
 /** @inheritDoc */
-org.jboss.core.util.ImageLoaderNoop.prototype.addImage = function (id, image) {
-	// noop
+org.jboss.core.util.ImageLoaderNoop.prototype.start = function() {
+  // noop
+};
+
+
+/** @inheritDoc */
+org.jboss.core.util.ImageLoaderNoop.prototype.addImage = function(id, image) {
+  // noop
 };

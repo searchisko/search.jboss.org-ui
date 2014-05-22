@@ -18,10 +18,13 @@
 
 /**
  * @fileoverview Image loader interface.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.core.util.ImageLoader');
+
+
 
 /**
  * ImageLoader interface. This allows for multiple implementations that can be switched
@@ -31,12 +34,14 @@ goog.provide('org.jboss.core.util.ImageLoader');
  */
 org.jboss.core.util.ImageLoader = function() {};
 
+
 /**
  * @param {string} id The ID of the image to load.
  * @param {string|Image} image Either the source URL of the image or the HTML
  *     image element itself (or any object with a {@code src} property, really).
  */
 org.jboss.core.util.ImageLoader.prototype.addImage = function(id, image) {};
+
 
 /**
  * Starts loading all images in the image loader.
