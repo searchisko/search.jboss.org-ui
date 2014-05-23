@@ -49,7 +49,6 @@ goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.visualization.Histogram');
 goog.require('org.jboss.search.page.filter.DateOrderByChanged');
 goog.require('org.jboss.search.page.filter.DateRangeChanged');
-goog.require('org.jboss.search.page.filter.ProjectFilter');
 
 
 
@@ -217,7 +216,7 @@ goog.inherits(org.jboss.search.page.filter.DateFilter, goog.events.EventTarget);
 
 /** @inheritDoc */
 org.jboss.search.page.filter.DateFilter.prototype.disposeInternal = function() {
-  org.jboss.search.page.filter.ProjectFilter.superClass_.disposeInternal.call(this);
+  org.jboss.search.page.filter.DateFilter.superClass_.disposeInternal.call(this);
 
   goog.dispose(this.histogram_chart_);
   goog.dispose(this.keyHandler_);
