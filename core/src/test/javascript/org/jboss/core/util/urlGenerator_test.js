@@ -28,302 +28,301 @@ var searchResultsPerPage_ = 10;
 
 var testSearchUrlGenerator = function() {
 
-    var root = "http://localhost:1234";
-    var url = new goog.Uri(root);
-    var g_ = org.jboss.core.util.urlGenerator;
-	var rpf_ = org.jboss.core.context.RequestParamsFactory.getInstance();
+  var root = 'http://localhost:1234';
+  var url = new goog.Uri(root);
+  var g_ = org.jboss.core.util.urlGenerator;
+  var rpf_ = org.jboss.core.context.RequestParamsFactory.getInstance();
 
-    var urlString;
+  var urlString;
 
-    // such call should fail during compilation
-    urlString = g_.searchUrl(null);
-    assertEquals(
-        null,
-        urlString);
+  // such call should fail during compilation
+  urlString = g_.searchUrl(null);
+  assertEquals(
+      null,
+      urlString);
 
-    // such call should fail during compilation
-    urlString = g_.searchUrl(url.clone());
-    assertEquals(
+  // such call should fail during compilation
+  urlString = g_.searchUrl(url.clone());
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query",
-                "field=sys_type", "field=sys_id", "field=sys_title", "field=sys_contributors", "field=sys_project",
-                "field=sys_project_name", "field=sys_description", "field=sys_tags", "field=sys_last_activity_date", "field=sys_created", "field=sys_url_view",
-                "query_highlight=true",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query',
+          'field=sys_type', 'field=sys_id', 'field=sys_title', 'field=sys_contributors', 'field=sys_project',
+          'field=sys_project_name', 'field=sys_description', 'field=sys_tags', 'field=sys_last_activity_date', 'field=sys_created', 'field=sys_url_view',
+          'query_highlight=true',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-    urlString = g_.searchUrl(
-        url.clone(),
-		rpf_.reset().setQueryString(' ').build(),
-		searchResultsPerPage_
-    );
-    assertEquals(
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString(' ').build(),
+      searchResultsPerPage_
+      );
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query=%20",
-                "field=sys_type", "field=sys_id", "field=sys_title", "field=sys_contributors", "field=sys_project",
-                "field=sys_project_name", "field=sys_description", "field=sys_tags", "field=sys_last_activity_date", "field=sys_created", "field=sys_url_view",
-                "query_highlight=true",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query=%20',
+          'field=sys_type', 'field=sys_id', 'field=sys_title', 'field=sys_contributors', 'field=sys_project',
+          'field=sys_project_name', 'field=sys_description', 'field=sys_tags', 'field=sys_last_activity_date', 'field=sys_created', 'field=sys_url_view',
+          'query_highlight=true',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-    urlString = g_.searchUrl(
-        url.clone(),
-		rpf_.reset().setQueryString('dummy').build(),
-		searchResultsPerPage_
-    );
-    assertEquals(
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString('dummy').build(),
+      searchResultsPerPage_
+      );
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query=dummy",
-                "field=sys_type", "field=sys_id", "field=sys_title", "field=sys_contributors", "field=sys_project",
-                "field=sys_project_name", "field=sys_description", "field=sys_tags", "field=sys_last_activity_date", "field=sys_created", "field=sys_url_view",
-                "query_highlight=true",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query=dummy',
+          'field=sys_type', 'field=sys_id', 'field=sys_title', 'field=sys_contributors', 'field=sys_project',
+          'field=sys_project_name', 'field=sys_description', 'field=sys_tags', 'field=sys_last_activity_date', 'field=sys_created', 'field=sys_url_view',
+          'query_highlight=true',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-    urlString = g_.searchUrl(
-        url.clone(),
-		rpf_.reset().setQueryString('dummy').setPage(20).build(),
-		searchResultsPerPage_
-    );
-    assertEquals(
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString('dummy').setPage(20).build(),
+      searchResultsPerPage_
+      );
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query=dummy",
-                "field=sys_type", "field=sys_id", "field=sys_title", "field=sys_contributors", "field=sys_project",
-                "field=sys_project_name", "field=sys_description", "field=sys_tags", "field=sys_last_activity_date", "field=sys_created", "field=sys_url_view",
-                "query_highlight=true",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram",
-                "from=190"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query=dummy',
+          'field=sys_type', 'field=sys_id', 'field=sys_title', 'field=sys_contributors', 'field=sys_project',
+          'field=sys_project_name', 'field=sys_description', 'field=sys_tags', 'field=sys_last_activity_date', 'field=sys_created', 'field=sys_url_view',
+          'query_highlight=true',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram',
+          'from=190'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-    urlString = g_.searchUrl(
-        url.clone(),
-		rpf_.reset().setQueryString('dummy').build(),
-		searchResultsPerPage_,
-		{ fields: [''], highlighting: false }
-    );
-    assertEquals(
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString('dummy').build(),
+      searchResultsPerPage_,
+      { fields: [''], highlighting: false }
+      );
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query=dummy",
-                "field",
-                "query_highlight=false",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query=dummy',
+          'field',
+          'query_highlight=false',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-    urlString = g_.searchUrl(
-        url.clone(),
-		rpf_.reset().setQueryString('dummy').build(),
-		searchResultsPerPage_,
-		{ fields: [], highlighting: false }
-	);
-    assertEquals(
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString('dummy').build(),
+      searchResultsPerPage_,
+      { fields: [], highlighting: false }
+      );
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query=dummy",
-                "query_highlight=false",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query=dummy',
+          'query_highlight=false',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-    urlString = g_.searchUrl(
-        url.clone(),
-		rpf_.reset().setQueryString('dummy').build(),
-		searchResultsPerPage_,
-		{ fields: [] }
-	);
-    assertEquals(
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString('dummy').build(),
+      searchResultsPerPage_,
+      { fields: [] }
+      );
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query=dummy",
-                "query_highlight=true",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query=dummy',
+          'query_highlight=true',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-	// contributors
-	urlString = g_.searchUrl(
-		url.clone(),
-		rpf_.reset().setQueryString("test").setContributors(["john.doe1@domain.com","john.doe2@domain.com"]).build(),
-		searchResultsPerPage_,
-		{ fields: [] }
-	);
-	assertEquals(
-		[
-			root,
-			[
-				"query=test",
-				"query_highlight=true",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram",
-				"contributor=" + goog.string.urlEncode("john.doe1@domain.com"),
-				"contributor=" + goog.string.urlEncode("john.doe2@domain.com")
-			].join('&')
+  // contributors
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString('test').setContributors(['john.doe1@domain.com', 'john.doe2@domain.com']).build(),
+      searchResultsPerPage_,
+      { fields: [] }
+      );
+  assertEquals(
+      [
+        root,
+        [
+          'query=test',
+          'query_highlight=true',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram',
+          'contributor=' + goog.string.urlEncode('john.doe1@domain.com'),
+          'contributor=' + goog.string.urlEncode('john.doe2@domain.com')
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-		].join('?'),
-		urlString);
+  // size parameter
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString('dummy').build(),
+      searchResultsPerPage_,
+      { fields: [], size: 0 }
+      );
+  assertEquals(
+      [
+        root,
+        [
+          'query=dummy',
+          'query_highlight=true',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram',
+          'size=0'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-	// size parameter
-	urlString = g_.searchUrl(
-		url.clone(),
-		rpf_.reset().setQueryString('dummy').build(),
-		searchResultsPerPage_,
-		{ fields: [], size: 0 }
-	);
-	assertEquals(
-		[
-			root,
-			[
-				"query=dummy",
-				"query_highlight=true",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram",
-				"size=0"
-			].join('&')
-		].join('?'),
-		urlString);
+  // size parameter has an upper limit
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString('dummy').build(),
+      searchResultsPerPage_,
+      { fields: [], size: 9999 }
+      );
+  assertEquals(
+      [
+        root,
+        [
+          'query=dummy',
+          'query_highlight=true',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram',
+          'size=100'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-	// size parameter has an upper limit
-	urlString = g_.searchUrl(
-		url.clone(),
-		rpf_.reset().setQueryString('dummy').build(),
-		searchResultsPerPage_,
-		{ fields: [], size: 9999 }
-	);
-	assertEquals(
-		[
-			root,
-			[
-				"query=dummy",
-				"query_highlight=true",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram",
-				"size=100"
-			].join('&')
-		].join('?'),
-		urlString);
-
-	// negative value of size parameter not allowed and is silently ignored
-	urlString = g_.searchUrl(
-		url.clone(),
-		rpf_.reset().setQueryString('dummy').build(),
-		searchResultsPerPage_,
-		{ fields: [], size: -1 }
-	);
-	assertEquals(
-		[
-			root,
-			[
-				"query=dummy",
-				"query_highlight=true",
-				"facet=top_contributors", "facet=per_project_counts", "facet=per_sys_type_counts", "facet=activity_dates_histogram"
-			].join('&')
-		].join('?'),
-		urlString);
+  // negative value of size parameter not allowed and is silently ignored
+  urlString = g_.searchUrl(
+      url.clone(),
+      rpf_.reset().setQueryString('dummy').build(),
+      searchResultsPerPage_,
+      { fields: [], size: -1 }
+      );
+  assertEquals(
+      [
+        root,
+        [
+          'query=dummy',
+          'query_highlight=true',
+          'facet=top_contributors', 'facet=per_project_counts', 'facet=per_sys_type_counts', 'facet=activity_dates_histogram'
+        ].join('&')
+      ].join('?'),
+      urlString);
 };
 
 var testProjectSuggestionsUrlGenerator = function() {
 
-    var root = "http://localhost:1234";
-    var url = new goog.Uri(root);
-    var g_ = org.jboss.core.util.urlGenerator;
+  var root = 'http://localhost:1234';
+  var url = new goog.Uri(root);
+  var g_ = org.jboss.core.util.urlGenerator;
 
 
-    var urlString;
+  var urlString;
 
-    urlString = g_.projectNameSuggestionsUrl(null);
-    assertEquals(
-        null,
-        urlString);
+  urlString = g_.projectNameSuggestionsUrl(null);
+  assertEquals(
+      null,
+      urlString);
 
-    urlString = g_.projectNameSuggestionsUrl(url.clone());
-    assertEquals(
+  urlString = g_.projectNameSuggestionsUrl(url.clone());
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-    urlString = g_.projectNameSuggestionsUrl(url.clone(), "test");
-    assertEquals(
+  urlString = g_.projectNameSuggestionsUrl(url.clone(), 'test');
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query=test"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query=test'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
-    urlString = g_.projectNameSuggestionsUrl(url.clone(), "test", 3);
-    assertEquals(
+  urlString = g_.projectNameSuggestionsUrl(url.clone(), 'test', 3);
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "query=test",
-                "size=3"
-            ].join('&')
-        ].join('?'),
-        urlString);
+          'query=test',
+          'size=3'
+        ].join('&')
+      ].join('?'),
+      urlString);
 
 };
 
 var testClickStreamUrlGenerator = function() {
 
-    var root = "http://localhost:1234";
-    var url = new goog.Uri(root);
-    var g_ = org.jboss.core.util.urlGenerator;
+  var root = 'http://localhost:1234';
+  var url = new goog.Uri(root);
+  var g_ = org.jboss.core.util.urlGenerator;
 
 
-    var urlString;
+  var urlString;
 
-    urlString = g_.clickStreamUrl(null, "ignored", "ignored");
-    assertEquals(
-        null,
-        urlString);
+  urlString = g_.clickStreamUrl(null, 'ignored', 'ignored');
+  assertEquals(
+      null,
+      urlString);
 
-    urlString = g_.clickStreamUrl(url.clone(), "one", "two");
-    assertEquals(
+  urlString = g_.clickStreamUrl(url.clone(), 'one', 'two');
+  assertEquals(
+      [
+        root,
         [
-            root,
-            [
-                "one",
-                "two"
-            ].join('/')
+          'one',
+          'two'
+        ].join('/')
+      ].join('/'),
+      urlString);
+
+  urlString = g_.clickStreamUrl(url.clone(), 'one', 'two', 'three');
+  assertEquals(
+      [
+        [
+          root,
+          [
+            'one',
+            'two'
+          ].join('/')
         ].join('/'),
-        urlString);
-
-    urlString = g_.clickStreamUrl(url.clone(), "one", "two", "three");
-    assertEquals(
-        [
-            [
-                root,
-                [
-                    "one",
-                    "two"
-                ].join('/')
-            ].join('/'),
-            "three"
-        ].join('?'),
-        urlString);
+        'three'
+      ].join('?'),
+      urlString);
 };

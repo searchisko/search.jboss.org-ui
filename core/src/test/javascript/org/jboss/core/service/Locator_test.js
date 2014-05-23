@@ -16,23 +16,18 @@
  * limitations under the License.
  */
 
-/**
- * @fileoverview
- * @author Lukas Vlcek (lvlcek@redhat.com)
- */
-
 goog.require('org.jboss.core.service.LocatorTest');
 
 goog.require('goog.testing.jsunit');
 
 var testLocator = function() {
-	var testContainer = org.jboss.core.service.LocatorTest;
-	for (var m in testContainer) {
-		if(testContainer.hasOwnProperty(m)) {
-			if (goog.isFunction(testContainer[m])) {
-				// execute test
-				testContainer[m]();
-			}
-		}
-	}
+  var testContainer = org.jboss.core.service.LocatorTest;
+  for (var m in testContainer) {
+    if (testContainer.hasOwnProperty(m)) {
+      if (goog.isFunction(testContainer[m])) {
+        // execute test
+        testContainer[m]();
+      }
+    }
+  }
 };

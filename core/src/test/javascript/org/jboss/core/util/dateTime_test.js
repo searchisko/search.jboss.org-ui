@@ -16,86 +16,78 @@
  * limitations under the License.
  */
 
-/**
- * @fileoverview
- * @author Lukas Vlcek (lvlcek@redhat.com)
- */
-
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.service.LookUpImpl');
-goog.require('org.jboss.core.Variables');
 goog.require('org.jboss.core.util.dateTime');
-goog.require('goog.date.DateTime');
-goog.require('goog.i18n.DateTimeFormat');
 
 goog.require('goog.testing.jsunit');
 
 var setUpPage = function() {
-	// setup service locator
-	new org.jboss.core.service.Locator(
-		new org.jboss.core.service.LookUpImpl()
-	);
+  // setup service locator
+  new org.jboss.core.service.Locator(
+      new org.jboss.core.service.LookUpImpl()
+  );
 };
 
 var tearDownPage = function() {
-	// dispose service locator
-	org.jboss.core.service.Locator.dispose();
+  // dispose service locator
+  org.jboss.core.service.Locator.dispose();
 };
 
 var testFloorToDays = function() {
 
-	var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
-	var ndt = org.jboss.core.util.dateTime.floorToDays(dt);
+  var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
+  var ndt = org.jboss.core.util.dateTime.floorToDays(dt);
 
-	assertEquals(2006,dt.getYear());
-	assertEquals(11,dt.getMonth());
-	assertEquals(6,dt.getDate());
-	assertEquals(10,dt.getHours());
-	assertEquals(4,dt.getMinutes());
-	assertEquals(2,dt.getSeconds());
-	assertEquals(0,dt.getMilliseconds());
+  assertEquals(2006, dt.getYear());
+  assertEquals(11, dt.getMonth());
+  assertEquals(6, dt.getDate());
+  assertEquals(10, dt.getHours());
+  assertEquals(4, dt.getMinutes());
+  assertEquals(2, dt.getSeconds());
+  assertEquals(0, dt.getMilliseconds());
 
-	assertEquals(2006,ndt.getYear());
-	assertEquals(11,ndt.getMonth());
-	assertEquals(6,ndt.getDate());
-	assertEquals(0,ndt.getHours());
-	assertEquals(0,ndt.getMinutes());
-	assertEquals(0,ndt.getSeconds());
-	assertEquals(0,ndt.getMilliseconds());
+  assertEquals(2006, ndt.getYear());
+  assertEquals(11, ndt.getMonth());
+  assertEquals(6, ndt.getDate());
+  assertEquals(0, ndt.getHours());
+  assertEquals(0, ndt.getMinutes());
+  assertEquals(0, ndt.getSeconds());
+  assertEquals(0, ndt.getMilliseconds());
 
-	assertFalse(dt.equals(ndt));
+  assertFalse(dt.equals(ndt));
 };
 
 var testDateFormatter = function() {
 
-	/** @type {string} */ var formatterDate;
-	var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
+  /** @type {string} */ var formatterDate;
+  var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
 
-	var formatter = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.SHORT_DATE_FORMAT);
-	formatterDate = org.jboss.core.util.dateTime.format(dt,formatter);
+  var formatter = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.SHORT_DATE_FORMAT);
+  formatterDate = org.jboss.core.util.dateTime.format(dt, formatter);
 
-	assertEquals("2006-12-06", formatterDate);
+  assertEquals('2006-12-06', formatterDate);
 
-	var formatter = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.MEDIUM_DATE_FORMAT);
-	formatterDate = org.jboss.core.util.dateTime.format(dt,formatter);
+  var formatter = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.MEDIUM_DATE_FORMAT);
+  formatterDate = org.jboss.core.util.dateTime.format(dt, formatter);
 
-	assertEquals("2006-12-6, 10:04AM",formatterDate);
+  assertEquals('2006-12-6, 10:04AM', formatterDate);
 };
 
 var testShortDateFormatter = function() {
 
-	/** @type {string} */ var formatterDate;
-	var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
-	formatterDate = org.jboss.core.util.dateTime.formatShortDate(dt);
+  /** @type {string} */ var formatterDate;
+  var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
+  formatterDate = org.jboss.core.util.dateTime.formatShortDate(dt);
 
-	assertEquals("2006-12-06", formatterDate);
+  assertEquals('2006-12-06', formatterDate);
 };
 
 var testMediumDateFormatter = function() {
 
-	/** @type {string} */ var formatterDate;
-	var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
-	formatterDate = org.jboss.core.util.dateTime.formatMediumDate(dt);
+  /** @type {string} */ var formatterDate;
+  var dt = new goog.date.DateTime(2006, 11, 6, 10, 4, 2);
+  formatterDate = org.jboss.core.util.dateTime.formatMediumDate(dt);
 
-	assertEquals("2006-12-6, 10:04am", formatterDate);
+  assertEquals('2006-12-6, 10:04am', formatterDate);
 };
