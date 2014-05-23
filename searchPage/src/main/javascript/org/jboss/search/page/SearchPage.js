@@ -365,7 +365,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
      * @type {goog.events.Key}
      * @private
      */
-    this.projectClickListenerId_ = goog.events.listen(this.elements_.getProject_filter_tab_div(),
+    this.projectClickListenerId_ = goog.events.listen(this.elements_.getTechnology_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
             thiz_.isTechnologyFilterExpanded_() ? thiz_.collapseTechnologyFilter_() : thiz_.expandTechnologyFilter_()
@@ -416,9 +416,9 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                 thiz_.collapseDateFilter_();
             }
 
-            // if technology filter (sub)element is clicked do not hide project filter
-            if (e.target !== thiz_.elements_.getProject_filter_tab_div() &&
-                !goog.dom.contains(thiz_.elements_.getProject_filter_body_div(), /** @type {Node} */ (e.target))) {
+            // if technology filter (sub)element is clicked do not hide technology filter
+            if (e.target !== thiz_.elements_.getTechnology_filter_tab_div() &&
+                !goog.dom.contains(thiz_.elements_.getTechnology_filter_body_div(), /** @type {Node} */ (e.target))) {
                 thiz_.collapseTechnologyFilter_();
             }
 
@@ -1110,7 +1110,7 @@ org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded_ = function () {
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isTechnologyFilterExpanded_ = function () {
-    return !goog.dom.classes.has(this.elements_.getProject_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+    return !goog.dom.classes.has(this.elements_.getTechnology_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 };
 
 /**

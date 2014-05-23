@@ -38,7 +38,7 @@ goog.require('org.jboss.search.page.filter.templates');
  * Create a new author filter.
  * It requires an element as the parameter, it assumes there is one element with class='filter_items' found inside.
  * @param {!HTMLElement} element to host the author filter
- * @param {!HTMLInputElement} query_field to host the project filter
+ * @param {!HTMLInputElement} query_field to host the technology filter
  * @param {!HTMLDivElement} author_filter_items_div where authors are listed
  * @param {function(): boolean=} opt_isCollapsed a function that is used to learn if filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements

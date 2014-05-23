@@ -49,7 +49,7 @@ var testValidParameters = function() {
     var query_suggestions_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
 
     var date_filter_body_div    = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
-    var project_filter_body_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var technology_filter_body_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
     var author_filter_body_div  = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
     var content_filter_body_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
 
@@ -59,27 +59,27 @@ var testValidParameters = function() {
 
     var date_filter_tab_div    = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
     var author_filter_tab_div  = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
-    var project_filter_tab_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+    var technology_filter_tab_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
     var content_filter_tab_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
     var date_order             = /** @type {!HTMLSelectElement} */ goog.dom.createDom('select', null);
 
-    var project_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
+    var technology_filter_query_field = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
     var author_filter_query_field  = /** @type {!HTMLInputElement} */ goog.dom.createDom('input', { type: 'text'});
 
 	var author_filter_items_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
-	var project_filter_items_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+	var technology_filter_items_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
 
     var search_results_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
     var search_filters_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
 
     var elements = new org.jboss.search.page.SearchPageElements(
         query_field, spinner_div, clear_query_div, query_suggestions_div,
-        date_filter_tab_div, project_filter_tab_div, author_filter_tab_div, content_filter_tab_div,
-        date_filter_body_div, project_filter_body_div, author_filter_body_div, content_filter_body_div,
+        date_filter_tab_div, technology_filter_tab_div, author_filter_tab_div, content_filter_tab_div,
+        date_filter_body_div, technology_filter_body_div, author_filter_body_div, content_filter_body_div,
         date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
         date_order,
-        project_filter_query_field, author_filter_query_field,
-		author_filter_items_div, project_filter_items_div,
+        technology_filter_query_field, author_filter_query_field,
+		author_filter_items_div, technology_filter_items_div,
         search_results_div, search_filters_div
     );
     assertTrue(elements.isValid());

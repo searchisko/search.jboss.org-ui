@@ -35,21 +35,21 @@ goog.require('goog.Disposable');
  * @param {!HTMLDivElement}   clear_query_div
  * @param {!HTMLDivElement}   query_suggestions_div
  * @param {!HTMLDivElement}   date_filter_tab_div
- * @param {!HTMLDivElement}   project_filter_tab_div
+ * @param {!HTMLDivElement}   technology_filter_tab_div
  * @param {!HTMLDivElement}   author_filter_tab_div
  * @param {!HTMLDivElement}   content_filter_tab_div
  * @param {!HTMLDivElement}   date_filter_body_div
- * @param {!HTMLDivElement}   project_filter_body_div
+ * @param {!HTMLDivElement}   technology_filter_body_div
  * @param {!HTMLDivElement}   author_filter_body_div
  * @param {!HTMLDivElement}   content_filter_body_div
  * @param {!HTMLDivElement}   date_histogram_chart_div
  * @param {!HTMLInputElement} date_filter_from_field
  * @param {!HTMLInputElement} date_filter_to_field
  * @param {!HTMLSelectElement} date_order
- * @param {!HTMLInputElement} project_filter_query_field
+ * @param {!HTMLInputElement} technology_filter_query_field
  * @param {!HTMLInputElement} author_filter_query_field
  * @param {!HTMLDivElement}   author_filter_items_div
- * @param {!HTMLDivElement}   project_filter_items_div
+ * @param {!HTMLDivElement}   technology_filter_items_div
  * @param {!HTMLDivElement}   search_results_div
  * @param {!HTMLDivElement}   search_filters_div
  * @constructor
@@ -57,12 +57,12 @@ goog.require('goog.Disposable');
  */
 org.jboss.search.page.SearchPageElements = function(
     query_field, spinner_div, clear_query_div, query_suggestions_div,
-    date_filter_tab_div, project_filter_tab_div, author_filter_tab_div, content_filter_tab_div,
-    date_filter_body_div, project_filter_body_div, author_filter_body_div, content_filter_body_div,
+    date_filter_tab_div, technology_filter_tab_div, author_filter_tab_div, content_filter_tab_div,
+    date_filter_body_div, technology_filter_body_div, author_filter_body_div, content_filter_body_div,
     date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
     date_order,
-    project_filter_query_field, author_filter_query_field,
-	author_filter_items_div, project_filter_items_div,
+    technology_filter_query_field, author_filter_query_field,
+	author_filter_items_div, technology_filter_items_div,
     search_results_div, search_filters_div
     ) {
 
@@ -73,21 +73,21 @@ org.jboss.search.page.SearchPageElements = function(
     /** @type {!HTMLDivElement}   */ this.clear_query_div = clear_query_div;
     /** @type {!HTMLDivElement}   */ this.query_suggestions_div = query_suggestions_div;
     /** @type {!HTMLDivElement}   */ this.date_filter_tab_div = date_filter_tab_div;
-    /** @type {!HTMLDivElement}   */ this.project_filter_tab_div = project_filter_tab_div;
+    /** @type {!HTMLDivElement}   */ this.technology_filter_tab_div = technology_filter_tab_div;
     /** @type {!HTMLDivElement}   */ this.author_filter_tab_div = author_filter_tab_div;
     /** @type {!HTMLDivElement}   */ this.content_filter_tab_div = content_filter_tab_div;
     /** @type {!HTMLDivElement}   */ this.date_filter_body_div = date_filter_body_div;
-    /** @type {!HTMLDivElement}   */ this.project_filter_body_div = project_filter_body_div;
+    /** @type {!HTMLDivElement}   */ this.technology_filter_body_div = technology_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.author_filter_body_div = author_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.content_filter_body_div = content_filter_body_div;
     /** @type {!HTMLDivElement}   */ this.date_histogram_chart_div = date_histogram_chart_div;
     /** @type {!HTMLInputElement} */ this.date_filter_from_field = date_filter_from_field;
     /** @type {!HTMLInputElement} */ this.date_filter_to_field = date_filter_to_field;
     /** @type {!HTMLSelectElement} */ this.date_order = date_order;
-    /** @type {!HTMLInputElement} */ this.project_filter_query_field = project_filter_query_field;
+    /** @type {!HTMLInputElement} */ this.technology_filter_query_field = technology_filter_query_field;
     /** @type {!HTMLInputElement} */ this.author_filter_query_field = author_filter_query_field;
     /** @type {!HTMLDivElement}   */ this.author_filter_items_div = author_filter_items_div;
-    /** @type {!HTMLDivElement}   */ this.project_filter_items_div = project_filter_items_div;
+    /** @type {!HTMLDivElement}   */ this.technology_filter_items_div = technology_filter_items_div;
     /** @type {!HTMLDivElement}   */ this.search_results_div = search_results_div;
     /** @type {!HTMLDivElement}   */ this.search_filters_div = search_filters_div;
 
@@ -102,21 +102,21 @@ org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() 
     delete this.clear_query_div;
     delete this.query_suggestions_div;
     delete this.date_filter_tab_div;
-    delete this.project_filter_tab_div;
+    delete this.technology_filter_tab_div;
     delete this.author_filter_tab_div;
     delete this.content_filter_tab_div;
     delete this.date_filter_body_div;
-    delete this.project_filter_body_div;
+    delete this.technology_filter_body_div;
     delete this.author_filter_body_div;
     delete this.content_filter_body_div;
     delete this.date_histogram_chart_div;
     delete this.date_filter_from_field;
     delete this.date_filter_to_field;
     delete this.date_order;
-    delete this.project_filter_query_field;
+    delete this.technology_filter_query_field;
     delete this.author_filter_query_field;
     delete this.author_filter_items_div;
-    delete this.project_filter_items_div;
+    delete this.technology_filter_items_div;
     delete this.search_results_div;
     delete this.search_filters_div;
 };
@@ -131,21 +131,21 @@ org.jboss.search.page.SearchPageElements.prototype.isValid = function() {
         && goog.isDefAndNotNull(this.clear_query_div)
         && goog.isDefAndNotNull(this.query_suggestions_div)
         && goog.isDefAndNotNull(this.date_filter_tab_div)
-        && goog.isDefAndNotNull(this.project_filter_tab_div)
+        && goog.isDefAndNotNull(this.technology_filter_tab_div)
         && goog.isDefAndNotNull(this.author_filter_tab_div)
         && goog.isDefAndNotNull(this.content_filter_tab_div)
         && goog.isDefAndNotNull(this.date_filter_body_div)
-        && goog.isDefAndNotNull(this.project_filter_body_div)
+        && goog.isDefAndNotNull(this.technology_filter_body_div)
         && goog.isDefAndNotNull(this.author_filter_body_div)
         && goog.isDefAndNotNull(this.content_filter_body_div)
         && goog.isDefAndNotNull(this.date_histogram_chart_div)
         && goog.isDefAndNotNull(this.date_filter_from_field)
         && goog.isDefAndNotNull(this.date_filter_to_field)
         && goog.isDefAndNotNull(this.date_order)
-        && goog.isDefAndNotNull(this.project_filter_query_field)
+        && goog.isDefAndNotNull(this.technology_filter_query_field)
         && goog.isDefAndNotNull(this.author_filter_query_field)
         && goog.isDefAndNotNull(this.author_filter_items_div)
-        && goog.isDefAndNotNull(this.project_filter_items_div)
+        && goog.isDefAndNotNull(this.technology_filter_items_div)
         && goog.isDefAndNotNull(this.search_results_div)
         && goog.isDefAndNotNull(this.search_filters_div)
 };
@@ -176,8 +176,8 @@ org.jboss.search.page.SearchPageElements.prototype.getDate_filter_tab_div = func
 };
 
 /** @return {!HTMLDivElement} */
-org.jboss.search.page.SearchPageElements.prototype.getProject_filter_tab_div = function() {
-    return this.project_filter_tab_div;
+org.jboss.search.page.SearchPageElements.prototype.getTechnology_filter_tab_div = function() {
+    return this.technology_filter_tab_div;
 };
 
 /** @return {!HTMLDivElement} */
@@ -196,8 +196,8 @@ org.jboss.search.page.SearchPageElements.prototype.getDate_filter_body_div = fun
 };
 
 /** @return {!HTMLDivElement} */
-org.jboss.search.page.SearchPageElements.prototype.getProject_filter_body_div = function() {
-    return this.project_filter_body_div;
+org.jboss.search.page.SearchPageElements.prototype.getTechnology_filter_body_div = function() {
+    return this.technology_filter_body_div;
 };
 
 /** @return {!HTMLDivElement} */
@@ -231,8 +231,8 @@ org.jboss.search.page.SearchPageElements.prototype.getDate_order = function() {
 };
 
 /** @return {!HTMLInputElement} */
-org.jboss.search.page.SearchPageElements.prototype.getProject_filter_query_field = function() {
-    return this.project_filter_query_field;
+org.jboss.search.page.SearchPageElements.prototype.getTechnology_filter_query_field = function() {
+    return this.technology_filter_query_field;
 };
 
 /** @return {!HTMLInputElement} */
@@ -246,8 +246,8 @@ org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_items_div = 
 };
 
 /** @return {!HTMLDivElement} */
-org.jboss.search.page.SearchPageElements.prototype.getProject_filter_items_div = function() {
-	return this.project_filter_items_div;
+org.jboss.search.page.SearchPageElements.prototype.getTechnology_filter_items_div = function() {
+	return this.technology_filter_items_div;
 };
 
 /** @return {!HTMLDivElement} */

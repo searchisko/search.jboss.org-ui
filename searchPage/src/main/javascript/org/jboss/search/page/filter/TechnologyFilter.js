@@ -49,18 +49,18 @@ goog.require('org.jboss.search.response');
 
 
 /**
- * Create a new project filter.
+ * Create a new technology filter.
  * It requires an element as a parameter, it assumes there is one element with class='filter_items' found inside.
- * @param {!HTMLElement} element to host the project filter
- * @param {!HTMLInputElement} query_field to host the project filter
- * @param {!HTMLDivElement} project_filter_items_div where projects are listed
+ * @param {!HTMLElement} element to host the technology filter
+ * @param {!HTMLInputElement} query_field to host the technology filter
+ * @param {!HTMLDivElement} technology_filter_items_div where projects are listed
  * @param {function(): boolean=} opt_isCollapsed a function that is used to learn if filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, project_filter_items_div, opt_isCollapsed,
+org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, technology_filter_items_div, opt_isCollapsed,
                                                       opt_expandFilter, opt_collapseFilter) {
   goog.events.EventTarget.call(this);
 
@@ -89,7 +89,7 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, p
    * @type {!HTMLElement}
    * @private
    */
-  this.items_div_ = project_filter_items_div;
+  this.items_div_ = technology_filter_items_div;
 
   /**
    * @type {!HTMLInputElement}
@@ -275,7 +275,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.getSuggestions = functio
 
 
 /**
- * Initialization of project filter, it pulls project array from lookup.
+ * Initialization of technology filter, it pulls project array from lookup.
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.init = function() {
   var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
