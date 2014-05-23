@@ -17,12 +17,12 @@
  */
 
 /**
- * @fileoverview Project filter.
+ * @fileoverview Technology filter.
  *
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
-goog.provide('org.jboss.search.page.filter.ProjectFilter');
+goog.provide('org.jboss.search.page.filter.TechnologyFilter');
 
 goog.require('goog.Uri');
 goog.require('goog.async.Delay');
@@ -60,7 +60,7 @@ goog.require('org.jboss.search.response');
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.jboss.search.page.filter.ProjectFilter = function(element, query_field, project_filter_items_div, opt_isCollapsed,
+org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, project_filter_items_div, opt_isCollapsed,
                                                       opt_expandFilter, opt_collapseFilter) {
   goog.events.EventTarget.call(this);
 
@@ -125,12 +125,12 @@ org.jboss.search.page.filter.ProjectFilter = function(element, query_field, proj
       false, this
       );
 };
-goog.inherits(org.jboss.search.page.filter.ProjectFilter, goog.events.EventTarget);
+goog.inherits(org.jboss.search.page.filter.TechnologyFilter, goog.events.EventTarget);
 
 
 /** @inheritDoc */
-org.jboss.search.page.filter.ProjectFilter.prototype.disposeInternal = function() {
-  org.jboss.search.page.filter.ProjectFilter.superClass_.disposeInternal.call(this);
+org.jboss.search.page.filter.TechnologyFilter.prototype.disposeInternal = function() {
+  org.jboss.search.page.filter.TechnologyFilter.superClass_.disposeInternal.call(this);
 
   goog.events.unlistenByKey(this.projectClickListenerId_);
 
@@ -148,7 +148,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.disposeInternal = function(
  * this does nothing if the filter is collapsed.
  * @param {boolean=} opt_force refresh even if filter is collapsed. Defaults to false.
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.refreshItems = function(opt_force) {
+org.jboss.search.page.filter.TechnologyFilter.prototype.refreshItems = function(opt_force) {
   var force = !!(opt_force || false);
   if (!this.isCollapsed_() || force) {
     var data = org.jboss.core.service.Locator.getInstance().getLookup().getRecentQueryResultData();
@@ -167,7 +167,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.refreshItems = function(opt
  * @param {Array} data
  * @private
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.updateItems_ = function(data) {
+org.jboss.search.page.filter.TechnologyFilter.prototype.updateItems_ = function(data) {
   // scroll to top when changing the content of the filter
   if (this.items_div_.scrollTop) {
     this.items_div_.scrollTop = 0;
@@ -181,7 +181,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.updateItems_ = function(dat
  * Calls opt_expandFilter function.
  * @see constructor
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.expandFilter = function() {
+org.jboss.search.page.filter.TechnologyFilter.prototype.expandFilter = function() {
   this.expandFilter_();
   this.refreshItems();
 };
@@ -191,7 +191,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.expandFilter = function() {
  * Calls opt_collapseFilter function.
  * @see constructor
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.collapseFilter = function() {
+org.jboss.search.page.filter.TechnologyFilter.prototype.collapseFilter = function() {
   this.collpaseFilter_();
 };
 
@@ -200,7 +200,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.collapseFilter = function()
  * Populate a new items into the filter. Drops all existing.
  * @param {Array.<{name: string, code: string}>} items
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.replaceItems = function(items) {
+org.jboss.search.page.filter.TechnologyFilter.prototype.replaceItems = function(items) {
   if (goog.isDefAndNotNull(items)) {
     var html = org.jboss.search.page.filter.templates.project_filter_items(
         { 'items': items, 'did_you_mean_items': null });
@@ -213,7 +213,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.replaceItems = function(ite
  * @type {goog.Uri}
  * @const
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.PROJECT_SUGGESTIONS_URI =
+org.jboss.search.page.filter.TechnologyFilter.prototype.PROJECT_SUGGESTIONS_URI =
     goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_PROJECT);
 
 
@@ -221,7 +221,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.PROJECT_SUGGESTIONS_URI =
  * Prototype URI
  * @return {goog.Uri} Project name suggestions service URI
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.getProjectSuggestionsUri = function() {
+org.jboss.search.page.filter.TechnologyFilter.prototype.getProjectSuggestionsUri = function() {
   return this.PROJECT_SUGGESTIONS_URI.clone();
 };
 
@@ -230,7 +230,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.getProjectSuggestionsUri = 
  *
  * @param {string} query
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.getSuggestions = function(query) {
+org.jboss.search.page.filter.TechnologyFilter.prototype.getSuggestions = function(query) {
 
   var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
 
@@ -277,7 +277,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.getSuggestions = function(q
 /**
  * Initialization of project filter, it pulls project array from lookup.
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.init = function() {
+org.jboss.search.page.filter.TechnologyFilter.prototype.init = function() {
   var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
   this.replaceItems(lookup_.getProjectArray());
 };
@@ -287,7 +287,7 @@ org.jboss.search.page.filter.ProjectFilter.prototype.init = function() {
  * @return {!Object.<(goog.events.KeyCodes|number), function(goog.events.KeyEvent, goog.async.Delay)>}
  * @private
  */
-org.jboss.search.page.filter.ProjectFilter.prototype.getPresetKeyHandlers_ = function() {
+org.jboss.search.page.filter.TechnologyFilter.prototype.getPresetKeyHandlers_ = function() {
 
   /**
    * @param {goog.events.KeyEvent} event

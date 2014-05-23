@@ -62,7 +62,7 @@ goog.require('org.jboss.search.page.element.Status');
 goog.require('org.jboss.search.page.filter.AuthorFilter');
 goog.require('org.jboss.search.page.filter.ContentFilter');
 goog.require('org.jboss.search.page.filter.DateFilter');
-goog.require('org.jboss.search.page.filter.ProjectFilter');
+goog.require('org.jboss.search.page.filter.TechnologyFilter');
 goog.require('org.jboss.search.page.SearchPage');
 goog.require("org.jboss.search.page.SearchPageElements");
 goog.require('org.jboss.search.service.query.QueryServiceCached');
@@ -248,7 +248,7 @@ org.jboss.search.App = function() {
         })
         // initialize project filter and keep reference in the lookup
         .addCallback(function(){
-            var projectFilter = new org.jboss.search.page.filter.ProjectFilter(
+            var technologyFilter = new org.jboss.search.page.filter.TechnologyFilter(
                 searchPageElements.getProject_filter_body_div(),
                 searchPageElements.getProject_filter_query_field(),
 				searchPageElements.getProject_filter_items_div(),
@@ -273,8 +273,8 @@ org.jboss.search.App = function() {
                     searchPageElements.getProject_filter_query_field().blur();
                 }
             );
-            lookup_.setProjectFilter(projectFilter);
-            projectFilter.init();
+            lookup_.setTechnologyFilter(technologyFilter);
+            technologyFilter.init();
         })
         .addCallback(function() {
             status.increaseProgress();

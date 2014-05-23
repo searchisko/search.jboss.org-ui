@@ -27,7 +27,7 @@ goog.provide('org.jboss.search.service.LookUp');
 goog.require("org.jboss.search.page.filter.AuthorFilter");
 goog.require("org.jboss.search.page.filter.ContentFilter");
 goog.require("org.jboss.search.page.filter.DateFilter");
-goog.require("org.jboss.search.page.filter.ProjectFilter");
+goog.require("org.jboss.search.page.filter.TechnologyFilter");
 goog.require("org.jboss.core.service.query.QueryService");
 goog.require("org.jboss.core.service.query.QueryServiceDispatcher");
 goog.require('org.jboss.core.context.RequestParams');
@@ -55,10 +55,10 @@ org.jboss.search.service.LookUp = function() {
 	this.projectArray_;
 
 	/**
-	 * @type {org.jboss.search.page.filter.ProjectFilter}
+	 * @type {org.jboss.search.page.filter.TechnologyFilter}
 	 * @private
 	 */
-	this.projectFilter_;
+	this.technologyFilter_;
 
 	/**
 	 * @type {org.jboss.search.page.filter.AuthorFilter}
@@ -126,17 +126,17 @@ org.jboss.search.service.LookUp.prototype.setProjectArray = function(projectArra
 };
 
 /**
- * @param {org.jboss.search.page.filter.ProjectFilter} filter
+ * @param {org.jboss.search.page.filter.TechnologyFilter} filter
  */
-org.jboss.search.service.LookUp.prototype.setProjectFilter = function(filter) {
-	this.projectFilter_ = filter;
+org.jboss.search.service.LookUp.prototype.setTechnologyFilter = function(filter) {
+	this.technologyFilter_ = filter;
 };
 
 /**
- * @return {org.jboss.search.page.filter.ProjectFilter}
+ * @return {org.jboss.search.page.filter.TechnologyFilter}
  */
-org.jboss.search.service.LookUp.prototype.getProjectFilter = function() {
-	return this.projectFilter_;
+org.jboss.search.service.LookUp.prototype.getTechnologyFilter = function() {
+	return this.technologyFilter_;
 };
 
 /**

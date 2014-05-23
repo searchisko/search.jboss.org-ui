@@ -194,9 +194,9 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 					// refresh author filter
 					var authorFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getAuthorFilter();
 					if (goog.isDefAndNotNull(authorFilter_)) { authorFilter_.refreshItems(false) }
-					// refresh project filter
-					var projectFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getProjectFilter();
-					if (goog.isDefAndNotNull(projectFilter_)) { projectFilter_.refreshItems(false) }
+					// refresh technology filter
+					var technologyFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getTechnologyFilter();
+					if (goog.isDefAndNotNull(technologyFilter_)) { technologyFilter_.refreshItems(false) }
                     break;
 
                 case  org.jboss.core.service.query.QueryServiceEventType.SEARCH_ERROR:
@@ -368,7 +368,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
     this.projectClickListenerId_ = goog.events.listen(this.elements_.getProject_filter_tab_div(),
         goog.events.EventType.CLICK,
         function() {
-            thiz_.isProjectFilterExpanded_() ? thiz_.collapseProjectFilter_() : thiz_.expandProjectFilter_()
+            thiz_.isTechnologyFilterExpanded_() ? thiz_.collapseTechnologyFilter_() : thiz_.expandTechnologyFilter_()
         }
     );
 
@@ -416,10 +416,10 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                 thiz_.collapseDateFilter_();
             }
 
-            // if project filter (sub)element is clicked do not hide project filter
+            // if technology filter (sub)element is clicked do not hide project filter
             if (e.target !== thiz_.elements_.getProject_filter_tab_div() &&
                 !goog.dom.contains(thiz_.elements_.getProject_filter_body_div(), /** @type {Node} */ (e.target))) {
-                thiz_.collapseProjectFilter_();
+                thiz_.collapseTechnologyFilter_();
             }
 
             // if author filter (sub)element is clicked do not hide author filter
@@ -896,7 +896,7 @@ org.jboss.search.page.SearchPage.prototype.clearSearchResults = function() {
  */
 org.jboss.search.page.SearchPage.prototype.collapseAllFilters = function() {
     if (this.isAuthorFilterExpanded_()) this.collapseAuthorFilter_();
-    if (this.isProjectFilterExpanded_()) this.collapseProjectFilter_();
+    if (this.isTechnologyFilterExpanded_()) this.collapseTechnologyFilter_();
     if (this.isDateFilterExpanded_()) this.collapseDateFilter_();
 };
 
@@ -1109,7 +1109,7 @@ org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded_ = function () {
  * @return {boolean}
  * @private
  */
-org.jboss.search.page.SearchPage.prototype.isProjectFilterExpanded_ = function () {
+org.jboss.search.page.SearchPage.prototype.isTechnologyFilterExpanded_ = function () {
     return !goog.dom.classes.has(this.elements_.getProject_filter_body_div(), org.jboss.core.Constants.HIDDEN);
 };
 
@@ -1154,8 +1154,8 @@ org.jboss.search.page.SearchPage.prototype.expandContentFilter_ = function () {
 };
 
 /** @private */
-org.jboss.search.page.SearchPage.prototype.expandProjectFilter_ = function () {
-    var filter = org.jboss.core.service.Locator.getInstance().getLookup().getProjectFilter();
+org.jboss.search.page.SearchPage.prototype.expandTechnologyFilter_ = function () {
+    var filter = org.jboss.core.service.Locator.getInstance().getLookup().getTechnologyFilter();
     if (goog.isDefAndNotNull(filter)) {
         filter.expandFilter()
     }
@@ -1170,8 +1170,8 @@ org.jboss.search.page.SearchPage.prototype.collapseDateFilter_ = function () {
 };
 
 /** @private */
-org.jboss.search.page.SearchPage.prototype.collapseProjectFilter_ = function () {
-    var filter = org.jboss.core.service.Locator.getInstance().getLookup().getProjectFilter();
+org.jboss.search.page.SearchPage.prototype.collapseTechnologyFilter_ = function () {
+    var filter = org.jboss.core.service.Locator.getInstance().getLookup().getTechnologyFilter();
     if (goog.isDefAndNotNull(filter)) {
         filter.collapseFilter()
     }
