@@ -23,49 +23,49 @@ goog.require('goog.testing.jsunit');
 
 var testPaginationGenerator = function() {
 
-    var g_ = org.jboss.search.util.paginationGenerator;
-    var pagination;
+  var g_ = org.jboss.search.util.paginationGenerator;
+  var pagination;
 
-    pagination = g_.generate(2, 43);
-    assertEquals(5, pagination.total_pages);
-    assertEquals(5, pagination.array.length);
-    assertEquals(1, pagination.array[0].page);
-    assertEquals("1", pagination.array[0].symbol);
+  pagination = g_.generate(2, 43);
+  assertEquals(5, pagination.total_pages);
+  assertEquals(5, pagination.array.length);
+  assertEquals(1, pagination.array[0].page);
+  assertEquals('1', pagination.array[0].symbol);
 
-    pagination = g_.generate(2, 143);
-    assertEquals(15, pagination.total_pages);
-    assertEquals(org.jboss.search.Variables.PAGINATION_MAX_ITEMS_COUNT, pagination.array.length);
-    assertEquals(1, pagination.array[0].page);
-    assertEquals("1", pagination.array[0].symbol);
+  pagination = g_.generate(2, 143);
+  assertEquals(15, pagination.total_pages);
+  assertEquals(org.jboss.search.Variables.PAGINATION_MAX_ITEMS_COUNT, pagination.array.length);
+  assertEquals(1, pagination.array[0].page);
+  assertEquals('1', pagination.array[0].symbol);
 
-    pagination = g_.generate(6, 143);
-    assertEquals(15, pagination.total_pages);
-    assertEquals(org.jboss.search.Variables.PAGINATION_MAX_ITEMS_COUNT, pagination.array.length);
-    assertEquals(2, pagination.array[0].page);
-    assertEquals(11, pagination.array[org.jboss.search.Variables.PAGINATION_MAX_ITEMS_COUNT-1].page);
+  pagination = g_.generate(6, 143);
+  assertEquals(15, pagination.total_pages);
+  assertEquals(org.jboss.search.Variables.PAGINATION_MAX_ITEMS_COUNT, pagination.array.length);
+  assertEquals(2, pagination.array[0].page);
+  assertEquals(11, pagination.array[org.jboss.search.Variables.PAGINATION_MAX_ITEMS_COUNT - 1].page);
 };
 
 var testPaginationGeneratorInfiniteLoop = function() {
 
-    if (org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE < 2) {
-        fail('Can not execute the test!');
-    }
+  if (org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE < 2) {
+    fail('Can not execute the test!');
+  }
 
-    var g_ = org.jboss.search.util.paginationGenerator;
-    var pagination;
+  var g_ = org.jboss.search.util.paginationGenerator;
+  var pagination;
 
-    pagination = g_.generate(1, org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE);
-    assertEquals(1, pagination.total_pages);
-    assertEquals(0, pagination.array.length);
+  pagination = g_.generate(1, org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE);
+  assertEquals(1, pagination.total_pages);
+  assertEquals(0, pagination.array.length);
 };
 
 var testPaginationGeneratorLogParameter = function() {
 
-    var g_ = org.jboss.search.util.paginationGenerator;
-    var pagination;
+  var g_ = org.jboss.search.util.paginationGenerator;
+  var pagination;
 
-    // make sure pagination is generated, thus SEARCH_RESULTS_PER_PAGE + 1
-    pagination = g_.generate(1, org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE + 1);
-    assertEquals(2, pagination.total_pages);
-    assertEquals(2, pagination.array.length);
+  // make sure pagination is generated, thus SEARCH_RESULTS_PER_PAGE + 1
+  pagination = g_.generate(1, org.jboss.search.Variables.SEARCH_RESULTS_PER_PAGE + 1);
+  assertEquals(2, pagination.total_pages);
+  assertEquals(2, pagination.array.length);
 };

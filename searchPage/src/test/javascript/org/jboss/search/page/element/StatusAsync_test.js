@@ -32,105 +32,113 @@ testCase.autoDiscoverTests();
 
 // Standalone Closure Test Runner.
 if (typeof G_testRunner != 'undefined') {
-    G_testRunner.initialize(testCase);
+  G_testRunner.initialize(testCase);
 }
 
 var div;
 
 var setUp = function() {
-    div = goog.dom.createElement('div');
-    goog.dom.setProperties(div,{ 'id': 'status_window'});
-    var container = goog.dom.getElement('body');
-    if (goog.isDefAndNotNull(container)) {
-        // if running in browser append element to the body so we can actually see it
-        goog.dom.append(container, [div]);
-    }
-}
+  div = goog.dom.createElement('div');
+  goog.dom.setProperties(div, { 'id': 'status_window'});
+  var container = goog.dom.getElement('body');
+  if (goog.isDefAndNotNull(container)) {
+    // if running in browser append element to the body so we can actually see it
+    goog.dom.append(container, [div]);
+  }
+};
 
 var tearDown = function() {
-    goog.dom.removeNode(div);
+  goog.dom.removeNode(div);
 };
 
 function testStatus() {
 
-    setUp();
+  setUp();
 
-    var status =new  org.jboss.search.page.element.Status(div, 5);
+  var status = new org.jboss.search.page.element.Status(div, 5);
 
-    assertTrue(status != null);
+  assertTrue(status != null);
 
-    var status1 = 'Loading...';
-    var status2 = 'Initialization...';
+  var status1 = 'Loading...';
+  var status2 = 'Initialization...';
 
-    status.show(status1);
+  status.show(status1);
 
-    var interval = 300;
-    var iv = setInterval(function(){
-        status.increaseProgress();
-    },300);
-    var animationFinished = false;
-    var testCheck = false;
+  var interval = 300;
+  var iv = setInterval(function() {
+    status.increaseProgress();
+  }, 300);
+  var animationFinished = false;
+  var testCheck = false;
 
-    setInterval(function(){ testCheck = true }, ((1/0.2)*interval)+interval+100 /* 100 = safety */);
+  setInterval(function() {
+    testCheck = true;
+  }, ((1 / 0.2) * interval) + interval + 100 /* 100 = safety */);
 
-    /*
-    waifForCondition(
-        function(){
-            return false;
-            return status != null && status.getProgressValue() > 0.5 && status.getStatus() == status1
-        },
-        function() {
-            status.setStatus(status2);
+  /*
+  waifForCondition(
+      function(){
+          return false;
+          return status != null && status.getProgressValue() > 0.5 && status.getStatus() == status1
+      },
+      function() {
+          status.setStatus(status2);
+      }
+  );
+  */
+
+  waitForCondition(
+      function() {
+        if (status != null && status.getProgressValue() > 0.5 && status.getStatus() == status1) {
+          return true;
+        } else {
+          return false;
         }
-    );
-    */
-
-    waitForCondition(
-        function(){
-            if (status != null && status.getProgressValue() > 0.5 && status.getStatus() == status1) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-        function(){
-            if (status != null) {
-                status.setStatus(status2);
-            }
+      },
+      function() {
+        if (status != null) {
+          status.setStatus(status2);
         }
-    );
+      }
+  );
 
-    waitForCondition(
-        function() { return status.getProgressValue() == 1 },
-        function() {
-            assertEquals(status2, status.getStatus());
-            clearInterval(iv);
-            setTimeout(function(){
-                animationFinished = true;
-                status.hide();
-                status.dispose();
-            }, interval);
-        }
-    );
+  waitForCondition(
+      function() {
+        return status.getProgressValue() == 1;
+      },
+      function() {
+        assertEquals(status2, status.getStatus());
+        clearInterval(iv);
+        setTimeout(function() {
+          animationFinished = true;
+          status.hide();
+          status.dispose();
+        }, interval);
+      }
+  );
 
-    waitForCondition(
-        function() { return animationFinished },
-        function() {
-            assertTrue(status.isDisposed());
-            assertEquals('parent div is empty',0, goog.dom.getChildren(div).length);
-        }
-    );
+  waitForCondition(
+      function() {
+        return animationFinished;
+      },
+      function() {
+        assertTrue(status.isDisposed());
+        assertEquals('parent div is empty', 0, goog.dom.getChildren(div).length);
+      }
+  );
 
-    // if any of the previous checks haven't been tested yet this will catch it
-    waitForCondition(
-        function() { return testCheck },
-        function () {
-            assertTrue(animationFinished);
-            assertTrue(status.isDisposed());
+  // if any of the previous checks haven't been tested yet this will catch it
+  waitForCondition(
+      function() {
+        return testCheck;
+      },
+      function() {
+        assertTrue(animationFinished);
+        assertTrue(status.isDisposed());
 
-            // set timeout to original value (in case more tests are run in one session)
-            goog.testing.ContinuationTestCase.MAX_TIMEOUT = original_timeout;
-        }
-    );
+        // set timeout to original value (in case more tests are run in one session)
+        goog.testing.ContinuationTestCase.MAX_TIMEOUT = original_timeout;
+      }
+  );
 
-};
+}
