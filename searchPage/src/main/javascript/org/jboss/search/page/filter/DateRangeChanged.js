@@ -18,13 +18,16 @@
 
 /**
  * @fileoverview
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.page.filter.DateRangeChanged');
 
-goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('goog.events.Event');
+goog.require('org.jboss.search.page.filter.DateFilterEventType');
+
+
 
 /**
  * Event represents change in date filter caused by selection in InputDatePicker.
@@ -37,46 +40,48 @@ goog.require('goog.events.Event');
  * @extends {goog.events.Event}
  */
 org.jboss.search.page.filter.DateRangeChanged = function(from, to) {
-	goog.events.Event.call(this, org.jboss.search.page.filter.DateFilterEventType.DATE_RANGE_CHANGED);
+  goog.events.Event.call(this, org.jboss.search.page.filter.DateFilterEventType.DATE_RANGE_CHANGED);
 
-	/**
-	 * @type {goog.date.DateTime}
-	 * @private
-	 */
-	this.from_ = goog.isDef(from) ? from : null;
+  /**
+   * @type {goog.date.DateTime}
+   * @private
+   */
+  this.from_ = goog.isDef(from) ? from : null;
 
-	/**
-	 * @type {goog.date.DateTime}
-	 * @private
-	 */
-	this.to_ = goog.isDef(to) ? to : null;
+  /**
+   * @type {goog.date.DateTime}
+   * @private
+   */
+  this.to_ = goog.isDef(to) ? to : null;
 
-	if (goog.isDefAndNotNull(this.from_)) {
-		this.from_.setHours(0);
-		this.from_.setMinutes(0);
-		this.from_.setSeconds(0);
-		this.from_.setMilliseconds(0);
-	}
+  if (goog.isDefAndNotNull(this.from_)) {
+    this.from_.setHours(0);
+    this.from_.setMinutes(0);
+    this.from_.setSeconds(0);
+    this.from_.setMilliseconds(0);
+  }
 
-	if (goog.isDefAndNotNull(this.to_)) {
-		this.to_.setHours(0);
-		this.to_.setMinutes(0);
-		this.to_.setSeconds(0);
-		this.to_.setMilliseconds(0);
-	}
+  if (goog.isDefAndNotNull(this.to_)) {
+    this.to_.setHours(0);
+    this.to_.setMinutes(0);
+    this.to_.setSeconds(0);
+    this.to_.setMilliseconds(0);
+  }
 };
 goog.inherits(org.jboss.search.page.filter.DateRangeChanged, goog.events.Event);
+
 
 /**
  * @return {goog.date.DateTime}
  */
 org.jboss.search.page.filter.DateRangeChanged.prototype.getFrom = function() {
-	return this.from_;
+  return this.from_;
 };
+
 
 /**
  * @return {goog.date.DateTime}
  */
 org.jboss.search.page.filter.DateRangeChanged.prototype.getTo = function() {
-	return this.to_;
+  return this.to_;
 };

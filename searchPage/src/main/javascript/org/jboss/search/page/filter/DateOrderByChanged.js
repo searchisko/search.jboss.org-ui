@@ -18,13 +18,16 @@
 
 /**
  * @fileoverview
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.page.filter.DateOrderByChanged');
 
-goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('goog.events.Event');
+goog.require('org.jboss.search.page.filter.DateFilterEventType');
+
+
 
 /**
  * @param {!org.jboss.core.context.RequestParams.Order} orderBy
@@ -32,19 +35,20 @@ goog.require('goog.events.Event');
  * @extends {goog.events.Event}
  */
 org.jboss.search.page.filter.DateOrderByChanged = function(orderBy) {
-    goog.events.Event.call(this, org.jboss.search.page.filter.DateFilterEventType.DATE_ORDER_BY_CHANGED);
+  goog.events.Event.call(this, org.jboss.search.page.filter.DateFilterEventType.DATE_ORDER_BY_CHANGED);
 
-    /**
-     * @type {!org.jboss.core.context.RequestParams.Order}
-     * @private
-     */
-    this.orderBy_ = orderBy;
+  /**
+   * @type {!org.jboss.core.context.RequestParams.Order}
+   * @private
+   */
+  this.orderBy_ = orderBy;
 };
 goog.inherits(org.jboss.search.page.filter.DateOrderByChanged, goog.events.Event);
+
 
 /**
  * @return {!org.jboss.core.context.RequestParams.Order}
  */
 org.jboss.search.page.filter.DateOrderByChanged.prototype.getOrderBy = function() {
-    return this.orderBy_;
+  return this.orderBy_;
 };
