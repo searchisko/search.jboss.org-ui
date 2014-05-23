@@ -19,12 +19,14 @@
 /**
  * @fileoverview LookUp implementation used for tests only.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.service.LookUpImplWithProjects');
 
 goog.require('org.jboss.core.service.LookUpImpl');
+
+
 
 /**
  * @extends {org.jboss.core.service.LookUpImpl}
@@ -32,29 +34,31 @@ goog.require('org.jboss.core.service.LookUpImpl');
  * @final
  */
 org.jboss.search.service.LookUpImplWithProjects = function() {
-	org.jboss.core.service.LookUpImpl.call(this);
-	/**
-	 * @type {Object}
-	 * @private
-	 */
-	this.projectMap_;
+  org.jboss.core.service.LookUpImpl.call(this);
+  /**
+   * @type {Object}
+   * @private
+   */
+  this.projectMap_;
 };
 goog.inherits(org.jboss.search.service.LookUpImplWithProjects, org.jboss.core.service.LookUpImpl);
+
 
 /**
  * @return {Object}
  */
 org.jboss.search.service.LookUpImplWithProjects.prototype.getProjectMap = function() {
-	if (goog.isDefAndNotNull(this.projectMap_)){
-		return this.projectMap_;
-	} else {
-		throw new Error("ProjectMap hasn't been set yet!");
-	}
+  if (goog.isDefAndNotNull(this.projectMap_)) {
+    return this.projectMap_;
+  } else {
+    throw new Error('ProjectMap hasn\'t been set yet!');
+  }
 };
+
 
 /**
  * @param {Object} projectMap
  */
 org.jboss.search.service.LookUpImplWithProjects.prototype.setProjectMap = function(projectMap) {
-	this.projectMap_ = projectMap;
+  this.projectMap_ = projectMap;
 };
