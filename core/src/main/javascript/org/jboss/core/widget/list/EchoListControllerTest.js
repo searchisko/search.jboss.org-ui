@@ -178,20 +178,13 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.input = function(que
 
 /** @inheritDoc */
 org.jboss.core.widget.list.EchoListControllerTest.prototype.abortActiveDataResources = function() {
-  if (this.echoDS1_.isActive()) {
-    this.echoDS1_.abort();
-  }
-  if (this.echoDS2_.isActive()) {
-    this.echoDS2_.abort();
-  }
+  this.abortActiveDataResourcesInternal([this.echoDS1_, this.echoDS2_]);
 };
 
 
 /** @inheritDoc */
 org.jboss.core.widget.list.EchoListControllerTest.prototype.getActiveDataResourcesCount = function() {
-  return goog.array.reduce([this.echoDS1_, this.echoDS2_], function(r, v) {
-    return (r += v.isActive() ? 1 : 0);
-  }, 0);
+  return this.getActiveDataResourcesCountInternal([this.echoDS1_, this.echoDS2_]);
 };
 
 

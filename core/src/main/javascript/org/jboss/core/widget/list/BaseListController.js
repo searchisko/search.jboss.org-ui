@@ -25,9 +25,11 @@
 goog.provide('org.jboss.core.widget.list.BaseListController');
 
 goog.require('goog.Disposable');
+goog.require('goog.array');
 goog.require('org.jboss.core.widget.list.ListController');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
 goog.require('org.jboss.core.widget.list.ListViewContainer');
+goog.require('org.jboss.core.widget.list.datasource.DataSource');
 
 
 
@@ -78,29 +80,57 @@ org.jboss.core.widget.list.BaseListController.prototype.disposeInternal = functi
 
 /** @inheritDoc */
 org.jboss.core.widget.list.BaseListController.prototype.input = function(query) {
-  // implement in subclass
+  throw new Error('Method not implemented!');
 };
 
 
 /** @inheritDoc */
 org.jboss.core.widget.list.BaseListController.prototype.abortActiveDataResources = function() {
-  // implement in subclass
+  throw new Error('Method not implemented!');
 };
 
 
 /** @inheritDoc */
 org.jboss.core.widget.list.BaseListController.prototype.getActiveDataResourcesCount = function() {
-  // implement in subclass
+  throw new Error('Method not implemented!');
 };
 
 
 /** @inheritDoc */
 org.jboss.core.widget.list.BaseListController.prototype.setKeyboardListener = function() {
-  // implement in subclass
+  throw new Error('Method not implemented!');
 };
 
 
 /** @inheritDoc */
 org.jboss.core.widget.list.BaseListController.prototype.setMouseListener = function() {
-  // implement in subclass
+  throw new Error('Method not implemented!');
+};
+
+
+/**
+ * Returns number of active data sources.
+ * @param {!Array.<org.jboss.core.widget.list.datasource.DataSource>} dataSources
+ * @return {number}
+ * @protected
+ */
+org.jboss.core.widget.list.BaseListController.prototype.getActiveDataResourcesCountInternal = function(dataSources) {
+  return goog.array.reduce(dataSources, function(r, v) {
+    return (r += v.isActive() ? 1 : 0);
+  }, 0);
+};
+
+
+/**
+ * Abort all provided {@link DataSource}s is they are active.
+ * @param {!Array.<org.jboss.core.widget.list.datasource.DataSource>} dataSources
+ * @protected
+ */
+org.jboss.core.widget.list.BaseListController.prototype.abortActiveDataResourcesInternal = function(dataSources) {
+  goog.array.forEach(dataSources, function(item) {
+    var ds = /** @type {org.jboss.core.widget.list.datasource.DataSource} */ (item);
+    if (ds.isActive()) {
+      ds.abort();
+    }
+  });
 };

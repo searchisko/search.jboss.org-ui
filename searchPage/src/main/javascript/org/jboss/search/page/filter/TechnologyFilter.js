@@ -24,6 +24,7 @@
 
 goog.provide('org.jboss.search.page.filter.TechnologyFilter');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController');
+goog.provide('org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS');
 
 goog.require('goog.Uri');
 goog.require('goog.async.Delay');
@@ -51,6 +52,8 @@ goog.require('org.jboss.core.widget.list.datasource.DataSourceEvent');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEventType');
 goog.require('org.jboss.core.widget.list.datasource.EchoDataSource');
 goog.require('org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener');
+goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener');
+goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener.EventType');
 goog.require('org.jboss.core.widget.list.mouse.MouseListener');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.page.filter.templates');
@@ -83,13 +86,37 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
       org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
       function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
-//        var model1 = lmc.getListModelById(org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1);
-//        if (model1 != null) {
-//          model1.setData(e.getData());
-//        }
+        var model = lmc.getListModelById(org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.SUGGESTIONS);
+        if (model != null) {
+          model.setData(e.getData());
+        }
       },
       false, this
       );
+
+  /**
+   * @type {org.jboss.core.widget.list.keyboard.KeyboardListener}
+   * @private
+   */
+  this.keyboardListener_ = null;
+
+  /**
+   * @type {goog.events.Key}
+   * @private
+   */
+  this.keyboardListenerKey_ = null;
+
+  /**
+   * @type {org.jboss.core.widget.list.mouse.MouseListener}
+   * @private
+   */
+  this.mouseListener_ = null;
+
+  /**
+   * @type {goog.events.Key}
+   * @private
+   */
+  this.mouseListenerKey_ = null;
 
 };
 goog.inherits(org.jboss.search.page.filter.TechnologyFilterController, org.jboss.core.widget.list.BaseListController);
@@ -98,6 +125,8 @@ goog.inherits(org.jboss.search.page.filter.TechnologyFilterController, org.jboss
 /** @inheritDoc */
 org.jboss.search.page.filter.TechnologyFilterController.prototype.disposeInternal = function() {
   org.jboss.search.page.filter.TechnologyFilterController.superClass_.disposeInternal.call(this);
+  goog.events.unlistenByKey(this.cacheDSlistenerId_);
+  goog.dispose(this.cacheDataSource_);
 };
 
 
@@ -107,10 +136,66 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.input = functi
 };
 
 
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologyFilterController.prototype.abortActiveDataResources = function() {
+  this.abortActiveDataResourcesInternal([this.cacheDataSource_]);
+};
 
-//org.jboss.search.page.filter.TechnologyFilterController.Keys = {
-//
-//};
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologyFilterController.prototype.getActiveDataResourcesCount = function() {
+  return this.getActiveDataResourcesCountInternal([this.cacheDataSource_]);
+};
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologyFilterController.prototype.setKeyboardListener = function(opt_keyboardListener) {
+  if (this.keyboardListenerKey_ != null) {
+    goog.events.unlistenByKey(this.keyboardListenerKey_);
+  }
+  this.keyboardListener_ = goog.isDefAndNotNull(opt_keyboardListener) ? opt_keyboardListener : null;
+  if (goog.isDefAndNotNull(this.keyboardListener_)) {
+    this.keyboardListenerKey_ = goog.events.listen(
+        this.keyboardListener_,
+        [
+          org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.UP,
+          org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.DOWN,
+          org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.ENTER
+        ],
+        function(e) {
+          var event = /** @type {goog.events.Event} */ (e);
+          switch (event.type) {
+            case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.UP:
+              this.lmc_.pointPreviousListItem();
+              break;
+            case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.DOWN:
+              this.lmc_.pointNextListItem();
+              break;
+            case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.ENTER:
+              this.lmc_.selectPointedListItem();
+              break;
+          }
+        }, false, this
+        );
+  }
+};
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologyFilterController.prototype.setMouseListener = function(opt_mouseListener) {
+  this.mouseListener_ = goog.isDefAndNotNull(opt_mouseListener) ? opt_mouseListener : null;
+};
+
+
+/**
+ * Constants for list keys.
+ *
+ * @enum {string}
+ */
+org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS = {
+  SUGGESTIONS: 'suggestions',
+  QUERY_CONTEXT: 'query_context'
+};
 
 
 

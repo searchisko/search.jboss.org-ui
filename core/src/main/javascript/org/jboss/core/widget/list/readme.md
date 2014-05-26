@@ -4,8 +4,8 @@
 data sources and list items related to a particular data source can be updated asynchronously at any time.
 On top of that this component enables selection of individual items either by pointer device or keyboard.
 
-The idea comes from need to build a general component that would allow implementation of complex suggestion drop-downs
-UI component similar to [Spotlight][].
+The idea comes from need to build a general component that would allow implementation of complex suggestion drop-down
+UI components similar to [Spotlight][].
 
 [Spotlight]: http://en.wikipedia.org/wiki/Spotlight_(software)
 
@@ -66,9 +66,9 @@ The `lists` configuration option describes lists that both the model and view wi
 
 ##### `attach`
 
-The `attach` configuration option contains reference to the DOM element which the controller will render the model to.
+The `attach` configuration option contains reference to the DOM element which the controller will render the view to.
 
-User input is then passed into `controller.input()` method (which expects `string` parameter). Typically, the controller
+User input can be passed into `controller.input()` method (which expects `string` parameter). Typically, the controller
 gets the user input and passes it to all the `DataSource`s and stream the incoming data to relevant `ListModel`s
 (via `ListModelContainer`) which triggers update of the view layer. 
 
