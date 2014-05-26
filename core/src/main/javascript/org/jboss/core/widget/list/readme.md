@@ -37,19 +37,21 @@ in web browser.)
 instances according to provided configuration and ties is to model and view parts. Once developer implements
 `ListController` class then the ListWidgetFactory is used to get the instance of it. See the following example:
 
-    var hostingDom = goog.dom.createDom('div');
-		
-    var controller = org.jboss.core.widget.list.ListWidgetFactory.build({
-        lists: [
-            { key: 'LIST_1', caption: null },
-            { key: 'LIST_2', caption: 'List caption' }
-        ],
-        controllerConstructor: fully.qualified.mane.of.ListController,
-        additionalConstructorParams: [ ],
-        attach: hostingDom
-    });
+```javascript
+var hostingDom = goog.dom.createDom('div');
     
-    controller.input('I am the user input...');
+var controller = org.jboss.core.widget.list.ListWidgetFactory.build({
+    lists: [
+        { key: 'LIST_1', caption: null },
+        { key: 'LIST_2', caption: 'List caption' }
+    ],
+    controllerConstructor: fully.qualified.mane.of.ListController,
+    additionalConstructorParams: [ ],
+    attach: hostingDom
+});
+
+controller.input('I am the user input...');
+```
 
 ##### `controllerConstructor` and `additionalConstructorParams`
 
@@ -82,7 +84,7 @@ data sources (like REST API).
 
 User can interact with the List Widget view layer via pointing device (mouse) or keyboard (or both). User has the option to
 select or unselect individual list items. This can be accomplished via two objects `KeyboardListener` and `MouseListener`
-that bath can be **set** and **unset** on the controller at runtime (after controller is instantiated).
+that both can be **set** and **unset** on the controller at runtime (after controller is instantiated).
 
 ### KeyboardListener
 
@@ -91,17 +93,21 @@ responsible for catching keyboard navigation events (like `keyup`, `keydown`, `e
 and fires appropriate events that controller can listen and react to. Controller can be set KeyboardListener instance
 at runtime.
 
-    /** @type {org.jboss.core.widget.list.keyboard.KeyboardListener} */
-    var keyboardListener_ = new org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener(inputField);
-    controller.setKeyboardListener(keyboardListener_);
+```javascript
+/** @type {org.jboss.core.widget.list.keyboard.KeyboardListener} */
+var keyboardListener_ = new org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener(inputField);
+controller.setKeyboardListener(keyboardListener_);
+```
 
 ### MouseListener
 
 [MouseListener](mouse/MouseListener.js) is ...TBD. Controller can be set MouseListener instance at runtime.
 
-    /** @type {org.jboss.core.widget.list.mouse.MouseListener} */
-    var mouseListener_ = new org.jboss.core.widget.list.mouse.MouseListener(hostingDom);
-    controller.setMouseListener(mouseListener_);
+```javascript
+/** @type {org.jboss.core.widget.list.mouse.MouseListener} */
+var mouseListener_ = new org.jboss.core.widget.list.mouse.MouseListener(hostingDom);
+controller.setMouseListener(mouseListener_);
+```
 
 ## Examples
 
@@ -112,8 +118,8 @@ the resulting list consists of two item lists each containing just a single item
 will echo user input as soon as it is changed, the second will have a small async delay (simulating wait for response
 from remote data source).
 
-```
-JavaScript example here.
+```javascript
+// JavaScript example here.
 ```
 
 ### Search Suggestions
@@ -123,7 +129,7 @@ REST services. And because we expect that response from the second REST service 
 use a third REST service to get temporary list items from that will be displayed to the user until response from the
 second REST service is delivered.
 
-```
-JavaScript example here.
+```javascript
+// JavaScript example here.
 ```
 

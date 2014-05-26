@@ -30,7 +30,6 @@ goog.require('org.jboss.core.widget.list.ListModel');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
 goog.require('org.jboss.core.widget.list.ListView');
 goog.require('org.jboss.core.widget.list.ListViewContainer');
-goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener');
 
 
 /**
@@ -45,12 +44,11 @@ goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener');
  * See ListWidgetFactory_test.js for example.
  *
  * @param {{
- *			lists: !Array.<{key: string, caption: string}>,
- *			controllerConstructor: !function(new:org.jboss.core.widget.list.ListController, org.jboss.core.widget.list.ListModelContainer, org.jboss.core.widget.list.ListViewContainer, ...[*]),
- *			additionalConstructorParams: Array.<*>,
- *			attach: !Element,
- *			keyboardListener: org.jboss.core.widget.list.keyboard.KeyboardListener
- *		}} conf
+ *    lists: !Array.<{key: string, caption: string}>,
+ *    controllerConstructor: !function(new:org.jboss.core.widget.list.ListController, org.jboss.core.widget.list.ListModelContainer, org.jboss.core.widget.list.ListViewContainer, ...[*]),
+ *    additionalConstructorParams: (?Array.<*>|undefined),
+ *    attach: !Element
+ *   }} conf
  * @return {org.jboss.core.widget.list.ListController}
  */
 org.jboss.core.widget.list.ListWidgetFactory.build = function(conf) {

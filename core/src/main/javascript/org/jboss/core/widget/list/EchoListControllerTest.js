@@ -54,8 +54,8 @@ goog.require('org.jboss.core.widget.list.mouse.MouseListener.EventType');
  * for each model. It allows to specify response delays of data sources via additional
  * constructor parameters.
  *
- * @param {org.jboss.core.widget.list.ListModelContainer} lmc
- * @param {org.jboss.core.widget.list.ListViewContainer} lvc
+ * @param {!org.jboss.core.widget.list.ListModelContainer} lmc
+ * @param {!org.jboss.core.widget.list.ListViewContainer} lvc
  * @param {{delay: number, repFactor: number}} conf1 config of the first {@link EchoDataSource}
  * @param {{delay: number, repFactor: number}} conf2 config of the second {@link EchoDataSource}
  * @constructor

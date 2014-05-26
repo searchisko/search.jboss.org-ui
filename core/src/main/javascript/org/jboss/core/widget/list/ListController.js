@@ -42,8 +42,8 @@ goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener');
  *
  * Important: make sure implementing class extends disposable if needed.
  *
- * @param {org.jboss.core.widget.list.ListModelContainer} lmc
- * @param {org.jboss.core.widget.list.ListViewContainer} lvc
+ * @param {!org.jboss.core.widget.list.ListModelContainer} lmc
+ * @param {!org.jboss.core.widget.list.ListViewContainer} lvc
  * @interface
  */
 org.jboss.core.widget.list.ListController = function(lmc, lvc) {};

@@ -41,25 +41,25 @@ goog.require('org.jboss.core.widget.list.datasource.DataSourceEvent');
  * @param {{
  *          delay: number,
  *          repFactor: number
- *        }} conf
+ *        }=} opt_conf
  * @constructor
  * @implements {org.jboss.core.widget.list.datasource.DataSource}
  * @extends {goog.events.EventTarget}
  */
-org.jboss.core.widget.list.datasource.EchoDataSource = function(conf) {
+org.jboss.core.widget.list.datasource.EchoDataSource = function(opt_conf) {
   goog.events.EventTarget.call(this);
 
   /**
    * @type {number}
    * @private
    */
-  this.delay_ = (conf && conf.delay) ? conf.delay : 0;
+  this.delay_ = (opt_conf && opt_conf.delay) ? opt_conf.delay : 0;
 
   /**
    * @type {number}
    * @private
    */
-  this.replication_ = (conf && conf.repFactor) ? conf.repFactor : 1;
+  this.replication_ = (opt_conf && opt_conf.repFactor) ? opt_conf.repFactor : 1;
 
   /**
    * @type {number|undefined}

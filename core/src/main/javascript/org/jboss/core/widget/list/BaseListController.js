@@ -39,8 +39,8 @@ goog.require('org.jboss.core.widget.list.ListViewContainer');
  * implementing classes to get active data sources aborted and
  * disposed on lmc and lvc properly.
  *
- * @param {org.jboss.core.widget.list.ListModelContainer} lmc
- * @param {org.jboss.core.widget.list.ListViewContainer} lvc
+ * @param {!org.jboss.core.widget.list.ListModelContainer} lmc
+ * @param {!org.jboss.core.widget.list.ListViewContainer} lvc
  * @constructor
  * @implements {org.jboss.core.widget.list.ListController}
  * @extends {goog.Disposable}
@@ -49,13 +49,13 @@ org.jboss.core.widget.list.BaseListController = function(lmc, lvc) {
   goog.Disposable.call(this);
 
   /**
-   * @type {org.jboss.core.widget.list.ListModelContainer}
+   * @type {!org.jboss.core.widget.list.ListModelContainer}
    * @protected
    */
   this.lmc_ = lmc;
 
   /**
-   * @type {org.jboss.core.widget.list.ListViewContainer}
+   * @type {!org.jboss.core.widget.list.ListViewContainer}
    * @protected
    */
   this.lvc_ = lvc;
