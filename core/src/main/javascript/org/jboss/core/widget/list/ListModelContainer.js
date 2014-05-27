@@ -250,6 +250,15 @@ org.jboss.core.widget.list.ListModelContainer.prototype.listItemAction = functio
 
 
 /**
+ *
+ * @return {boolean}
+ */
+org.jboss.core.widget.list.ListModelContainer.prototype.isAnyItemPointed = function() {
+  return false;
+};
+
+
+/**
  * Get {@link ListModel} by given id. Returns null if not found.
  *
  * @param {string} id

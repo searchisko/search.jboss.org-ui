@@ -23,6 +23,10 @@
  */
 goog.provide('org.jboss.core.Constants');
 
+
+/**
+ * Constants.
+ */
 org.jboss.core.Constants = {
 
   /**

@@ -233,18 +233,18 @@ org.jboss.search.App = function() {
   // ## Author Filter
   var authorFilterDeferred = new goog.async.Deferred();
 
-  // ## Project Filter
-  var projectFilterDeferred = new goog.async.Deferred();
+  // ## Technology Filter
+  var technologyFilterDeferred = new goog.async.Deferred();
 
   // ## Content Filter
   var contentFilterDeferred = new goog.async.Deferred();
 
   // projectList will be initialized at some point in the future (it is deferred type)
   // once it is initialized it calls the deferred that is passed as an argument
-  var projectList = new org.jboss.search.list.project.Project(projectFilterDeferred);
+  var projectList = new org.jboss.search.list.project.Project(technologyFilterDeferred);
 
-  projectFilterDeferred
-      // keep project list data in the lookup (so it can be easily used by other objects in the application)
+  technologyFilterDeferred
+  // keep project list data in the lookup (so it can be easily used by other objects in the application)
       .addCallback(function() {
         lookup_.setProjectMap(projectList.getMap());
         lookup_.setProjectArray(projectList.getArray());
@@ -398,7 +398,7 @@ org.jboss.search.App = function() {
 
   // wait for all deferred initializations to finish and enable search GUI only after that
   var asyncInit = new goog.async.DeferredList(
-      [dateFilterDeferred, authorFilterDeferred, projectFilterDeferred, contentFilterDeferred],
+      [dateFilterDeferred, authorFilterDeferred, technologyFilterDeferred, contentFilterDeferred],
       false, // wait for all deferred to success before execution chain is called
       true // if however any deferred fails, calls errback immediately
       );
@@ -442,10 +442,10 @@ org.jboss.search.App = function() {
         var event = /** @type {goog.net.XhrManager.Event} */ (e);
         if (event.target.isSuccess()) {
           var response = event.target.getResponseJson();
-          projectFilterDeferred.callback(response);
+          technologyFilterDeferred.callback(response);
         } else {
           // Project info failed to load.
-          projectFilterDeferred.callback({});
+          technologyFilterDeferred.callback({});
         }
       }
   );

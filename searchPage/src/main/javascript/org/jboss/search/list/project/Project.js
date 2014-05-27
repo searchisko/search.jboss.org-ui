@@ -19,15 +19,18 @@
 /**
  * @fileoverview Project list is collection of project entities.
  * This collection is typically initiated at the application start and then used during application life cycle.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.list.project.Project');
 
-goog.require('goog.string');
-goog.require('goog.object');
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
+goog.require('goog.object');
+goog.require('goog.string');
+
+
 
 /**
  * Creates a new instance of Project list.
@@ -39,34 +42,34 @@ goog.require('goog.async.Deferred');
  * @extends {goog.async.Deferred}
  */
 org.jboss.search.list.project.Project = function(deferred, opt_canceller, opt_defaultScope) {
+  goog.async.Deferred.call(this, opt_canceller, opt_defaultScope);
 
-    goog.async.Deferred.call(this, opt_canceller, opt_defaultScope);
+  /**
+   * @type {!goog.async.Deferred}
+   * @private
+   */
+  this.deferred_ = deferred;
 
-    /**
-     * @type {!goog.async.Deferred}
-     * @private
-     */
-    this.deferred_ = deferred;
+  /**
+   * {
+   *     project_id: project_name,
+   *     ...
+   *     'hibernatesearch': 'Hibernate Search'
+   * }
+   *
+   * @type {Object}
+   * @private
+   */
+  this.map_ = {};
 
-    /**
-     * {
-     *     project_id: project_name,
-     *     ...
-     *     'hibernatesearch': 'Hibernate Search'
-     * }
-     *
-     * @type {Object}
-     * @private
-     */
-    this.map = {};
-
-    // when deferred has the results, parse them, keep them in the map and let the callee know.
-    this.deferred_.addCallback(function(data){
-        this.map = this.parseProjectData(data);
-        this.callback();
-    }, this);
+  // when deferred has the results, parse them, keep them in the map and let the callee know.
+  this.deferred_.addCallback(function(data) {
+    this.map_ = this.parseProjectData(data);
+    this.callback();
+  }, this);
 };
 goog.inherits(org.jboss.search.list.project.Project, goog.async.Deferred);
+
 
 /**
  * Knows how to parse response from {@see Constants.API_URL_PROJECT_LIST_QUERY}
@@ -75,22 +78,23 @@ goog.inherits(org.jboss.search.list.project.Project, goog.async.Deferred);
  * @return {Object}
  */
 org.jboss.search.list.project.Project.prototype.parseProjectData = function(json) {
-    var map_ = {};
-    var hits = goog.object.getValueByKeys(json, "hits", "hits");
-    if (goog.isDef(hits) && goog.isArray(hits)) {
-        goog.array.forEach(hits, function(hit){
-            var fields = goog.object.getValueByKeys(hit, "fields");
-            if (goog.isObject(fields)) {
-                var id_ = goog.object.getValueByKeys(fields, "sys_project");
-                var name_ = goog.object.getValueByKeys(fields, "sys_project_name");
-                if (goog.isDefAndNotNull(id_) && goog.isDefAndNotNull(name_)) {
-                    map_[id_] = name_;
-                }
-            }
-        }, this);
-    }
-    return map_
+  var map_ = {};
+  var hits = goog.object.getValueByKeys(json, 'hits', 'hits');
+  if (goog.isDef(hits) && goog.isArray(hits)) {
+    goog.array.forEach(hits, function(hit) {
+      var fields = goog.object.getValueByKeys(hit, 'fields');
+      if (goog.isObject(fields)) {
+        var id_ = goog.object.getValueByKeys(fields, 'sys_project');
+        var name_ = goog.object.getValueByKeys(fields, 'sys_project_name');
+        if (goog.isDefAndNotNull(id_) && goog.isDefAndNotNull(name_)) {
+          map_[id_] = name_;
+        }
+      }
+    }, this);
+  }
+  return map_;
 };
+
 
 /**
  * Return Project Name for given Project ID.
@@ -98,16 +102,18 @@ org.jboss.search.list.project.Project.prototype.parseProjectData = function(json
  * @return {!string}
  */
 org.jboss.search.list.project.Project.prototype.getSysProjectName = function(sysId) {
-    return goog.object.get(this.map, sysId, "Unknown").valueOf();
+  return goog.object.get(this.map_, sysId, 'Unknown').valueOf();
 };
+
 
 /**
  * Return projects as a map.
  * @return {Object}
  */
 org.jboss.search.list.project.Project.prototype.getMap = function() {
-    return this.map;
+  return this.map_;
 };
+
 
 /**
  * Return projects as an array.
@@ -115,11 +121,11 @@ org.jboss.search.list.project.Project.prototype.getMap = function() {
  * @return {!Array.<{name: string, code: string}>}
  */
 org.jboss.search.list.project.Project.prototype.getArray = function() {
-    /** @type {!Array.<{name: string, code: string}>} */ var result = new Array();
-    goog.object.forEach(this.map, function(value, key){
-        var name = (goog.string.isEmptySafe(value) ? key : value);
-        result.push({'name':name, 'code':key, 'orderBy': name.toLowerCase()});
-    });
-    goog.array.sortObjectsByKey(result,'orderBy');
-    return result;
+  /** @type {!Array.<{name: string, code: string}>} */ var result = new Array();
+  goog.object.forEach(this.map_, function(value, key) {
+    var name = (goog.string.isEmptySafe(value) ? key : value);
+    result.push({'name': name, 'code': key, 'orderBy': name.toLowerCase()});
+  });
+  goog.array.sortObjectsByKey(result, 'orderBy');
+  return result;
 };

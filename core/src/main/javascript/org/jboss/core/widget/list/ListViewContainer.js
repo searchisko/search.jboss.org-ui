@@ -95,7 +95,7 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
   /**
    * Listens for clicks propagated to the hosting element.
    * It investigates if the event target has an id attribute value. If yes then the
-   * id attribute value and relevant action is passed to {@ListModelContainer}.
+   * id attribute value and relevant action is passed to {@link ListModelContainer}.
    *
    * TODO: remove if note used
    *
@@ -133,7 +133,6 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
         // TODO: the following type declaration is not clean...
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent|org.jboss.core.widget.list.ListModelContainerEvent} */ (e);
         switch (event.getType()) {
-
           // create a new item list based on new data
           // this operation replaces DOM element which is related to changed list model only
           case org.jboss.core.widget.list.event.ListModelEventType.NEW_DATA_SET:
@@ -238,13 +237,18 @@ org.jboss.core.widget.list.ListViewContainer.prototype.disposeInternal = functio
   });
 };
 
+
+/**
+ *
+ * @return {Object}
+ */
 org.jboss.core.widget.list.ListViewContainer.prototype.getViewDoms = function() {
-	return this.viewDoms_;
+  return this.viewDoms_;
 };
 
 
 /**
- * Return array of latest DOM Elements.  Order of Elements is by initial order of {@link ListView}s.
+ * Return array of the latest DOM Elements.  Order of Elements is by initial order of {@link ListView}s.
  * @return {!Array.<Element>}
  */
 org.jboss.core.widget.list.ListViewContainer.prototype.constructDOM = function() {
