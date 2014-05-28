@@ -27,10 +27,11 @@
  * Correct solution is described here:
  * http://code.google.com/p/closure-library/wiki/FrequentlyAskedQuestions
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.code.fixDeps');
 
 goog.require('goog.debug.ErrorHandler');
 goog.require('goog.events.EventWrapper');
+

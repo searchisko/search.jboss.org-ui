@@ -18,17 +18,17 @@
 
 /**
  * @fileoverview Provides xhr services.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.request');
 
+goog.require('goog.Uri');
 goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.util.urlGenerator');
 goog.require('org.jboss.search.Constants');
 
-goog.require('goog.Uri');
 
 /**
  * Write click stream statistics.
@@ -39,17 +39,17 @@ goog.require('goog.Uri');
  * @param {string=} opt_session
  */
 org.jboss.search.request.writeClickStreamStatistics = function(uri, uuid, id, opt_session) {
-    var url_string = org.jboss.core.util.urlGenerator.clickStreamUrl(uri, uuid, id, opt_session);
-    if (!goog.isNull(url_string)) {
-        var xhr = org.jboss.core.service.Locator.getInstance().getLookup().getXhrManager();
-        xhr.send(
-            org.jboss.search.Constants.WRITE_CLICK_STREAM_STATS_ID,
-            // setting the parameter value clears previously set value (that is what we want!)
-            url_string,
-            org.jboss.core.Constants.POST,
-            "", // post_data
-            {}, // headers_map
-            org.jboss.search.Constants.WRITE_STATS_REQUEST_PRIORITY
-        );
-    }
+  var url_string = org.jboss.core.util.urlGenerator.clickStreamUrl(uri, uuid, id, opt_session);
+  if (!goog.isNull(url_string)) {
+    var xhr = org.jboss.core.service.Locator.getInstance().getLookup().getXhrManager();
+    xhr.send(
+        org.jboss.search.Constants.WRITE_CLICK_STREAM_STATS_ID,
+        // setting the parameter value clears previously set value (that is what we want!)
+        url_string,
+        org.jboss.core.Constants.POST,
+        '', // post_data
+        {}, // headers_map
+        org.jboss.search.Constants.WRITE_STATS_REQUEST_PRIORITY
+    );
+  }
 };

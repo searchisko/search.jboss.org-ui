@@ -18,12 +18,15 @@
 
 /**
  * @fileoverview Caching decorator of QueryService.
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.service.query.QueryServiceCached');
 
 goog.require('org.jboss.core.service.query.QueryService');
+
+
 
 /**
  * @param {!org.jboss.core.service.query.QueryService} queryService
@@ -31,21 +34,23 @@ goog.require('org.jboss.core.service.query.QueryService');
  * @implements {org.jboss.core.service.query.QueryService}
  */
 org.jboss.search.service.query.QueryServiceCached = function(queryService) {
-    /**
-     * @type {org.jboss.core.service.query.QueryService}
-     * @private
-     */
-    this.queryService_ = queryService;
+  /**
+   * @type {org.jboss.core.service.query.QueryService}
+   * @private
+   */
+  this.queryService_ = queryService;
 };
+
 
 /** @override */
 org.jboss.search.service.query.QueryServiceCached.prototype.userQuery = function(requestParams) {
-    // TODO: implement caching
-    this.queryService_.userQuery(requestParams);
+  // TODO: implement caching
+  this.queryService_.userQuery(requestParams);
 };
+
 
 /** @override */
 org.jboss.search.service.query.QueryServiceCached.prototype.userSuggestionQuery = function(query_string) {
-    // TODO: implement caching
-    this.queryService_.userSuggestionQuery(query_string);
+  // TODO: implement caching
+  this.queryService_.userSuggestionQuery(query_string);
 };
