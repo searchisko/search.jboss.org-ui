@@ -147,6 +147,9 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
               this.viewDoms_[id] = newViewDom;
               // if replacing the DOM element is slow or visually distracting, we could do
               // diff and modification of the old element instead (like ReactJS does).
+              // One issue is that the scrolling is not working well (the scroll event can be caught
+              // by the parent DIV while the nodes are switching and then the whole screen is scrolled instead
+              // of child DIV).
               goog.dom.replaceNode(newViewDom, oldViewDom);
               this.dispatchEvent(
                   new org.jboss.core.widget.list.event.ListViewEvent(
