@@ -19,19 +19,18 @@
 
 goog.provide('init.search');
 
-goog.require("org.jboss.core.service.Locator");
-goog.require("org.jboss.search.service.LookUp");
+goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.search.App');
 goog.require('org.jboss.search.logging.Logging');
+goog.require('org.jboss.search.service.LookUp');
 
 {
+  new org.jboss.core.service.Locator(new org.jboss.search.service.LookUp());
 
-	new org.jboss.core.service.Locator(new org.jboss.search.service.LookUp());
-
-	if (goog.DEBUG) {
-		new org.jboss.search.logging.Logging(
-			org.jboss.core.service.Locator.getInstance().getLookup().getHistory()
-		);
-	}
-    new org.jboss.search.App();
+  if (goog.DEBUG) {
+    new org.jboss.search.logging.Logging(
+        org.jboss.core.service.Locator.getInstance().getLookup().getHistory()
+    );
+  }
+  new org.jboss.search.App();
 }

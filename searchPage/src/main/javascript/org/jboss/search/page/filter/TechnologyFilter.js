@@ -22,11 +22,14 @@
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
+goog.provide('org.jboss.search.page.filter.TechnologyDataSource');
 goog.provide('org.jboss.search.page.filter.TechnologyFilter');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS');
 
 goog.require('goog.Uri');
+goog.require('goog.array');
+goog.require('goog.array.ArrayLike');
 goog.require('goog.async.Delay');
 goog.require('goog.async.nextTick');
 goog.require('goog.events');
@@ -47,9 +50,11 @@ goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.util.urlGenerator');
 goog.require('org.jboss.core.widget.list.BaseListController');
 goog.require('org.jboss.core.widget.list.ListController');
+goog.require('org.jboss.core.widget.list.ListItem');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
 goog.require('org.jboss.core.widget.list.ListViewContainer');
 goog.require('org.jboss.core.widget.list.ListWidgetFactory');
+goog.require('org.jboss.core.widget.list.datasource.DataSource');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEvent');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEventType');
 goog.require('org.jboss.core.widget.list.datasource.EchoDataSource');
@@ -61,6 +66,76 @@ goog.require('org.jboss.core.widget.list.mouse.MouseListener.EventType');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.page.filter.templates');
 goog.require('org.jboss.search.response');
+
+
+
+/**
+ * Technology {@link DataSource}.
+ * @constructor
+ * @implements {org.jboss.core.widget.list.datasource.DataSource}
+ * @extends {goog.events.EventTarget}
+ */
+org.jboss.search.page.filter.TechnologyDataSource = function() {
+  goog.events.EventTarget.call(this);
+};
+goog.inherits(org.jboss.search.page.filter.TechnologyDataSource, goog.events.EventTarget);
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologyDataSource.prototype.disposeInternal = function() {
+  org.jboss.search.page.filter.TechnologyDataSource.superClass_.disposeInternal.call(this);
+};
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologyDataSource.prototype.get = function(query) {
+  var projectMap = org.jboss.core.service.Locator.getInstance().getLookup().getProjectMapClone();
+  var recentQueryResults = org.jboss.core.service.Locator.getInstance().getLookup().getRecentQueryResultData();
+  if (goog.isDefAndNotNull(recentQueryResults)) {
+    var technologyFacet = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(recentQueryResults,
+        'facets', 'per_project_counts', 'terms'));
+    if (goog.isDefAndNotNull(technologyFacet)) {
+      goog.array.forEach(technologyFacet, function(item) {
+        var projectCode = goog.object.getValueByKeys(item, 'term');
+        var count = goog.object.getValueByKeys(item, 'count');
+        if (projectMap.hasOwnProperty(projectCode)) {
+          projectMap[projectCode] += ' (' + count + ')';
+        }
+      });
+    }
+  }
+  this.dispatchEvent(
+      new org.jboss.core.widget.list.datasource.DataSourceEvent(this.convertCacheToEventDate_(projectMap))
+  );
+};
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologyDataSource.prototype.abort = function() {
+  // noop, we are not doing async operation
+};
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologyDataSource.prototype.isActive = function() {
+  return false;
+};
+
+
+/**
+ * @param {!Object} data
+ * @return {!Array.<org.jboss.core.widget.list.ListItem>}
+ * @private
+ */
+org.jboss.search.page.filter.TechnologyDataSource.prototype.convertCacheToEventDate_ = function(data) {
+  var a = [];
+  for (var property in data) {
+    if (data.hasOwnProperty(property)) {
+      a.push(new org.jboss.core.widget.list.ListItem(property, data[property]));
+    }
+  }
+  return a;
+};
 
 
 
@@ -79,36 +154,16 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
   org.jboss.core.widget.list.BaseListController.call(this, lmc, lvc);
 
   /**
-   * @type {!org.jboss.core.widget.list.datasource.EchoDataSource}
+   * @type {!org.jboss.search.page.filter.TechnologyDataSource}
    * @private
    */
-  this.suggestionsDataSource_ = new org.jboss.core.widget.list.datasource.EchoDataSource();
+  this.queryContextDataSource_ = new org.jboss.search.page.filter.TechnologyDataSource();
 
   /**
    * @type {!org.jboss.core.widget.list.datasource.EchoDataSource}
    * @private
    */
-  this.queryContextDataSource_ = new org.jboss.core.widget.list.datasource.EchoDataSource({
-    delay: 300,
-    repFactor: 4
-  });
-
-  /**
-   * @type {goog.events.Key}
-   * @private
-   */
-  this.suggestionsDSListenerId_ = goog.events.listen(
-      this.suggestionsDataSource_,
-      org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
-      function(event) {
-        var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
-        var model = lmc.getListModelById(org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.SUGGESTIONS);
-        if (model != null) {
-          model.setData(e.getData());
-        }
-      },
-      false, this
-      );
+  this.didYouMeanDataSource_ = new org.jboss.core.widget.list.datasource.EchoDataSource();
 
   /**
    * @type {goog.events.Key}
@@ -120,6 +175,23 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
       function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
         var model = lmc.getListModelById(org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.QUERY_CONTEXT);
+        if (model != null) {
+          model.setData(e.getData());
+        }
+      },
+      false, this
+      );
+
+  /**
+   * @type {goog.events.Key}
+   * @private
+   */
+  this.didYouMeanDSListenerId_ = goog.events.listen(
+      this.didYouMeanDataSource_,
+      org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
+      function(event) {
+        var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
+        var model = lmc.getListModelById(org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.DID_YOU_MEAN);
         if (model != null) {
           model.setData(e.getData());
         }
@@ -158,10 +230,10 @@ goog.inherits(org.jboss.search.page.filter.TechnologyFilterController, org.jboss
 /** @inheritDoc */
 org.jboss.search.page.filter.TechnologyFilterController.prototype.disposeInternal = function() {
   org.jboss.search.page.filter.TechnologyFilterController.superClass_.disposeInternal.call(this);
-  goog.events.unlistenByKey(this.suggestionsDSListenerId_);
   goog.events.unlistenByKey(this.queryContextDSListenerId_);
-  goog.dispose(this.suggestionsDataSource_);
+  goog.events.unlistenByKey(this.didYouMeanDSListenerId_);
   goog.dispose(this.queryContextDataSource_);
+  goog.dispose(this.didYouMeanDataSource_);
 };
 
 
@@ -170,20 +242,20 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.input = functi
   // console.log('query >', query);
   this.abortActiveDataResources();
   this.lmc_.depointPointedListItem();
-  this.suggestionsDataSource_.get(query);
   this.queryContextDataSource_.get(query);
+  this.didYouMeanDataSource_.get(query);
 };
 
 
 /** @inheritDoc */
 org.jboss.search.page.filter.TechnologyFilterController.prototype.abortActiveDataResources = function() {
-  this.abortActiveDataResourcesInternal([this.suggestionsDataSource_, this.queryContextDataSource_]);
+  this.abortActiveDataResourcesInternal([this.queryContextDataSource_, this.didYouMeanDataSource_]);
 };
 
 
 /** @inheritDoc */
 org.jboss.search.page.filter.TechnologyFilterController.prototype.getActiveDataResourcesCount = function() {
-  return this.getActiveDataResourcesCountInternal([this.suggestionsDataSource_, this.queryContextDataSource_]);
+  return this.getActiveDataResourcesCountInternal([this.queryContextDataSource_, this.didYouMeanDataSource_]);
 };
 
 
@@ -262,8 +334,8 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.setMouseListen
  * @enum {string}
  */
 org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS = {
-  SUGGESTIONS: 'suggestions',
-  QUERY_CONTEXT: 'query_context'
+  QUERY_CONTEXT: 'query_context',
+  DID_YOU_MEAN: 'did_you_mean'
 };
 
 
@@ -323,8 +395,8 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
    */
   this.technologyListWidget_ = org.jboss.core.widget.list.ListWidgetFactory.build({
     lists: [
-      { key: org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.SUGGESTIONS, caption: 'Suggestions' },
-      { key: org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.QUERY_CONTEXT, caption: 'Query Relevant' }
+      { key: org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.DID_YOU_MEAN, caption: 'Did You Mean?' },
+      { key: org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.QUERY_CONTEXT, caption: 'All Technologies' }
     ],
     controllerConstructor: org.jboss.search.page.filter.TechnologyFilterController,
     attach: this.items_div_

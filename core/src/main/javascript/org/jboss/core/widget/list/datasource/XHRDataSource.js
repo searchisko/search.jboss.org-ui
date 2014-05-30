@@ -18,6 +18,7 @@
 
 /**
  * @fileoverview
+ * TODO: remove if not used
  *
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */

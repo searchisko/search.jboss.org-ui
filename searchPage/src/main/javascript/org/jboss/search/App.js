@@ -258,6 +258,7 @@ org.jboss.search.App = function() {
             function() {
               return goog.dom.classes.has(searchPageElements.getTechnology_filter_body_div(), org.jboss.core.Constants.HIDDEN);
             },
+            // expand
             function() {
               goog.dom.classes.remove(searchPageElements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
               goog.dom.classes.add(searchPageElements.getTechnology_filter_tab_div(), org.jboss.core.Constants.SELECTED);
@@ -272,6 +273,7 @@ org.jboss.search.App = function() {
               searchPageElements.getTechnology_filter_query_field().focus();
               searchPageElements.getAuthor_filter_query_field().blur();
             },
+            // collapse
             function() {
               goog.dom.classes.remove(searchPageElements.getTechnology_filter_tab_div(), org.jboss.core.Constants.SELECTED);
               goog.dom.classes.add(searchPageElements.getTechnology_filter_body_div(), org.jboss.core.Constants.HIDDEN);

@@ -24,6 +24,7 @@
 
 goog.provide('org.jboss.search.service.LookUp');
 
+goog.require('goog.object');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.service.LookUpImpl');
 goog.require('org.jboss.core.service.query.QueryService');
@@ -97,6 +98,7 @@ goog.inherits(org.jboss.search.service.LookUp, org.jboss.core.service.LookUpImpl
 
 
 /**
+ * Returns the project map.
  * @return {Object}
  */
 org.jboss.search.service.LookUp.prototype.getProjectMap = function() {
@@ -105,6 +107,15 @@ org.jboss.search.service.LookUp.prototype.getProjectMap = function() {
   } else {
     throw new Error('ProjectMap hasn\'t been set yet!');
   }
+};
+
+
+/**
+ * Returns clone of the project map.
+ * @return {Object}
+ */
+org.jboss.search.service.LookUp.prototype.getProjectMapClone = function() {
+  return goog.object.clone(this.getProjectMap());
 };
 
 
