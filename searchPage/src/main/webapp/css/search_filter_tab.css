@@ -123,9 +123,23 @@
 }
 
 /* highlight background of filter items on hover */
+/*
 .filter_items div:hover {
+.filter_items div {
 	background-color: lightgrey;
 	cursor: pointer;
+}
+*/
+
+.filter_items div.caption {
+    margin: 4px 0;
+    width: 100%;
+    text-align: left;
+}
+
+.filter_items div.selected {
+    background-color: lightgrey;
+    cursor: pointer;
 }
 
 /* align small avatars on filter items */
