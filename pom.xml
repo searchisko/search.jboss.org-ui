@@ -36,13 +36,13 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
-        <jsframework.version>1.18.1</jsframework.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jstd.plugin.version>1.3.5.1</jstd.plugin.version>
         <lesscss-maven-plugin.version>1.3.3</lesscss-maven-plugin.version>
-        <!-- This version of closure library is by default used by jsframework 1.17.0 -->
-        <!-- <closure.library.version>v20131014</closure.library.version> -->
+        <jsframework.version>1.18.1</jsframework.version>
+        <!-- Compiler v20131014 is used by default by CJF v1.18.1 -->
+        <closure.library.version>v20131014</closure.library.version>
         <!-- Compilation level is set in profile -->
         <!--<closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>-->
     </properties>
@@ -128,6 +128,13 @@
                                 </define>
                             </defines>
                         </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.google.javascript</groupId>
+                                <artifactId>closure-compiler</artifactId>
+                                <version>${closure.library.version}</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
@@ -135,7 +142,7 @@
 
         <!--
             ==========================================================
-            Used in Jenkins build. It allow to test the application
+            Used in Jenkins build. It allows to test the application
             directly from the Jenkins [public] folder after the build
             is finished.
             ==========================================================
@@ -171,6 +178,13 @@
                                 </define>
                             </defines>
                         </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.google.javascript</groupId>
+                                <artifactId>closure-compiler</artifactId>
+                                <version>${closure.library.version}</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                 </plugins>
             </build>

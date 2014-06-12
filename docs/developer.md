@@ -25,7 +25,7 @@ Google Closure, Soy templates and jsTestDriver are all very interesting and powe
 It is important to keep versions of individual parts of [Closure Tools](https://developers.google.com/closure) that are used during development in the sync.
 
 By Closure compiler version we mean **release** number as defined for Maven use:
-<http://code.google.com/p/closure-compiler/wiki/Maven#Releases>
+<https://github.com/google/closure-compiler/wiki/Releases>
 
 #### Maven Plugin
 
