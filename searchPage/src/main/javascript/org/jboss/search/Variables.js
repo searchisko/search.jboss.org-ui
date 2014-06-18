@@ -34,11 +34,13 @@ org.jboss.search.Variables = {
    * @type {string}
    * @const
    */
-  // API_URL_BASE_DCP : 'http://192.168.2.2:8080',
-  // API_URL_BASE_DCP : 'http://dcp-dev.jboss.org:8080',
-//  API_URL_BASE_DCP : 'http://dcp-jbossorgdev.rhcloud.com',
-//  API_URL_BASE_DCP: 'http://dcpbeta-searchisko.rhcloud.com',
-  API_URL_BASE_DCP : 'http://dcp-stg.jboss.org',
+  // API_URL_BASE_DCP: 'http://192.168.2.2:8080',
+  // API_URL_BASE_DCP: 'http://dcp-dev.jboss.org:8080',
+  // API_URL_BASE_DCP: 'http://dcp-jbossorgdev.rhcloud.com',
+  // API_URL_BASE_DCP: 'http://dcpbeta-searchisko.rhcloud.com',
+  // API_URL_BASE_DCP: 'http://10.34.2.178:8080',
+  API_URL_BASE_DCP: 'http://dcp.jboss.org',
+//  API_URL_BASE_DCP: 'http://dcp-stg.jboss.org',
 
   /**
    * Base URL of Profile app.

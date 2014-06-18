@@ -17,15 +17,16 @@
  */
 
 /**
- * @fileoverview Technology filter.
+ * @fileoverview Technology filter and related classes.
  *
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
-goog.provide('org.jboss.search.page.filter.TechnologyDataSource');
+goog.provide('org.jboss.search.page.filter.AllTechnologyDataSource');
 goog.provide('org.jboss.search.page.filter.TechnologyFilter');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS');
+goog.provide('org.jboss.search.page.filter.TechnologySuggestionsDataSource');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
@@ -47,6 +48,7 @@ goog.require('goog.object');
 goog.require('goog.string');
 goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.service.query.QueryServiceEventType');
 goog.require('org.jboss.core.util.urlGenerator');
 goog.require('org.jboss.core.widget.list.BaseListController');
 goog.require('org.jboss.core.widget.list.ListController');
@@ -57,7 +59,6 @@ goog.require('org.jboss.core.widget.list.ListWidgetFactory');
 goog.require('org.jboss.core.widget.list.datasource.DataSource');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEvent');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEventType');
-goog.require('org.jboss.core.widget.list.datasource.EchoDataSource');
 goog.require('org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener');
 goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener');
 goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener.EventType');
@@ -75,49 +76,98 @@ goog.require('org.jboss.search.response');
  * @implements {org.jboss.core.widget.list.datasource.DataSource}
  * @extends {goog.events.EventTarget}
  */
-org.jboss.search.page.filter.TechnologyDataSource = function() {
+org.jboss.search.page.filter.AllTechnologyDataSource = function() {
   goog.events.EventTarget.call(this);
-};
-goog.inherits(org.jboss.search.page.filter.TechnologyDataSource, goog.events.EventTarget);
 
+  /**
+   * @type {string}
+   * @private
+   */
+  this.previousQuery_ = '';
 
-/** @inheritDoc */
-org.jboss.search.page.filter.TechnologyDataSource.prototype.disposeInternal = function() {
-  org.jboss.search.page.filter.TechnologyDataSource.superClass_.disposeInternal.call(this);
-};
+  var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
 
+  /**
+   * @type {org.jboss.core.service.query.QueryService}
+   * @private
+   */
+  this.queryService_ = lookup_.getQueryService();
 
-/** @inheritDoc */
-org.jboss.search.page.filter.TechnologyDataSource.prototype.get = function(query) {
-  var projectMap = org.jboss.core.service.Locator.getInstance().getLookup().getProjectMapClone();
-  var recentQueryResults = org.jboss.core.service.Locator.getInstance().getLookup().getRecentQueryResultData();
-  if (goog.isDefAndNotNull(recentQueryResults)) {
-    var technologyFacet = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(recentQueryResults,
-        'facets', 'per_project_counts', 'terms'));
-    if (goog.isDefAndNotNull(technologyFacet)) {
-      goog.array.forEach(technologyFacet, function(item) {
-        var projectCode = goog.object.getValueByKeys(item, 'term');
-        var count = goog.object.getValueByKeys(item, 'count');
-        if (projectMap.hasOwnProperty(projectCode)) {
-          projectMap[projectCode] += ' (' + count + ')';
+  /**
+   * @type {!org.jboss.core.service.query.QueryServiceDispatcher}
+   * @private
+   */
+  this.queryServiceDispatcher_ = lookup_.getQueryServiceDispatcher();
+
+  /**
+   * If the search results changes we need to learn about this and update the filter content accordingly.
+   * @type {goog.events.Key}
+   * @private
+   */
+  this.suggestionsSearchKey_ = goog.events.listen(
+      this.queryServiceDispatcher_,
+      [
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED
+      ],
+      function() {
+        var tf_ = lookup_.getTechnologyFilter();
+        if (goog.isDefAndNotNull(tf_) && tf_.isExpanded()) {
+          this.get(this.previousQuery_);
         }
-      });
-    }
-  }
-  this.dispatchEvent(
-      new org.jboss.core.widget.list.datasource.DataSourceEvent(this.convertCacheToEventDate_(projectMap))
-  );
+      }, false, this);
+};
+goog.inherits(org.jboss.search.page.filter.AllTechnologyDataSource, goog.events.EventTarget);
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.AllTechnologyDataSource.prototype.disposeInternal = function() {
+  org.jboss.search.page.filter.AllTechnologyDataSource.superClass_.disposeInternal.call(this);
+  goog.events.unlistenByKey(this.suggestionsSearchKey_);
+  delete this.queryService_;
+  delete this.queryServiceDispatcher_;
 };
 
 
 /** @inheritDoc */
-org.jboss.search.page.filter.TechnologyDataSource.prototype.abort = function() {
+org.jboss.search.page.filter.AllTechnologyDataSource.prototype.get = function(query) {
+//  var q = goog.string.makeSafe(query);
+//  if (q != this.previousQuery_) {
+
+    // fire query for new project name candidates and possible (did you mean) candidates
+//    this.queryService_.userSuggestionQuery(query);
+
+    // get all technologies and get the most recent counts for them (if possible)
+    var projectMap = org.jboss.core.service.Locator.getInstance().getLookup().getProjectMapClone();
+    var recentQueryResults = org.jboss.core.service.Locator.getInstance().getLookup().getRecentQueryResultData();
+    if (goog.isDefAndNotNull(recentQueryResults)) {
+      var technologyFacet = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(recentQueryResults,
+          'facets', 'per_project_counts', 'terms'));
+      if (goog.isDefAndNotNull(technologyFacet)) {
+        goog.array.forEach(technologyFacet, function(item) {
+          var projectCode = goog.object.getValueByKeys(item, 'term');
+          var count = goog.object.getValueByKeys(item, 'count');
+          if (projectMap.hasOwnProperty(projectCode)) {
+            projectMap[projectCode] += ' (' + count + ')';
+          }
+        });
+      }
+    }
+    // console.log('dispatching all technologies with counts data');
+    this.dispatchEvent(
+        new org.jboss.core.widget.list.datasource.DataSourceEvent(this.convertCacheToEventDate_(projectMap))
+    );
+//  }
+};
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.AllTechnologyDataSource.prototype.abort = function() {
   // noop, we are not doing async operation
 };
 
 
 /** @inheritDoc */
-org.jboss.search.page.filter.TechnologyDataSource.prototype.isActive = function() {
+org.jboss.search.page.filter.AllTechnologyDataSource.prototype.isActive = function() {
   return false;
 };
 
@@ -127,7 +177,7 @@ org.jboss.search.page.filter.TechnologyDataSource.prototype.isActive = function(
  * @return {!Array.<org.jboss.core.widget.list.ListItem>}
  * @private
  */
-org.jboss.search.page.filter.TechnologyDataSource.prototype.convertCacheToEventDate_ = function(data) {
+org.jboss.search.page.filter.AllTechnologyDataSource.prototype.convertCacheToEventDate_ = function(data) {
   var a = [];
   for (var property in data) {
     if (data.hasOwnProperty(property)) {
@@ -135,6 +185,89 @@ org.jboss.search.page.filter.TechnologyDataSource.prototype.convertCacheToEventD
     }
   }
   return a;
+};
+
+
+
+/**
+ * Technology suggestions {@link DataSource}.
+ * @constructor
+ * @implements {org.jboss.core.widget.list.datasource.DataSource}
+ * @extends {goog.events.EventTarget}
+ */
+org.jboss.search.page.filter.TechnologySuggestionsDataSource = function() {
+  goog.events.EventTarget.call(this);
+};
+goog.inherits(org.jboss.search.page.filter.TechnologySuggestionsDataSource, goog.events.EventTarget);
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologySuggestionsDataSource.prototype.disposeInternal = function() {
+  org.jboss.search.page.filter.TechnologySuggestionsDataSource.superClass_.disposeInternal.call(this);
+};
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologySuggestionsDataSource.prototype.get = function(query) {
+  var xhrManager = org.jboss.core.service.Locator.getInstance().getLookup().getXhrManager();
+  xhrManager.abort(org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID, true);
+  if (!goog.string.isEmptySafe(query)) {
+
+    var query_url_string = org.jboss.core.util.urlGenerator.projectNameSuggestionsUrl(
+        goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_PROJECT).clone(),
+        query, 20);
+
+    if (query_url_string != null) {
+      xhrManager.send(
+          org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID,
+          query_url_string,
+          org.jboss.core.Constants.GET,
+          '', // post_data
+          {}, // headers_map
+          org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_PRIORITY,
+          // callback, The only param is the event object from the COMPLETE event.
+          goog.bind(function(e) {
+            var event = /** @type {goog.net.XhrManager.Event} */ (e);
+            if (event.target.isSuccess()) {
+              var response = /** @type {{responses: {length: number}}} */ (event.target.getResponseJson());
+              var ngrams = /** @type {{length: number}} */ (goog.object.getValueByKeys(response['responses'][0], 'hits', 'hits'));
+              var fuzzy = /** @type {{length: number}} */ (goog.object.getValueByKeys(response['responses'][1], 'hits', 'hits'));
+              // console.log('ngrams',ngrams);
+              // console.log('fuzzy',fuzzy);
+//              var output = org.jboss.search.response.normalizeProjectSuggestionsResponse(ngrams, fuzzy);
+              //          var html = org.jboss.search.page.filter.templates.project_filter_items(output);
+              //          this.items_div_.innerHTML = html;
+              //          console.log('suggestions >',output);
+            } else {
+              // Project info failed to load.
+              // TODO: fire event with details...
+              // console.log('failed!');
+            }
+          }, this)
+      );
+    }
+
+//    a.push(new org.jboss.core.widget.list.ListItem('property', query));
+  } else {
+    this.dispatchEvent(
+        new org.jboss.core.widget.list.datasource.DataSourceEvent([])
+    );
+  }
+};
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologySuggestionsDataSource.prototype.abort = function() {
+};
+
+
+/** @inheritDoc */
+org.jboss.search.page.filter.TechnologySuggestionsDataSource.prototype.isActive = function() {
+};
+
+
+org.jboss.search.page.filter.TechnologySuggestionsDataSource.prototype.getSuggestions_ = function() {
+
 };
 
 
@@ -154,16 +287,16 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
   org.jboss.core.widget.list.BaseListController.call(this, lmc, lvc);
 
   /**
-   * @type {!org.jboss.search.page.filter.TechnologyDataSource}
+   * @type {!org.jboss.search.page.filter.AllTechnologyDataSource}
    * @private
    */
-  this.queryContextDataSource_ = new org.jboss.search.page.filter.TechnologyDataSource();
+  this.queryContextDataSource_ = new org.jboss.search.page.filter.AllTechnologyDataSource();
 
   /**
-   * @type {!org.jboss.core.widget.list.datasource.EchoDataSource}
+   * @type {!org.jboss.search.page.filter.TechnologySuggestionsDataSource}
    * @private
    */
-  this.didYouMeanDataSource_ = new org.jboss.core.widget.list.datasource.EchoDataSource();
+  this.didYouMeanDataSource_ = new org.jboss.search.page.filter.TechnologySuggestionsDataSource();
 
   /**
    * @type {goog.events.Key}
@@ -335,7 +468,8 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.setMouseListen
  */
 org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS = {
   QUERY_CONTEXT: 'query_context',
-  DID_YOU_MEAN: 'did_you_mean'
+  DID_YOU_MEAN: 'did_you_mean',
+  MATCHING: 'matching'
 };
 
 
@@ -396,6 +530,7 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
   this.technologyListWidget_ = org.jboss.core.widget.list.ListWidgetFactory.build({
     lists: [
       { key: org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.DID_YOU_MEAN, caption: 'Did You Mean?' },
+      { key: org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.MATCHING, caption: 'Matching Technologies' },
       { key: org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.QUERY_CONTEXT, caption: 'All Technologies' }
     ],
     controllerConstructor: org.jboss.search.page.filter.TechnologyFilterController,
@@ -500,6 +635,15 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.collapseFilter = functio
 
 
 /**
+ * Returns true if filter is expanded.
+ * @return {boolean}
+ */
+org.jboss.search.page.filter.TechnologyFilter.prototype.isExpanded = function() {
+  return !this.isCollapsed_();
+};
+
+
+/**
  * Populate a new items into the filter. Drops all existing.
  * @param {Array.<{name: string, code: string}>} items
  */
@@ -514,76 +658,10 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.replaceItems = function(
 
 
 /**
- * @type {goog.Uri}
- * @const
- */
-org.jboss.search.page.filter.TechnologyFilter.prototype.PROJECT_SUGGESTIONS_URI =
-    goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_PROJECT);
-
-
-/**
- * Prototype URI
- * @return {goog.Uri} Project name suggestions service URI
- */
-org.jboss.search.page.filter.TechnologyFilter.prototype.getProjectSuggestionsUri = function() {
-  return this.PROJECT_SUGGESTIONS_URI.clone();
-};
-
-
-/**
- *
- * @param {string} query
- */
-org.jboss.search.page.filter.TechnologyFilter.prototype.getSuggestions = function(query) {
-
-  var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
-
-  var xhrManager = lookup_.getXhrManager();
-  xhrManager.abort(org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID, true);
-
-  if (goog.string.isEmptySafe(query)) {
-    this.init();
-    return;
-  }
-
-  var query_url_string = /** @type {string} */ (org.jboss.core.util.urlGenerator.projectNameSuggestionsUrl(
-      this.getProjectSuggestionsUri(), query, 20));
-
-  xhrManager.send(
-      org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID,
-      query_url_string,
-      org.jboss.core.Constants.GET,
-      '', // post_data
-      {}, // headers_map
-      org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_PRIORITY,
-      // callback, The only param is the event object from the COMPLETE event.
-      goog.bind(function(e) {
-        var event = /** @type {goog.net.XhrManager.Event} */ (e);
-        if (event.target.isSuccess()) {
-          var response = /** @type {{responses: {length: number}}} */ (event.target.getResponseJson());
-          var ngrams = /** @type {{length: number}} */ (goog.object.getValueByKeys(response['responses'][0], 'hits', 'hits'));
-          var fuzzy = /** @type {{length: number}} */ (goog.object.getValueByKeys(response['responses'][1], 'hits', 'hits'));
-          // console.log('ngrams',ngrams);
-          // console.log('fuzzy',fuzzy);
-          var output = org.jboss.search.response.normalizeProjectSuggestionsResponse(ngrams, fuzzy);
-          var html = org.jboss.search.page.filter.templates.project_filter_items(output);
-          this.items_div_.innerHTML = html;
-        } else {
-          // Project info failed to load.
-          // TODO: fire event with details...
-          // console.log('failed!');
-        }
-      }, this)
-  );
-};
-
-
-/**
  * Initialization of technology filter, it pulls project array from lookup.
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.init = function() {
-  var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
-//  this.replaceItems(lookup_.getProjectArray());
+  // TODO: ?
 };
 
 
@@ -603,7 +681,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.getPresetKeyHandlers_ = 
         delay.stop();
         this.query_field_.value = '';
         // we can not call init() directly because we want to abort previous request (if there is any)
-        this.getSuggestions('');
+        //this.getSuggestions('');
       } else {
         this.collapseFilter();
       }

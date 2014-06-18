@@ -19,20 +19,24 @@
 /**
  * @fileoverview Variables that can vary depending on target deployment.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 goog.provide('org.jboss.profile.Variables');
 
+
+/**
+ * Variables.
+ */
 org.jboss.profile.Variables = {
 
-	/**
-	 * Base URL of DCP API.
-	 * @type {string}
-	 * @const
-	 */
-//	API_URL_BASE_DCP : 'http://10.34.2.178:8080',
-//	API_URL_BASE_DCP : 'http://dcp-dev.jboss.org:8080',
-//	API_URL_BASE_DCP : 'http://dcp-jbossorgdev.rhcloud.com'
-	API_URL_BASE_DCP : 'http://dcp-stg.jboss.org'
+  /**
+   * Base URL of DCP API.
+   * @type {string}
+   * @const
+   */
+  // API_URL_BASE_DCP: 'http://10.34.2.178:8080',
+  // API_URL_BASE_DCP: 'http://dcp-dev.jboss.org:8080',
+  // API_URL_BASE_DCP: 'http://dcp-jbossorgdev.rhcloud.com'
+  API_URL_BASE_DCP: 'http://dcp-stg.jboss.org'
 
 };

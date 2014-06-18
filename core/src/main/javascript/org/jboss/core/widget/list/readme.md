@@ -76,9 +76,27 @@ gets the user input and passes it to all the `DataSource`s and stream the incomi
 
 ### DataSource
 
-[DataSource](datasource/DataSource.js) is an interface for classes that can provide data in form of `Array.<org.jboss.core.widget.list.ListItem>`.
-It can accept user input (i.e. query string) and emit event with new data, thus it is designed to work with asynchronous
-data sources (like REST API).
+[DataSource](datasource/DataSource.js) is an interface for classes that can provide data in form of
+`Array.<org.jboss.core.widget.list.ListItem>`. It can accept user input (i.e. query string) and emit event with new
+data, thus it is designed to work with asynchronous data sources (like REST API). If the input does not yield
+any data (i.e. the response should be empty) then it simply emits an empty array.
+
+See example:
+
+```javascript
+/**
+ * Very simple "echo-like" data source.
+ */
+MyDataSource.prototype.get = function(query) {
+  var data = [];
+  if (!goog.string.isEmptySafe(query)) {
+    data.push(new org.jboss.core.widget.list.ListItem('property', query));
+  }
+  this.dispatchEvent(
+      new org.jboss.core.widget.list.datasource.DataSourceEvent(data)
+  );
+};
+```
 
 ## Selecting List Items
 

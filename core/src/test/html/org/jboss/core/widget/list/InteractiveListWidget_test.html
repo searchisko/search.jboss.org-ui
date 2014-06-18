@@ -15,6 +15,7 @@
 	<script src="ListWidget_test_deps.js"></script>
 	<!--<script src="InteractiveListWidget_test.js"></script>-->
 	<script type="text/javascript">
+		goog.require('goog.async.nextTick');
 		goog.require('goog.events');
 		goog.require('goog.events.EventType');
 		goog.require('goog.events.KeyCodes');
@@ -63,12 +64,12 @@
 			function(e) {
 				// does not capture cut & paste events
 				if (goog.events.KeyCodes.isTextModifyingKeyEvent(/** @type {goog.events.BrowserEvent} */ (e))) {
-					setTimeout(
+                    goog.async.nextTick(
 						function(){
 							if (this.inputFieldValue != this.inputField.value) {
 								this.inputFieldValue = this.inputField.value;
 								controller.input(this.inputField.value);}
-						}, 0
+						}, this
 					);
 				}
 			},
