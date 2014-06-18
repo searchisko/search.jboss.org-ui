@@ -147,7 +147,7 @@ org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, se
   var from = requestParams.getFrom();
   if (goog.isDef(from)) {
     if (goog.isDateLike(from) && from instanceof goog.date.DateTime) {
-      rootUri.setParameterValue(params.ACTIVITY_DATE_FROM, from.toXmlDateTime(true));
+      rootUri.setParameterValue(params.ACTIVITY_DATE_FROM, from.toXmlDateTime(true).replace('+','.0+'));
     }
   }
 
@@ -155,7 +155,7 @@ org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, se
   var to = requestParams.getTo();
   if (goog.isDef(to) && to instanceof goog.date.DateTime) {
     if (goog.isDateLike(to)) {
-      rootUri.setParameterValue(params.ACTIVITY_DATE_TO, to.toXmlDateTime(true));
+      rootUri.setParameterValue(params.ACTIVITY_DATE_TO, to.toXmlDateTime(true).replace('+','.0+'));
     }
   }
 
