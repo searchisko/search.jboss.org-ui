@@ -39,19 +39,19 @@ org.jboss.core.service.query.QueryServiceEventType = {
   // User query events
   // ----------------------------------------------
 
-  // search request has been started
+  // request has been started
   SEARCH_START: goog.events.getUniqueId('search_start'),
 
-  // running search request has been aborted
+  // running request has been aborted
   SEARCH_ABORTED: goog.events.getUniqueId('search_aborted'),
 
-  // search request has finished (either successfully or failed)
+  // request has finished (either successfully or failed)
   SEARCH_FINISHED: goog.events.getUniqueId('search_finished'),
 
-  // search request finished successfully
+  // request finished successfully
   SEARCH_SUCCEEDED: goog.events.getUniqueId('search_succeeded'),
 
-  // search request failed
+  // request failed
   SEARCH_ERROR: goog.events.getUniqueId('search_error'),
 
   // ----------------------------------------------
@@ -66,20 +66,39 @@ org.jboss.core.service.query.QueryServiceEventType = {
   // User suggestions query events
   // ----------------------------------------------
 
-  // search request has been started
+  // request has been started
   SEARCH_SUGGESTIONS_START: goog.events.getUniqueId('search_suggestions_start'),
 
-  // running search request has been aborted
+  // running request has been aborted
   SEARCH_SUGGESTIONS_ABORTED: goog.events.getUniqueId('search_suggestions_aborted'),
 
-  // search request has finished (either successfully or failed)
+  // request has finished (either successfully or failed)
   SEARCH_SUGGESTIONS_FINISHED: goog.events.getUniqueId('search_suggestions_finished'),
 
-  // search request finished successfully
+  // request finished successfully
   SEARCH_SUGGESTIONS_SUCCEEDED: goog.events.getUniqueId('search_suggestions_succeeded'),
 
-  // search request failed
-  SEARCH_SUGGESTIONS_ERROR: goog.events.getUniqueId('search_suggestions_error')
+  // request failed
+  SEARCH_SUGGESTIONS_ERROR: goog.events.getUniqueId('search_suggestions_error'),
+
+  // ----------------------------------------------
+  // Project name suggestions query events
+  // ----------------------------------------------
+
+  // request has been started
+  PROJECT_NAME_SEARCH_SUGGESTIONS_START: goog.events.getUniqueId('project_name_search_suggestions_start'),
+
+  // running request has been aborted
+  PROJECT_NAME_SEARCH_SUGGESTIONS_ABORTED: goog.events.getUniqueId('project_name_search_suggestions_aborted'),
+
+  // request has finished (either successfully or failed)
+  PROJECT_NAME_SEARCH_SUGGESTIONS_FINISHED: goog.events.getUniqueId('project_name_search_suggestions_finished'),
+
+  // request finished successfully
+  PROJECT_NAME_SEARCH_SUGGESTIONS_SUCCEEDED: goog.events.getUniqueId('project_name_search_suggestions_succeeded'),
+
+  // request failed
+  PROJECT_NAME_SEARCH_SUGGESTIONS_ERROR: goog.events.getUniqueId('project_name_search_suggestions_error')
 };
 
 
@@ -94,6 +113,7 @@ org.jboss.core.service.query.QueryServiceEvent = function(type, opt_metadata) {
   goog.events.Event.call(this, type);
 
   /**
+   * TODO: can be removed?
    * @type {org.jboss.core.service.query.QueryServiceEventType}
    * @private
    */
@@ -109,6 +129,7 @@ goog.inherits(org.jboss.core.service.query.QueryServiceEvent, goog.events.Event)
 
 
 /**
+ * TODO: can be removed? (is present by default)
  * @return {org.jboss.core.service.query.QueryServiceEventType}
  */
 org.jboss.core.service.query.QueryServiceEvent.prototype.getType = function() {

@@ -50,7 +50,14 @@ org.jboss.search.service.query.QueryServiceCached.prototype.userQuery = function
 
 
 /** @override */
-org.jboss.search.service.query.QueryServiceCached.prototype.userSuggestionQuery = function(query_string) {
+org.jboss.search.service.query.QueryServiceCached.prototype.userSuggestionQuery = function(query) {
   // TODO: implement caching
-  this.queryService_.userSuggestionQuery(query_string);
+  this.queryService_.userSuggestionQuery(query);
+};
+
+
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceCached.prototype.projectNameSuggestions = function(query) {
+  // TODO: implement caching
+  this.queryService_.projectNameSuggestions(query);
 };

@@ -48,6 +48,14 @@ org.jboss.core.service.query.QueryService.prototype.userQuery = function(request
  * Execute user suggestion query. This is fired for type ahead queries while user types in a query into the main
  * search field.
  *
- * @param {string} query_string user query
+ * @param {string} query user query
  */
-org.jboss.core.service.query.QueryService.prototype.userSuggestionQuery = function(query_string) {};
+org.jboss.core.service.query.QueryService.prototype.userSuggestionQuery = function(query) {};
+
+
+/**
+ * [Suggestions API - project name]{@link http://docs.jbossorg.apiary.io/#suggestionsapiprojectname}
+ *
+ * @param {string} query
+ */
+org.jboss.core.service.query.QueryService.prototype.projectNameSuggestions = function(query) {};

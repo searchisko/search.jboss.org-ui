@@ -23,18 +23,20 @@
  * not matter, it is better to have duplicities as long as it makes code not readable.
  * It does not add up to size of compiled code.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  * @externs
  */
 
 // The purpose of this externs file is to make sure the compiler does not rename JSON fields.
 // see https://groups.google.com/forum/?fromgroups=#!topic/closure-templates-discuss/dRgUIbp84iw
 
+
+
 /**
  * Metadata in {@link org.jboss.core.service.query.QueryServiceEvent}
  * @interface
  */
-function QueryEventMetadata() {};
+function QueryEventMetadata() {}
 QueryEventMetadata.prototype.requestParams;
 QueryEventMetadata.prototype.query_string;
 QueryEventMetadata.prototype.url;
@@ -44,7 +46,7 @@ QueryEventMetadata.prototype.error;
  * Search hits.
  * @interface
  */
-function SearchResults() {};
+function SearchResults() {}
 SearchResults.prototype.actual_page;  // computed by normalize.js
 SearchResults.prototype.user_query;   // computed by normalize.js
 SearchResults.prototype.took;
@@ -67,7 +69,7 @@ SearchResults.prototype.hits.hits;
  * Individual search hit.
  * @interface
  */
-function SearchHit() {};
+function SearchHit() {}
 SearchHit.prototype._id;
 SearchHit.prototype.position_on_page;  // computed or modified by normalize.js
 
@@ -124,7 +126,7 @@ SearchHit.prototype.facets.per_sys_type_counts;
  * Keys related to date histogram.
  * @interface
  */
-function DateHistogram() {};
+function DateHistogram() {}
 DateHistogram.prototype.activity_dates_histogram;
 DateHistogram.prototype.activity_dates_histogram_interval;
 DateHistogram.prototype.time;
@@ -134,7 +136,7 @@ DateHistogram.prototype.count;
  * Top contributor facet fields
  * @interface
  */
-function TopContributorFacet() {};
+function TopContributorFacet() {}
 TopContributorFacet.prototype.count;
 TopContributorFacet.prototype.term;
 TopContributorFacet.prototype.name;		// computed or modified by normalize.js
@@ -144,15 +146,15 @@ TopContributorFacet.prototype.gURL16;	// computed or modified by normalize.js
  * Project name suggestions
  * @interface
  */
-function filterItem() {};
+function filterItem() {}
 filterItem.prototype.did_you_mean_items;
-filterItem.prototype.items;
-filterItem.prototype.items.name;
-filterItem.prototype.items.code;
-filterItem.prototype.items.fields;
-filterItem.prototype.items.highlight;
+filterItem.prototype.matching_items;
+filterItem.prototype.matching_items.name;
+filterItem.prototype.matching_items.code;
+filterItem.prototype.matching_items.fields;
+filterItem.prototype.matching_items.highlight;
 
-function activeSearchFilter() {};
+function activeSearchFilter() {}
 activeSearchFilter.prototype.dateFilter;
 activeSearchFilter.prototype.type;
 activeSearchFilter.prototype.from;

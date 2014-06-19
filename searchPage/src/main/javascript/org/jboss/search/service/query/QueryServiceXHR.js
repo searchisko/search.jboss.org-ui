@@ -34,6 +34,7 @@ goog.require('goog.array');
 goog.require('goog.net.XhrManager');
 goog.require('goog.net.XhrManager.Event');
 goog.require('goog.string');
+goog.require('goog.object');
 goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.service.Locator');
@@ -136,7 +137,7 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userQuery = function(re
 
 
 /** @override */
-org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = function(query_string) {
+org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = function(query) {
 
   var ids = this.getXHRManager_().getOutstandingRequestIds();
   if (goog.array.contains(ids, org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID)) {
@@ -144,16 +145,16 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = f
     // this.dispatcher_.dispatchUserSuggestionsQueryAbort();
   }
 
-  if (!goog.isDefAndNotNull(query_string) || goog.string.isEmptySafe(query_string)) {
+  if (!goog.isDefAndNotNull(query) || goog.string.isEmptySafe(query)) {
     // TODO: for now this is used as a workaround to enable suggestions hiding when query is empty
     this.dispatcher_.dispatchUserSuggestionsQueryAbort();
   }
 
-  if (goog.isDefAndNotNull(query_string) && !goog.string.isEmptySafe(query_string)) {
+  if (goog.isDefAndNotNull(query) && !goog.string.isEmptySafe(query)) {
     var searchSuggestionsURI_ = this.searchSuggestionsURI_.clone();
-    var query_url_string_ = searchSuggestionsURI_.setParameterValue('q', query_string).toString();
+    var query_url_string_ = searchSuggestionsURI_.setParameterValue('q', query).toString();
 
-    this.dispatcher_.dispatchUserSuggestionsQueryStart(query_string, query_url_string_);
+    this.dispatcher_.dispatchUserSuggestionsQueryStart(query, query_url_string_);
     this.getXHRManager_().send(
         org.jboss.search.Constants.SEARCH_SUGGESTIONS_REQUEST_ID,
         // setting the parameter value clears previously set value (that is what we want!)
@@ -171,8 +172,8 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = f
               var response = event.target.getResponseJson();
               // We are taking the response from the mock server for now,
               // just replace the token with an actual query string.
-              response['view']['search']['options'] = [query_string];
-              response['model']['search']['search']['query'] = query_string;
+              response['view']['search']['options'] = [query];
+              response['model']['search']['search']['query'] = query;
 
               // var model = /** @type {!Object} */ (goog.object.get(response, "model", {}));
               // thiz_.query_suggestions_model = thiz_.parseQuerySuggestionsModel_(model);
@@ -194,13 +195,64 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = f
           } else {
             // We failed getting query suggestions
             // thiz_.hideAndCleanSuggestionsElementAndModel_();
-            this.dispatcher_.dispatchUserSuggestionsQueryError(query_string, event.target.getLastError());
+            this.dispatcher_.dispatchUserSuggestionsQueryError(query, event.target.getLastError());
           }
 
         }, this)
     );
 
   }
+};
+
+
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceXHR.prototype.projectNameSuggestions = function(query) {
+
+  var ids = this.getXHRManager_().getOutstandingRequestIds();
+  if (goog.array.contains(ids, org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID)) {
+    this.getXHRManager_().abort(org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID, true);
+    this.dispatcher_.dispatchProjectNameSuggestionsQueryAbort();
+  }
+
+  if (!goog.isDefAndNotNull(query) || goog.string.isEmptySafe(query)) {
+    // TODO: for now this is used as a workaround to enable suggestions hiding when query is empty
+    this.dispatcher_.dispatchProjectNameSuggestionsQueryAbort();
+  }
+
+  if (goog.isDefAndNotNull(query) && !goog.string.isEmptySafe(query)) {
+    var query_url_string = org.jboss.core.util.urlGenerator.projectNameSuggestionsUrl(
+        goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_PROJECT).clone(), query, 20
+        );
+
+    if (query_url_string != null) {
+      this.dispatcher_.dispatchProjectNameSuggestionsQueryStart(query, query_url_string);
+      this.getXHRManager_().send(
+          org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID,
+          query_url_string,
+          org.jboss.core.Constants.GET,
+          '', // post_data
+          {}, // headers_map
+          org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_PRIORITY,
+          // callback, The only param is the event object from the COMPLETE event.
+          goog.bind(function(e) {
+            this.dispatcher_.dispatchProjectNameSuggestionsQueryFinished();
+            var event = /** @type {goog.net.XhrManager.Event} */ (e);
+            if (event.target.isSuccess()) {
+              var response = /** @type {{responses: {length: number}}} */ (event.target.getResponseJson());
+              var ngrams = /** @type {{length: number}} */ (goog.object.getValueByKeys(response['responses'][0], 'hits', 'hits'));
+              var fuzzy = /** @type {{length: number}} */ (goog.object.getValueByKeys(response['responses'][1], 'hits', 'hits'));
+              var eventMetadata = org.jboss.search.response.normalizeProjectSuggestionsResponse(ngrams, fuzzy);
+              this.dispatcher_.dispatchProjectNameSuggestionsQuerySucceeded(eventMetadata);
+            } else {
+              // Project info failed to load.
+              // TODO: provide error details
+              this.dispatcher_.dispatchProjectNameSuggestionsQueryError(query, {});
+            }
+          }, this)
+      );
+    }
+  }
+
 };
 
 

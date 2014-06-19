@@ -86,6 +86,8 @@ See example:
 ```javascript
 /**
  * Very simple "echo-like" data source.
+ *
+ * @param {string} query
  */
 MyDataSource.prototype.get = function(query) {
   var data = [];

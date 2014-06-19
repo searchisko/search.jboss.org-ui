@@ -356,7 +356,7 @@ org.jboss.search.response.normalizeAllSpaces_ = function(str) {
  * It returns normalized and sanitized project name suggestions response.
  * @param {{length: number}} ngrams raw response from search API.
  * @param {{length: number}} fuzzy raw response from search API.
- * @return {{ items: Array, did_you_mean_items: Array }}
+ * @return {{ matching_items: !Array, did_you_mean_items: !Array }}
  */
 org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams, fuzzy) {
 
@@ -386,7 +386,5 @@ org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams,
     }
   });
 
-  var output = { 'items': items, 'did_you_mean_items': did_you_mean_items };
-
-  return output;
+  return { 'matching_items': items, 'did_you_mean_items': did_you_mean_items };
 };

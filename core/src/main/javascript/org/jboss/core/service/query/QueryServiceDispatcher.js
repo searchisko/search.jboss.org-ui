@@ -35,6 +35,7 @@ goog.require('org.jboss.core.service.query.QueryServiceEventType');
 
 /**
  * Crate a new instance.
+ *
  * @constructor
  * @extends {goog.events.EventTarget}
  */
@@ -46,7 +47,6 @@ goog.inherits(org.jboss.core.service.query.QueryServiceDispatcher, goog.events.E
 
 /** @inheritDoc */
 org.jboss.core.service.query.QueryServiceDispatcher.prototype.disposeInternal = function() {
-  // Call the superclass's disposeInternal() method.
   org.jboss.core.service.query.QueryServiceDispatcher.superClass_.disposeInternal.call(this);
 };
 
@@ -218,15 +218,99 @@ org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserSugges
  *   error: {...}
  * }
  *
- * @param {string} query_string
+ * @param {string} query
  * @param {Object} error
  */
-org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryError = function(query_string,
-                                                                                                           error) {
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserSuggestionsQueryError = function(query, error) {
   var event = new org.jboss.core.service.query.QueryServiceEvent(
       org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_ERROR,
       {
-        query_string: query_string,
+        query_string: query,
+        error: error
+      }
+      );
+  this.dispatchEvent(event);
+};
+
+
+/**
+ * Dispatches PROJECT_NAME_SEARCH_SUGGESTIONS_ABORTED event.
+ */
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchProjectNameSuggestionsQueryAbort = function() {
+  // TODO:
+  var event = new org.jboss.core.service.query.QueryServiceEvent(
+      org.jboss.core.service.query.QueryServiceEventType.PROJECT_NAME_SEARCH_SUGGESTIONS_ABORTED
+      );
+  this.dispatchEvent(event);
+};
+
+
+/**
+ * Dispatches PROJECT_NAME_SEARCH_SUGGESTIONS_START event.
+ * Event metadata format:
+ * {
+ *   query_string: "client query",
+ *   url: "Request URL"
+ * }
+ *
+ * @param {string} query
+ * @param {string} query_url_string
+ */
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchProjectNameSuggestionsQueryStart = function(query, query_url_string) {
+  // TODO:
+  var event = new org.jboss.core.service.query.QueryServiceEvent(
+      org.jboss.core.service.query.QueryServiceEventType.PROJECT_NAME_SEARCH_SUGGESTIONS_START,
+      {
+        query_string: query,
+        url: query_url_string
+      }
+      );
+  this.dispatchEvent(event);
+};
+
+
+/**
+ * Dispatches PROJECT_NAME_SEARCH_SUGGESTIONS_FINISHED event.
+ */
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchProjectNameSuggestionsQueryFinished = function() {
+  var event = new org.jboss.core.service.query.QueryServiceEvent(
+      org.jboss.core.service.query.QueryServiceEventType.PROJECT_NAME_SEARCH_SUGGESTIONS_FINISHED
+      );
+  this.dispatchEvent(event);
+};
+
+
+/**
+ * Dispatches PROJECT_NAME_SEARCH_SUGGESTIONS_SUCCEEDED event.
+ * Metadata contains modified response JSON data.
+ *
+ * @param {Object|undefined} responseData normalized response data
+ */
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchProjectNameSuggestionsQuerySucceeded = function(responseData) {
+  var event = new org.jboss.core.service.query.QueryServiceEvent(
+      org.jboss.core.service.query.QueryServiceEventType.PROJECT_NAME_SEARCH_SUGGESTIONS_SUCCEEDED,
+      responseData
+      );
+  this.dispatchEvent(event);
+};
+
+
+/**
+ * Dispatches PROJECT_NAME_SEARCH_SUGGESTIONS_ERROR event.
+ * Event metadata format:
+ * {
+ *   query_string: "client query",
+ *   error: {...}
+ * }
+ *
+ * @param {string} query
+ * @param {Object} error
+ */
+org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchProjectNameSuggestionsQueryError = function(query, error) {
+  var event = new org.jboss.core.service.query.QueryServiceEvent(
+      org.jboss.core.service.query.QueryServiceEventType.PROJECT_NAME_SEARCH_SUGGESTIONS_ERROR,
+      {
+        query_string: query,
         error: error
       }
       );

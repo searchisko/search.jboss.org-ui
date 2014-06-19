@@ -16,16 +16,15 @@
  * limitations under the License.
  */
 
-goog.require('org.jboss.core.service.Locator');
-goog.require('org.jboss.core.context.RequestParams');
-goog.require('org.jboss.core.context.RequestParamsFactory');
-goog.require('org.jboss.core.util.gravatar');
-goog.require('org.jboss.core.util.emailName');
-goog.require('org.jboss.search.response');
-goog.require('org.jboss.search.service.LookUpImplWithProjects');
-
 goog.require('goog.string');
 goog.require('goog.testing.jsunit');
+goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.context.RequestParamsFactory');
+goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.util.emailName');
+goog.require('org.jboss.core.util.gravatar');
+goog.require('org.jboss.search.response');
+goog.require('org.jboss.search.service.LookUpImplWithProjects');
 
 var setUp = function() {
   org.jboss.core.service.Locator.dispose();
@@ -66,14 +65,14 @@ var testNormalizeSearchResponse = function() {
 
 var testNormalizeProjectNameSuggestionResponse = function() {
 
-  var items = [];
+  var matching_items = [];
   var did_you_mean = [];
-  var result = org.jboss.search.response.normalizeProjectSuggestionsResponse(items, did_you_mean);
+  var result = org.jboss.search.response.normalizeProjectSuggestionsResponse(matching_items, did_you_mean);
 
-  assertEquals(0, result.items.length);
+  assertEquals(0, result.matching_items.length);
   assertEquals(0, result.did_you_mean_items.length);
 
-  items = [
+  matching_items = [
     { highlight: { sys_project_name: { edgengram: 'A'}}, fields: { sys_project: '1' }},
     { highlight: { sys_project_name: { edgengram: 'B'}}, fields: { sys_project: '2' }},
     { highlight: { sys_project_name: { edgengram: 'C'}}, fields: { sys_project: '3' }}
@@ -84,12 +83,12 @@ var testNormalizeProjectNameSuggestionResponse = function() {
     { fields: { sys_project: '4', sys_project_name: 'D' }}
   ];
 
-  result = org.jboss.search.response.normalizeProjectSuggestionsResponse(items, did_you_mean);
+  result = org.jboss.search.response.normalizeProjectSuggestionsResponse(matching_items, did_you_mean);
 
-  assertEquals(3, result.items.length);
-  assertEquals('1', result.items[0].code);
-  assertEquals('2', result.items[1].code);
-  assertEquals('3', result.items[2].code);
+  assertEquals(3, result.matching_items.length);
+  assertEquals('1', result.matching_items[0].code);
+  assertEquals('2', result.matching_items[1].code);
+  assertEquals('3', result.matching_items[2].code);
 
   assertEquals(1, result.did_you_mean_items.length);
   assertEquals('4', result.did_you_mean_items[0].code);

@@ -33,6 +33,8 @@ goog.require('org.jboss.core.widget.list.ListItem');
 
 
 /**
+ * A general interface of data source. Data source is abstraction of some logic that can
+ * acquire and emit data relevant to client query in an async way.
  *
  * @interface
  */
@@ -40,7 +42,9 @@ org.jboss.core.widget.list.datasource.DataSource = function() {};
 
 
 /**
- * Dispatches {@link DataSourceEvent}.
+ * Typically, the data source dispatches {@link DataSourceEvent} once the data relevant
+ * to given query is acquired.
+ * TODO: (Lukas) rename to better descriptive function name
  *
  * @param {string} query
  */
