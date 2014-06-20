@@ -42,29 +42,29 @@ goog.require('goog.string');
 goog.require('goog.window');
 goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.core.context.RequestParams');
-goog.require('org.jboss.core.context.RequestParamsFactory');
 goog.require('org.jboss.core.context.RequestParams.Order');
+goog.require('org.jboss.core.context.RequestParamsFactory');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.service.query.QueryServiceEventType');
+goog.require('org.jboss.core.util.ImageLoaderNet');
+goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.core.util.fragmentGenerator');
 goog.require('org.jboss.core.util.fragmentParser');
 goog.require('org.jboss.core.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.core.util.fragmentParser.UI_param_suffix');
-goog.require('org.jboss.core.util.dateTime');
-goog.require('org.jboss.core.util.ImageLoaderNet');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.Variables');
 goog.require('org.jboss.search.list.project.Project');
+goog.require('org.jboss.search.page.SearchPage');
+goog.require('org.jboss.search.page.SearchPageElements');
 goog.require('org.jboss.search.page.element.Status');
+goog.require('org.jboss.search.page.event.ContributorIdSelected');
 goog.require('org.jboss.search.page.event.EventType');
 goog.require('org.jboss.search.page.event.QuerySubmitted');
-goog.require('org.jboss.search.page.event.ContributorIdSelected');
 goog.require('org.jboss.search.page.filter.AuthorFilter');
 goog.require('org.jboss.search.page.filter.ContentFilter');
 goog.require('org.jboss.search.page.filter.DateFilter');
 goog.require('org.jboss.search.page.filter.TechnologyFilter');
-goog.require('org.jboss.search.page.SearchPage');
-goog.require('org.jboss.search.page.SearchPageElements');
 goog.require('org.jboss.search.service.query.QueryServiceCached');
 goog.require('org.jboss.search.service.query.QueryServiceXHR');
 
@@ -78,7 +78,6 @@ goog.require('org.jboss.search.service.query.QueryServiceXHR');
 org.jboss.search.App = function() {
   goog.Disposable.call(this);
 
-  // prevent page being cached by browser
   // this ensures JavaScript is executed on browser BACK button
   this.unloadId_ = goog.events.listen(goog.dom.getWindow(), goog.events.EventType.UNLOAD, goog.nullFunction);
 
