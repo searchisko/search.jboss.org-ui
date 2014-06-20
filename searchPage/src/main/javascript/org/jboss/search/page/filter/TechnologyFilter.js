@@ -611,13 +611,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.disposeInternal = functi
 org.jboss.search.page.filter.TechnologyFilter.prototype.refreshItems = function(opt_force) {
   var force = !!(opt_force || false);
   if (!this.isCollapsed_() || force) {
-    var data = org.jboss.core.service.Locator.getInstance().getLookup().getRecentQueryResultData();
-    if (goog.isDefAndNotNull(data) &&
-        goog.isArray(goog.object.getValueByKeys(data, ['facets', 'per_project_counts', 'terms']))) {
-      this.updateItems_(data.facets.per_project_counts.terms);
-    } else {
-      this.updateItems_([]);
-    }
+    this.technologyListWidget_.input(this.query_field_.value);
   }
 };
 
@@ -628,6 +622,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.refreshItems = function(
  * @private
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.updateItems_ = function(data) {
+  // TODO: remove if not used!
   // scroll to top when changing the content of the filter
   if (this.items_div_.scrollTop && goog.isNumber(this.items_div_.scrollTop)) {
     this.items_div_.scrollTop = 0;
@@ -667,24 +662,10 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.isExpanded = function() 
 
 
 /**
- * Populate a new items into the filter. Drops all existing.
- * @param {Array.<{name: string, code: string}>} items
- */
-org.jboss.search.page.filter.TechnologyFilter.prototype.replaceItems = function(items) {
-  // TODO: check this is not called!
-  if (goog.isDefAndNotNull(items)) {
-    var html = org.jboss.search.page.filter.templates.project_filter_items(
-        { 'items': items, 'did_you_mean_items': null });
-    this.items_div_.innerHTML = html;
-  }
-};
-
-
-/**
  * Initialization of technology filter, it pulls project array from lookup.
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.init = function() {
-  // TODO: ?
+  // TODO: called from the main web app during initialization. Do we want to do anything here?
 };
 
 
