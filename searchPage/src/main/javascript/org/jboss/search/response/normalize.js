@@ -25,6 +25,7 @@
 goog.provide('org.jboss.search.response');
 
 goog.require('goog.array');
+goog.require('goog.array.ArrayLike');
 goog.require('goog.date');
 goog.require('goog.date.DateTime');
 goog.require('goog.format.EmailAddress');
@@ -354,8 +355,8 @@ org.jboss.search.response.normalizeAllSpaces_ = function(str) {
 
 /**
  * It returns normalized and sanitized project name suggestions response.
- * @param {{length: number}} ngrams raw response from search API.
- * @param {{length: number}} fuzzy raw response from search API.
+ * @param {goog.array.ArrayLike} ngrams raw response from search API.
+ * @param {goog.array.ArrayLike} fuzzy raw response from search API.
  * @return {{ matching_items: !Array, did_you_mean_items: !Array }}
  */
 org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams, fuzzy) {

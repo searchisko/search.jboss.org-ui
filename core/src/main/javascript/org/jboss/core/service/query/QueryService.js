@@ -59,3 +59,17 @@ org.jboss.core.service.query.QueryService.prototype.userSuggestionQuery = functi
  * @param {string} query
  */
 org.jboss.core.service.query.QueryService.prototype.projectNameSuggestions = function(query) {};
+
+
+/**
+ * Returns true if there is any running 'project name suggestions' requests.
+ *
+ * @return {boolean}
+ */
+org.jboss.core.service.query.QueryService.prototype.isProjectNameSuggestionsRunning = function() {};
+
+
+/**
+ * If there are any running 'project name suggestions' requests, abort them immediately.
+ */
+org.jboss.core.service.query.QueryService.prototype.abortProjectNameSuggestions = function() {};

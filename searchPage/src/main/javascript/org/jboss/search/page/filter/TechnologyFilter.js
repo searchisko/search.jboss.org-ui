@@ -221,22 +221,32 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
         if (goog.isDefAndNotNull(tf_) && tf_.isExpanded()) {
           var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
           var data = /** @type {!Object} */ (goog.isObject(event.getMetadata()) ? event.getMetadata() : {});
+
+          // handle matching items
           var matching_items = goog.object.getValueByKeys(data, 'matching_items');
+          /** @type {!Array.<org.jboss.core.widget.list.ListItem>} */ var mi = [];
           if (goog.isDef(matching_items) && goog.isArrayLike(matching_items)) {
-            /** @type {!Array.<org.jboss.core.widget.list.ListItem>} */ var mi = [];
             goog.array.forEach(/** @type {goog.array.ArrayLike} */ (matching_items), function(item) {
               mi.push(new org.jboss.core.widget.list.ListItem(item['code'], item['name']));
             });
-            this.matchingDataSource_.repeat(mi);
           }
+          this.matchingDataSource_.repeat(mi);
+
+          // handle did_you_mean items
           var did_you_mean_items = goog.object.getValueByKeys(data, 'did_you_mean_items');
+          /** @type {!Array.<org.jboss.core.widget.list.ListItem>} */ var dymi = [];
           if (goog.isDef(did_you_mean_items) && goog.isArrayLike(did_you_mean_items)) {
-            /** @type {!Array.<org.jboss.core.widget.list.ListItem>} */ var dymi = [];
-            goog.array.forEach(/** @type {goog.array.ArrayLike} */ (did_you_mean_items), function(item) {
-              dymi.push(new org.jboss.core.widget.list.ListItem(item['code'], item['name']));
+            var codeExistsFn = function(matching_item) {
+              return matching_item.code == this;
+            };
+            goog.array.forEach(/** @type {goog.array.ArrayLike} */ (did_you_mean_items), function(dym_item) {
+              // include only if code does not already exists in matching_items
+              if (!goog.array.findIndex(mi, codeExistsFn, dym_item) > -1) {
+                dymi.push(new org.jboss.core.widget.list.ListItem(dym_item['code'], dym_item['name']));
+              }
             });
-            this.didYouMeanDataSource_.repeat(dymi);
           }
+          this.didYouMeanDataSource_.repeat(dymi);
         }
       }, false, this);
 
@@ -375,36 +385,24 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.disposeInterna
 
 /** @inheritDoc */
 org.jboss.search.page.filter.TechnologyFilterController.prototype.input = function(query) {
-  // console.log('query >', query);
   this.abortActiveDataResources();
   this.lmc_.depointPointedListItem();
   this.queryContextDataSource_.get(query);
-  if (!goog.string.isEmptySafe(query)) {
-    this.queryService_.projectNameSuggestions(query);
-  } else {
-    this.matchingDataSource_.repeat([]);
-    this.didYouMeanDataSource_.repeat([]);
-  }
+  this.queryService_.projectNameSuggestions(query);
 };
 
 
 /** @inheritDoc */
 org.jboss.search.page.filter.TechnologyFilterController.prototype.abortActiveDataResources = function() {
-  // TODO: abort the projectNameSuggestionsKey_ query if it is running
-  this.abortActiveDataResourcesInternal([
-    this.queryContextDataSource_//,
-//    this.projectNameSuggestionsDataSource_
-  ]);
+  this.abortActiveDataResourcesInternal([this.queryContextDataSource_]);
+  this.queryService_.abortProjectNameSuggestions();
 };
 
 
 /** @inheritDoc */
 org.jboss.search.page.filter.TechnologyFilterController.prototype.getActiveDataResourcesCount = function() {
-  // TODO: count also the projectNameSuggestionsKey_ query if it is running
-  return this.getActiveDataResourcesCountInternal([
-    this.queryContextDataSource_//,
-    // this.projectNameSuggestionsDataSource_
-  ]);
+  return this.getActiveDataResourcesCountInternal([this.queryContextDataSource_]) +
+      (this.queryService_.isProjectNameSuggestionsRunning() ? 1 : 0);
 };
 
 

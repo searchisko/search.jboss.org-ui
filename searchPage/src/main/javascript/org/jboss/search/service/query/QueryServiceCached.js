@@ -24,6 +24,7 @@
 
 goog.provide('org.jboss.search.service.query.QueryServiceCached');
 
+goog.require('goog.Disposable');
 goog.require('org.jboss.core.service.query.QueryService');
 
 
@@ -32,13 +33,24 @@ goog.require('org.jboss.core.service.query.QueryService');
  * @param {!org.jboss.core.service.query.QueryService} queryService
  * @constructor
  * @implements {org.jboss.core.service.query.QueryService}
+ * @extends {goog.Disposable}
  */
 org.jboss.search.service.query.QueryServiceCached = function(queryService) {
+  goog.Disposable.call(this);
+
   /**
-   * @type {org.jboss.core.service.query.QueryService}
+   * @type {!org.jboss.core.service.query.QueryService}
    * @private
    */
   this.queryService_ = queryService;
+};
+goog.inherits(org.jboss.search.service.query.QueryServiceCached, goog.Disposable);
+
+
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceCached.prototype.disposeInternal = function() {
+  org.jboss.search.service.query.QueryServiceCached.superClass_.disposeInternal.call(this);
+  delete this.queryService_;
 };
 
 
@@ -60,4 +72,16 @@ org.jboss.search.service.query.QueryServiceCached.prototype.userSuggestionQuery 
 org.jboss.search.service.query.QueryServiceCached.prototype.projectNameSuggestions = function(query) {
   // TODO: implement caching
   this.queryService_.projectNameSuggestions(query);
+};
+
+
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceCached.prototype.isProjectNameSuggestionsRunning = function() {
+  return this.queryService_.isProjectNameSuggestionsRunning();
+};
+
+
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceCached.prototype.abortProjectNameSuggestions = function() {
+  this.queryService_.abortProjectNameSuggestions();
 };

@@ -112,7 +112,9 @@ org.jboss.core.widget.list.ListView.prototype.constructDOM = function(data, opt_
           if (goog.isDef(opt_selectedIndex) && index == opt_selectedIndex) {
             goog.dom.classes.add(item, org.jboss.core.Constants.SELECTED);
           }
-          goog.dom.appendChild(item, goog.dom.createTextNode(listItem.getValue()));
+//          goog.dom.appendChild(item, goog.dom.createTextNode(listItem.getValue()));
+          // TODO: we need to be careful about XSS and catching click event with nested elements!
+          goog.dom.appendChild(item, goog.dom.htmlToDocumentFragment(listItem.getValue()));
           goog.dom.appendChild(element, item);
         },
         this

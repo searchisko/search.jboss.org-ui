@@ -31,10 +31,11 @@ goog.provide('org.jboss.search.service.query.QueryServiceXHR');
 goog.require('goog.Disposable');
 goog.require('goog.Uri');
 goog.require('goog.array');
+goog.require('goog.array.ArrayLike');
 goog.require('goog.net.XhrManager');
 goog.require('goog.net.XhrManager.Event');
-goog.require('goog.string');
 goog.require('goog.object');
+goog.require('goog.string');
 goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.service.Locator');
@@ -208,20 +209,11 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = f
 /** @inheritDoc */
 org.jboss.search.service.query.QueryServiceXHR.prototype.projectNameSuggestions = function(query) {
 
-  var ids = this.getXHRManager_().getOutstandingRequestIds();
-  if (goog.array.contains(ids, org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID)) {
-    this.getXHRManager_().abort(org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID, true);
-    this.dispatcher_.dispatchProjectNameSuggestionsQueryAbort();
-  }
-
-  if (!goog.isDefAndNotNull(query) || goog.string.isEmptySafe(query)) {
-    // TODO: for now this is used as a workaround to enable suggestions hiding when query is empty
-    this.dispatcher_.dispatchProjectNameSuggestionsQueryAbort();
-  }
+  this.abortProjectNameSuggestions();
 
   if (goog.isDefAndNotNull(query) && !goog.string.isEmptySafe(query)) {
     var query_url_string = org.jboss.core.util.urlGenerator.projectNameSuggestionsUrl(
-        goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_PROJECT).clone(), query, 20
+        goog.Uri.parse(org.jboss.search.Constants.API_URL_SUGGESTIONS_PROJECT).clone(), query, 30
         );
 
     if (query_url_string != null) {
@@ -239,8 +231,8 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.projectNameSuggestions 
             var event = /** @type {goog.net.XhrManager.Event} */ (e);
             if (event.target.isSuccess()) {
               var response = /** @type {{responses: {length: number}}} */ (event.target.getResponseJson());
-              var ngrams = /** @type {{length: number}} */ (goog.object.getValueByKeys(response['responses'][0], 'hits', 'hits'));
-              var fuzzy = /** @type {{length: number}} */ (goog.object.getValueByKeys(response['responses'][1], 'hits', 'hits'));
+              var ngrams = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(response['responses'][0], 'hits', 'hits'));
+              var fuzzy = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(response['responses'][1], 'hits', 'hits'));
               var eventMetadata = org.jboss.search.response.normalizeProjectSuggestionsResponse(ngrams, fuzzy);
               this.dispatcher_.dispatchProjectNameSuggestionsQuerySucceeded(eventMetadata);
             } else {
@@ -251,8 +243,27 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.projectNameSuggestions 
           }, this)
       );
     }
+  } else {
+    var eventMetadata = org.jboss.search.response.normalizeProjectSuggestionsResponse([], []);
+    this.dispatcher_.dispatchProjectNameSuggestionsQuerySucceeded(eventMetadata);
   }
 
+};
+
+
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceXHR.prototype.isProjectNameSuggestionsRunning = function() {
+  var ids = this.getXHRManager_().getOutstandingRequestIds();
+  return goog.array.contains(ids, org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID);
+};
+
+
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceXHR.prototype.abortProjectNameSuggestions = function() {
+  if (this.isProjectNameSuggestionsRunning()) {
+    this.getXHRManager_().abort(org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_ID, true);
+    this.dispatcher_.dispatchProjectNameSuggestionsQueryAbort();
+  }
 };
 
 

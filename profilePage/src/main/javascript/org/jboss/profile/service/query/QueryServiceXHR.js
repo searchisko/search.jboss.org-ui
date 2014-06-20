@@ -144,6 +144,18 @@ org.jboss.profile.service.query.QueryServiceXHR.prototype.projectNameSuggestions
 };
 
 
+/** @inheritDoc */
+org.jboss.profile.service.query.QueryServiceXHR.prototype.isProjectNameSuggestionsRunning = function() {
+  // no-op
+};
+
+
+/** @inheritDoc */
+org.jboss.profile.service.query.QueryServiceXHR.prototype.abortProjectNameSuggestions = function() {
+  // no-op
+};
+
+
 /**
  * @return {!goog.net.XhrManager}
  * @private
