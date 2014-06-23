@@ -107,6 +107,7 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
       goog.events.EventType.CLICK,
       function(e) {
         var event = /** @type {goog.events.BrowserEvent} */ (e);
+        e.stopPropagation();
         if (goog.isDefAndNotNull(event.target.id) && !goog.string.isEmptySafe(event.target.id)) {
           var id = event.target.id;
           listModelContainer.listItemAction(id, 'click');
