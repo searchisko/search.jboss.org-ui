@@ -28,6 +28,7 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.dom.classes');
+goog.require('goog.dom.query');
 goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.core.widget.list.ListItem');
 
@@ -35,7 +36,7 @@ goog.require('org.jboss.core.widget.list.ListItem');
 
 /**
  * A view representing a single {@link ListModel}. But it is not strictly tied to the {@link ListModel},
- * see {@link #constructDOM()}.
+ * see {@link #constructNewDOM()}.
  *
  * @param {string} id
  * @param {?string} caption
@@ -91,7 +92,7 @@ org.jboss.core.widget.list.ListView.prototype.getCaption = function() {
  * @param {number=} opt_selectedIndex
  * @return {!Element}
  */
-org.jboss.core.widget.list.ListView.prototype.constructDOM = function(data, opt_selectedIndex) {
+org.jboss.core.widget.list.ListView.prototype.constructNewDOM = function(data, opt_selectedIndex) {
   // Soy template could be used instead...
   var element = goog.dom.createDom(goog.dom.TagName.DIV, 'list'); // TODO: create new Constant
   if (!goog.array.isEmpty(data)) {
@@ -121,6 +122,36 @@ org.jboss.core.widget.list.ListView.prototype.constructDOM = function(data, opt_
     );
   }
   return element;
+};
+
+
+/**
+ * Add selected class into list item at 'index' position within provided DOM.
+ *
+ * @param {!Element} element
+ * @param {number} index
+ * @suppress {deprecated}
+ */
+org.jboss.core.widget.list.ListView.prototype.selectInDOM = function(element, index) {
+  var candidates = goog.dom.query('.li', element);
+  if (candidates.length > index) {
+    goog.dom.classes.add(candidates[index], org.jboss.core.Constants.SELECTED);
+  }
+};
+
+
+/**
+ * Deselect all selected items in provided DOM.
+ *
+ * @param {!Element} element
+ */
+org.jboss.core.widget.list.ListView.prototype.deselectInDOM = function(element) {
+  var found = goog.dom.findNodes(element, function(node) {
+    return goog.dom.classes.has(node, org.jboss.core.Constants.SELECTED);
+  });
+  goog.array.forEach(found, function(node) {
+    goog.dom.classes.remove(node, org.jboss.core.Constants.SELECTED);
+  });
 };
 
 

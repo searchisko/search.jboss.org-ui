@@ -602,6 +602,7 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
           goog.async.nextTick(
               function() {
                 this.technologyListWidget_.input(this.query_field_.value);
+//                console.log(this.items_div_, this.items_div_.offsetHeight,  this.items_div_.scrollHeight);
               }, this
           );
         } else if (e.keyCode == goog.events.KeyCodes.ESC) {

@@ -235,3 +235,123 @@ function testEmptyListDiv() {
       }
   );
 }
+
+
+/**
+ * Testing the DOM manipulation: specifically the selecting and deselecting elements.
+ */
+function testDOMwithActiveItems() {
+  var hostingDom = goog.dom.createDom('div', testclass);
+  goog.dom.removeChildren(hostingDom);
+
+  var new_data_in_model = false;
+  var first_test_passed = false;
+  var second_test_passed = false;
+
+  var lm1 = new org.jboss.core.widget.list.ListModel('a1', 'caption a1');
+  var lm2 = new org.jboss.core.widget.list.ListModel('a2', 'caption a2');
+  var lmc = new org.jboss.core.widget.list.ListModelContainer([lm1, lm2]);
+
+  var lv1 = new org.jboss.core.widget.list.ListView('a1', 'caption a1');
+  var lv2 = new org.jboss.core.widget.list.ListView('a2', 'caption a2');
+  var lvc = new org.jboss.core.widget.list.ListViewContainer([lv1, lv2], lmc, hostingDom);
+
+  goog.events.listen(
+      lvc,
+      org.jboss.core.widget.list.event.ListViewEventType.VIEW_UPDATE,
+      function(e) {
+        assertNotNull(e.target);
+        new_data_in_model = true;
+      }
+  );
+
+  // once we have some data we want to select some of the list items
+  waitForCondition(
+      function() {
+        return new_data_in_model;
+      },
+      function() {
+        lv1.selectInDOM(lvc.getViewDoms()['a1'], 1);
+        lv2.selectInDOM(lvc.getViewDoms()['a2'], 0);
+
+        //console.log(lvc.getViewDoms()['a1'].outerHTML.toLowerCase());
+        assertEquals(
+            '<div class="list">' +
+            '<div class="caption">caption a1</div>' +
+            '<div id="a11" class="li">item 1</div>' +
+            '<div id="a12" class="li selected">item 2</div>' +
+            '<div id="a13" class="li">item 3</div>' +
+            '</div>',
+            lvc.getViewDoms()['a1'].outerHTML.toLowerCase()
+        );
+
+        //console.log(lvc.getViewDoms()['a2'].outerHTML.toLowerCase());
+        assertEquals(
+            '<div class="list">' +
+            '<div class="caption">caption a2</div>' +
+            '<div id="a21" class="li selected">item 1</div>' +
+            '<div id="a22" class="li">item 2</div>' +
+            '</div>',
+            lvc.getViewDoms()['a2'].outerHTML.toLowerCase()
+        );
+
+        first_test_passed = true;
+      }
+  );
+
+  // deselect items in the second model
+  waitForCondition(
+      function() {
+        return first_test_passed;
+      },
+      function() {
+        lv2.deselectInDOM(lvc.getViewDoms()['a2']);
+
+        // should be still selected
+        //console.log(lvc.getViewDoms()['a1'].outerHTML.toLowerCase());
+        assertEquals(
+            '<div class="list">' +
+            '<div class="caption">caption a1</div>' +
+            '<div id="a11" class="li">item 1</div>' +
+            '<div id="a12" class="li selected">item 2</div>' +
+            '<div id="a13" class="li">item 3</div>' +
+            '</div>',
+            lvc.getViewDoms()['a1'].outerHTML.toLowerCase()
+        );
+
+        //console.log(lvc.getViewDoms()['a2'].outerHTML.toLowerCase());
+        assertEquals(
+            '<div class="list">' +
+            '<div class="caption">caption a2</div>' +
+            '<div id="a21" class="li">item 1</div>' +
+            '<div id="a22" class="li">item 2</div>' +
+            '</div>',
+            lvc.getViewDoms()['a2'].outerHTML.toLowerCase()
+        );
+
+        second_test_passed = true;
+      }
+  );
+
+  waitForCondition(
+      function() {
+        return first_test_passed && second_test_passed;
+      },
+      function() {
+        assertTrue('Both test passed', true);
+      }
+  );
+
+  // update models
+  lm1.setData([
+    new org.jboss.core.widget.list.ListItem('1', 'item 1'),
+    new org.jboss.core.widget.list.ListItem('2', 'item 2'),
+    new org.jboss.core.widget.list.ListItem('3', 'item 3')
+  ]);
+
+  lm2.setData([
+    new org.jboss.core.widget.list.ListItem('1', 'item 1'),
+    new org.jboss.core.widget.list.ListItem('2', 'item 2')
+  ]);
+
+}
