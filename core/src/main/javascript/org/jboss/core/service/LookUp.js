@@ -30,10 +30,10 @@
 
 goog.provide('org.jboss.core.service.LookUp');
 
-goog.require('goog.History');
 goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.i18n.DateTimeParse');
 goog.require('goog.net.XhrManager');
+goog.require('org.jboss.core.service.navigation.NavigationService');
 goog.require('org.jboss.core.service.query.QueryService');
 goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require('org.jboss.core.util.ImageLoader');
@@ -55,11 +55,21 @@ org.jboss.core.service.LookUp.prototype.getXhrManager = function() {};
 
 
 /**
- * Return instance of goog.History.
- * It is a singleton instance at the application level.
- * @return {!goog.History}
+ * @param {!org.jboss.core.service.navigation.NavigationService} navigationService
  */
-org.jboss.core.service.LookUp.prototype.getHistory = function() {};
+org.jboss.core.service.LookUp.prototype.setNavigationService = function(navigationService) {};
+
+
+/**
+ * @return {!org.jboss.core.service.navigation.NavigationService}
+ */
+org.jboss.core.service.LookUp.prototype.getNavigationService = function() {};
+
+
+/**
+ * @return {!org.jboss.core.service.navigation.NavigationServiceDispatcher}
+ */
+org.jboss.core.service.LookUp.prototype.getNavigationServiceDispatcher = function() {};
 
 
 /**

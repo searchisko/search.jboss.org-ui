@@ -250,11 +250,12 @@ org.jboss.core.widget.list.ListModelContainer.prototype.listItemAction = functio
 
 
 /**
+ * Return true if any item is pointed.
  *
  * @return {boolean}
  */
 org.jboss.core.widget.list.ListModelContainer.prototype.isAnyItemPointed = function() {
-  return false;
+  return !!(this.pointedModelIndex_ != null && this.pointedListItemIndex_ != null);
 };
 
 
@@ -407,7 +408,7 @@ org.jboss.core.widget.list.ListModelContainer.prototype.pointNextListItem = func
 
 
 /**
- * Find the {@link LitModel} who owns pointed list item and let is know that
+ * Find the {@link ListModel} who owns pointed list item and let is know that
  * particular item has been selected.
  */
 org.jboss.core.widget.list.ListModelContainer.prototype.selectPointedListItem = function() {
@@ -472,7 +473,7 @@ org.jboss.core.widget.list.ListModelContainer.prototype.dispatchDepointed_ = fun
  */
 org.jboss.core.widget.list.ListModelContainer.prototype.getNextNonEmptyListModelStartingFrom_ = function(index) {
   var r = goog.array.findIndex(this.models_, function(model, i) {
-    return (i >= index && (model.getSize() > 0 ? true : false));
+    return (i >= index && model.getSize() > 0);
   });
   return (r === -1 ? null : r);
 };
@@ -489,7 +490,7 @@ org.jboss.core.widget.list.ListModelContainer.prototype.getNextNonEmptyListModel
  */
 org.jboss.core.widget.list.ListModelContainer.prototype.getPreviousNonEmptyListModelStartingFrom_ = function(index) {
   var r = goog.array.findIndexRight(this.models_, function(model, i) {
-    return (i <= index && (model.getSize() > 0 ? true : false));
+    return (i <= index && model.getSize() > 0);
   });
   return (r === -1 ? null : r);
 };

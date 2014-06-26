@@ -17,9 +17,10 @@
  */
 
 /**
- * @fileoverview Object that dispatches events related to QueryService. The convention is that for all '*_SUCCEEDED'
- * events the metadata contains raw (normalized) response data (JSON). For other event types it can contain different
- * metadata (but again JSON). Later, the format of 'other' event's metadata can be formalized. Right now it is not.
+ * @fileoverview Object that dispatches events related to {@link QueryService}.
+ * The convention is that for all '*_SUCCEEDED' events the metadata contains raw (normalized) response data (JSON).
+ * For other event types it can contain different metadata (but again JSON). Later, the format of 'other'
+ * event's metadata can be formalized. Right now it is not.
  *
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */

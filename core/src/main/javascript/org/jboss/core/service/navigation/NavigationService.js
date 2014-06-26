@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2012 Red Hat Inc. and/or its affiliates and other contributors
+ * Copyright 2014 Red Hat Inc. and/or its affiliates and other contributors
  * as indicated by the @authors tag. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,17 +17,33 @@
  */
 
 /**
- * @fileoverview Event types for search page events.
+ * @fileoverview
+ *
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
-goog.provide('org.jboss.search.page.event.EventType');
-
-goog.require('goog.events');
+goog.provide('org.jboss.core.service.navigation.NavigationService');
 
 
-/** @enum {string} */
-org.jboss.search.page.event.EventType = {
-  QUERY_SUBMITTED: goog.events.getUniqueId('query_submitted'),
-  CONTRIBUTOR_ID_SELECTED: goog.events.getUniqueId('contributor_id_selected')
-};
+
+/**
+ * @interface
+ */
+org.jboss.core.service.navigation.NavigationService = function() {};
+
+
+/**
+ * Request navigation change.
+ * Implementing classes should cause dispatching of {@link NavigationServiceEvent} event.
+ *
+ * @param {string} token
+ */
+org.jboss.core.service.navigation.NavigationService.prototype.navigate = function(token) {};
+
+
+/**
+ *
+ * @param {boolean} flag
+ * @see goog.History.prototype.setEnabled
+ */
+org.jboss.core.service.navigation.NavigationService.prototype.setEnable = function(flag) {};

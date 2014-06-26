@@ -17,20 +17,54 @@
  * limitations under the License.
  */
 
+/**
+ * @fileoverview Configuration of locator and lookup. Then create the main search app.
+ *
+ * @author lvlcek@redhat.com (Lukas Vlcek)
+ */
+
 goog.provide('init.search');
 
+goog.require('goog.History');
 goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.service.navigation.NavigationServiceHistory');
+goog.require('org.jboss.core.util.ImageLoaderNet');
 goog.require('org.jboss.search.App');
-goog.require('org.jboss.search.logging.Logging');
+//goog.require('org.jboss.search.logging.Logging');
 goog.require('org.jboss.search.service.LookUp');
+goog.require('org.jboss.search.service.query.QueryServiceCached');
+goog.require('org.jboss.search.service.query.QueryServiceXHR');
 
 {
+  // Create and configure LookUp instance
   new org.jboss.core.service.Locator(new org.jboss.search.service.LookUp());
 
-  if (goog.DEBUG) {
-    new org.jboss.search.logging.Logging(
-        org.jboss.core.service.Locator.getInstance().getLookup().getHistory()
-    );
-  }
+  var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
+
+  // setup ImageLoader that does pre-load images.
+  lookup_.setImageLoader(new org.jboss.core.util.ImageLoaderNet());
+
+  // setup production QueryService (cached version)
+  lookup_.setQueryService(
+      new org.jboss.search.service.query.QueryServiceCached(
+          new org.jboss.search.service.query.QueryServiceXHR(lookup_.getQueryServiceDispatcher())
+      )
+  );
+
+  // setup navigation service based on history object
+  lookup_.setNavigationService(
+      new org.jboss.core.service.navigation.NavigationServiceHistory(
+          lookup_.getNavigationServiceDispatcher(),
+          new goog.History()
+      )
+  );
+
+  //  if (goog.DEBUG) {
+  //    new org.jboss.search.logging.Logging(
+  //        org.jboss.core.service.Locator.getInstance().getLookup().getHistory()
+  //    );
+  //  }
+
+  // Create the search app
   new org.jboss.search.App();
 }

@@ -47,6 +47,7 @@ goog.require('goog.net.XhrManager.Event');
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('org.jboss.core.Constants');
+goog.require('org.jboss.core.context.RequestParamsFactory');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.service.query.QueryServiceEventType');
 goog.require('org.jboss.core.util.urlGenerator');
@@ -60,6 +61,8 @@ goog.require('org.jboss.core.widget.list.datasource.DataSource');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEvent');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEventType');
 goog.require('org.jboss.core.widget.list.datasource.RepeaterDataSource');
+goog.require('org.jboss.core.widget.list.event.ListModelEvent');
+goog.require('org.jboss.core.widget.list.event.ListModelEventType');
 goog.require('org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener');
 goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener');
 goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener.EventType');
@@ -194,19 +197,51 @@ org.jboss.search.page.filter.AllTechnologyDataSource.prototype.convertCacheToEve
 org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
   org.jboss.core.widget.list.BaseListController.call(this, lmc, lvc);
 
-  var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
+  /**
+   * @type {!org.jboss.core.service.LookUp}
+   * @private
+   */
+  this.lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
 
   /**
    * @type {org.jboss.core.service.query.QueryService}
    * @private
    */
-  this.queryService_ = lookup_.getQueryService();
+  this.queryService_ = this.lookup_.getQueryService();
 
   /**
    * @type {!org.jboss.core.service.query.QueryServiceDispatcher}
    * @private
    */
-  this.queryServiceDispatcher_ = lookup_.getQueryServiceDispatcher();
+  this.queryServiceDispatcher_ = this.lookup_.getQueryServiceDispatcher();
+
+  this.listItemSelectedKey_ = goog.events.listen(
+      this.getListModelContainer(),
+      [
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED
+      ],
+      function(e) {
+        var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
+        var data = event.target.getData();
+        var index = event.getItemIndex();
+        if (index < data.length) {
+          /** @type {org.jboss.core.widget.list.ListItem} */
+          var selected = data[index];
+          var selectedTechnologyId = selected.getId();
+          var rp = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
+          if (goog.isDefAndNotNull(rp)) {
+            var techArray = rp.getProjects();
+            if (!goog.array.contains(techArray, selectedTechnologyId)) {
+              techArray = goog.array.concat(techArray, selectedTechnologyId);
+            }
+            var rpf = org.jboss.core.context.RequestParamsFactory.getInstance();
+            rp = rpf.reset().copy(rp).setProjects(techArray).build();
+            this.queryService_.userQuery(rp);
+//            this.queryServiceDispatcher_.dispatchNewRequestParameters(rp);
+          }
+        }
+      }, false, this
+      );
 
   /**
    * @type {goog.events.Key}
@@ -218,7 +253,7 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
         org.jboss.core.service.query.QueryServiceEventType.PROJECT_NAME_SEARCH_SUGGESTIONS_SUCCEEDED
       ],
       function(e) {
-        var tf_ = lookup_.getTechnologyFilter();
+        var tf_ = this.lookup_.getTechnologyFilter();
         if (goog.isDefAndNotNull(tf_) && tf_.isExpanded()) {
           var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
           var data = /** @type {!Object} */ (goog.isObject(event.getMetadata()) ? event.getMetadata() : {});
@@ -286,7 +321,7 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
       org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
       function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
-        var model = lmc.getListModelById(
+        var model = this.getListModelContainer().getListModelById(
             org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.QUERY_CONTEXT
             );
         if (model != null) {
@@ -307,7 +342,7 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
       org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
       function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
-        var model = lmc.getListModelById(
+        var model = this.getListModelContainer().getListModelById(
             org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.DID_YOU_MEAN
             );
         if (model != null) {
@@ -328,7 +363,7 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
       org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
       function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
-        var model = lmc.getListModelById(
+        var model = this.getListModelContainer().getListModelById(
             org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.MATCHING
             );
         if (model != null) {
@@ -370,6 +405,7 @@ goog.inherits(org.jboss.search.page.filter.TechnologyFilterController, org.jboss
 org.jboss.search.page.filter.TechnologyFilterController.prototype.disposeInternal = function() {
   org.jboss.search.page.filter.TechnologyFilterController.superClass_.disposeInternal.call(this);
 
+  goog.events.unlistenByKey(this.listItemSelectedKey_);
   goog.events.unlistenByKey(this.queryContextDSListenerId_);
   goog.events.unlistenByKey(this.didYouMeanDSListenerId_);
   goog.events.unlistenByKey(this.matchingDSListenerId_);
@@ -381,13 +417,14 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.disposeInterna
 
   delete this.queryService_;
   delete this.queryServiceDispatcher_;
+  delete this.lookup_;
 };
 
 
 /** @inheritDoc */
 org.jboss.search.page.filter.TechnologyFilterController.prototype.input = function(query) {
   this.abortActiveDataResources();
-  this.lmc_.depointPointedListItem();
+  this.getListModelContainer().depointPointedListItem();
   this.queryContextDataSource_.get(query);
   this.queryService_.projectNameSuggestions(query);
 };
@@ -425,14 +462,14 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.setKeyboardLis
           var event = /** @type {goog.events.Event} */ (e);
           switch (event.type) {
             case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.UP:
-              this.lmc_.pointPreviousListItem();
+              this.getListModelContainer().pointPreviousListItem();
               break;
             case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.DOWN:
-              this.lmc_.pointNextListItem();
+              this.getListModelContainer().pointNextListItem();
               break;
             case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.ENTER:
-              if (this.lmc_.isAnyItemPointed()) {
-                this.lmc_.selectPointedListItem();
+              if (this.getListModelContainer().isAnyItemPointed()) {
+                this.getListModelContainer().selectPointedListItem();
               }
               break;
           }
@@ -460,14 +497,14 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.setMouseListen
           var event = /** @type {goog.events.Event} */ (e);
           switch (event.type) {
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSEENTER:
-              this.lmc_.pointListItemById(event.target.id);
+              this.getListModelContainer().pointListItemById(event.target.id);
               break;
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSELEAVE:
-              this.lmc_.depointPointedListItem();
+              this.getListModelContainer().depointPointedListItem();
               break;
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.CLICK:
-              this.lmc_.pointListItemById(event.target.id);
-              this.lmc_.selectPointedListItem();
+              this.getListModelContainer().pointListItemById(event.target.id);
+              this.getListModelContainer().selectPointedListItem();
               break;
           }
         }, false, this

@@ -25,12 +25,13 @@
 
 goog.provide('org.jboss.core.service.LookUpImpl');
 
-goog.require('goog.History');
 goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.i18n.DateTimeParse');
 goog.require('goog.net.XhrManager');
 goog.require('org.jboss.core.Variables');
 goog.require('org.jboss.core.service.LookUp');
+goog.require('org.jboss.core.service.navigation.NavigationService');
+goog.require('org.jboss.core.service.navigation.NavigationServiceDispatcher');
 goog.require('org.jboss.core.service.query.QueryService');
 goog.require('org.jboss.core.service.query.QueryServiceDispatcher');
 goog.require('org.jboss.core.util.ImageLoader');
@@ -53,10 +54,16 @@ org.jboss.core.service.LookUpImpl = function() {
   this.xhrManager_;
 
   /**
-   * @type {goog.History}
+   * @type {org.jboss.core.service.navigation.NavigationService}
    * @private
    */
-  this.history_;
+  this.navigationService_;
+
+  /**
+   * @type {org.jboss.core.service.navigation.NavigationServiceDispatcher}
+   * @private
+   */
+  this.navigationServiceDispatcher_;
 
   /**
    * @type {org.jboss.core.util.ImageLoader}
@@ -124,11 +131,24 @@ org.jboss.core.service.LookUpImpl.prototype.getXhrManager = function() {
 
 
 /** @inheritDoc */
-org.jboss.core.service.LookUpImpl.prototype.getHistory = function() {
-  if (!goog.isDefAndNotNull(this.history_)) {
-    this.history_ = new goog.History();
+org.jboss.core.service.LookUpImpl.prototype.setNavigationService = function (navigationService) {
+  this.navigationService_ = navigationService;
+};
+
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.getNavigationService = function() {
+  if (goog.isDefAndNotNull(this.navigationService_)) { return this.navigationService_; }
+  throw Error('NavigationService has not been set yet!');
+};
+
+
+/** @inheritDoc */
+org.jboss.core.service.LookUpImpl.prototype.getNavigationServiceDispatcher = function() {
+  if (!goog.isDefAndNotNull(this.navigationServiceDispatcher_)) {
+    this.navigationServiceDispatcher_ = new org.jboss.core.service.navigation.NavigationServiceDispatcher();
   }
-  return this.history_;
+  return this.navigationServiceDispatcher_;
 };
 
 

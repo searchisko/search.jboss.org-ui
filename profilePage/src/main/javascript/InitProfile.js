@@ -19,19 +19,39 @@
 
 goog.provide('init.profile');
 
-goog.require("org.jboss.core.service.Locator");
-goog.require("org.jboss.profile.service.LookUp");
+goog.require('goog.History');
+goog.require('org.jboss.core.service.Locator');
+goog.require('org.jboss.core.service.navigation.NavigationServiceHistory');
 goog.require('org.jboss.profile.App');
+goog.require('org.jboss.profile.service.LookUp');
+goog.require('org.jboss.profile.service.query.QueryServiceXHR');
 //goog.require('org.jboss.search.logging.Logging');
 
 {
-	new org.jboss.core.service.Locator(new org.jboss.profile.service.LookUp());
+  new org.jboss.core.service.Locator(new org.jboss.profile.service.LookUp());
 
-//	if (goog.DEBUG) {
-//		new org.jboss.search.logging.Logging(
-//			org.jboss.core.service.Locator.getInstance().getLookup().getHistory()
-//		);
-//	}
+  var lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
 
-	new org.jboss.profile.App();
+  // setup production QueryService (cached version)
+  lookup_.setQueryService(
+      // new org.jboss.search.service.query.QueryServiceCached(
+      new org.jboss.profile.service.query.QueryServiceXHR(lookup_.getQueryServiceDispatcher())
+      // )
+  );
+
+  // setup navigation service based on history object
+  lookup_.setNavigationService(
+      new org.jboss.core.service.navigation.NavigationServiceHistory(
+          lookup_.getNavigationServiceDispatcher(),
+          new goog.History()
+      )
+  );
+
+  // if (goog.DEBUG) {
+  //   new org.jboss.search.logging.Logging(
+  //     org.jboss.core.service.Locator.getInstance().getLookup().getHistory()
+  //   );
+  // }
+
+  new org.jboss.profile.App();
 }

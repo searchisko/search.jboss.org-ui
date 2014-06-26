@@ -82,7 +82,6 @@ goog.inherits(org.jboss.search.service.query.QueryServiceXHR, goog.Disposable);
 
 /** @inheritDoc */
 org.jboss.search.service.query.QueryServiceXHR.prototype.disposeInternal = function() {
-  // Call the superclass's disposeInternal() method.
   org.jboss.search.service.query.QueryServiceXHR.superClass_.disposeInternal.call(this);
 
   delete this.dispatcher_;

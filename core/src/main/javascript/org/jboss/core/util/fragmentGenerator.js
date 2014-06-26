@@ -110,7 +110,7 @@ org.jboss.core.util.fragmentGenerator.generate = function(requestParams, opt_req
 
   // if log was used in previous call, keep it
   /** @type {org.jboss.core.context.RequestParams} */
-  if (goog.isDef(opt_requestParams)) {
+  if (goog.isDefAndNotNull(opt_requestParams)) {
     var log = opt_requestParams.getLog();
     if (goog.isDefAndNotNull(log) && !goog.string.isEmpty(log)) {
       token.push([p_.LOG, goog.string.urlEncode(log)].join(''));

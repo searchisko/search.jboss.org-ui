@@ -18,6 +18,7 @@
 
 /**
  * @fileoverview
+ * TODO: I think we can completely get rid of goog.require and goog.provide in this interface.
  *
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */

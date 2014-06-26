@@ -113,28 +113,12 @@ org.jboss.core.service.query.QueryServiceEvent = function(type, opt_metadata) {
   goog.events.Event.call(this, type);
 
   /**
-   * TODO: can be removed?
-   * @type {org.jboss.core.service.query.QueryServiceEventType}
-   * @private
-   */
-  this.type_ = type;
-
-  /**
    * @type {Object|undefined}
    * @private
    */
   this.metadata_ = opt_metadata;
 };
 goog.inherits(org.jboss.core.service.query.QueryServiceEvent, goog.events.Event);
-
-
-/**
- * TODO: can be removed? (is present by default)
- * @return {org.jboss.core.service.query.QueryServiceEventType}
- */
-org.jboss.core.service.query.QueryServiceEvent.prototype.getType = function() {
-  return this.type_;
-};
 
 
 /**

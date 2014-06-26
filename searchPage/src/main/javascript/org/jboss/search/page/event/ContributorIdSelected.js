@@ -18,13 +18,15 @@
 
 /**
  * @fileoverview
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.page.event.ContributorIdSelected');
 
-goog.require('org.jboss.search.page.event.EventType');
 goog.require('goog.events.Event');
+goog.require('org.jboss.search.page.event.EventType');
+
+
 
 /**
  * @param {!string} contributorId
@@ -32,19 +34,20 @@ goog.require('goog.events.Event');
  * @extends {goog.events.Event}
  */
 org.jboss.search.page.event.ContributorIdSelected = function(contributorId) {
-	goog.events.Event.call(this, org.jboss.search.page.event.EventType.CONTRIBUTOR_ID_SELECTED);
+  goog.events.Event.call(this, org.jboss.search.page.event.EventType.CONTRIBUTOR_ID_SELECTED);
 
-	/**
-	 * @type {!string}
-	 * @private
-	 */
-	this.contributorId_ = contributorId;
+  /**
+   * @type {!string}
+   * @private
+   */
+  this.contributorId_ = contributorId;
 };
 goog.inherits(org.jboss.search.page.event.ContributorIdSelected, goog.events.Event);
+
 
 /**
  * @return {!string}
  */
 org.jboss.search.page.event.ContributorIdSelected.prototype.getContributorId = function() {
-	return this.contributorId_;
+  return this.contributorId_;
 };

@@ -132,7 +132,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
       goog.bind(function(e) {
         var metadata_;
         var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
-        switch (event.getType()) {
+        switch (event.type) {
           /*
            =====================================================
            When new request parameters are available:
@@ -226,7 +226,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
             break;
 
           default:
-            this.log_.info('Unknown search event type [' + event.getType() + ']');
+            this.log_.info('Unknown search event type [' + event.type + ']');
         }
       }, this)
       );
@@ -247,7 +247,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
       ],
       goog.bind(function(e) {
         var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
-        switch (event.getType()) {
+        switch (event.type) {
 
           // case org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUGGESTIONS_START:
           // break;
@@ -280,7 +280,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
             break;
 
           default:
-            this.log_.info('Unknown search suggestions event type [' + event.getType() + ']');
+            this.log_.info('Unknown search suggestions event type [' + event.type + ']');
         }
       }, this)
       );

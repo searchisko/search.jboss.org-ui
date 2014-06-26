@@ -18,13 +18,15 @@
 
 /**
  * @fileoverview
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.page.event.QuerySubmitted');
 
-goog.require('org.jboss.search.page.event.EventType');
 goog.require('goog.events.Event');
+goog.require('org.jboss.search.page.event.EventType');
+
+
 
 /**
  * @param {!org.jboss.core.context.RequestParams} requestParams
@@ -32,19 +34,20 @@ goog.require('goog.events.Event');
  * @extends {goog.events.Event}
  */
 org.jboss.search.page.event.QuerySubmitted = function(requestParams) {
-    goog.events.Event.call(this, org.jboss.search.page.event.EventType.QUERY_SUBMITTED);
+  goog.events.Event.call(this, org.jboss.search.page.event.EventType.QUERY_SUBMITTED);
 
-    /**
-     * @type {!org.jboss.core.context.RequestParams}
-     * @private
-     */
-    this.requestParams_ = requestParams;
+  /**
+   * @type {!org.jboss.core.context.RequestParams}
+   * @private
+   */
+  this.requestParams_ = requestParams;
 };
 goog.inherits(org.jboss.search.page.event.QuerySubmitted, goog.events.Event);
+
 
 /**
  * @return {!org.jboss.core.context.RequestParams}
  */
 org.jboss.search.page.event.QuerySubmitted.prototype.getRequestParams = function() {
-    return this.requestParams_;
+  return this.requestParams_;
 };

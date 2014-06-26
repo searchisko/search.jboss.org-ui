@@ -44,6 +44,7 @@ goog.require('goog.date.DateTime');
 
 /**
  * Request parameters. Do not create instances directly, use {@link RequestParamsFactory} instead.
+ * TODO: get* functions should return safe copy of the values (like in case of arrays).
  *
  * @param {string} query_string
  * @param {?number} page

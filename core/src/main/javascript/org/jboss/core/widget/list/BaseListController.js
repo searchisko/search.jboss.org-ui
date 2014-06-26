@@ -17,7 +17,8 @@
  */
 
 /**
- * @fileoverview
+ * @fileoverview BaseListController can be extended by classes that
+ * implement {@link ListController}.
  *
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
@@ -52,13 +53,13 @@ org.jboss.core.widget.list.BaseListController = function(lmc, lvc) {
 
   /**
    * @type {!org.jboss.core.widget.list.ListModelContainer}
-   * @protected
+   * @private
    */
   this.lmc_ = lmc;
 
   /**
    * @type {!org.jboss.core.widget.list.ListViewContainer}
-   * @protected
+   * @private
    */
   this.lvc_ = lvc;
 };
@@ -75,6 +76,28 @@ org.jboss.core.widget.list.BaseListController.prototype.disposeInternal = functi
   this.lvc_.dispose();
   delete this.lmc_;
   delete this.lvc_;
+};
+
+
+/**
+ * Method for subclasses to get access to {@link ListModelContainer}.
+ *
+ * @return {!org.jboss.core.widget.list.ListModelContainer}
+ * @protected
+ */
+org.jboss.core.widget.list.BaseListController.prototype.getListModelContainer = function() {
+  return this.lmc_;
+};
+
+
+/**
+ * Method for subclasses to get access to {@link ListViewContainer}.
+ *
+ * @return {!org.jboss.core.widget.list.ListViewContainer}
+ * @protected
+ */
+org.jboss.core.widget.list.BaseListController.prototype.getListViewContainer = function() {
+  return this.lvc_;
 };
 
 

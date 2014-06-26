@@ -112,7 +112,7 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
       org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
       function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
-        var model1 = lmc.getListModelById(org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1);
+        var model1 = this.getListModelContainer().getListModelById(org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1);
         if (model1 != null) {
           model1.setData(e.getData());
         }
@@ -129,7 +129,7 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
       org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
       function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
-        var model2 = lmc.getListModelById(org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2);
+        var model2 = this.getListModelContainer().getListModelById(org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2);
         if (model2 != null) {
           model2.setData(e.getData());
         }
@@ -142,7 +142,7 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
    * @private
    */
   this.listItemSelectedId_ = goog.events.listen(
-      this.lmc_,
+      this.getListModelContainer(),
       org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
       function(e) {
 //        console.log(e);
@@ -170,7 +170,7 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.disposeInternal = fu
 /** @inheritDoc */
 org.jboss.core.widget.list.EchoListControllerTest.prototype.input = function(query) {
   this.abortActiveDataResources();
-  this.lmc_.depointPointedListItem();
+  this.getListModelContainer().depointPointedListItem();
   this.echoDS1_.get(query);
   this.echoDS2_.get(query);
 };
@@ -234,13 +234,13 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.setKeyboardListener 
           var event = /** @type {goog.events.Event} */ (e);
           switch (event.type) {
             case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.UP:
-              this.lmc_.pointPreviousListItem();
+              this.getListModelContainer().pointPreviousListItem();
               break;
             case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.DOWN:
-              this.lmc_.pointNextListItem();
+              this.getListModelContainer().pointNextListItem();
               break;
             case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.ENTER:
-              this.lmc_.selectPointedListItem();
+              this.getListModelContainer().selectPointedListItem();
               break;
           }
         }, false, this
@@ -271,14 +271,14 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.setMouseListener = f
           var event = /** @type {goog.events.Event} */ (e);
           switch (event.type) {
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSEENTER:
-              this.lmc_.pointListItemById(event.target.id);
+              this.getListModelContainer().pointListItemById(event.target.id);
               break;
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSELEAVE:
-              this.lmc_.depointPointedListItem();
+              this.getListModelContainer().depointPointedListItem();
               break;
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.CLICK:
-              this.lmc_.pointListItemById(event.target.id);
-              this.lmc_.selectPointedListItem();
+              this.getListModelContainer().pointListItemById(event.target.id);
+              this.getListModelContainer().selectPointedListItem();
               break;
           }
         }, false, this
