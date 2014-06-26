@@ -23,18 +23,18 @@
  *
  * This is just a trivial implementation. We might consider using 'goog.ui.ProgressBar' going forward.
  *
- * @author Lukas Vlcek (lvlcek@redhat.com)
+ * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
 goog.provide('org.jboss.search.page.element.Status');
 
-goog.require('org.jboss.core.Constants');
-
+goog.require('goog.Disposable');
+goog.require('goog.debug.Logger');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
-goog.require('goog.Disposable');
+goog.require('org.jboss.core.Constants');
 
-goog.require('goog.debug.Logger');
+
 
 /**
  * Status "window" can display some text and report progress. When a new instance is created
@@ -49,115 +49,131 @@ goog.require('goog.debug.Logger');
  * @extends {goog.Disposable}
  */
 org.jboss.search.page.element.Status = function(div, portions) {
-    goog.Disposable.call(this);
+  goog.Disposable.call(this);
 
-	this.log_ = goog.debug.Logger.getLogger('org.jboss.search.page.element.Status');
+  this.log_ = goog.debug.Logger.getLogger('org.jboss.search.page.element.Status');
 
-	if (portions < 1) {
-		throw new Error("portions must be greater than zero");
-	}
+  if (portions < 1) {
+    throw new Error('portions must be greater than zero');
+  }
 
-    /**
-	 * @type {!HTMLDivElement}
-	 */
-	this.topDiv_ = div;
+  /**
+   * @type {!HTMLDivElement}
+   * @private
+   */
+  this.topDiv_ = div;
 
-	/**
-	 * @type {!number}
-	 */
-	this.portions_ = portions;
+  /**
+   * @type {!number}
+   * @private
+   */
+  this.portions_ = portions;
 
-	/**
-	 * @type {!Element}
-	 */
-	this.status_ = goog.dom.createDom('div');
+  /**
+   * @type {!Element}
+   * @private
+   */
+  this.status_ = goog.dom.createDom('div');
 
-    /**
-	 * @type {!Element}
-	 */
-	this.progress_ = goog.dom.createDom('div');
+  /**
+   * @type {!Element}
+   * @private
+   */
+  this.progress_ = goog.dom.createDom('div');
 
-    /**
-	 * @type {number}
-	 * @private
-	 */
-	this.progress_val_ = 0;
+  /**
+   * @type {number}
+   * @private
+   */
+  this.progress_val_ = 0;
 
-    goog.dom.setProperties(this.status_,{ 'class': 'message'});
-    goog.dom.setProperties(this.progress_,{ 'class': 'progress_bar'});
-    goog.dom.append(this.topDiv_,[this.status_, this.progress_]);
+  goog.dom.setProperties(this.status_, { 'class': 'message'});
+  goog.dom.setProperties(this.progress_, { 'class': 'progress_bar'});
+  goog.dom.append(this.topDiv_, [this.status_, this.progress_]);
 };
 goog.inherits(org.jboss.search.page.element.Status, goog.Disposable);
 
+
 /** @inheritDoc */
 org.jboss.search.page.element.Status.prototype.disposeInternal = function() {
-    org.jboss.search.page.element.Status.superClass_.disposeInternal.call(this);
-    this.progress_val_ = 0;
-    delete this.progress_;
-    delete this.status_;
-    goog.dom.removeChildren(this.topDiv_);
-    delete this.topDiv_;
-	delete this.log_;
+  org.jboss.search.page.element.Status.superClass_.disposeInternal.call(this);
+  this.progress_val_ = 0;
+  delete this.progress_;
+  delete this.status_;
+  goog.dom.removeChildren(this.topDiv_);
+  delete this.topDiv_;
+  delete this.log_;
 };
+
 
 /**
  * Increase progress value by single portion or by positive number of portions.
  * @param {number=} opt_count
  */
 org.jboss.search.page.element.Status.prototype.increaseProgress = function(opt_count) {
-	var count_ = 1; // default value
-	if (goog.isDefAndNotNull(opt_count) && goog.isNumber(opt_count)) {
-		if (opt_count > 1) { count_ = opt_count }
-		else { this.log_.warning("opt_cont was invalid, using the default value instead") }
-	}
-	if (this.progress_val_ < 1) {
-		var tick = count_ / this.portions_;
-		this.setProgressValue_(this.getProgressValue() + tick);
-		this.log_.info("status progress increased to [" + this.getProgressValue() + "]");
-	}
+  var count_ = 1; // default value
+  if (goog.isDefAndNotNull(opt_count) && goog.isNumber(opt_count)) {
+    if (opt_count > 1) {
+      count_ = opt_count;
+    }
+    else {
+      this.log_.warning('opt_cont was invalid, using the default value instead');
+    }
+  }
+  if (this.progress_val_ < 1) {
+    var tick = count_ / this.portions_;
+    this.setProgressValue_(this.getProgressValue() + tick);
+    this.log_.info('status progress increased to [' + this.getProgressValue() + ']');
+  }
 };
+
 
 /**
  * Show the status.
  * @param {string=} opt_status Value to setup (override) the status to.
  */
 org.jboss.search.page.element.Status.prototype.show = function(opt_status) {
-	this.log_.info("show status, progress [" + this.getProgressValue() + "]");
-    this.setStatus(opt_status);
-    goog.dom.classes.remove(this.topDiv_, org.jboss.core.Constants.HIDDEN);
+  this.log_.info('show status, progress [' + this.getProgressValue() + ']');
+  this.setStatus(opt_status);
+  goog.dom.classes.remove(this.topDiv_, org.jboss.core.Constants.HIDDEN);
 };
+
 
 /**
  * Hide the status.
  */
 org.jboss.search.page.element.Status.prototype.hide = function() {
-	this.log_.info("hide status");
-    goog.dom.classes.add(this.topDiv_, org.jboss.core.Constants.HIDDEN);
+  this.log_.info('hide status');
+  goog.dom.classes.add(this.topDiv_, org.jboss.core.Constants.HIDDEN);
 };
+
 
 /**
  * Set status text.
  * @param {string=} opt_status
  */
 org.jboss.search.page.element.Status.prototype.setStatus = function(opt_status) {
-    goog.dom.setTextContent(this.status_, opt_status || '');
+  goog.dom.setTextContent(this.status_, opt_status || '');
 };
+
 
 /**
  * Get status text.
  * @return {!string}
  */
 org.jboss.search.page.element.Status.prototype.getStatus = function() {
-    return goog.dom.getTextContent(this.status_);
+  return goog.dom.getTextContent(this.status_);
 };
+
 
 /**
  * If progress bar is defined return it's value or return null.
  * @return {number}
  */
 org.jboss.search.page.element.Status.prototype.getProgressValue = function() {
-    return this.progress_val_;
+  return this.progress_val_;
 };
+
 
 /**
  * Update the progress bar.
@@ -166,14 +182,15 @@ org.jboss.search.page.element.Status.prototype.getProgressValue = function() {
  * @private
  */
 org.jboss.search.page.element.Status.prototype.setProgressValue_ = function(val) {
-    if (val >= 0 && val <= 1) {
-        this.setProgressValueWithoutCheck_(val);
-    } else if (val < 0) {
-        this.setProgressValueWithoutCheck_(0);
-    } else {
-        this.setProgressValueWithoutCheck_(1);
-    }
+  if (val >= 0 && val <= 1) {
+    this.setProgressValueWithoutCheck_(val);
+  } else if (val < 0) {
+    this.setProgressValueWithoutCheck_(0);
+  } else {
+    this.setProgressValueWithoutCheck_(1);
+  }
 };
+
 
 /**
  *
@@ -181,7 +198,7 @@ org.jboss.search.page.element.Status.prototype.setProgressValue_ = function(val)
  * @private
  */
 org.jboss.search.page.element.Status.prototype.setProgressValueWithoutCheck_ = function(val) {
-    this.progress_val_ = val;
-    val = Math.round(val*100);
-    goog.dom.setProperties(this.progress_,{ 'style': ['width:',val,'%'].join('')});
+  this.progress_val_ = val;
+  val = Math.round(val * 100);
+  goog.dom.setProperties(this.progress_, { style: ['width:', val, '%'].join('')});
 };
