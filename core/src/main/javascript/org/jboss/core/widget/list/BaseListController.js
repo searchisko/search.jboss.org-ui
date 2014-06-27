@@ -25,8 +25,8 @@
 
 goog.provide('org.jboss.core.widget.list.BaseListController');
 
-goog.require('goog.Disposable');
 goog.require('goog.array');
+goog.require('goog.events.EventTarget');
 goog.require('org.jboss.core.widget.list.ListController');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
 goog.require('org.jboss.core.widget.list.ListViewContainer');
@@ -46,10 +46,10 @@ goog.require('org.jboss.core.widget.list.datasource.DataSource');
  * @param {!org.jboss.core.widget.list.ListViewContainer} lvc
  * @constructor
  * @implements {org.jboss.core.widget.list.ListController}
- * @extends {goog.Disposable}
+ * @extends {goog.events.EventTarget}
  */
 org.jboss.core.widget.list.BaseListController = function(lmc, lvc) {
-  goog.Disposable.call(this);
+  goog.events.EventTarget.call(this);
 
   /**
    * @type {!org.jboss.core.widget.list.ListModelContainer}
@@ -63,7 +63,7 @@ org.jboss.core.widget.list.BaseListController = function(lmc, lvc) {
    */
   this.lvc_ = lvc;
 };
-goog.inherits(org.jboss.core.widget.list.BaseListController, goog.Disposable);
+goog.inherits(org.jboss.core.widget.list.BaseListController, goog.events.EventTarget);
 
 
 /** @inheritDoc */
