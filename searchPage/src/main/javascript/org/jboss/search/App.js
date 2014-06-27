@@ -225,9 +225,11 @@ org.jboss.search.App = function() {
         this.lookup_.setTechnologyFilter(technologyFilter);
         technologyFilter.init();
       }, this))
-      .addCallback(function() {
-        status.increaseProgress();
-      });
+      .addCallback(
+          goog.bind(function() {
+            this.searchPage.listenOnTechnologyFilterChanges(this.lookup_.getTechnologyFilter());
+            status.increaseProgress();
+          }, this));
 
   // initialize author filter and keep reference in the lookup
   authorFilterDeferred
@@ -261,9 +263,11 @@ org.jboss.search.App = function() {
             );
         this.lookup_.setAuthorFilter(authorFilter);
       }, this))
-      .addCallback(function() {
-        status.increaseProgress();
-      });
+      .addCallback(
+          goog.bind(function() {
+            //this.searchPage.listenOnAuthorFilterChanges(this.lookup_.getAuthorFilter());
+            status.increaseProgress();
+          }, this));
 
   // initialize content filter and keep reference in the lookup
   contentFilterDeferred
@@ -292,9 +296,11 @@ org.jboss.search.App = function() {
             );
         this.lookup_.setContentFilter(contentFilter);
       }, this))
-      .addCallback(function() {
-        status.increaseProgress();
-      });
+      .addCallback(
+          goog.bind(function() {
+            //this.searchPage.listenOnContentFilterChanges(this.lookup_.getContentFilter());
+            status.increaseProgress();
+          }, this));
 
   // initialization of date filter and keep reference in the lookup
   dateFilterDeferred
@@ -334,8 +340,8 @@ org.jboss.search.App = function() {
       // second register listener on the date filter
       .addCallback(
           goog.bind(function() {
+            this.searchPage.listenOnDateFilterChanges(this.lookup_.getDateFilter());
             status.increaseProgress();
-            this.searchPage.registerListenerOnDateFilterChanges(this.lookup_.getDateFilter());
           }, this));
 
   // wait for all deferred initializations to finish and enable search GUI only after that

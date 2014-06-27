@@ -26,6 +26,8 @@ goog.provide('org.jboss.search.page.filter.AllTechnologyDataSource');
 goog.provide('org.jboss.search.page.filter.TechnologyFilter');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS');
+goog.provide('org.jboss.search.page.filter.TechnologyFilterEvent');
+goog.provide('org.jboss.search.page.filter.TechnologyFilterEventType');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
@@ -222,24 +224,7 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
       ],
       function(e) {
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
-        var data = event.target.getData();
-        var index = event.getItemIndex();
-        if (index < data.length) {
-          /** @type {org.jboss.core.widget.list.ListItem} */
-          var selected = data[index];
-          var selectedTechnologyId = selected.getId();
-          var rp = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
-          if (goog.isDefAndNotNull(rp)) {
-            var techArray = rp.getProjects();
-            if (!goog.array.contains(techArray, selectedTechnologyId)) {
-              techArray = goog.array.concat(techArray, selectedTechnologyId);
-            }
-            var rpf = org.jboss.core.context.RequestParamsFactory.getInstance();
-            rp = rpf.reset().copy(rp).setProjects(techArray).build();
-            this.queryService_.userQuery(rp);
-//            this.queryServiceDispatcher_.dispatchNewRequestParameters(rp);
-          }
-        }
+        this.dispatchEvent(event);
       }, false, this
       );
 
@@ -527,8 +512,12 @@ org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS = {
 
 
 /**
- * Create a new technology filter.
+ * Technology filter is responsible for managing the technology filter.
+ * It dispatches {@link TechnologyFilterEvent} whenever a new {@link RequestParams} is available
+ * as a result of user interaction with the filter.
+ *
  * It requires an element as a parameter, it assumes there is one element with class='filter_items' found inside.
+ *
  * @param {!HTMLElement} element to host the technology filter
  * @param {!HTMLInputElement} query_field to host the technology filter
  * @param {!HTMLDivElement} technology_filter_items_div where projects are listed
@@ -575,11 +564,10 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
   this.query_field_ = query_field;
 
   /**
-   * Create a ListWidget ...
    * @type {org.jboss.core.widget.list.ListController}
    * @private
    */
-  this.technologyListWidget_ = org.jboss.core.widget.list.ListWidgetFactory.build({
+  this.technologyFilterController_ = org.jboss.core.widget.list.ListWidgetFactory.build({
     lists: [
       {
         caption: 'Matching Technologies',
@@ -600,8 +588,39 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
   // ... and set keyboard and mouse listeners for it
   this.keyboardListener_ = new org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener(this.query_field_);
   this.mouseListener_ = new org.jboss.core.widget.list.mouse.MouseListener(this.items_div_);
-  this.technologyListWidget_.setKeyboardListener(this.keyboardListener_);
-  this.technologyListWidget_.setMouseListener(this.mouseListener_);
+  this.technologyFilterController_.setKeyboardListener(this.keyboardListener_);
+  this.technologyFilterController_.setMouseListener(this.mouseListener_);
+
+  this.technologyFilterControllerKey_ = goog.events.listen(
+      this.technologyFilterController_,
+      [
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED
+      ],
+      function(e) {
+        var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
+        var data = event.target.getData();
+        var index = event.getItemIndex();
+        if (index < data.length) {
+          /** @type {org.jboss.core.widget.list.ListItem} */
+          var selected = data[index];
+          var selectedTechnologyId = selected.getId();
+          var rp = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
+          if (goog.isDefAndNotNull(rp)) {
+            var techArray = rp.getProjects();
+            if (!goog.array.contains(techArray, selectedTechnologyId)) {
+              techArray = goog.array.concat(techArray, selectedTechnologyId);
+            }
+            var rpf = org.jboss.core.context.RequestParamsFactory.getInstance();
+            var new_rp = rpf.reset().copy(rp).setProjects(techArray).build();
+            this.dispatchEvent(
+                new org.jboss.search.page.filter.TechnologyFilterEvent(
+                    org.jboss.search.page.filter.TechnologyFilterEventType.NEW_REQUEST_PARAMETERS,
+                    new_rp)
+            );
+          }
+        }
+      }, false, this
+      );
 
   /**
    * If the filter is expanded and the ESC key is caught on the document then collapse the filter.
@@ -638,7 +657,7 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
         if (goog.events.KeyCodes.isTextModifyingKeyEvent(e)) {
           goog.async.nextTick(
               function() {
-                this.technologyListWidget_.input(this.query_field_.value);
+                this.technologyFilterController_.input(this.query_field_.value);
 //                console.log(this.items_div_, this.items_div_.offsetHeight,  this.items_div_.scrollHeight);
               }, this
           );
@@ -646,7 +665,7 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
           if (this.query_field_.value != '') {
             // clear the query input field on ESC key and block event propagation
             this.query_field_.value = '';
-            this.technologyListWidget_.input(this.query_field_.value);
+            this.technologyFilterController_.input(this.query_field_.value);
             e.stopPropagation();
           }
         }
@@ -661,11 +680,12 @@ goog.inherits(org.jboss.search.page.filter.TechnologyFilter, goog.events.EventTa
 org.jboss.search.page.filter.TechnologyFilter.prototype.disposeInternal = function() {
   org.jboss.search.page.filter.TechnologyFilter.superClass_.disposeInternal.call(this);
 
+  goog.events.unlistenByKey(this.technologyFilterControllerKey_);
   goog.events.unlistenByKey(this.collapseKeyListenerKey_);
   goog.events.unlistenByKey(this.queryFieldListenerKey_);
 
   // dispose ListWidget related objects
-  goog.dispose(this.technologyListWidget_);
+  goog.dispose(this.technologyFilterController_);
   goog.dispose(this.keyboardListener_);
   goog.dispose(this.mouseListener_);
 
@@ -684,7 +704,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.disposeInternal = functi
 org.jboss.search.page.filter.TechnologyFilter.prototype.refreshItems = function(opt_force) {
   var force = !!(opt_force || false);
   if (!this.isCollapsed_() || force) {
-    this.technologyListWidget_.input(this.query_field_.value);
+    this.technologyFilterController_.input(this.query_field_.value);
   }
 };
 
@@ -739,4 +759,41 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.isExpanded = function() 
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.init = function() {
   // TODO: called from the main web app during initialization. Do we want to do anything here?
+};
+
+
+
+/**
+ * TODO: make this a general event 'NewRequestParamsEvent', it can be request by all filters.
+ * @param {string} type
+ * @param {!org.jboss.core.context.RequestParams} requestParameters
+ * @constructor
+ * @extends {goog.events.Event}
+ */
+org.jboss.search.page.filter.TechnologyFilterEvent = function(type, requestParameters) {
+  goog.events.Event.call(this, type);
+
+  /**
+   * @type {!org.jboss.core.context.RequestParams}
+   * @private
+   */
+  this.requestParameters_ = requestParameters;
+};
+goog.inherits(org.jboss.search.page.filter.TechnologyFilterEvent, goog.events.Event);
+
+
+/**
+ * @return {!org.jboss.core.context.RequestParams}
+ */
+org.jboss.search.page.filter.TechnologyFilterEvent.prototype.getRequestParameters = function() {
+  return this.requestParameters_;
+};
+
+
+/**
+ *
+ * @enum {string}
+ */
+org.jboss.search.page.filter.TechnologyFilterEventType = {
+  NEW_REQUEST_PARAMETERS: goog.events.getUniqueId('new_request_parameters')
 };

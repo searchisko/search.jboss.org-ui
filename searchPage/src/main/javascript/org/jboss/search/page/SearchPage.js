@@ -63,6 +63,9 @@ goog.require('org.jboss.search.page.filter.DateFilter');
 goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('org.jboss.search.page.filter.DateOrderByChanged');
 goog.require('org.jboss.search.page.filter.DateRangeChanged');
+goog.require('org.jboss.search.page.filter.TechnologyFilter');
+goog.require('org.jboss.search.page.filter.TechnologyFilterEvent');
+goog.require('org.jboss.search.page.filter.TechnologyFilterEventType');
 goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.request');
 goog.require('org.jboss.search.response');
@@ -308,6 +311,13 @@ org.jboss.search.page.SearchPage = function(context, elements) {
    * @private
    */
   this.dateRangeChangedId_;
+
+  /**
+   * This listener is called whenever a new {@link RequestParams} is available.
+   * @type {goog.events.Key}
+   * @private
+   */
+  this.newRequestParamsKey_;
 
   /**
    * @type {goog.events.Key}
@@ -736,16 +746,8 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
   goog.events.unlistenByKey(this.userQueryServiceDispatcherListenerId_);
   goog.events.unlistenByKey(this.userSuggestionsQueryServiceDispatcherListenerId_);
 
-  // initiated later, thus we have to check first
-  if (goog.isDefAndNotNull(this.dateFilterIntervalSelectedId_)) {
-    goog.events.unlistenByKey(this.dateFilterIntervalSelectedId_);
-  }
-  if (goog.isDefAndNotNull(this.dateOrderByChangedId_)) {
-    goog.events.unlistenByKey(this.dateOrderByChangedId_);
-  }
-  if (goog.isDefAndNotNull(this.dateRangeChangedId_)) {
-    goog.events.unlistenByKey(this.dateRangeChangedId_);
-  }
+  this.unlistenDateFilter_();
+  this.unlistenTechnologyFilter_();
 
   // Remove references to COM objects.
 
@@ -783,17 +785,67 @@ org.jboss.search.page.SearchPage.prototype.getUserClickStreamUri = function() {
 
 
 /**
- *
- * @param {org.jboss.search.page.filter.DateFilter} dateFilter
+ * Unlisten listeners related to technology filter.
+ * @private
  */
-org.jboss.search.page.SearchPage.prototype.registerListenerOnDateFilterChanges = function(dateFilter) {
+org.jboss.search.page.SearchPage.prototype.unlistenTechnologyFilter_ = function() {
+  if (goog.isDefAndNotNull(this.newRequestParamsKey_)) {
+    goog.events.unlistenByKey(this.newRequestParamsKey_);
+  }
+};
+
+
+/**
+ *
+ * @param {org.jboss.search.page.filter.TechnologyFilter} technologyFilter
+ */
+org.jboss.search.page.SearchPage.prototype.listenOnTechnologyFilterChanges = function(technologyFilter) {
   // unlisten if already registered
+  this.unlistenTechnologyFilter_();
+
+  if (goog.isDefAndNotNull(technologyFilter)) {
+    this.newRequestParamsKey_ = goog.events.listen(
+        technologyFilter,
+        [
+          org.jboss.search.page.filter.TechnologyFilterEventType.NEW_REQUEST_PARAMETERS
+        ],
+        function(e) {
+          var event = /** @type {org.jboss.search.page.filter.TechnologyFilterEvent} */ (e);
+          this.dispatchEvent(
+              new org.jboss.search.page.event.QuerySubmitted(
+                  event.getRequestParameters()
+              )
+          );
+        }, false, this
+        );
+  }
+};
+
+
+/**
+ * Unlisten listeners related to date filter.
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.unlistenDateFilter_ = function() {
   if (goog.isDefAndNotNull(this.dateFilterIntervalSelectedId_)) {
     goog.events.unlistenByKey(this.dateFilterIntervalSelectedId_);
   }
   if (goog.isDefAndNotNull(this.dateOrderByChangedId_)) {
     goog.events.unlistenByKey(this.dateOrderByChangedId_);
   }
+  if (goog.isDefAndNotNull(this.dateRangeChangedId_)) {
+    goog.events.unlistenByKey(this.dateRangeChangedId_);
+  }
+};
+
+
+/**
+ *
+ * @param {org.jboss.search.page.filter.DateFilter} dateFilter
+ */
+org.jboss.search.page.SearchPage.prototype.listenOnDateFilterChanges = function(dateFilter) {
+  // unlisten if already registered
+  this.unlistenDateFilter_();
 
   if (goog.isDefAndNotNull(dateFilter)) {
 
