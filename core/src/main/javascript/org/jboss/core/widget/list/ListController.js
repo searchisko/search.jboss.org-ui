@@ -24,11 +24,6 @@
 
 goog.provide('org.jboss.core.widget.list.ListController');
 
-goog.require('goog.Disposable');
-goog.require('org.jboss.core.widget.list.ListModelContainer');
-goog.require('org.jboss.core.widget.list.ListViewContainer');
-goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener');
-
 
 
 /**
@@ -40,10 +35,9 @@ goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener');
  * parameters (depending on implementation needs).
  * See the {@link ListWidgetFactory} for details about how to pass additional constructor parameters.
  *
- * Important: make sure implementing class extends disposable if needed.
- *
  * @param {!org.jboss.core.widget.list.ListModelContainer} lmc
  * @param {!org.jboss.core.widget.list.ListViewContainer} lvc
+ * @extends {goog.events.Listenable}
  * @interface
  */
 org.jboss.core.widget.list.ListController = function(lmc, lvc) {};
