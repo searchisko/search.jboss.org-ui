@@ -549,11 +549,10 @@ org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS = {
  * It dispatches {@link TechnologyFilterEvent} whenever a new {@link RequestParams} is available
  * as a result of user interaction with the filter.
  *
- * It requires an element as a parameter, it assumes there is one element with class='filter_items' found inside.
- *
  * @param {!HTMLElement} element to host the technology filter
  * @param {!HTMLInputElement} query_field to host the technology filter
  * @param {!HTMLDivElement} technology_filter_items_div where projects are listed
+ * @param {!HTMLSelectElement} technology_filter_order select element to drive order of items
  * @param {function(): boolean=} opt_isCollapsed a function that is used to learn if filter is collapsed
  * @param {Function=} opt_expandFilter a function that is used to show/expand the filter DOM elements
  * @param {Function=} opt_collapseFilter a function that is used to hide/collapse the filter DOM elements
@@ -561,6 +560,7 @@ org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS = {
  * @extends {goog.events.EventTarget}
  */
 org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, technology_filter_items_div,
+                                                         technology_filter_order,
                                                          opt_isCollapsed, opt_expandFilter, opt_collapseFilter) {
   goog.events.EventTarget.call(this);
 
@@ -590,6 +590,12 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
    * @private
    */
   this.items_div_ = technology_filter_items_div;
+
+  /**
+   * @type {!HTMLSelectElement}
+   * @private
+   */
+  this.items_order_ = technology_filter_order;
 
   /**
    * @type {!HTMLInputElement}
@@ -705,6 +711,16 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
       }, false, this
       );
 
+  this.technologyFilterOrderKey_ = goog.events.listen(
+      this.items_order_,
+      [
+        goog.events.EventType.CHANGE
+      ],
+      function(e) {
+        // TODO
+        //console.log(this.getOrder_());
+      }, false, this);
+
 };
 goog.inherits(org.jboss.search.page.filter.TechnologyFilter, goog.events.EventTarget);
 
@@ -716,6 +732,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.disposeInternal = functi
   goog.events.unlistenByKey(this.technologyFilterControllerKey_);
   goog.events.unlistenByKey(this.collapseKeyListenerKey_);
   goog.events.unlistenByKey(this.queryFieldListenerKey_);
+  goog.events.unlistenByKey(this.technologyFilterOrderKey_);
 
   // dispose ListWidget related objects
   goog.dispose(this.technologyFilterController_);
@@ -723,6 +740,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.disposeInternal = functi
   goog.dispose(this.mouseListener_);
 
   delete this.items_div_;
+  delete this.items_order_;
   delete this.query_field_;
   delete this.expandFilter_;
   delete this.collpaseFilter_;
@@ -792,6 +810,21 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.isExpanded = function() 
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.init = function() {
   // TODO: called from the main web app during initialization. Do we want to do anything here?
+};
+
+
+/**
+ * TODO
+ * @return {*}
+ * @private
+ */
+org.jboss.search.page.filter.TechnologyFilter.prototype.getOrder_ = function() {
+  var so = goog.object.getValueByKeys(this.items_order_, 'selectedOptions');
+  if (so != undefined && goog.isFunction(so.item)) {
+    var item = so.item(0);
+    if (goog.isDefAndNotNull(item))
+      return item.value;
+  }
 };
 
 

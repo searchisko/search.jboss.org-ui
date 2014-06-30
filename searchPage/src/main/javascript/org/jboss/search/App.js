@@ -197,6 +197,7 @@ org.jboss.search.App = function() {
             elements.getTechnology_filter_body_div(),
             elements.getTechnology_filter_query_field(),
             elements.getTechnology_filter_items_div(),
+            elements.getTechnology_filter_order(),
             function() {
               return goog.dom.classes.has(elements.getTechnology_filter_body_div(), org.jboss.core.Constants.HIDDEN);
             },
@@ -495,6 +496,10 @@ org.jboss.search.App.prototype.locateDocumentElements_ = function() {
   var author_filter_items_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('filter_items', author_filter_body_div));
   // DIV element where projects are listed
   var project_filter_items_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('filter_items', project_filter_body_div));
+  var technology_filter_order_select = /** @type {!HTMLSelectElement} */ (goog.dom.findNode(project_filter_body_div,
+      function(node) {
+        return (goog.dom.isElement(node) && node.getAttribute('id') == 'technology_order');
+      }));
 
   var second_filters_row_div = /** @type {!HTMLDivElement} */ (goog.dom.getElement('second_filters_row'));
 
@@ -511,7 +516,7 @@ org.jboss.search.App.prototype.locateDocumentElements_ = function() {
       date_filter_tab_div, project_filter_tab_div, author_filter_tab_div, content_filter_tab_div,
       date_filter_body_div, project_filter_body_div, author_filter_body_div, content_filter_body_div,
       date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
-      date_order,
+      date_order, technology_filter_order_select,
       project_filter_query_field, author_filter_query_field,
       author_filter_items_div, project_filter_items_div,
       search_results_div, search_filters_div

@@ -69,6 +69,7 @@ var testValidParameters = function() {
 
   var author_filter_items_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
   var technology_filter_items_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
+  var technology_filter_order_select = /** @type {!HTMLSelectElement} */ goog.dom.createDom('select', null);
 
   var search_results_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
   var search_filters_div = /** @type {!HTMLDivElement} */ goog.dom.createDom('div', null);
@@ -78,7 +79,7 @@ var testValidParameters = function() {
       date_filter_tab_div, technology_filter_tab_div, author_filter_tab_div, content_filter_tab_div,
       date_filter_body_div, technology_filter_body_div, author_filter_body_div, content_filter_body_div,
       date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
-      date_order,
+      date_order, technology_filter_order_select,
       technology_filter_query_field, author_filter_query_field,
       author_filter_items_div, technology_filter_items_div,
       search_results_div, search_filters_div
