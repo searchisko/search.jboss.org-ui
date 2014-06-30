@@ -32,6 +32,7 @@ goog.require('goog.Disposable');
 goog.require('goog.Uri');
 goog.require('goog.array');
 goog.require('goog.array.ArrayLike');
+goog.require('goog.net.ErrorCode');
 goog.require('goog.net.XhrManager');
 goog.require('goog.net.XhrManager.Event');
 goog.require('goog.object');
@@ -128,6 +129,8 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userQuery = function(re
             }
           } else {
             // We failed getting search results data
+            // console.log('error code >', event.target.getLastErrorCode());
+            // console.log('error message >', goog.net.ErrorCode.getDebugMessage(event.target.getLastErrorCode()));
             this.dispatcher_.dispatchUserQueryError(requestParams.getQueryString(), event.target.getLastError());
           }
         }, this)
@@ -195,6 +198,8 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = f
           } else {
             // We failed getting query suggestions
             // thiz_.hideAndCleanSuggestionsElementAndModel_();
+            // console.log('error code >', event.target.getLastErrorCode());
+            // console.log('error message >', goog.net.ErrorCode.getDebugMessage(event.target.getLastErrorCode()));
             this.dispatcher_.dispatchUserSuggestionsQueryError(query, event.target.getLastError());
           }
 
@@ -237,6 +242,8 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.projectNameSuggestions 
             } else {
               // Project info failed to load.
               // TODO: provide error details
+              // console.log('error code >', event.target.getLastErrorCode());
+              // console.log('error message >', goog.net.ErrorCode.getDebugMessage(event.target.getLastErrorCode()));
               this.dispatcher_.dispatchProjectNameSuggestionsQueryError(query, {});
             }
           }, this)
