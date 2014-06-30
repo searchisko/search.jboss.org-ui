@@ -240,15 +240,46 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
       function(e) {
         var tf_ = this.lookup_.getTechnologyFilter();
         if (goog.isDefAndNotNull(tf_) && tf_.isExpanded()) {
+
           var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
           var data = /** @type {!Object} */ (goog.isObject(event.getMetadata()) ? event.getMetadata() : {});
+
+          /**
+           * Function to lookup a count for given technology code from previous search results aggregation.
+           * Note: We should find more elegant way how to get counts for technology codes.
+           *       See the AllTechnologyDataSource which contains similar logic (we should refactor this).
+           *
+           * @param {string} code
+           * @return {string} contains either ' (_number_)' or ''
+           */
+          var getRecentCountForTechnology_ = function(code) {
+            var recentQueryResults = org.jboss.core.service.Locator.getInstance().getLookup().getRecentQueryResultData();
+            if (goog.isDefAndNotNull(recentQueryResults)) {
+              var technologyFacet = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(recentQueryResults,
+                  'facets', 'per_project_counts', 'terms'));
+              if (goog.isDefAndNotNull(technologyFacet)) {
+                var matching = goog.array.find(technologyFacet, function(tech) {
+                  return (goog.object.getValueByKeys(tech, 'term') === code);
+                });
+                if (goog.isDefAndNotNull(matching)) {
+                  var count = goog.object.getValueByKeys(matching, 'count');
+                }
+                if (goog.isDefAndNotNull(count)) {
+                  return ' (' + count + ')';
+                }
+              }
+            }
+            return '';
+          };
 
           // handle matching items
           var matching_items = goog.object.getValueByKeys(data, 'matching_items');
           /** @type {!Array.<org.jboss.core.widget.list.ListItem>} */ var mi = [];
           if (goog.isDef(matching_items) && goog.isArrayLike(matching_items)) {
-            goog.array.forEach(/** @type {goog.array.ArrayLike} */ (matching_items), function(item) {
-              mi.push(new org.jboss.core.widget.list.ListItem(item['code'], item['name']));
+            goog.array.forEach(/** @type {goog.array.ArrayLike} */ (matching_items), function (item) {
+              var code = item['code'];
+              var count = getRecentCountForTechnology_(code);
+              mi.push(new org.jboss.core.widget.list.ListItem(item['code'], item['name'] + count));
             });
           }
           this.matchingDataSource_.repeat(mi);
@@ -263,7 +294,9 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
             goog.array.forEach(/** @type {goog.array.ArrayLike} */ (did_you_mean_items), function(dym_item) {
               // include only if code does not already exists in matching_items
               if (!goog.array.findIndex(mi, codeExistsFn, dym_item) > -1) {
-                dymi.push(new org.jboss.core.widget.list.ListItem(dym_item['code'], dym_item['name']));
+                var code = dym_item['code'];
+                var count = getRecentCountForTechnology_(code);
+                dymi.push(new org.jboss.core.widget.list.ListItem(dym_item['code'], dym_item['name'] + count));
               }
             });
           }
