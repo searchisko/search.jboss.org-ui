@@ -37,7 +37,7 @@ goog.require('org.jboss.search.page.filter.TechnologyFilter');
 
 
 /**
- *
+ * TODO: we should rename it to LookUpImpl
  * @constructor
  * @extends {org.jboss.core.service.LookUpImpl}
  * @final
@@ -46,7 +46,13 @@ org.jboss.search.service.LookUp = function() {
   org.jboss.core.service.LookUpImpl.call(this);
 
   /**
-   * @type {Object}
+   * @type {Object.<string, string>}
+   * @private
+   */
+  this.typeMap_;
+
+  /**
+   * @type {Object.<string, string>}
    * @private
    */
   this.projectMap_;
@@ -98,8 +104,38 @@ goog.inherits(org.jboss.search.service.LookUp, org.jboss.core.service.LookUpImpl
 
 
 /**
+ * Returns the type map.
+ * @return {Object.<string, string>}
+ */
+org.jboss.search.service.LookUp.prototype.getTypeMap = function() {
+  if (goog.isDefAndNotNull(this.typeMap_)) {
+    return this.typeMap_;
+  } else {
+    throw new Error('TypeMap hasn\'t been set yet!');
+  }
+};
+
+
+/**
+ * Returns clone of the type map.
+ * @return {Object.<string, string>}
+ */
+org.jboss.search.service.LookUp.prototype.getTypeMapClone = function() {
+  return goog.object.clone(this.getTypeMap());
+};
+
+
+/**
+ * @param {Object.<string, string>} typeMap
+ */
+org.jboss.search.service.LookUp.prototype.setTypeMap = function(typeMap) {
+  this.typeMap_ = typeMap;
+};
+
+
+/**
  * Returns the project map.
- * @return {Object}
+ * @return {Object.<string, string>}
  */
 org.jboss.search.service.LookUp.prototype.getProjectMap = function() {
   if (goog.isDefAndNotNull(this.projectMap_)) {
@@ -112,7 +148,7 @@ org.jboss.search.service.LookUp.prototype.getProjectMap = function() {
 
 /**
  * Returns clone of the project map.
- * @return {Object}
+ * @return {Object.<string, string>}
  */
 org.jboss.search.service.LookUp.prototype.getProjectMapClone = function() {
   return goog.object.clone(this.getProjectMap());
@@ -120,7 +156,7 @@ org.jboss.search.service.LookUp.prototype.getProjectMapClone = function() {
 
 
 /**
- * @param {Object} projectMap
+ * @param {Object.<string, string>} projectMap
  */
 org.jboss.search.service.LookUp.prototype.setProjectMap = function(projectMap) {
   this.projectMap_ = projectMap;

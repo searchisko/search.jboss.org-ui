@@ -36,6 +36,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.events.Key');
+goog.require('goog.net.ErrorCode');
 goog.require('goog.net.XhrManager.Event');
 goog.require('goog.string');
 goog.require('goog.window');
@@ -55,7 +56,8 @@ goog.require('org.jboss.core.util.fragmentParser.INTERNAL_param');
 goog.require('org.jboss.core.util.fragmentParser.UI_param_suffix');
 goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.Variables');
-goog.require('org.jboss.search.list.project.Project');
+goog.require('org.jboss.search.list.Project');
+goog.require('org.jboss.search.list.Type');
 goog.require('org.jboss.search.page.SearchPage');
 goog.require('org.jboss.search.page.SearchPageElements');
 goog.require('org.jboss.search.page.element.Status');
@@ -91,8 +93,11 @@ org.jboss.search.App = function() {
   var status = new org.jboss.search.page.element.Status(status_window, 4);
   status.show('Initialization...');
 
-  var log = goog.debug.Logger.getLogger('org.jboss.search.App');
-  log.info('Search App initialization...');
+  /**
+   * @private
+   */
+  this.log_ = goog.debug.Logger.getLogger('org.jboss.search.App');
+  this.log_.info('Search App initialization...');
 
   var elements = this.locateDocumentElements_();
 
@@ -181,18 +186,19 @@ org.jboss.search.App = function() {
   // ## Content Filter
   var contentFilterDeferred = new goog.async.Deferred();
 
-  // projectList will be initialized at some point in the future (it is deferred type)
-  // once it is initialized it calls the deferred that is passed as an argument
-  var projectList = new org.jboss.search.list.project.Project(technologyFilterDeferred);
+  // Lists will be initialized at some point in the future (they are deferred types) once they are initialized
+  // they calls the deferred that is passed as an argument to their constructor.
+  var projectList = new org.jboss.search.list.Project(technologyFilterDeferred);
+  var typeList = new org.jboss.search.list.Type(contentFilterDeferred);
 
   technologyFilterDeferred
-  // keep project list data in the lookup (so it can be easily used by other objects in the application)
       .addCallback(goog.bind(function() {
+        // keep project list data in the lookup (so it can be easily used by other objects in the application)
         this.lookup_.setProjectMap(projectList.getMap());
         this.lookup_.setProjectArray(projectList.getArray());
       }, this))
-      // initialize technology filter and keep reference in the lookup
       .addCallback(goog.bind(function() {
+        // initialize technology filter and keep reference in the lookup
         var technologyFilter = new org.jboss.search.page.filter.TechnologyFilter(
             elements.getTechnology_filter_body_div(),
             elements.getTechnology_filter_query_field(),
@@ -232,9 +238,9 @@ org.jboss.search.App = function() {
             status.increaseProgress();
           }, this));
 
-  // initialize author filter and keep reference in the lookup
   authorFilterDeferred
       .addCallback(goog.bind(function() {
+        // initialize author filter and keep reference in the lookup
         var authorFilter = new org.jboss.search.page.filter.AuthorFilter(
             elements.getAuthor_filter_body_div(),
             elements.getAuthor_filter_query_field(),
@@ -270,9 +276,15 @@ org.jboss.search.App = function() {
             status.increaseProgress();
           }, this));
 
-  // initialize content filter and keep reference in the lookup
   contentFilterDeferred
       .addCallback(goog.bind(function() {
+        // keep type list data in the lookup (so it can be easily used by other objects in the application)
+        this.lookup_.setTypeMap(typeList.getMap());
+//        console.log(this.lookup_.getTypeMap());
+//        this.lookup_.setProjectArray(projectList.getArray());
+      }, this))
+      .addCallback(goog.bind(function() {
+        // initialize content filter and keep reference in the lookup
         var contentFilter = new org.jboss.search.page.filter.ContentFilter(
             elements.getContent_filter_body_div(),
             function() {
@@ -303,10 +315,10 @@ org.jboss.search.App = function() {
             status.increaseProgress();
           }, this));
 
-  // initialization of date filter and keep reference in the lookup
   dateFilterDeferred
-  // first instantiate date filter and push it up into LookUp
       .addCallback(goog.bind(function() {
+        // initialization of date filter and keep reference in the lookup
+        // first instantiate date filter and push it up into LookUp
         var dateFilter = new org.jboss.search.page.filter.DateFilter(
             elements.getDate_filter_body_div(),
             elements.getDate_histogram_chart_div(),
@@ -378,7 +390,7 @@ org.jboss.search.App = function() {
         elements.getQuery_field().removeAttribute(org.jboss.core.Constants.DISABLED);
       }, this));
 
-  // fire XHR to load project list data
+  // load technology list data and initialize technologyFilter
   this.lookup_.getXhrManager().send(
       org.jboss.search.Constants.LOAD_PROJECT_LIST_REQUEST_ID,
       goog.Uri.parse(org.jboss.search.Constants.API_URL_PROJECT_LIST_QUERY).toString(),
@@ -386,24 +398,44 @@ org.jboss.search.App = function() {
       '', // post_data
       {}, // headers_map
       org.jboss.search.Constants.LOAD_LIST_PRIORITY,
-      // callback, The only param is the event object from the COMPLETE event.
-      function(e) {
+      goog.bind(function(e) {
         var event = /** @type {goog.net.XhrManager.Event} */ (e);
         if (event.target.isSuccess()) {
-          var response = event.target.getResponseJson();
-          technologyFilterDeferred.callback(response);
+          this.log_.info('Initialize technology list data.');
+          technologyFilterDeferred.callback(event.target.getResponseJson());
         } else {
-          // Project info failed to load.
+          this.log_.warning('Initialization of technology list data failed!');
+          this.log_.severe('Error: ' + goog.net.ErrorCode.getDebugMessage(event.target.getLastErrorCode()));
+          this.log_.warning('Continue with empty technology list data.');
           technologyFilterDeferred.callback({});
         }
-      }
+      }, this)
+  );
+
+  // load type list data and initialize contentFilter
+  this.lookup_.getXhrManager().send(
+      org.jboss.search.Constants.LOAD_TYPE_LIST_REQUEST_ID,
+      goog.Uri.parse(org.jboss.search.Constants.API_URL_TYPE_LIST_QUERY).toString(),
+      org.jboss.core.Constants.GET,
+      '', // post_data
+      {}, // headers_map
+      org.jboss.search.Constants.LOAD_LIST_PRIORITY,
+      goog.bind(function(e) {
+        var event = /** @type {goog.net.XhrManager.Event} */ (e);
+        if (event.target.isSuccess()) {
+          this.log_.info('Initialize type list data.');
+          contentFilterDeferred.callback(event.target.getResponseJson());
+        } else {
+          this.log_.warning('Initialization of type list data failed!');
+          this.log_.severe('Error: ' + goog.net.ErrorCode.getDebugMessage(event.target.getLastErrorCode()));
+          this.log_.warning('Continue with empty type list data.');
+          contentFilterDeferred.callback({});
+        }
+      }, this)
   );
 
   // initialize authorFilter
   authorFilterDeferred.callback({});
-
-  // initialize contentFilter
-  contentFilterDeferred.callback({});
 
   // initialize dateFilter
   dateFilterDeferred.callback({});
@@ -459,6 +491,7 @@ org.jboss.search.App.prototype.disposeInternal = function() {
   goog.events.unlistenByKey(this.searchEventListenerId_);
 
   delete this.lookup_;
+  delete this.log_;
 
   // TODO: should be moved up the chain (for now we can keep it here)
   org.jboss.core.service.Locator.dispose();

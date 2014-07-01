@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-goog.require('org.jboss.search.list.project.Project');
 
 goog.require('goog.array');
-goog.require('goog.json');
 goog.require('goog.async.Deferred');
+goog.require('goog.json');
 goog.require('goog.testing.ContinuationTestCase');
 goog.require('goog.testing.jsunit');
+goog.require('org.jboss.search.list.Project');
 
 
 var testCase = new goog.testing.ContinuationTestCase('Continuation Test Case');
@@ -54,7 +54,7 @@ function testProject() {
   var json = sample_response_data;
 
   var deferred = new goog.async.Deferred();
-  var project = new org.jboss.search.list.project.Project(deferred);
+  var project = new org.jboss.search.list.Project(deferred);
 
   project
     .addCallback(function() {

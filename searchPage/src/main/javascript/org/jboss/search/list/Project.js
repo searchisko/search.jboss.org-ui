@@ -23,7 +23,7 @@
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
-goog.provide('org.jboss.search.list.project.Project');
+goog.provide('org.jboss.search.list.Project');
 
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
@@ -41,7 +41,7 @@ goog.require('goog.string');
  * @constructor
  * @extends {goog.async.Deferred}
  */
-org.jboss.search.list.project.Project = function(deferred, opt_canceller, opt_defaultScope) {
+org.jboss.search.list.Project = function(deferred, opt_canceller, opt_defaultScope) {
   goog.async.Deferred.call(this, opt_canceller, opt_defaultScope);
 
   /**
@@ -57,7 +57,7 @@ org.jboss.search.list.project.Project = function(deferred, opt_canceller, opt_de
    *     'hibernatesearch': 'Hibernate Search'
    * }
    *
-   * @type {Object}
+   * @type {Object.<string, string>}
    * @private
    */
   this.map_ = {};
@@ -68,16 +68,17 @@ org.jboss.search.list.project.Project = function(deferred, opt_canceller, opt_de
     this.callback();
   }, this);
 };
-goog.inherits(org.jboss.search.list.project.Project, goog.async.Deferred);
+goog.inherits(org.jboss.search.list.Project, goog.async.Deferred);
 
 
 /**
  * Knows how to parse response from {@see Constants.API_URL_PROJECT_LIST_QUERY}
  * into simple map representation.
  * @param {!Object} json
- * @return {Object}
+ * @return {!Object}
  */
-org.jboss.search.list.project.Project.prototype.parseProjectData = function(json) {
+org.jboss.search.list.Project.prototype.parseProjectData = function(json) {
+  this.checkFailedResponse(json);
   var map_ = {};
   var hits = goog.object.getValueByKeys(json, 'hits', 'hits');
   if (goog.isDef(hits) && goog.isArray(hits)) {
@@ -86,8 +87,13 @@ org.jboss.search.list.project.Project.prototype.parseProjectData = function(json
       if (goog.isObject(fields)) {
         var id_ = goog.object.getValueByKeys(fields, 'sys_project');
         var name_ = goog.object.getValueByKeys(fields, 'sys_project_name');
-        if (goog.isDefAndNotNull(id_) && goog.isDefAndNotNull(name_)) {
-          map_[id_] = name_;
+        if (goog.isDefAndNotNull(id_)) {
+          if (goog.isDefAndNotNull(name_)) {
+            map_[id_] = name_;
+          } else {
+            // fallback (no project name found for the code)
+            map_[id_] = id_;
+          }
         }
       }
     }, this);
@@ -97,20 +103,29 @@ org.jboss.search.list.project.Project.prototype.parseProjectData = function(json
 
 
 /**
+ *
+ * @param {!Object} json
+ */
+org.jboss.search.list.Project.prototype.checkFailedResponse = function(json) {
+  // TODO: {@see org.jboss.search.list.Type}.
+};
+
+
+/**
  * Return Project Name for given Project ID.
  * @param {!string} sysId
  * @return {!string}
  */
-org.jboss.search.list.project.Project.prototype.getSysProjectName = function(sysId) {
+org.jboss.search.list.Project.prototype.getSysProjectName = function(sysId) {
   return goog.object.get(this.map_, sysId, 'Unknown').valueOf();
 };
 
 
 /**
  * Return projects as a map.
- * @return {Object}
+ * @return {Object.<string, string>}
  */
-org.jboss.search.list.project.Project.prototype.getMap = function() {
+org.jboss.search.list.Project.prototype.getMap = function() {
   return this.map_;
 };
 
@@ -118,10 +133,10 @@ org.jboss.search.list.project.Project.prototype.getMap = function() {
 /**
  * Return projects as an array.
  * Returned array is ordered ascending by the lower-cased 'name' value.
- * @return {!Array.<{name: string, code: string}>}
+ * @return {!Array.<{name: string, code: string, orderBy: string}>}
  */
-org.jboss.search.list.project.Project.prototype.getArray = function() {
-  /** @type {!Array.<{name: string, code: string}>} */ var result = new Array();
+org.jboss.search.list.Project.prototype.getArray = function() {
+  /** @type {!Array.<{name: string, code: string, orderBy: string}>} */ var result = new Array();
   goog.object.forEach(this.map_, function(value, key) {
     var name = (goog.string.isEmptySafe(value) ? key : value);
     result.push({'name': name, 'code': key, 'orderBy': name.toLowerCase()});

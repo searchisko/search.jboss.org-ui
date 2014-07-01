@@ -53,18 +53,25 @@ org.jboss.search.Constants = {
   SEARCH_QUERY_REQUEST_ID: '3',
 
   /**
-   * Used as an identifier to abort or/and send the query search request.
+   * Used as an identifier to abort or/and send the project_info search request.
    * @type {string}
    * @const
    */
   LOAD_PROJECT_LIST_REQUEST_ID: '4',
 
   /**
+   * Used as an identifier to abort or/and send the type search request.
+   * @type {string}
+   * @const
+   */
+  LOAD_TYPE_LIST_REQUEST_ID: '5',
+
+  /**
    * Used as an identifier to abort or/and send the query click stream writes.
    * @type {string}
    * @const
    */
-  WRITE_CLICK_STREAM_STATS_ID: '5',
+  WRITE_CLICK_STREAM_STATS_ID: '6',
 
   /**
    * Priority of initialization.
@@ -189,6 +196,12 @@ org.jboss.search.Constants = {
     '/v1/rest',
     '/search?',
     ['sys_type=project_info', 'size=300', 'field=sys_project', 'field=sys_project_name'].join('&')
+  ].join(''),
+
+  API_URL_TYPE_LIST_QUERY: [org.jboss.search.Variables.API_URL_BASE_DCP,
+    '/v1/rest',
+    '/search?',
+    ['facet=per_sys_type_counts', 'size=0'].join('&')
   ].join(''),
 
   /**
