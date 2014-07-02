@@ -7,6 +7,9 @@
 --path ./../../../../../../main/javascript/org/jboss/core/service/Locator.js \
 --path ./../../../../../../main/javascript/org/jboss/core/service/LookUp.js \
 --path ./../../../../../../main/javascript/org/jboss/core/service/LookUpImpl.js \
+--path ./../../../../../../main/javascript/org/jboss/core/service/navigation/ \
+--path ./../../../../../../main/javascript/org/jboss/core/service/query/ \
+--path ./../../../../../../main/javascript/org/jboss/core/context/ \
 --path ./../../../../../../test/javascript/org/jboss/core/util/dateTime_test.js \
 --output_mode deps \
 > dateTime_test_deps.js
