@@ -51,7 +51,7 @@ org.jboss.core.util.urlGenerator.QueryParams = {
   ACTIVITY_DATE_TO: 'activity_date_to',
   ORDER_BY: 'sortBy',
   CONTRIBUTOR: 'contributor',
-  CONTENT_TYPE: 'type',
+  CONTENT_TYPE: 'sys_type',
   PROJECT: 'project',
   TAG: 'tag'
 };
