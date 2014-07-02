@@ -26,8 +26,6 @@ goog.provide('org.jboss.search.page.filter.AllTechnologyDataSource');
 goog.provide('org.jboss.search.page.filter.TechnologyFilter');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS');
-goog.provide('org.jboss.search.page.filter.TechnologyFilterEvent');
-goog.provide('org.jboss.search.page.filter.TechnologyFilterEventType');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
@@ -71,6 +69,8 @@ goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener.EventType');
 goog.require('org.jboss.core.widget.list.mouse.MouseListener');
 goog.require('org.jboss.core.widget.list.mouse.MouseListener.EventType');
 goog.require('org.jboss.search.Constants');
+goog.require('org.jboss.search.page.filter.NewRequestParamsEvent');
+goog.require('org.jboss.search.page.filter.NewRequestParamsEventType');
 goog.require('org.jboss.search.page.filter.templates');
 goog.require('org.jboss.search.response');
 
@@ -104,14 +104,14 @@ org.jboss.search.page.filter.AllTechnologyDataSource = function() {
    * @type {goog.events.Key}
    * @private
    */
-  this.suggestionsSearchKey_ = goog.events.listen(
+  this.updateAfterSearchKey_ = goog.events.listen(
       this.queryServiceDispatcher_,
       [
         org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED
       ],
       function() {
-        var tf_ = lookup_.getTechnologyFilter();
-        if (goog.isDefAndNotNull(tf_) && tf_.isExpanded()) {
+        var f_ = lookup_.getTechnologyFilter();
+        if (goog.isDefAndNotNull(f_) && f_.isExpanded()) {
           this.get(this.previousQuery_);
         }
       }, false, this);
@@ -122,7 +122,7 @@ goog.inherits(org.jboss.search.page.filter.AllTechnologyDataSource, goog.events.
 /** @inheritDoc */
 org.jboss.search.page.filter.AllTechnologyDataSource.prototype.disposeInternal = function() {
   org.jboss.search.page.filter.AllTechnologyDataSource.superClass_.disposeInternal.call(this);
-  goog.events.unlistenByKey(this.suggestionsSearchKey_);
+  goog.events.unlistenByKey(this.updateAfterSearchKey_);
   delete this.queryServiceDispatcher_;
 };
 
@@ -148,7 +148,7 @@ org.jboss.search.page.filter.AllTechnologyDataSource.prototype.get = function(qu
       });
     }
   }
-  // console.log('dispatching all technologies with counts data');
+
   this.dispatchEvent(
       new org.jboss.core.widget.list.datasource.DataSourceEvent(this.convertCacheToEventDate_(projectMap))
   );
@@ -428,6 +428,8 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.disposeInterna
   goog.events.unlistenByKey(this.didYouMeanDSListenerId_);
   goog.events.unlistenByKey(this.matchingDSListenerId_);
   goog.events.unlistenByKey(this.projectNameSuggestionsKey_);
+  goog.events.unlistenByKey(this.keyboardListenerKey_);
+  goog.events.unlistenByKey(this.mouseListenerKey_);
 
   goog.dispose(this.queryContextDataSource_);
   goog.dispose(this.didYouMeanDataSource_);
@@ -436,6 +438,8 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.disposeInterna
   delete this.queryService_;
   delete this.queryServiceDispatcher_;
   delete this.lookup_;
+  delete this.keyboardListener_;
+  delete this.mouseListener_;
 };
 
 
@@ -586,7 +590,7 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
       opt_isCollapsed : function() { return true; });
 
   /**
-   * @type {!HTMLElement}
+   * @type {!HTMLDivElement}
    * @private
    */
   this.items_div_ = technology_filter_items_div;
@@ -626,8 +630,8 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
   });
   // ... and set keyboard and mouse listeners for it
   this.keyboardListener_ = new org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener(this.query_field_);
-  this.mouseListener_ = new org.jboss.core.widget.list.mouse.MouseListener(this.items_div_);
   this.technologyFilterController_.setKeyboardListener(this.keyboardListener_);
+  this.mouseListener_ = new org.jboss.core.widget.list.mouse.MouseListener(this.items_div_);
   this.technologyFilterController_.setMouseListener(this.mouseListener_);
 
   this.technologyFilterControllerKey_ = goog.events.listen(
@@ -642,18 +646,18 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
         if (index < data.length) {
           /** @type {org.jboss.core.widget.list.ListItem} */
           var selected = data[index];
-          var selectedTechnologyId = selected.getId();
+          var selectedId = selected.getId();
           var rp = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
           if (goog.isDefAndNotNull(rp)) {
-            var techArray = rp.getProjects();
-            if (!goog.array.contains(techArray, selectedTechnologyId)) {
-              techArray = goog.array.concat(techArray, selectedTechnologyId);
+            var filterArray = rp.getProjects();
+            if (!goog.array.contains(filterArray, selectedId)) {
+              filterArray = goog.array.concat(filterArray, selectedId);
             }
             var rpf = org.jboss.core.context.RequestParamsFactory.getInstance();
-            var new_rp = rpf.reset().copy(rp).setProjects(techArray).build();
+            var new_rp = rpf.reset().copy(rp).setProjects(filterArray).build();
             this.dispatchEvent(
-                new org.jboss.search.page.filter.TechnologyFilterEvent(
-                    org.jboss.search.page.filter.TechnologyFilterEventType.NEW_REQUEST_PARAMETERS,
+                new org.jboss.search.page.filter.NewRequestParamsEvent(
+                    org.jboss.search.page.filter.NewRequestParamsEventType.NEW_REQUEST_PARAMETERS,
                     new_rp)
             );
           }
@@ -782,8 +786,8 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.updateItems_ = function(
  * @see constructor
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.expandFilter = function() {
+  this.refreshItems(true);
   this.expandFilter_();
-  this.refreshItems();
 };
 
 
@@ -825,41 +829,4 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.getOrder_ = function() {
     if (goog.isDefAndNotNull(item))
       return item.value;
   }
-};
-
-
-
-/**
- * TODO: make this a general event 'NewRequestParamsEvent', it can be request by all filters.
- * @param {string} type
- * @param {!org.jboss.core.context.RequestParams} requestParameters
- * @constructor
- * @extends {goog.events.Event}
- */
-org.jboss.search.page.filter.TechnologyFilterEvent = function(type, requestParameters) {
-  goog.events.Event.call(this, type);
-
-  /**
-   * @type {!org.jboss.core.context.RequestParams}
-   * @private
-   */
-  this.requestParameters_ = requestParameters;
-};
-goog.inherits(org.jboss.search.page.filter.TechnologyFilterEvent, goog.events.Event);
-
-
-/**
- * @return {!org.jboss.core.context.RequestParams}
- */
-org.jboss.search.page.filter.TechnologyFilterEvent.prototype.getRequestParameters = function() {
-  return this.requestParameters_;
-};
-
-
-/**
- *
- * @enum {string}
- */
-org.jboss.search.page.filter.TechnologyFilterEventType = {
-  NEW_REQUEST_PARAMETERS: goog.events.getUniqueId('new_request_parameters')
 };

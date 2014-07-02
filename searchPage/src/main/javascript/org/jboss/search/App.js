@@ -204,6 +204,7 @@ org.jboss.search.App = function() {
             elements.getTechnology_filter_query_field(),
             elements.getTechnology_filter_items_div(),
             elements.getTechnology_filter_order(),
+            // isCollapsed
             function() {
               return goog.dom.classes.has(elements.getTechnology_filter_body_div(), org.jboss.core.Constants.HIDDEN);
             },
@@ -245,9 +246,11 @@ org.jboss.search.App = function() {
             elements.getAuthor_filter_body_div(),
             elements.getAuthor_filter_query_field(),
             elements.getAuthor_filter_items_div(),
+            // isCollapsed
             function() {
               return goog.dom.classes.has(elements.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
             },
+            // expand
             function() {
               goog.dom.classes.remove(elements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
               goog.dom.classes.remove(elements.getTechnology_filter_tab_div(), org.jboss.core.Constants.SELECTED);
@@ -262,6 +265,7 @@ org.jboss.search.App = function() {
               elements.getTechnology_filter_query_field().blur();
               elements.getAuthor_filter_query_field().focus();
             },
+            // collapse
             function() {
               goog.dom.classes.remove(elements.getAuthor_filter_tab_div(), org.jboss.core.Constants.SELECTED);
               goog.dom.classes.add(elements.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
@@ -280,13 +284,17 @@ org.jboss.search.App = function() {
       .addCallback(goog.bind(function() {
         // keep type list data in the lookup (so it can be easily used by other objects in the application)
         this.lookup_.setTypeMap(typeList.getMap());
-//        console.log(this.lookup_.getTypeMap());
-//        this.lookup_.setProjectArray(projectList.getArray());
       }, this))
       .addCallback(goog.bind(function() {
         // initialize content filter and keep reference in the lookup
         var contentFilter = new org.jboss.search.page.filter.ContentFilter(
             elements.getContent_filter_body_div(),
+            elements.getContent_filter_items_div(),
+            // isCollapsed
+            function() {
+              return goog.dom.classes.has(elements.getContent_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+            },
+            // expand
             function() {
               goog.dom.classes.remove(elements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
               goog.dom.classes.remove(elements.getTechnology_filter_tab_div(), org.jboss.core.Constants.SELECTED);
@@ -301,6 +309,7 @@ org.jboss.search.App = function() {
               elements.getTechnology_filter_query_field().blur(); // TODO needed?
               elements.getAuthor_filter_query_field().blur();  // TODO needed?
             },
+            // collapse
             function() {
               goog.dom.classes.remove(elements.getContent_filter_tab_div(), org.jboss.core.Constants.SELECTED);
               goog.dom.classes.add(elements.getContent_filter_body_div(), org.jboss.core.Constants.HIDDEN);
@@ -311,7 +320,7 @@ org.jboss.search.App = function() {
       }, this))
       .addCallback(
           goog.bind(function() {
-            //this.searchPage.listenOnContentFilterChanges(this.lookup_.getContentFilter());
+            this.searchPage.listenOnContentFilterChanges(this.lookup_.getContentFilter());
             status.increaseProgress();
           }, this));
 
@@ -325,9 +334,11 @@ org.jboss.search.App = function() {
             elements.getDate_filter_from_field(),
             elements.getDate_filter_to_field(),
             elements.getDate_order(),
+            // isCollapsed
             function() {
               return goog.dom.classes.has(elements.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN);
             },
+            // expand
             function() {
               goog.dom.classes.add(elements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
               goog.dom.classes.remove(elements.getTechnology_filter_tab_div(), org.jboss.core.Constants.SELECTED);
@@ -342,6 +353,7 @@ org.jboss.search.App = function() {
               elements.getTechnology_filter_query_field().blur();
               elements.getAuthor_filter_query_field().blur();
             },
+            // collapse
             function() {
               goog.dom.classes.remove(elements.getDate_filter_tab_div(), org.jboss.core.Constants.SELECTED);
               goog.dom.classes.add(elements.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN);
@@ -527,6 +539,8 @@ org.jboss.search.App.prototype.locateDocumentElements_ = function() {
 
   // DIV element where authors are listed
   var author_filter_items_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('filter_items', author_filter_body_div));
+  // DIV element where content types are listed
+  var content_filter_items_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('filter_items', content_filter_body_div));
   // DIV element where projects are listed
   var project_filter_items_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('filter_items', project_filter_body_div));
   var technology_filter_order_select = /** @type {!HTMLSelectElement} */ (goog.dom.findNode(project_filter_body_div,
@@ -551,7 +565,7 @@ org.jboss.search.App.prototype.locateDocumentElements_ = function() {
       date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
       date_order, technology_filter_order_select,
       project_filter_query_field, author_filter_query_field,
-      author_filter_items_div, project_filter_items_div,
+      author_filter_items_div, content_filter_items_div, project_filter_items_div,
       search_results_div, search_filters_div
       );
 

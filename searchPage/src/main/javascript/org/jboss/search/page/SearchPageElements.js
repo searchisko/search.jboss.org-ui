@@ -52,6 +52,7 @@ goog.require('goog.Disposable');
  * @param {!HTMLInputElement} technology_filter_query_field
  * @param {!HTMLInputElement} author_filter_query_field
  * @param {!HTMLDivElement}   author_filter_items_div
+ * @param {!HTMLDivElement}   content_filter_items_div
  * @param {!HTMLDivElement}   technology_filter_items_div
  * @param {!HTMLDivElement}   search_results_div
  * @param {!HTMLDivElement}   search_filters_div
@@ -65,7 +66,7 @@ org.jboss.search.page.SearchPageElements = function(
     date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
     date_order, technology_filter_order,
     technology_filter_query_field, author_filter_query_field,
-    author_filter_items_div, technology_filter_items_div,
+    author_filter_items_div, content_filter_items_div, technology_filter_items_div,
     search_results_div, search_filters_div) {
 
   goog.Disposable.call(this);
@@ -90,6 +91,7 @@ org.jboss.search.page.SearchPageElements = function(
   /** @type {!HTMLInputElement} */ this.technology_filter_query_field = technology_filter_query_field;
   /** @type {!HTMLInputElement} */ this.author_filter_query_field = author_filter_query_field;
   /** @type {!HTMLDivElement}   */ this.author_filter_items_div = author_filter_items_div;
+  /** @type {!HTMLDivElement}   */ this.content_filter_items_div = content_filter_items_div;
   /** @type {!HTMLDivElement}   */ this.technology_filter_items_div = technology_filter_items_div;
   /** @type {!HTMLDivElement}   */ this.search_results_div = search_results_div;
   /** @type {!HTMLDivElement}   */ this.search_filters_div = search_filters_div;
@@ -121,6 +123,7 @@ org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() 
   delete this.technology_filter_query_field;
   delete this.author_filter_query_field;
   delete this.author_filter_items_div;
+  delete this.content_filter_items_div;
   delete this.technology_filter_items_div;
   delete this.search_results_div;
   delete this.search_filters_div;
@@ -152,6 +155,7 @@ org.jboss.search.page.SearchPageElements.prototype.isValid = function() {
       goog.isDefAndNotNull(this.technology_filter_query_field) &&
       goog.isDefAndNotNull(this.author_filter_query_field) &&
       goog.isDefAndNotNull(this.author_filter_items_div) &&
+      goog.isDefAndNotNull(this.content_filter_items_div) &&
       goog.isDefAndNotNull(this.technology_filter_items_div) &&
       goog.isDefAndNotNull(this.search_results_div) &&
       goog.isDefAndNotNull(this.search_filters_div);
@@ -275,6 +279,12 @@ org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_query_field 
 /** @return {!HTMLDivElement} */
 org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_items_div = function() {
   return this.author_filter_items_div;
+};
+
+
+/** @return {!HTMLDivElement} */
+org.jboss.search.page.SearchPageElements.prototype.getContent_filter_items_div = function() {
+  return this.content_filter_items_div;
 };
 
 

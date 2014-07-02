@@ -59,13 +59,14 @@ goog.require('org.jboss.search.page.UserIdle');
 goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('org.jboss.search.page.event.ContributorIdSelected');
 goog.require('org.jboss.search.page.event.QuerySubmitted');
+goog.require('org.jboss.search.page.filter.ContentFilter');
 goog.require('org.jboss.search.page.filter.DateFilter');
 goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('org.jboss.search.page.filter.DateOrderByChanged');
 goog.require('org.jboss.search.page.filter.DateRangeChanged');
+goog.require('org.jboss.search.page.filter.NewRequestParamsEvent');
+goog.require('org.jboss.search.page.filter.NewRequestParamsEventType');
 goog.require('org.jboss.search.page.filter.TechnologyFilter');
-goog.require('org.jboss.search.page.filter.TechnologyFilterEvent');
-goog.require('org.jboss.search.page.filter.TechnologyFilterEventType');
 goog.require('org.jboss.search.page.templates');
 goog.require('org.jboss.search.request');
 goog.require('org.jboss.search.response');
@@ -313,11 +314,18 @@ org.jboss.search.page.SearchPage = function(context, elements) {
   this.dateRangeChangedId_;
 
   /**
-   * This listener is called whenever a new {@link RequestParams} is available.
+   * This listener is called whenever a new {@link RequestParams} is dispatched from technology filter.
    * @type {goog.events.Key}
    * @private
    */
-  this.newRequestParamsKey_;
+  this.newRequestParamsFromTechnologyFilterKey_;
+
+  /**
+   * This listener is called whenever a new {@link RequestParams} is dispatched from content filter.
+   * @type {goog.events.Key}
+   * @private
+   */
+  this.newRequestParamsFromContentFilterKey_;
 
   /**
    * @type {goog.events.Key}
@@ -785,12 +793,49 @@ org.jboss.search.page.SearchPage.prototype.getUserClickStreamUri = function() {
 
 
 /**
- * Unlisten listeners related to technology filter.
+ * Unlisten on content filter listeners.
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.unlistenContentFilter_ = function() {
+  // unlisten if already registered
+  if (goog.isDefAndNotNull(this.newRequestParamsFromContentFilterKey_)) {
+    goog.events.unlistenByKey(this.newRequestParamsFromContentFilterKey_);
+  }
+};
+
+
+/**
+ *
+ * @param {org.jboss.search.page.filter.ContentFilter} contentFilter
+ */
+org.jboss.search.page.SearchPage.prototype.listenOnContentFilterChanges = function(contentFilter) {
+  this.unlistenContentFilter_();
+  if (goog.isDefAndNotNull(contentFilter)) {
+    this.newRequestParamsFromContentFilterKey_ = goog.events.listen(
+        contentFilter,
+        [
+          org.jboss.search.page.filter.NewRequestParamsEventType.NEW_REQUEST_PARAMETERS
+        ],
+        function(e) {
+          var event = /** @type {org.jboss.search.page.filter.NewRequestParamsEvent} */ (e);
+          this.dispatchEvent(
+              new org.jboss.search.page.event.QuerySubmitted(
+                  event.getRequestParameters()
+              )
+          );
+        }, false, this
+        );
+  }
+};
+
+
+/**
+ * Unlisten on technology filter listeners.
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.unlistenTechnologyFilter_ = function() {
-  if (goog.isDefAndNotNull(this.newRequestParamsKey_)) {
-    goog.events.unlistenByKey(this.newRequestParamsKey_);
+  if (goog.isDefAndNotNull(this.newRequestParamsFromTechnologyFilterKey_)) {
+    goog.events.unlistenByKey(this.newRequestParamsFromTechnologyFilterKey_);
   }
 };
 
@@ -802,15 +847,14 @@ org.jboss.search.page.SearchPage.prototype.unlistenTechnologyFilter_ = function(
 org.jboss.search.page.SearchPage.prototype.listenOnTechnologyFilterChanges = function(technologyFilter) {
   // unlisten if already registered
   this.unlistenTechnologyFilter_();
-
   if (goog.isDefAndNotNull(technologyFilter)) {
-    this.newRequestParamsKey_ = goog.events.listen(
+    this.newRequestParamsFromTechnologyFilterKey_ = goog.events.listen(
         technologyFilter,
         [
-          org.jboss.search.page.filter.TechnologyFilterEventType.NEW_REQUEST_PARAMETERS
+          org.jboss.search.page.filter.NewRequestParamsEventType.NEW_REQUEST_PARAMETERS
         ],
         function(e) {
-          var event = /** @type {org.jboss.search.page.filter.TechnologyFilterEvent} */ (e);
+          var event = /** @type {org.jboss.search.page.filter.NewRequestParamsEvent} */ (e);
           this.dispatchEvent(
               new org.jboss.search.page.event.QuerySubmitted(
                   event.getRequestParameters()
