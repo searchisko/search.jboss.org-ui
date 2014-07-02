@@ -418,7 +418,8 @@ org.jboss.search.page.filter.ContentFilter = function(element, content_filter_it
               filterArray = goog.array.concat(filterArray, selectedId);
             }
             var rpf = org.jboss.core.context.RequestParamsFactory.getInstance();
-            var new_rp = rpf.reset().copy(rp).setContentTypes(filterArray).build();
+            // set new sys_types filters and reset page
+            var new_rp = rpf.reset().copy(rp).setContentTypes(filterArray).setPage(null).build();
             this.dispatchEvent(
                 new org.jboss.search.page.filter.NewRequestParamsEvent(
                     org.jboss.search.page.filter.NewRequestParamsEventType.NEW_REQUEST_PARAMETERS,

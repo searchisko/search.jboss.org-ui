@@ -654,7 +654,8 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
               filterArray = goog.array.concat(filterArray, selectedId);
             }
             var rpf = org.jboss.core.context.RequestParamsFactory.getInstance();
-            var new_rp = rpf.reset().copy(rp).setProjects(filterArray).build();
+            // set new project filters and reset page
+            var new_rp = rpf.reset().copy(rp).setProjects(filterArray).setPage(null).build();
             this.dispatchEvent(
                 new org.jboss.search.page.filter.NewRequestParamsEvent(
                     org.jboss.search.page.filter.NewRequestParamsEventType.NEW_REQUEST_PARAMETERS,
