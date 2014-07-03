@@ -692,7 +692,16 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                             // img Element holding contributor large avatar found
                             var currentSRC = avatarImg.getAttribute('src');
                             if (currentSRC && currentSRC != contributor.gURL40) {
-                              avatarImg.setAttribute('src', contributor.gURL40);
+                              if (goog.isNull(avatarImg.onerror)) {
+                                // We have to create new img element because the existing one have the 'onerror'
+                                // function already executed (therefore it is set to null). (see #62)
+                                var i_ = goog.dom.createDom('img', {});
+                                i_.setAttribute('onerror', 'this.onerror=null;this.src="image/test/generic.png"');
+                                i_.setAttribute('src', contributor.gURL40);
+                                goog.dom.replaceNode(i_, avatarImg);
+                              } else {
+                                avatarImg.setAttribute('src', contributor.gURL40);
+                              }
                             }
                           }
                         }

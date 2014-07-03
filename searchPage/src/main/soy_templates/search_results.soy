@@ -97,7 +97,7 @@
         <div class="hit">
             <div class="left">
                 <p class="avatar">
-                    <img src="{$fields.sys_contributors_view?[0]?.gURL40 ?: 'image/test/generic.png'}">
+                    <img src="{$fields.sys_contributors_view?[0]?.gURL40 ?: 'image/test/generic.png'}" onerror="this.onerror=null;this.src='image/test/generic.png'">
                 </p>
             </div>
             <div class="main">
@@ -175,7 +175,7 @@
                 {if isNonnull($fields?.sys_contributors_view)}
                     <div class="contributors_list">
                         {foreach $c in $fields.sys_contributors_view}
-                            <span class="ct_" hn_="{$position_on_page}" cn_="{index($c)}"><img src="{$c.gURL16}"></span>
+                            <span class="ct_" hn_="{$position_on_page}" cn_="{index($c)}"><img src="{$c.gURL16}" onerror="this.onerror=null;this.src='image/test/generic.png'"></span>
                         {/foreach}
                         {if $fields?.sys_contributors_view.length > 0}
                             <span class="selected_contributor_name">&#8212; <span class="value">{$fields.sys_contributors_view[0].name}</span></span>

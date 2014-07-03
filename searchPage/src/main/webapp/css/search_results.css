@@ -166,6 +166,8 @@
     cursor: pointer;
     vertical-align: middle;
     opacity: 0.3;
+    max-height: 16px;
+    max-width: 16px;
 
     /* WebKit */
     -webkit-transition-property: opacity;
