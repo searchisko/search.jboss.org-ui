@@ -16,11 +16,10 @@
  * limitations under the License.
  */
 
-goog.require('org.jboss.core.util.fragmentGenerator');
+goog.require('goog.testing.jsunit');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParamsFactory');
-
-goog.require('goog.testing.jsunit');
+goog.require('org.jboss.core.util.fragmentGenerator');
 
 var testFragmentGenerator = function() {
 
@@ -44,7 +43,7 @@ var testFragmentGenerator = function() {
       .setQueryString('test').setContributors(['c1']).setProjects(['p1', 'p1', 'p2']).setContentTypes(['t1', 't2'])
       .build();
   urlFragment = org.jboss.core.util.fragmentGenerator.generate(requestParams);
-  assertEquals('q=test&people=c1&technology=p1&technology=p2&type=t1&type=t2', urlFragment);
+  assertEquals('q=test&people=c1&tech=p1&tech=p2&type=t1&type=t2', urlFragment);
 };
 
 var testFragmentKeepLog = function() {

@@ -66,7 +66,7 @@ org.jboss.core.util.fragmentParser.UI_param = {
   FROM: 'from',
   TO: 'to',
   CONTRIBUTOR: 'people',
-  PROJECT: 'technology',
+  PROJECT: 'tech',
   CONTENT_TYPE: 'type',
   ORDER_BY: 'orderBy',
   LOG: 'log'
