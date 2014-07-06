@@ -127,7 +127,7 @@ org.jboss.search.page.filter.TypeDataSource.prototype.get = function(query) {
   }
 
   this.dispatchEvent(
-      new org.jboss.core.widget.list.datasource.DataSourceEvent(this.convertCacheToEventDate_(typeMap))
+      new org.jboss.core.widget.list.datasource.DataSourceEvent(this.convertCacheToEventData_(typeMap))
   );
 };
 
@@ -149,7 +149,7 @@ org.jboss.search.page.filter.TypeDataSource.prototype.isActive = function() {
  * @return {!Array.<org.jboss.core.widget.list.ListItem>}
  * @private
  */
-org.jboss.search.page.filter.TypeDataSource.prototype.convertCacheToEventDate_ = function(data) {
+org.jboss.search.page.filter.TypeDataSource.prototype.convertCacheToEventData_ = function(data) {
   var a = [];
   for (var property in data) {
     if (data.hasOwnProperty(property)) {

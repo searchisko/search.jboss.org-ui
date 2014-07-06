@@ -24,6 +24,7 @@
 
 goog.provide('org.jboss.search.service.LookUp');
 
+goog.require('goog.array');
 goog.require('goog.object');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.service.LookUpImpl');
@@ -52,13 +53,19 @@ org.jboss.search.service.LookUp = function() {
   this.typeMap_;
 
   /**
+   * @type {Array.<{name: string, code: string, orderBy: string}>}
+   * @private
+   */
+  this.typeArray_;
+
+  /**
    * @type {Object.<string, string>}
    * @private
    */
   this.projectMap_;
 
   /**
-   * @type {Array.<{name: string, code: string}>}
+   * @type {Array.<{name: string, code: string, orderBy: string}>}
    * @private
    */
   this.projectArray_;
@@ -134,6 +141,23 @@ org.jboss.search.service.LookUp.prototype.setTypeMap = function(typeMap) {
 
 
 /**
+ * @param {Array.<{name: string, code: string, orderBy: string}>} typeArray
+ */
+org.jboss.search.service.LookUp.prototype.setTypeArray = function(typeArray) {
+  this.typeArray_ = typeArray;
+};
+
+
+/**
+ * Returns clone of type array.
+ * @return {Array.<{name: string, code: string, orderBy: string}>}
+ */
+org.jboss.search.service.LookUp.prototype.getTypeArrayClone = function() {
+  return goog.array.clone(this.projectArray_);
+};
+
+
+/**
  * Returns the project map.
  * @return {Object.<string, string>}
  */
@@ -164,7 +188,7 @@ org.jboss.search.service.LookUp.prototype.setProjectMap = function(projectMap) {
 
 
 /**
- * @return {Array.<{name: string, code: string}>}
+ * @return {Array.<{name: string, code: string, orderBy: string}>}
  */
 org.jboss.search.service.LookUp.prototype.getProjectArray = function() {
   return this.projectArray_;
@@ -172,7 +196,16 @@ org.jboss.search.service.LookUp.prototype.getProjectArray = function() {
 
 
 /**
- * @param {Array.<{name: string, code: string}>} projectArray
+ * Returns clone of project array.
+ * @return {Array.<{name: string, code: string, orderBy: string}>}
+ */
+org.jboss.search.service.LookUp.prototype.getProjectArrayClone = function() {
+  return goog.array.clone(this.projectArray_);
+};
+
+
+/**
+ * @param {Array.<{name: string, code: string, orderBy: string}>} projectArray
  */
 org.jboss.search.service.LookUp.prototype.setProjectArray = function(projectArray) {
   this.projectArray_ = projectArray;

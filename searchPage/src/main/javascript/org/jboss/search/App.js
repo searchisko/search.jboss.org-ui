@@ -284,6 +284,7 @@ org.jboss.search.App = function() {
       .addCallback(goog.bind(function() {
         // keep type list data in the lookup (so it can be easily used by other objects in the application)
         this.lookup_.setTypeMap(typeList.getMap());
+        this.lookup_.setTypeArray(typeList.getArray());
       }, this))
       .addCallback(goog.bind(function() {
         // initialize content filter and keep reference in the lookup
