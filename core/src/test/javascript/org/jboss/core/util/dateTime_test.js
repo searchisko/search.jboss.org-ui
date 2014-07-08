@@ -16,11 +16,10 @@
  * limitations under the License.
  */
 
+goog.require('goog.testing.jsunit');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.service.LookUpImpl');
 goog.require('org.jboss.core.util.dateTime');
-
-goog.require('goog.testing.jsunit');
 
 var setUpPage = function() {
   // setup service locator
@@ -68,7 +67,7 @@ var testDateFormatter = function() {
 
   assertEquals('2006-12-06', formatterDate);
 
-  var formatter = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.MEDIUM_DATE_FORMAT);
+  formatter = new goog.i18n.DateTimeFormat(org.jboss.core.Variables.MEDIUM_DATE_FORMAT);
   formatterDate = org.jboss.core.util.dateTime.format(dt, formatter);
 
   assertEquals('2006-12-6, 10:04AM', formatterDate);
