@@ -286,7 +286,8 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
   this.listItemSelectedKey_ = goog.events.listen(
       this.getListModelContainer(),
       [
-        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED
       ],
       function(e) {
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
@@ -781,12 +782,14 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
   this.technologyFilterControllerKey_ = goog.events.listen(
       this.technologyFilterController_,
       [
-        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED
       ],
       function(e) {
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
         var data = event.target.getData();
         var index = event.getItemIndex();
+
         if (index < data.length) {
           /** @type {org.jboss.core.widget.list.ListItem} */
           var selected = data[index];
@@ -794,9 +797,22 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
           var rp = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
           if (goog.isDefAndNotNull(rp)) {
             var filterArray = rp.getProjects();
-            if (!goog.array.contains(filterArray, selectedId)) {
-              filterArray = goog.array.concat(filterArray, selectedId);
+
+            // depending on event type update filterArray
+            switch (event.getType()) {
+              case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
+                if (!goog.array.contains(filterArray, selectedId)) {
+                  filterArray = goog.array.concat(filterArray, selectedId);
+                }
+                break;
+
+              case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED:
+                if (goog.array.contains(filterArray, selectedId)) {
+                  goog.array.remove(filterArray, selectedId);
+                }
+                break;
             }
+
             var rpf = org.jboss.core.context.RequestParamsFactory.getInstance();
             // set new project filters and reset page
             var new_rp = rpf.reset().copy(rp).setProjects(filterArray).setPage(null).build();

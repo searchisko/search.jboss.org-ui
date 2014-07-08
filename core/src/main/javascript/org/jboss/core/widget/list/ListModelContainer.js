@@ -142,18 +142,6 @@ org.jboss.core.widget.list.ListModelContainer = function(models) {
   // pointedModelIndex_ and pointedListItemIndex_. Something that would represent tuple (ListModel, ListItem).
 
   /**
-   * Representation of selected {@link ListItem}s within {@link ListModel}.
-   * It must have the same dimension as models array.
-   *
-   * @type {!Array.<Array.<number>>}
-   * @private
-   */
-  this.selectedItems_ = [];
-  goog.array.forEach(this.models_, function() {
-    this.selectedItems_.push([]);
-  }, this);
-
-  /**
    * Model listeners.
    *
    * @type {!Array.<goog.events.Key>}
@@ -167,7 +155,8 @@ org.jboss.core.widget.list.ListModelContainer = function(models) {
         model,
         [
           org.jboss.core.widget.list.event.ListModelEventType.NEW_DATA_SET,
-          org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED
+          org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
+          org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED
         ],
         function(event) {
           var e = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (event);
@@ -200,9 +189,13 @@ org.jboss.core.widget.list.ListModelContainer = function(models) {
               }
               break;
 
-            case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
-              // probably do nothing
-              break;
+            // case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
+              // nothing needed here now ...
+              // break;
+
+            // case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED:
+              // nothing needed here now ...
+              // break;
           }
         },
         false, this
@@ -223,29 +216,6 @@ org.jboss.core.widget.list.ListModelContainer.prototype.disposeInternal = functi
   goog.array.forEach(this.modelListenersKeys_, function(key) {
     goog.events.unlistenByKey(key);
   });
-};
-
-
-/**
- * Notification that client initiated specific action on some list item.
- * The id value is concatenation of {@link ListModel#getId()} and {@link ListItem#getId()}.
- *
- * TODO: remove if not used
- *
- * @param {string} id
- * @param {string} action
- */
-org.jboss.core.widget.list.ListModelContainer.prototype.listItemAction = function(id, action) {
-  var model = this.getListModelById(id);
-  if (model != null) {
-    var listItemId = goog.string.remove(id, model.getId());
-    if (!goog.string.isEmptySafe(listItemId)) {
-      var li = model.getListItemById(listItemId);
-      // if (li != null) {
-      // TODO: call action on model for specific list item
-      // }
-    }
-  }
 };
 
 
@@ -408,14 +378,15 @@ org.jboss.core.widget.list.ListModelContainer.prototype.pointNextListItem = func
 
 
 /**
- * Find the {@link ListModel} who owns pointed list item and let is know that
- * particular item has been selected.
+ * Find the {@link ListModel} who owns pointed list item and let it know that
+ * particular item has been selected. If the item in already selected then this
+ * deselect the item.
  */
 org.jboss.core.widget.list.ListModelContainer.prototype.selectPointedListItem = function() {
   var pointedListItemIndex = this.pointedListItemIndex_;
   var lm = this.getPointedListModel_();
   if (lm != null && pointedListItemIndex != null) {
-    lm.selectItem(pointedListItemIndex);
+    lm.toggleSelectedItemIndex(pointedListItemIndex);
   }
 };
 

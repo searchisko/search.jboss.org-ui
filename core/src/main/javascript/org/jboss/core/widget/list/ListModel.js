@@ -27,6 +27,7 @@ goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.string');
 goog.require('org.jboss.core.widget.list.ListItem');
+goog.require('org.jboss.core.widget.list.ListItemId');
 goog.require('org.jboss.core.widget.list.event.ListModelEvent');
 goog.require('org.jboss.core.widget.list.event.ListModelEventType');
 
@@ -60,6 +61,12 @@ org.jboss.core.widget.list.ListModel = function(id, caption) {
    * @private
    */
   this.data_ = [];
+
+  /**
+   * @type {!Array.<org.jboss.core.widget.list.ListItemId>}
+   * @private
+   */
+  this.selectedItems_ = [];
 };
 goog.inherits(org.jboss.core.widget.list.ListModel, goog.events.EventTarget);
 
@@ -92,14 +99,27 @@ org.jboss.core.widget.list.ListModel.prototype.getCaption = function() {
 
 
 /**
- * Dispatches {@link ListModelEvent} upon successful operation.
+ * Sets new data to the model. It update list of selected items and silently
+ * drops those that are not found in the new data.
+ *
+ * Dispatches {@link NEW_DATA_SET} upon successful operation.
  *
  * @param {!Array.<org.jboss.core.widget.list.ListItem>} data
  * @param {boolean=} opt_omitFireEvent if true then no event is fired upon data set.
  */
 org.jboss.core.widget.list.ListModel.prototype.setData = function(data, opt_omitFireEvent) {
-  // make a deep clone of the data first (is it worth?)
+
+  // update selected items (throwing out those that are not found in the new data)
+  var newSelectedItems = goog.array.filter(this.selectedItems_, function(selectedItem) {
+    return (goog.array.findIndex(data, function(listItem) {
+      return listItem.getId() == selectedItem;
+    }) > -1);
+  });
+  this.selectedItems_ = newSelectedItems;
+
+  // shall we make a deep clone of the data first (is it worth?)
   this.data_ = data;
+
   if (goog.isDef(opt_omitFireEvent) && opt_omitFireEvent == true) { return; }
   this.dispatchEvent(
       new org.jboss.core.widget.list.event.ListModelEvent(
@@ -110,19 +130,61 @@ org.jboss.core.widget.list.ListModel.prototype.setData = function(data, opt_omit
 
 
 /**
- * Dispatches {@link ListModelEvent} upon successful operation.
+ * @param {!org.jboss.core.widget.list.ListItemId} itemId
+ * @return {boolean} true if item is selected
+ */
+org.jboss.core.widget.list.ListModel.prototype.isItemSelected = function(itemId) {
+  return (goog.array.findIndex(this.selectedItems_, function(item) {
+    return item == itemId;
+  }) > -1);
+};
+
+
+/**
+ * Toggle selected on list item for given index position.
+ *
+ * Dispatches {@link LIST_ITEM_SELECTED} or {@link LIST_ITEM_DESELECTED} upon successful operation.
  *
  * @param {number} index
  */
-org.jboss.core.widget.list.ListModel.prototype.selectItem = function(index) {
-  if (!goog.isNumber(index) || index < 0 || this.data_.length < index - 1) {
-    return;
+org.jboss.core.widget.list.ListModel.prototype.toggleSelectedItemIndex = function(index) {
+  var item = this.getListItem(index);
+  if (goog.isDefAndNotNull(item)) {
+    var itemId = item.getId();
+    if (this.isItemSelected(itemId)) {
+      this.removeFromSelected_(itemId);
+      this.dispatchEvent(
+          new org.jboss.core.widget.list.event.ListModelEvent(
+              org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED,
+              this, index)
+      );
+    } else {
+      this.pushToSelected_(itemId);
+      this.dispatchEvent(
+          new org.jboss.core.widget.list.event.ListModelEvent(
+              org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
+              this, index)
+      );
+    }
   }
-  this.dispatchEvent(
-      new org.jboss.core.widget.list.event.ListModelEvent(
-          org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
-          this, index)
-  );
+};
+
+
+/**
+ * @param {!org.jboss.core.widget.list.ListItemId} itemId
+ * @private
+ */
+org.jboss.core.widget.list.ListModel.prototype.pushToSelected_ = function(itemId) {
+  this.selectedItems_.push(itemId);
+};
+
+
+/**
+ * @param {!org.jboss.core.widget.list.ListItemId} itemId
+ * @private
+ */
+org.jboss.core.widget.list.ListModel.prototype.removeFromSelected_ = function(itemId) {
+  goog.array.remove(this.selectedItems_, itemId);
 };
 
 
@@ -147,6 +209,16 @@ org.jboss.core.widget.list.ListModel.prototype.getSize = function() {
 
 
 /**
+ * Get number of selected items in the list.
+ *
+ * @return {number}
+ */
+org.jboss.core.widget.list.ListModel.prototype.getSelectedSize = function() {
+  return this.selectedItems_.length;
+};
+
+
+/**
  * Get item at specified index.
  * Index value has the same convention as an array index (starting at 0 for the first item).
  * Returns <code>null</code> if index value is out of the array bounds.
@@ -155,21 +227,21 @@ org.jboss.core.widget.list.ListModel.prototype.getSize = function() {
  * @return {?org.jboss.core.widget.list.ListItem}
  */
 org.jboss.core.widget.list.ListModel.prototype.getListItem = function(index) {
-  return this.data_.length < (index + 1) ? null : this.data_[index];
+  return (!goog.isNumber(index) || index < 0 || this.getSize() < (index + 1)) ? null : this.data_[index];
 };
 
 
 /**
  * Try to find and return {@link ListItem} having given id.  Returns <code>null</code> if not found.
  *
- * @param {string} id
+ * @param {org.jboss.core.widget.list.ListItemId} itemId
  * @return {?org.jboss.core.widget.list.ListItem}
  */
-org.jboss.core.widget.list.ListModel.prototype.getListItemById = function(id) {
+org.jboss.core.widget.list.ListModel.prototype.getListItemById = function(itemId) {
   return goog.array.find(
       this.data_,
       function(listItem) {
-        return listItem.getId() == id;
+        return listItem.getId() == itemId;
       }
   );
 };
@@ -179,10 +251,11 @@ org.jboss.core.widget.list.ListModel.prototype.getListItemById = function(id) {
  * Returns index of {@link ListItem} having given id within internal data structure.
  * Returns null if not found.
  *
- * @param {string} id
+ * @param {org.jboss.core.widget.list.ListItemId} itemId
  * @return {?number}
  */
-org.jboss.core.widget.list.ListModel.prototype.getListItemIndexById = function(id) {
+org.jboss.core.widget.list.ListModel.prototype.getListItemIndexById = function(itemId) {
+  var id = itemId.toString();
   if (id.length > 0 && goog.string.startsWith(id, this.id_)) {
     var listItemId = id.slice(this.id_.length);
     var index = goog.array.findIndex(

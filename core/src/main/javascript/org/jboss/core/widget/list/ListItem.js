@@ -22,19 +22,26 @@
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 goog.provide('org.jboss.core.widget.list.ListItem');
+goog.provide('org.jboss.core.widget.list.ListItemId');
+
+
+/**
+ * @typedef {string}
+ */
+org.jboss.core.widget.list.ListItemId;
 
 
 
 /**
  *
- * @param {string} id
+ * @param {org.jboss.core.widget.list.ListItemId} id
  * @param {string} value
  * @constructor
  */
 org.jboss.core.widget.list.ListItem = function(id, value) {
 
   /**
-   * @type {string}
+   * @type {org.jboss.core.widget.list.ListItemId}
    * @private
    */
   this.id_ = id;
@@ -49,7 +56,7 @@ org.jboss.core.widget.list.ListItem = function(id, value) {
 
 /**
  *
- * @return {string}
+ * @return {org.jboss.core.widget.list.ListItemId}
  */
 org.jboss.core.widget.list.ListItem.prototype.getId = function() {
   return this.id_;

@@ -196,7 +196,8 @@ org.jboss.search.page.filter.ContentFilterController = function(lmc, lvc) {
   this.listItemSelectedKey_ = goog.events.listen(
       this.getListModelContainer(),
       [
-        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED
       ],
       function(e) {
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
@@ -401,12 +402,14 @@ org.jboss.search.page.filter.ContentFilter = function(element, content_filter_it
   this.contentFilterControllerKey_ = goog.events.listen(
       this.contentFilterController_,
       [
-        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED
       ],
       function(e) {
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
         var data = event.target.getData();
         var index = event.getItemIndex();
+
         if (index < data.length) {
           /** @type {org.jboss.core.widget.list.ListItem} */
           var selected = data[index];
@@ -414,9 +417,22 @@ org.jboss.search.page.filter.ContentFilter = function(element, content_filter_it
           var rp = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
           if (goog.isDefAndNotNull(rp)) {
             var filterArray = rp.getContentTypes();
-            if (!goog.array.contains(filterArray, selectedId)) {
-              filterArray = goog.array.concat(filterArray, selectedId);
+
+            // depending on event type update filterArray
+            switch (event.getType()) {
+              case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
+                if (!goog.array.contains(filterArray, selectedId)) {
+                  filterArray = goog.array.concat(filterArray, selectedId);
+                }
+                break;
+
+              case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED:
+                if (goog.array.contains(filterArray, selectedId)) {
+                  goog.array.remove(filterArray, selectedId);
+                }
+                break;
             }
+
             var rpf = org.jboss.core.context.RequestParamsFactory.getInstance();
             // set new sys_types filters and reset page
             var new_rp = rpf.reset().copy(rp).setContentTypes(filterArray).setPage(null).build();
@@ -457,11 +473,12 @@ goog.inherits(org.jboss.search.page.filter.ContentFilter, goog.events.EventTarge
 org.jboss.search.page.filter.ContentFilter.prototype.disposeInternal = function() {
   org.jboss.search.page.filter.ContentFilter.superClass_.disposeInternal.call(this);
 
+  goog.events.unlistenByKey(this.contentFilterControllerKey_);
+  goog.events.unlistenByKey(this.keyListenerId_);
+
   goog.dispose(this.contentFilterController_);
   goog.dispose(this.mouseListener_);
   goog.dispose(this.keyHandler_);
-
-  goog.events.unlistenByKey(this.keyListenerId_);
 
   delete this.items_div_;
   delete this.expandFilter_;

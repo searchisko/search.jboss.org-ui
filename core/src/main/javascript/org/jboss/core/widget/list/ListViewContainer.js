@@ -93,30 +93,6 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
   this.viewListenersKeys_ = [];
 
   /**
-   * Listens for clicks propagated to the hosting element.
-   * It investigates if the event target has an id attribute value. If yes then the
-   * id attribute value and relevant action is passed to {@link ListModelContainer}.
-   *
-   * TODO: remove if note used
-   *
-   * @type {goog.events.Key}
-   * @private
-   */
-  this.hostingElementListenerKey_ = goog.events.listen(
-      this.hostingElement_,
-      goog.events.EventType.CLICK,
-      function(e) {
-        var event = /** @type {goog.events.BrowserEvent} */ (e);
-        //console.log('event >',e);
-        e.stopPropagation();
-        if (goog.isDefAndNotNull(event.target.id) && !goog.string.isEmptySafe(event.target.id)) {
-          var id = event.target.id;
-          listModelContainer.listItemAction(id, 'click');
-        }
-      }, false, this
-      );
-
-  /**
    *
    * @type {goog.events.Key}
    * @private
@@ -230,7 +206,6 @@ goog.inherits(org.jboss.core.widget.list.ListViewContainer, goog.events.EventTar
 org.jboss.core.widget.list.ListViewContainer.prototype.disposeInternal = function() {
   org.jboss.core.widget.list.ListViewContainer.superClass_.disposeInternal.call(this);
   goog.events.unlistenByKey(this.listModelEventKey_);
-  goog.events.unlistenByKey(this.hostingElementListenerKey_);
   delete this.views_;
   goog.array.forEach(this.viewListenersKeys_, function(key) {
     goog.events.unlistenByKey(key);

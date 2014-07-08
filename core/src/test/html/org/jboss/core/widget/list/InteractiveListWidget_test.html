@@ -29,12 +29,12 @@
 	</script>
 	<script>
 
-		var hostingDom = goog.dom.createDom('div', "test_only");
-		goog.dom.appendChild(goog.dom.getDocument().body, hostingDom);
+		var hostingElement = goog.dom.createDom('div', "test_only");
+		goog.dom.appendChild(goog.dom.getDocument().body, hostingElement);
 
 		var inputField = /** @type {HTMLInputElement} */ (goog.dom.getElement("query_field"));
 		var keyboardListener_ = new org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener(inputField);
-        var mouseListener_ = new org.jboss.core.widget.list.mouse.MouseListener(hostingDom);
+        var mouseListener_ = new org.jboss.core.widget.list.mouse.MouseListener(hostingElement);
 
 		// use factory to create instance of ListController
 		var controller = org.jboss.core.widget.list.ListWidgetFactory.build({
@@ -46,7 +46,7 @@
 			],
 			controllerConstructor: org.jboss.core.widget.list.EchoListControllerTest,
 			additionalConstructorParams: [{delay:2000, repFactor:3}, {delay:0, repFactor:10}],
-			attach: hostingDom
+			attach: hostingElement
 		});
 
 		controller.setKeyboardListener(keyboardListener_);
