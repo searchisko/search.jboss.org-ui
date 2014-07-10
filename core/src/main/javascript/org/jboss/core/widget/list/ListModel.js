@@ -61,12 +61,6 @@ org.jboss.core.widget.list.ListModel = function(id, caption) {
    * @private
    */
   this.data_ = [];
-
-  /**
-   * @type {!Array.<org.jboss.core.widget.list.ListItemId>}
-   * @private
-   */
-  this.selectedItems_ = [];
 };
 goog.inherits(org.jboss.core.widget.list.ListModel, goog.events.EventTarget);
 
@@ -109,14 +103,6 @@ org.jboss.core.widget.list.ListModel.prototype.getCaption = function() {
  */
 org.jboss.core.widget.list.ListModel.prototype.setData = function(data, opt_omitFireEvent) {
 
-  // update selected items (throwing out those that are not found in the new data)
-  var newSelectedItems = goog.array.filter(this.selectedItems_, function(selectedItem) {
-    return (goog.array.findIndex(data, function(listItem) {
-      return listItem.getId() == selectedItem;
-    }) > -1);
-  });
-  this.selectedItems_ = newSelectedItems;
-
   // shall we make a deep clone of the data first (is it worth?)
   this.data_ = data;
 
@@ -134,9 +120,10 @@ org.jboss.core.widget.list.ListModel.prototype.setData = function(data, opt_omit
  * @return {boolean} true if item is selected
  */
 org.jboss.core.widget.list.ListModel.prototype.isItemSelected = function(itemId) {
-  return (goog.array.findIndex(this.selectedItems_, function(item) {
-    return item == itemId;
-  }) > -1);
+  var index = goog.array.findIndex(this.data_, function(item) {
+    return itemId == item.getId();
+  });
+  return index > -1 ? (this.data_[index].isSelected()) : false;
 };
 
 
@@ -150,16 +137,15 @@ org.jboss.core.widget.list.ListModel.prototype.isItemSelected = function(itemId)
 org.jboss.core.widget.list.ListModel.prototype.toggleSelectedItemIndex = function(index) {
   var item = this.getListItem(index);
   if (goog.isDefAndNotNull(item)) {
-    var itemId = item.getId();
-    if (this.isItemSelected(itemId)) {
-      this.removeFromSelected_(itemId);
+    if (item.isSelected()) {
+      item.setSelected(false);
       this.dispatchEvent(
           new org.jboss.core.widget.list.event.ListModelEvent(
               org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED,
               this, index)
       );
     } else {
-      this.pushToSelected_(itemId);
+      item.setSelected(true);
       this.dispatchEvent(
           new org.jboss.core.widget.list.event.ListModelEvent(
               org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
@@ -167,24 +153,6 @@ org.jboss.core.widget.list.ListModel.prototype.toggleSelectedItemIndex = functio
       );
     }
   }
-};
-
-
-/**
- * @param {!org.jboss.core.widget.list.ListItemId} itemId
- * @private
- */
-org.jboss.core.widget.list.ListModel.prototype.pushToSelected_ = function(itemId) {
-  this.selectedItems_.push(itemId);
-};
-
-
-/**
- * @param {!org.jboss.core.widget.list.ListItemId} itemId
- * @private
- */
-org.jboss.core.widget.list.ListModel.prototype.removeFromSelected_ = function(itemId) {
-  goog.array.remove(this.selectedItems_, itemId);
 };
 
 
@@ -214,7 +182,7 @@ org.jboss.core.widget.list.ListModel.prototype.getSize = function() {
  * @return {number}
  */
 org.jboss.core.widget.list.ListModel.prototype.getSelectedSize = function() {
-  return this.selectedItems_.length;
+  return goog.array.reduce(this.data_, function(r, v) { return r + (v.isSelected() ? 1 : 0); }, 0);
 };
 
 

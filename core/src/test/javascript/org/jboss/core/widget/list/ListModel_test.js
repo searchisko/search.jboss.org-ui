@@ -25,7 +25,7 @@ goog.require('org.jboss.core.widget.list.event.ListModelEventType');
 
 var testData = function() {
   /**
-   * @param {value} string
+   * @param {string} value
    * @return {org.jboss.core.widget.list.ListItemId}
    */
   function itemId(value) {
@@ -68,10 +68,10 @@ var testData = function() {
 
     model.setData(data);
     assertEquals(2, model.getSize());
-    assertEquals(1, model.getSelectedSize());
+    assertEquals(0, model.getSelectedSize());
 
     assertFalse(model.isItemSelected(itemId(1)));
-    assertTrue(model.isItemSelected(itemId(2)));
+    assertFalse(model.isItemSelected(itemId(2)));
   }
 
   {

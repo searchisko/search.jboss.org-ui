@@ -49,6 +49,10 @@ org.jboss.core.service.query.QueryServiceEventType = {
   SEARCH_FINISHED: goog.events.getUniqueId('search_finished'),
 
   // request finished successfully
+  // NOTE: It should be guarantied that at this point both the
+  // new {@link RequestParams} and recent search results are
+  // available (ATM in Lookup).
+  // TODO: make sure ^^ is valid
   SEARCH_SUCCEEDED: goog.events.getUniqueId('search_succeeded'),
 
   // request failed

@@ -137,9 +137,20 @@
     text-align: left;
 }
 
-.filter_items div.selected {
-    background-color: lightgrey;
+.filter_items div.pointed {
+    background-color: #cdcdcd;
+    color: black;
     cursor: pointer;
+}
+
+.filter_items div.selected {
+    background-color: rgba(27, 87, 247, 0.95);
+    color: white;
+    cursor: pointer;
+}
+
+.filter_items div.selected.pointed {
+    background-color: rgba(26, 69, 195, 0.95);
 }
 
 /* align small avatars on filter items */

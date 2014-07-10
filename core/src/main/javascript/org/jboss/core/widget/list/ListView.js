@@ -30,7 +30,7 @@ goog.require('goog.dom.TagName');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 goog.require('org.jboss.core.Constants');
-goog.require('org.jboss.core.widget.list.ListItem');
+goog.require('org.jboss.core.widget.list.ListModel');
 
 
 
@@ -80,7 +80,7 @@ org.jboss.core.widget.list.ListView.prototype.getCaption = function() {
 
 /**
  * Constructs DOM from the data.
- * The DOM for {@link ListView} is represented by enclosing DIV with nested DIVs, one for each {@link ListItem}.
+ * The DOM for {@link ListModel} is represented by enclosing DIV with nested DIVs, one for each {@link ListItem}.
  * Each {@link ListItem} DIV has generated ID attribute, value of the ID is "${ListView.id}"+"${ListItem.id}".
  * This assumes the ID value of {@link ListView} must be distinct enough.
  * There is also one DIV for the list caption in the beginning of the list, it has no ID attribute.
@@ -88,38 +88,40 @@ org.jboss.core.widget.list.ListView.prototype.getCaption = function() {
  *
  * See ListViewContainer_test.js.
  *
- * @param {!Array.<org.jboss.core.widget.list.ListItem>} data
- * @param {number=} opt_selectedIndex
+ * @param {org.jboss.core.widget.list.ListModel=} opt_listModel
  * @return {!Element}
  */
-org.jboss.core.widget.list.ListView.prototype.constructNewDOM = function(data, opt_selectedIndex) {
+org.jboss.core.widget.list.ListView.prototype.constructNewDOM = function(opt_listModel) {
   // Soy template could be used instead...
   var element = goog.dom.createDom(goog.dom.TagName.DIV, 'list'); // TODO: create new Constant
-  if (!goog.array.isEmpty(data)) {
-    if (this.caption_ != null) {
-      var caption = goog.dom.createDom(goog.dom.TagName.DIV, 'caption'); // TODO: create new Constant
-      goog.dom.appendChild(caption, goog.dom.createTextNode(this.caption_));
-      goog.dom.appendChild(element, caption);
+  if (goog.isDefAndNotNull(opt_listModel)) {
+    var data = opt_listModel.getData();
+    if (!goog.array.isEmpty(data)) {
+      if (this.caption_ != null) {
+        var caption = goog.dom.createDom(goog.dom.TagName.DIV, 'caption'); // TODO: create new Constant
+        goog.dom.appendChild(caption, goog.dom.createTextNode(this.caption_));
+        goog.dom.appendChild(element, caption);
+      }
+      goog.array.forEach(
+          data,
+          function(listItem, index) {
+            var item = goog.dom.createDom(goog.dom.TagName.DIV,
+                {
+                  'id': this.constructElementId_(listItem),
+                  'class': org.jboss.core.widget.list.ListView.Constants.LIST_ITEM_CLASS
+                }
+                );
+            if (opt_listModel.isItemSelected(listItem.getId())) {
+              goog.dom.classes.add(item, org.jboss.core.Constants.SELECTED);
+            }
+            // goog.dom.appendChild(item, goog.dom.createTextNode(listItem.getValue()));
+            // TODO: we need to be careful about XSS and catching click event with nested elements!
+            goog.dom.appendChild(item, goog.dom.htmlToDocumentFragment(listItem.getValue()));
+            goog.dom.appendChild(element, item);
+          },
+          this
+      );
     }
-    goog.array.forEach(
-        data,
-        function(listItem, index) {
-          var item = goog.dom.createDom(goog.dom.TagName.DIV,
-              {
-                'id': this.constructElementId_(listItem),
-                'class': org.jboss.core.widget.list.ListView.Constants.LIST_ITEM_CLASS
-              }
-              );
-          if (goog.isDef(opt_selectedIndex) && index == opt_selectedIndex) {
-            goog.dom.classes.add(item, org.jboss.core.Constants.SELECTED);
-          }
-//          goog.dom.appendChild(item, goog.dom.createTextNode(listItem.getValue()));
-          // TODO: we need to be careful about XSS and catching click event with nested elements!
-          goog.dom.appendChild(item, goog.dom.htmlToDocumentFragment(listItem.getValue()));
-          goog.dom.appendChild(element, item);
-        },
-        this
-    );
   }
   return element;
 };
@@ -132,10 +134,10 @@ org.jboss.core.widget.list.ListView.prototype.constructNewDOM = function(data, o
  * @param {number} index
  * @suppress {deprecated}
  */
-org.jboss.core.widget.list.ListView.prototype.selectInDOM = function(element, index) {
+org.jboss.core.widget.list.ListView.prototype.pointInDOM = function(element, index) {
   var candidates = goog.dom.query('.li', element);
   if (candidates.length > index) {
-    goog.dom.classes.add(candidates[index], org.jboss.core.Constants.SELECTED);
+    goog.dom.classes.add(candidates[index], org.jboss.core.Constants.POINTED);
   }
 };
 
@@ -145,12 +147,12 @@ org.jboss.core.widget.list.ListView.prototype.selectInDOM = function(element, in
  *
  * @param {!Element} element
  */
-org.jboss.core.widget.list.ListView.prototype.deselectInDOM = function(element) {
+org.jboss.core.widget.list.ListView.prototype.depointInDOM = function(element) {
   var found = goog.dom.findNodes(element, function(node) {
-    return goog.dom.classes.has(node, org.jboss.core.Constants.SELECTED);
+    return goog.dom.classes.has(node, org.jboss.core.Constants.POINTED);
   });
   goog.array.forEach(found, function(node) {
-    goog.dom.classes.remove(node, org.jboss.core.Constants.SELECTED);
+    goog.dom.classes.remove(node, org.jboss.core.Constants.POINTED);
   });
 };
 

@@ -271,15 +271,15 @@ function testDOMwithActiveItems() {
         return new_data_in_model;
       },
       function() {
-        lv1.selectInDOM(lvc.getViewDoms()['a1'], 1);
-        lv2.selectInDOM(lvc.getViewDoms()['a2'], 0);
+        lv1.pointInDOM(lvc.getViewDoms()['a1'], 1);
+        lv2.pointInDOM(lvc.getViewDoms()['a2'], 0);
 
         //console.log(lvc.getViewDoms()['a1'].outerHTML.toLowerCase());
         assertEquals(
             '<div class="list">' +
             '<div class="caption">caption a1</div>' +
             '<div id="a11" class="li">item 1</div>' +
-            '<div id="a12" class="li selected">item 2</div>' +
+            '<div id="a12" class="li pointed">item 2</div>' +
             '<div id="a13" class="li">item 3</div>' +
             '</div>',
             lvc.getViewDoms()['a1'].outerHTML.toLowerCase()
@@ -289,7 +289,7 @@ function testDOMwithActiveItems() {
         assertEquals(
             '<div class="list">' +
             '<div class="caption">caption a2</div>' +
-            '<div id="a21" class="li selected">item 1</div>' +
+            '<div id="a21" class="li pointed">item 1</div>' +
             '<div id="a22" class="li">item 2</div>' +
             '</div>',
             lvc.getViewDoms()['a2'].outerHTML.toLowerCase()
@@ -305,7 +305,7 @@ function testDOMwithActiveItems() {
         return first_test_passed;
       },
       function() {
-        lv2.deselectInDOM(lvc.getViewDoms()['a2']);
+        lv2.depointInDOM(lvc.getViewDoms()['a2']);
 
         // should be still selected
         //console.log(lvc.getViewDoms()['a1'].outerHTML.toLowerCase());
@@ -313,7 +313,7 @@ function testDOMwithActiveItems() {
             '<div class="list">' +
             '<div class="caption">caption a1</div>' +
             '<div id="a11" class="li">item 1</div>' +
-            '<div id="a12" class="li selected">item 2</div>' +
+            '<div id="a12" class="li pointed">item 2</div>' +
             '<div id="a13" class="li">item 3</div>' +
             '</div>',
             lvc.getViewDoms()['a1'].outerHTML.toLowerCase()

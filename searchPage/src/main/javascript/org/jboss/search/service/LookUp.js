@@ -153,7 +153,9 @@ org.jboss.search.service.LookUp.prototype.setTypeArray = function(typeArray) {
  * @return {Array.<{name: string, code: string, orderBy: string}>}
  */
 org.jboss.search.service.LookUp.prototype.getTypeArrayClone = function() {
-  return goog.array.clone(this.projectArray_);
+  return /** @type {Array.<{name: string, code: string, orderBy: string}>} */ (goog.object.unsafeClone(
+      this.typeArray_)
+  );
 };
 
 
@@ -200,7 +202,9 @@ org.jboss.search.service.LookUp.prototype.getProjectArray = function() {
  * @return {Array.<{name: string, code: string, orderBy: string}>}
  */
 org.jboss.search.service.LookUp.prototype.getProjectArrayClone = function() {
-  return goog.array.clone(this.projectArray_);
+  return /** @type {Array.<{name: string, code: string, orderBy: string}>} */ (goog.object.unsafeClone(
+      this.projectArray_)
+  );
 };
 
 

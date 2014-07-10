@@ -54,6 +54,7 @@ goog.require('org.jboss.core.widget.list.event.ListModelEvent');
 goog.require('org.jboss.core.widget.list.event.ListModelEventType');
 goog.require('org.jboss.core.widget.list.mouse.MouseListener');
 goog.require('org.jboss.core.widget.list.mouse.MouseListener.EventType');
+goog.require('org.jboss.search.page.filter.FilterUtils');
 goog.require('org.jboss.search.page.filter.NewRequestParamsEvent');
 goog.require('org.jboss.search.page.filter.NewRequestParamsEventType');
 
@@ -107,27 +108,54 @@ org.jboss.search.page.filter.TypeDataSource.prototype.disposeInternal = function
 
 
 /** @inheritDoc */
-org.jboss.search.page.filter.TypeDataSource.prototype.get = function(query) {
+org.jboss.search.page.filter.TypeDataSource.prototype.get = function() {
 
-  // get all types and get the most recent counts for them (if possible)
-  var typeMap = org.jboss.core.service.Locator.getInstance().getLookup().getTypeMapClone();
+  // get selected types
+  /** @type {?org.jboss.core.context.RequestParams} */
+  var requestParams = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
+  var selectedTypes = [];
+  if (goog.isDefAndNotNull(requestParams)) {
+    selectedTypes = requestParams.getContentTypes();
+  }
+
+  // get all types array
+  /** @type {Array.<{name: string, code: string, orderBy: string, count: number, selected: boolean}>} */
+  var typeArray = org.jboss.core.service.Locator.getInstance().getLookup().getTypeArrayClone();
+
+  // flag those that are selected
+  goog.array.forEach(selectedTypes, function(selectedType) {
+    var matching = goog.array.find(typeArray, function(item) {
+      return item.code == selectedType;
+    });
+    if (matching != null) {
+      matching['selected'] = true;
+    }
+  });
+
+  // get recent search results (can will get facets counts from it)
   var recentQueryResults = org.jboss.core.service.Locator.getInstance().getLookup().getRecentQueryResultData();
+
   if (goog.isDefAndNotNull(recentQueryResults)) {
     var typeFacet = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(recentQueryResults,
-      'facets', 'per_sys_type_counts', 'terms'));
+        'facets', 'per_sys_type_counts', 'terms'));
     if (goog.isDefAndNotNull(typeFacet)) {
       goog.array.forEach(typeFacet, function(item) {
         var typeCode = goog.object.getValueByKeys(item, 'term');
         var count = goog.object.getValueByKeys(item, 'count');
-        if (typeMap.hasOwnProperty(typeCode)) {
-          typeMap[typeCode] += ' (' + count + ')';
+        var matchingType = goog.array.find(typeArray, function(i) {
+          return i.code == typeCode;
+        });
+        if (matchingType != null) {
+          matchingType['count'] = count;
         }
       });
     }
   }
 
   this.dispatchEvent(
-      new org.jboss.core.widget.list.datasource.DataSourceEvent(this.convertCacheToEventData_(typeMap))
+      new org.jboss.core.widget.list.datasource.DataSourceEvent(
+          org.jboss.search.page.filter.FilterUtils.convertDataToEventData(typeArray)
+      )
   );
 };
 
@@ -141,22 +169,6 @@ org.jboss.search.page.filter.TypeDataSource.prototype.abort = function() {
 /** @inheritDoc */
 org.jboss.search.page.filter.TypeDataSource.prototype.isActive = function() {
   return false;
-};
-
-
-/**
- * @param {!Object} data
- * @return {!Array.<org.jboss.core.widget.list.ListItem>}
- * @private
- */
-org.jboss.search.page.filter.TypeDataSource.prototype.convertCacheToEventData_ = function(data) {
-  var a = [];
-  for (var property in data) {
-    if (data.hasOwnProperty(property)) {
-      a.push(new org.jboss.core.widget.list.ListItem(property, data[property]));
-    }
-  }
-  return a;
 };
 
 
@@ -318,7 +330,7 @@ org.jboss.search.page.filter.ContentFilterController.prototype.setMouseListener 
               break;
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.CLICK:
               this.getListModelContainer().pointListItemById(event.target.id);
-              this.getListModelContainer().selectPointedListItem();
+              this.getListModelContainer().toggleSelectedPointedListItem();
               break;
           }
         }, false, this

@@ -77,20 +77,12 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
   goog.array.forEach(
       this.views_,
       function(listView) {
-        var listDom = listView.constructNewDOM([]);
+        var listDom = listView.constructNewDOM();
         this.viewDoms_[listView.getId()] = listDom;
         goog.dom.appendChild(this.hostingElement_, listDom);
       },
       this
   );
-
-  /**
-   * View listeners.
-   *
-   * @type {Array.<goog.events.Key>}
-   * @private
-   */
-  this.viewListenersKeys_ = [];
 
   /**
    *
@@ -118,16 +110,16 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
         // TODO: the following type declaration is not clean...
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent|org.jboss.core.widget.list.ListModelContainerEvent} */ (e);
         switch (event.getType()) {
+
           // create a new item list based on new data
           // this operation replaces DOM element which is related to changed list model only
           case org.jboss.core.widget.list.event.ListModelEventType.NEW_DATA_SET:
             var lm = /** @type {org.jboss.core.widget.list.ListModel} */ (event.target);
             var id = lm.getId();
-            var data = lm.getData();
             var listView = this.getListViewById_(id);
             if (goog.isDefAndNotNull(listView)) {
               var oldViewDom = this.viewDoms_[id];
-              var newViewDom = listView.constructNewDOM(data);
+              var newViewDom = listView.constructNewDOM(lm);
               // keep reference to the new DOM
               this.viewDoms_[id] = newViewDom;
               // if replacing the DOM element is slow or visually distracting, we could do
@@ -153,7 +145,7 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
             var listView = this.getListViewById_(id);
             if (goog.isDefAndNotNull(listView)) {
               var viewDom = this.viewDoms_[id];
-              listView.selectInDOM(viewDom, evt.getItemIndex());
+              listView.pointInDOM(viewDom, evt.getItemIndex());
               this.dispatchEvent(
                   new org.jboss.core.widget.list.event.ListViewEvent(
                       listView,
@@ -171,7 +163,7 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
             var listView = this.getListViewById_(id);
             if (goog.isDefAndNotNull(listView)) {
               var viewDom = this.viewDoms_[id];
-              listView.deselectInDOM(viewDom);
+              listView.depointInDOM(viewDom);
               this.dispatchEvent(
                   new org.jboss.core.widget.list.event.ListViewEvent(
                       listView,
@@ -207,9 +199,6 @@ org.jboss.core.widget.list.ListViewContainer.prototype.disposeInternal = functio
   org.jboss.core.widget.list.ListViewContainer.superClass_.disposeInternal.call(this);
   goog.events.unlistenByKey(this.listModelEventKey_);
   delete this.views_;
-  goog.array.forEach(this.viewListenersKeys_, function(key) {
-    goog.events.unlistenByKey(key);
-  });
 };
 
 
@@ -220,26 +209,6 @@ org.jboss.core.widget.list.ListViewContainer.prototype.disposeInternal = functio
 org.jboss.core.widget.list.ListViewContainer.prototype.getViewDoms = function() {
   return this.viewDoms_;
 };
-
-
-/**
- * Return array of the latest DOM Elements.  Order of Elements is by initial order of {@link ListView}s.
- * TODO: Remove if not used!
- * @return {!Array.<Element>}
- */
-/*
-org.jboss.core.widget.list.ListViewContainer.prototype.constructNewDOM = function() {
-  var elements = [];
-  goog.array.forEach(
-      this.views_,
-      function(listView) {
-        elements.push(this.viewDoms_[listView.getId()]);
-      },
-      this
-  );
-  return elements;
-};
-*/
 
 
 /**

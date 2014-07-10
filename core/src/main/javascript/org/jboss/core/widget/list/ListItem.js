@@ -26,6 +26,11 @@ goog.provide('org.jboss.core.widget.list.ListItemId');
 
 
 /**
+ * Type alias for {@link ListItem} id. In fact it is just a string but
+ * having distinct type for it allows us to make sure we do not pass arbitrary
+ * values to methods that expect parameter of type of "list item id".
+ * This makes the code a little bit more robust (providing Closure Compiler is used of course).
+ *
  * @typedef {string}
  */
 org.jboss.core.widget.list.ListItemId;
@@ -33,12 +38,14 @@ org.jboss.core.widget.list.ListItemId;
 
 
 /**
+ * Represents a single item in the {@link ListModel}.
  *
  * @param {org.jboss.core.widget.list.ListItemId} id
  * @param {string} value
+ * @param {boolean=} opt_selected true if the item is selected
  * @constructor
  */
-org.jboss.core.widget.list.ListItem = function(id, value) {
+org.jboss.core.widget.list.ListItem = function(id, value, opt_selected) {
 
   /**
    * @type {org.jboss.core.widget.list.ListItemId}
@@ -51,11 +58,16 @@ org.jboss.core.widget.list.ListItem = function(id, value) {
    * @private
    */
   this.value_ = value;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.selected_ = opt_selected || false;
 };
 
 
 /**
- *
  * @return {org.jboss.core.widget.list.ListItemId}
  */
 org.jboss.core.widget.list.ListItem.prototype.getId = function() {
@@ -64,9 +76,24 @@ org.jboss.core.widget.list.ListItem.prototype.getId = function() {
 
 
 /**
- *
  * @return {string}
  */
 org.jboss.core.widget.list.ListItem.prototype.getValue = function() {
   return this.value_;
+};
+
+
+/**
+ * @return {boolean}
+ */
+org.jboss.core.widget.list.ListItem.prototype.isSelected = function() {
+  return this.selected_;
+};
+
+
+/**
+ * @param {boolean} selected
+ */
+org.jboss.core.widget.list.ListItem.prototype.setSelected = function(selected) {
+  this.selected_ = selected;
 };

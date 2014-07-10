@@ -34,6 +34,7 @@ goog.require('org.jboss.core.widget.list.BaseListController');
 goog.require('org.jboss.core.widget.list.ListController');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
 goog.require('org.jboss.core.widget.list.ListViewContainer');
+goog.require('org.jboss.core.widget.list.event.ListModelEvent');
 goog.require('org.jboss.core.widget.list.event.ListModelEventType');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEvent');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEventType');
@@ -143,9 +144,26 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
    */
   this.listItemSelectedId_ = goog.events.listen(
       this.getListModelContainer(),
-      org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
+      [
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
+        org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED
+      ],
       function(e) {
-//        console.log(e);
+        var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
+        var data = event.target.getData();
+        var index = event.getItemIndex();
+
+        if (index < data.length) {
+          switch (event.getType()) {
+            case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
+              // console.log('selected', event);
+              break;
+
+            case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED:
+              // console.log('deselected', event);
+              break;
+          }
+        }
       }, false, this
       );
 };
@@ -240,7 +258,7 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.setKeyboardListener 
               this.getListModelContainer().pointNextListItem();
               break;
             case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.ENTER:
-              this.getListModelContainer().selectPointedListItem();
+              this.getListModelContainer().toggleSelectedPointedListItem();
               break;
           }
         }, false, this
@@ -278,7 +296,7 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.setMouseListener = f
               break;
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.CLICK:
               this.getListModelContainer().pointListItemById(event.target.id);
-              this.getListModelContainer().selectPointedListItem();
+              this.getListModelContainer().toggleSelectedPointedListItem();
               break;
           }
         }, false, this

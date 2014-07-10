@@ -139,6 +139,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
         switch (event.type) {
           /*
            =====================================================
+           TODO: NEW_REQUEST_PARAMETERS should not probably be handled here.
            When new request parameters are available:
            - store them into LookUp
            - update active filters section

@@ -382,7 +382,7 @@ org.jboss.core.widget.list.ListModelContainer.prototype.pointNextListItem = func
  * particular item has been selected. If the item in already selected then this
  * deselect the item.
  */
-org.jboss.core.widget.list.ListModelContainer.prototype.selectPointedListItem = function() {
+org.jboss.core.widget.list.ListModelContainer.prototype.toggleSelectedPointedListItem = function() {
   var pointedListItemIndex = this.pointedListItemIndex_;
   var lm = this.getPointedListModel_();
   if (lm != null && pointedListItemIndex != null) {

@@ -84,7 +84,7 @@ org.jboss.core.widget.list.event.ListModelEvent.prototype.getType = function() {
 
 /**
  * Return index of list item relevant to this event. Some events are not related
- * to individual items, in such case this function return null.
+ * to individual items, in such case this function returns null.
  *
  * @return {?number}
  */

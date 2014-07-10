@@ -58,6 +58,13 @@ org.jboss.core.Constants = {
   SELECTED: 'selected',
 
   /**
+   * Used in CSS.
+   * @type {string}
+   * @const
+   */
+  POINTED: 'pointed',
+
+  /**
    * Used in CSS and as an input element attribute.
    * @type {string}
    * @const
