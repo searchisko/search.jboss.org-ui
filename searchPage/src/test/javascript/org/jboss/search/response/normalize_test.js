@@ -20,6 +20,7 @@ goog.require('goog.string');
 goog.require('goog.testing.jsunit');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.context.RequestParamsFactory');
+goog.require('org.jboss.core.response.ProjectNameSuggestions');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.util.emailName');
 goog.require('org.jboss.core.util.gravatar');
@@ -67,8 +68,9 @@ var testNormalizeProjectNameSuggestionResponse = function() {
 
   var matching_items = [];
   var did_you_mean = [];
-  var result = org.jboss.search.response.normalizeProjectSuggestionsResponse(matching_items, did_you_mean);
+  var result = org.jboss.search.response.normalizeProjectSuggestionsResponse('query', matching_items, did_you_mean);
 
+  assertEquals('query', result.query);
   assertEquals(0, result.matching_items.length);
   assertEquals(0, result.did_you_mean_items.length);
 
@@ -83,7 +85,9 @@ var testNormalizeProjectNameSuggestionResponse = function() {
     { fields: { sys_project: '4', sys_project_name: 'D' }}
   ];
 
-  result = org.jboss.search.response.normalizeProjectSuggestionsResponse(matching_items, did_you_mean);
+  result = org.jboss.search.response.normalizeProjectSuggestionsResponse('query', matching_items, did_you_mean);
+
+  assertEquals('query', result.query);
 
   assertEquals(3, result.matching_items.length);
   assertEquals('1', result.matching_items[0].code);
@@ -97,15 +101,15 @@ var testNormalizeProjectNameSuggestionResponse = function() {
 
 var testGravatarEmailHash = function() {
 
-  assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.core.util.gravatar.gravatarEmailHash('LKRZYZAN@redhat.com'));
-  assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.core.util.gravatar.gravatarEmailHash('lkrzyzan@redhat.com'));
-  assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.core.util.gravatar.gravatarEmailHash('  <lkrzyzan@redhat.com>'));
-  assertEquals('', '6029b8a70a9e305525aa8f750d2a01c4', org.jboss.core.util.gravatar.gravatarEmailHash('Libor Krzyzanek <lkrzyzan@redhat.com>'));
+  assertEquals('6029b8a70a9e305525aa8f750d2a01c4', org.jboss.core.util.gravatar.gravatarEmailHash('LKRZYZAN@redhat.com'));
+  assertEquals('6029b8a70a9e305525aa8f750d2a01c4', org.jboss.core.util.gravatar.gravatarEmailHash('lkrzyzan@redhat.com'));
+  assertEquals('6029b8a70a9e305525aa8f750d2a01c4', org.jboss.core.util.gravatar.gravatarEmailHash('  <lkrzyzan@redhat.com>'));
+  assertEquals('6029b8a70a9e305525aa8f750d2a01c4', org.jboss.core.util.gravatar.gravatarEmailHash('Libor Krzyzanek <lkrzyzan@redhat.com>'));
 };
 
 var testExtractNameFromEmail = function() {
-  assertEquals('', 'Libor Krzyzanek', org.jboss.core.util.emailName.extractNameFromMail('Libor Krzyzanek <lkrzyzan@redhat.com>'));
-  assertEquals('', 'lkrzyzan@redhat.com', org.jboss.core.util.emailName.extractNameFromMail('<lkrzyzan@redhat.com>'));
+  assertEquals('Libor Krzyzanek', org.jboss.core.util.emailName.extractNameFromMail('Libor Krzyzanek <lkrzyzan@redhat.com>'));
+  assertEquals('lkrzyzan@redhat.com', org.jboss.core.util.emailName.extractNameFromMail('<lkrzyzan@redhat.com>'));
 };
 
 var testGravatarURI = function() {

@@ -32,6 +32,7 @@ goog.require('goog.format.EmailAddress');
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('org.jboss.core.context.RequestParams');
+goog.require('org.jboss.core.response.ProjectNameSuggestions');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.util.dateTime');
 goog.require('org.jboss.core.util.emailName');
@@ -355,16 +356,18 @@ org.jboss.search.response.normalizeAllSpaces_ = function(str) {
 
 /**
  * It returns normalized and sanitized project name suggestions response.
- * @param {goog.array.ArrayLike} ngrams raw response from search API.
- * @param {goog.array.ArrayLike} fuzzy raw response from search API.
- * @return {{ matching_items: !Array, did_you_mean_items: !Array }}
+ * @param {string} query
+ * @param {goog.array.ArrayLike} ngrams raw response from search API
+ * @param {goog.array.ArrayLike} fuzzy raw response from search API
+ * @return {org.jboss.core.response.ProjectNameSuggestions}
  */
-org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams, fuzzy) {
+org.jboss.search.response.normalizeProjectSuggestionsResponse = function(query, ngrams, fuzzy) {
 
   var items = [];
   goog.array.forEach(ngrams, function(item) {
     items.push({
-      'name': item.highlight['sys_project_name.edgengram'] ? item.highlight['sys_project_name.edgengram'] : item.highlight['sys_project_name.ngram'],
+      'name': item.highlight['sys_project_name.edgengram'] ?
+          item.highlight['sys_project_name.edgengram'] : item.highlight['sys_project_name.ngram'],
       'code': item.fields['sys_project']
     });
   });
@@ -387,5 +390,5 @@ org.jboss.search.response.normalizeProjectSuggestionsResponse = function(ngrams,
     }
   });
 
-  return { 'matching_items': items, 'did_you_mean_items': did_you_mean_items };
+  return { 'query': query, 'matching_items': items, 'did_you_mean_items': did_you_mean_items };
 };

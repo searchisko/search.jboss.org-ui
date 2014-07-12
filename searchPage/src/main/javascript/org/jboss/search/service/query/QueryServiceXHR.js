@@ -91,14 +91,10 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.disposeInternal = funct
 };
 
 
-/** @override */
+/** @inheritDoc */
 org.jboss.search.service.query.QueryServiceXHR.prototype.userQuery = function(requestParams) {
 
-  var ids = this.getXHRManager_().getOutstandingRequestIds();
-  if (goog.array.contains(ids, org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID)) {
-    this.getXHRManager_().abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
-    this.dispatcher_.dispatchUserQueryAbort();
-  }
+  this.abortUserQuery();
 
   var searchURI_ = this.searchURI_.clone();
   var query_url_string_ = org.jboss.core.util.urlGenerator.searchUrl(searchURI_, requestParams,
@@ -120,10 +116,18 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userQuery = function(re
           var event = /** @type {goog.net.XhrManager.Event} */ (e);
           if (event.target.isSuccess()) {
             try {
-              this.dispatcher_.dispatchNewRequestParameters(requestParams);
               var response = event.target.getResponseJson();
               var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(response, requestParams);
-              this.dispatcher_.dispatchUserQuerySucceeded(normalizedResponse);
+
+              // we must make sure this is set to lookup before the success event is dispatched (see #80)
+              org.jboss.core.service.Locator.getInstance().getLookup().setRequestParams(requestParams);
+              org.jboss.core.service.Locator.getInstance().getLookup().setRecentQueryResultData(normalizedResponse);
+
+              var eventData = /** @type {org.jboss.core.response.SearchResults} */ ({
+                query: requestParams,
+                response: normalizedResponse
+              });
+              this.dispatcher_.dispatchUserQuerySucceeded(eventData);
             } catch (err) {
               this.dispatcher_.dispatchUserQueryError(requestParams.getQueryString(), err);
             }
@@ -139,7 +143,23 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.userQuery = function(re
 };
 
 
-/** @override */
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceXHR.prototype.isUserQueryRunning = function() {
+  var ids = this.getXHRManager_().getOutstandingRequestIds();
+  return goog.array.contains(ids, org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID);
+};
+
+
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceXHR.prototype.abortUserQuery = function() {
+  if (this.isUserQueryRunning()) {
+    this.getXHRManager_().abort(org.jboss.search.Constants.SEARCH_QUERY_REQUEST_ID, true);
+    this.dispatcher_.dispatchUserQueryAbort();
+  }
+};
+
+
+/** @inheritDoc */
 org.jboss.search.service.query.QueryServiceXHR.prototype.userSuggestionQuery = function(query) {
 
   var ids = this.getXHRManager_().getOutstandingRequestIds();
@@ -229,16 +249,31 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.projectNameSuggestions 
           '', // post_data
           {}, // headers_map
           org.jboss.search.Constants.PROJECT_SUGGESTIONS_REQUEST_PRIORITY,
-          // callback, The only param is the event object from the COMPLETE event.
           goog.bind(function(e) {
             this.dispatcher_.dispatchProjectNameSuggestionsQueryFinished();
             var event = /** @type {goog.net.XhrManager.Event} */ (e);
             if (event.target.isSuccess()) {
-              var response = /** @type {{responses: {length: number}}} */ (event.target.getResponseJson());
-              var ngrams = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(response['responses'][0], 'hits', 'hits'));
-              var fuzzy = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(response['responses'][1], 'hits', 'hits'));
-              var eventMetadata = org.jboss.search.response.normalizeProjectSuggestionsResponse(ngrams, fuzzy);
-              this.dispatcher_.dispatchProjectNameSuggestionsQuerySucceeded(eventMetadata);
+              try {
+                var response = event.target.getResponseJson();
+                if (goog.isDef(response)) {
+                  // TODO: this is ugly code and not safe at all
+                  // ------
+                  var ngrams = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(response['responses'][0],
+                      'hits', 'hits'));
+                  var fuzzy = /** @type {goog.array.ArrayLike} */ (goog.object.getValueByKeys(response['responses'][1],
+                      'hits', 'hits'));
+                  // ------
+                  this.dispatcher_.dispatchProjectNameSuggestionsQuerySucceeded(
+                      org.jboss.search.response.normalizeProjectSuggestionsResponse(query, ngrams, fuzzy)
+                  );
+                } else {
+                  // malformed response?
+                  this.dispatcher_.dispatchProjectNameSuggestionsQueryError(query, {});
+                }
+              } catch (err) {
+                // malformed response?
+                this.dispatcher_.dispatchProjectNameSuggestionsQueryError(query, {});
+              }
             } else {
               // Project info failed to load.
               // TODO: provide error details
@@ -250,8 +285,9 @@ org.jboss.search.service.query.QueryServiceXHR.prototype.projectNameSuggestions 
       );
     }
   } else {
-    var eventMetadata = org.jboss.search.response.normalizeProjectSuggestionsResponse([], []);
-    this.dispatcher_.dispatchProjectNameSuggestionsQuerySucceeded(eventMetadata);
+    this.dispatcher_.dispatchProjectNameSuggestionsQuerySucceeded(
+        org.jboss.search.response.normalizeProjectSuggestionsResponse(query, [], [])
+    );
   }
 
 };

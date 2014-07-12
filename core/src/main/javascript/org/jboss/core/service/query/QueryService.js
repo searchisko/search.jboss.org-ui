@@ -46,6 +46,20 @@ org.jboss.core.service.query.QueryService.prototype.userQuery = function(request
 
 
 /**
+ * Returns true if there is running 'user query' request.
+ *
+ * @return {boolean}
+ */
+org.jboss.core.service.query.QueryService.prototype.isUserQueryRunning = function() {};
+
+
+/**
+ * If there are running 'user query' request, abort it immediately.
+ */
+org.jboss.core.service.query.QueryService.prototype.abortUserQuery = function() {};
+
+
+/**
  * Execute user suggestion query. This is fired for type ahead queries while user types in a query into the main
  * search field.
  *
@@ -63,7 +77,7 @@ org.jboss.core.service.query.QueryService.prototype.projectNameSuggestions = fun
 
 
 /**
- * Returns true if there is any running 'project name suggestions' requests.
+ * Returns true if there is running 'project name suggestions' request.
  *
  * @return {boolean}
  */
@@ -71,6 +85,6 @@ org.jboss.core.service.query.QueryService.prototype.isProjectNameSuggestionsRunn
 
 
 /**
- * If there are any running 'project name suggestions' requests, abort them immediately.
+ * If there are running 'project name suggestions' request, abort it immediately.
  */
 org.jboss.core.service.query.QueryService.prototype.abortProjectNameSuggestions = function() {};

@@ -53,6 +53,7 @@ org.jboss.core.widget.list.event.ListViewEvent = function(listView, type) {
   goog.events.Event.call(this, type, listView);
 
   /**
+   * TODO: the 'type' property and getter can be removed (it is in Event by default)
    * @type {org.jboss.core.widget.list.event.ListViewEventType}
    * @private
    */

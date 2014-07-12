@@ -25,7 +25,15 @@
 goog.provide('org.jboss.search.service.query.QueryServiceCached');
 
 goog.require('goog.Disposable');
+goog.require('goog.events');
+goog.require('goog.events.Key');
+goog.require('org.jboss.core.response.ProjectNameSuggestions');
+goog.require('org.jboss.core.response.SearchResults');
+goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.service.query.QueryService');
+goog.require('org.jboss.core.service.query.QueryServiceEvent');
+goog.require('org.jboss.core.service.query.QueryServiceEventType');
+goog.require('org.jboss.core.service.query.SimpleTimeCache');
 
 
 
@@ -43,6 +51,66 @@ org.jboss.search.service.query.QueryServiceCached = function(queryService) {
    * @private
    */
   this.queryService_ = queryService;
+
+  /**
+   * @type {!org.jboss.core.service.query.QueryServiceDispatcher}
+   * @private
+   */
+  this.queryServiceDispatcher_ = org.jboss.core.service.Locator.getInstance().getLookup().getQueryServiceDispatcher();
+
+  /**
+   * Cache of previously executed "project name suggestion" queries.
+   * Cache objects expire after 5 minutes (300 seconds), expired objects are removed every 10 seconds.
+   *
+   * @type {!org.jboss.core.service.query.SimpleTimeCache.<org.jboss.core.response.SearchResults>}
+   * @private
+   */
+  this.userQueryCache_ = new org.jboss.core.service.query.SimpleTimeCache(300, 10);
+
+  this.userQueryCacheUpdateKey_ = goog.events.listen(
+      this.queryServiceDispatcher_,
+      [
+        org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED
+      ],
+      goog.bind(function(e) {
+        var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
+        var data = /** @type {org.jboss.core.response.SearchResults} */ (event.getMetadata());
+        var key = data.query.toString();
+        if (!this.userQueryCache_.containsForKey(key)) {
+          this.userQueryCache_.put(key, data);
+        }
+      }, this));
+
+  /**
+   * Cache of previously executed "project name suggestion" queries.
+   * Cache objects expire after 5 minutes (300 seconds), expired objects are removed every 10 seconds.
+   *
+   * @type {!org.jboss.core.service.query.SimpleTimeCache.<org.jboss.core.response.ProjectNameSuggestions>}
+   * @private
+   */
+  this.projectNameSuggestionsCache_ = new org.jboss.core.service.query.SimpleTimeCache(300, 10);
+
+  /**
+   * Subscribing to 'PROJECT_NAME_SEARCH_SUGGESTIONS_SUCCEEDED'. Every time new data arrives
+   * we check if it is in the cache, if not we put it into the cache. Since then we serve the
+   * data from the cache. Once the data expires from the cache we will put it into the cache
+   * as soon as a new request it executed.
+   *
+   * @type {goog.events.Key}
+   * @private
+   */
+  this.projectNameSuggestionsCacheUpdateKey_ = goog.events.listen(
+      this.queryServiceDispatcher_,
+      [
+        org.jboss.core.service.query.QueryServiceEventType.PROJECT_NAME_SEARCH_SUGGESTIONS_SUCCEEDED
+      ],
+      goog.bind(function(e) {
+        var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
+        var data = /** @type {org.jboss.core.response.ProjectNameSuggestions} */ (event.getMetadata());
+        if (!this.projectNameSuggestionsCache_.containsForKey(data.query)) {
+          this.projectNameSuggestionsCache_.put(data.query, data);
+        }
+      }, this));
 };
 goog.inherits(org.jboss.search.service.query.QueryServiceCached, goog.Disposable);
 
@@ -50,18 +118,61 @@ goog.inherits(org.jboss.search.service.query.QueryServiceCached, goog.Disposable
 /** @inheritDoc */
 org.jboss.search.service.query.QueryServiceCached.prototype.disposeInternal = function() {
   org.jboss.search.service.query.QueryServiceCached.superClass_.disposeInternal.call(this);
+
+  goog.events.unlistenByKey(this.userQueryCacheUpdateKey_);
+  goog.events.unlistenByKey(this.projectNameSuggestionsCacheUpdateKey_);
+
+  goog.dispose(this.userQueryCache_);
+  goog.dispose(this.projectNameSuggestionsCache_);
+
+  delete this.queryServiceDispatcher_;
   delete this.queryService_;
 };
 
 
-/** @override */
+/** @inheritDoc */
 org.jboss.search.service.query.QueryServiceCached.prototype.userQuery = function(requestParams) {
-  // TODO: implement caching
+  var key = requestParams.toString();
+  // in case we can get the data from cache
+  if (this.userQueryCache_.containsForKey(key)) {
+    var response = this.userQueryCache_.get(key);
+    if (goog.isDefAndNotNull(response)) {
+
+      // specify correct type to make type check compiler pass (this line is removed in ADVANCED compilation anyway)
+      response = /** @type {org.jboss.core.response.SearchResults} */ (response);
+
+      // fire the same events that would be fired in successful path of a service doing a real XHR
+      // this is necessary to make sure all logic based on the events will not break
+      this.abortUserQuery();
+      this.queryServiceDispatcher_.dispatchUserQueryStart(response.query, 'mem_cache://');
+      this.queryServiceDispatcher_.dispatchUserQueryFinished();
+
+      // we must make sure this is set to lookup before the success event is dispatched (see #80)
+      org.jboss.core.service.Locator.getInstance().getLookup().setRequestParams(requestParams);
+      org.jboss.core.service.Locator.getInstance().getLookup().setRecentQueryResultData(response.response);
+
+      this.queryServiceDispatcher_.dispatchUserQuerySucceeded(response);
+      return;
+    }
+  }
+  // otherwise call the query service
   this.queryService_.userQuery(requestParams);
 };
 
 
-/** @override */
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceCached.prototype.abortUserQuery = function() {
+  this.queryService_.abortUserQuery();
+};
+
+
+/** @inheritDoc */
+org.jboss.search.service.query.QueryServiceCached.prototype.isUserQueryRunning = function() {
+  return this.queryService_.isUserQueryRunning();
+};
+
+
+/** @inheritDoc */
 org.jboss.search.service.query.QueryServiceCached.prototype.userSuggestionQuery = function(query) {
   // TODO: implement caching
   this.queryService_.userSuggestionQuery(query);
@@ -70,7 +181,24 @@ org.jboss.search.service.query.QueryServiceCached.prototype.userSuggestionQuery 
 
 /** @inheritDoc */
 org.jboss.search.service.query.QueryServiceCached.prototype.projectNameSuggestions = function(query) {
-  // TODO: implement caching
+  // in case we can get the data from cache
+  if (this.projectNameSuggestionsCache_.containsForKey(query)) {
+    var response = this.projectNameSuggestionsCache_.get(query);
+    if (goog.isDefAndNotNull(response)) {
+
+      // specify correct type to make type check compiler pass (this line is removed in ADVANCED compilation anyway)
+      response = /** @type {org.jboss.core.response.ProjectNameSuggestions} */ (response);
+
+      // fire the same events that would be fired in successful path of a service doing a real XHR
+      // this is necessary to make sure all logic based on the events will not break
+      this.abortProjectNameSuggestions();
+      this.queryServiceDispatcher_.dispatchProjectNameSuggestionsQueryStart(query, 'mem_cache://');
+      this.queryServiceDispatcher_.dispatchProjectNameSuggestionsQueryFinished();
+      this.queryServiceDispatcher_.dispatchProjectNameSuggestionsQuerySucceeded(response);
+      return;
+    }
+  }
+  // otherwise call the query service
   this.queryService_.projectNameSuggestions(query);
 };
 

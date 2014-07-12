@@ -87,11 +87,7 @@ org.jboss.profile.service.query.QueryServiceXHR.prototype.disposeInternal = func
 /** @inheritDoc */
 org.jboss.profile.service.query.QueryServiceXHR.prototype.userQuery = function(requestParams) {
 
-  var ids = this.getXHRManager_().getOutstandingRequestIds();
-  if (goog.array.contains(ids, org.jboss.profile.Constants.SEARCH_QUERY_REQUEST_ID)) {
-    this.getXHRManager_().abort(org.jboss.profile.Constants.SEARCH_QUERY_REQUEST_ID, true);
-    this.dispatcher_.dispatchUserQueryAbort();
-  }
+  this.abortUserQuery();
 
   var searchURI_ = this.searchURI_.clone();
   var query_url_string_ = org.jboss.core.util.urlGenerator.searchUrl(searchURI_, requestParams, 0,
@@ -113,11 +109,12 @@ org.jboss.profile.service.query.QueryServiceXHR.prototype.userQuery = function(r
           var event = /** @type {goog.net.XhrManager.Event} */ (e);
           if (event.target.isSuccess()) {
             try {
-              this.dispatcher_.dispatchNewRequestParameters(requestParams);
               var response = event.target.getResponseJson();
-              // console.log(response);
-              // var normalizedResponse = org.jboss.search.response.normalizeSearchResponse(response, requestParams);
-              // this.dispatcher_.dispatchUserQuerySucceeded(normalizedResponse);
+
+              // we must make sure this is set to lookup before the success event is dispatched (see #80)
+              org.jboss.core.service.Locator.getInstance().getLookup().setRequestParams(requestParams);
+              org.jboss.core.service.Locator.getInstance().getLookup().setRecentQueryResultData(response);
+
               this.dispatcher_.dispatchUserQuerySucceeded(response);
             } catch (err) {
               this.dispatcher_.dispatchUserQueryError(requestParams.getQueryString(), err);
@@ -129,6 +126,22 @@ org.jboss.profile.service.query.QueryServiceXHR.prototype.userQuery = function(r
         }, this)
     );
   }
+};
+
+
+/** @inheritDoc */
+org.jboss.profile.service.query.QueryServiceXHR.prototype.abortUserQuery = function() {
+  if (this.isUserQueryRunning()) {
+    this.getXHRManager_().abort(org.jboss.profile.Constants.SEARCH_QUERY_REQUEST_ID, true);
+    this.dispatcher_.dispatchUserQueryAbort();
+  }
+};
+
+
+/** @inheritDoc */
+org.jboss.profile.service.query.QueryServiceXHR.prototype.isUserQueryRunning = function() {
+  var ids = this.getXHRManager_().getOutstandingRequestIds();
+  return goog.array.contains(ids, org.jboss.profile.Constants.SEARCH_QUERY_REQUEST_ID);
 };
 
 

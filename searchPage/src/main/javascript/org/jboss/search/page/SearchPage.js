@@ -126,7 +126,6 @@ org.jboss.search.page.SearchPage = function(context, elements) {
   this.userQueryServiceDispatcherListenerId_ = goog.events.listen(
       this.queryServiceDispatcher_,
       [
-        org.jboss.core.service.query.QueryServiceEventType.NEW_REQUEST_PARAMETERS,
         org.jboss.core.service.query.QueryServiceEventType.SEARCH_START,
         org.jboss.core.service.query.QueryServiceEventType.SEARCH_ABORTED,
         org.jboss.core.service.query.QueryServiceEventType.SEARCH_FINISHED,
@@ -137,20 +136,6 @@ org.jboss.search.page.SearchPage = function(context, elements) {
         var metadata_;
         var event = /** @type {org.jboss.core.service.query.QueryServiceEvent} */ (e);
         switch (event.type) {
-          /*
-           =====================================================
-           TODO: NEW_REQUEST_PARAMETERS should not probably be handled here.
-           When new request parameters are available:
-           - store them into LookUp
-           - update active filters section
-           =====================================================
-           */
-          case org.jboss.core.service.query.QueryServiceEventType.NEW_REQUEST_PARAMETERS:
-            var requestParams = /** @type {org.jboss.core.context.RequestParams} */ (event.getMetadata());
-            org.jboss.core.service.Locator.getInstance().getLookup().setRequestParams(requestParams);
-            // this.renderSearchFilters_();
-            break;
-
           /*
            =====================================================
            As soon as user query is started we update couple of HTML elements:
@@ -193,32 +178,34 @@ org.jboss.search.page.SearchPage = function(context, elements) {
            =====================================================
            When new search results are available:
            - render HTML and display it.
-           - refresh filters that are visible (expanded)
            =====================================================
            */
           case org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED:
-            var response = event.getMetadata();
-            // console.log("response > ",response);
-            this.log_.info('Search request succeeded, took ' + response['took'] + 'ms, uuid [' +
-                response['uuid'] + ']');
-            org.jboss.core.service.Locator.getInstance().getLookup().setRecentQueryResultData(response);
-            // render new HTML for search results first
-            this.renderSearchResults_();
-            this.enableSearchResults_();
-            // refresh histogram chart only if filter expanded
-            var dateFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getDateFilter();
-            if (goog.isDefAndNotNull(dateFilter_)) {
-              dateFilter_.refreshChart(false);
-            }
-            // refresh author filter
-            var authorFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getAuthorFilter();
-            if (goog.isDefAndNotNull(authorFilter_)) {
-              authorFilter_.refreshItems(false);
-            }
-            // refresh technology filter
-            var technologyFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getTechnologyFilter();
-            if (goog.isDefAndNotNull(technologyFilter_)) {
-              technologyFilter_.refreshItems(false);
+            try {
+              //var response = /** @type {org.jboss.core.response.SearchResults} */ (event.getMetadata());
+              // this.log_.info('Search request succeeded, took ' + response['took'] + 'ms, uuid [' +
+              //   response['uuid'] + ']');
+
+              // render new HTML for search results first
+              this.renderSearchResults_();
+              this.enableSearchResults_();
+
+              // TODO: can this be removed? It should be moved to the filter itself (see Technology or Content filter)
+              // refresh histogram chart only if filter is expanded (i.e. visible)
+              var dateFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getDateFilter();
+              if (goog.isDefAndNotNull(dateFilter_)) {
+                dateFilter_.refreshChart(false);
+              }
+
+              // TODO: remove once author filter is migrated to ListWidget
+              // refresh author filter
+              var authorFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getAuthorFilter();
+              if (goog.isDefAndNotNull(authorFilter_)) {
+                authorFilter_.refreshItems(false);
+              }
+            } catch (err) {
+              // TODO: dispatch application error
+              // console.log(err);
             }
             break;
 

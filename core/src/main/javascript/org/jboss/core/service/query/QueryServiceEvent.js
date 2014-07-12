@@ -49,22 +49,13 @@ org.jboss.core.service.query.QueryServiceEventType = {
   SEARCH_FINISHED: goog.events.getUniqueId('search_finished'),
 
   // request finished successfully
-  // NOTE: It should be guarantied that at this point both the
-  // new {@link RequestParams} and recent search results are
-  // available (ATM in Lookup).
-  // TODO: make sure ^^ is valid
+  // NOTE: It must be guarantied that when this event is dispatched
+  // both the new {@link RequestParams} and recent search results
+  // are available (via Lookup). (See #80)
   SEARCH_SUCCEEDED: goog.events.getUniqueId('search_succeeded'),
 
   // request failed
   SEARCH_ERROR: goog.events.getUniqueId('search_error'),
-
-  // ----------------------------------------------
-  // Request parameters for the last successful query.
-  // Do not be confused by the name "new", in fact they can be
-  // identical to the previous request parameters.
-  // ----------------------------------------------
-
-  NEW_REQUEST_PARAMETERS: goog.events.getUniqueId('new_request_params'),
 
   // ----------------------------------------------
   // User suggestions query events

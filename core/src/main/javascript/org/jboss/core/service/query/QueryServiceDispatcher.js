@@ -25,12 +25,30 @@
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 
+goog.provide('org.jboss.core.response.ProjectNameSuggestions');
+goog.provide('org.jboss.core.response.SearchResults');
 goog.provide('org.jboss.core.service.query.QueryServiceDispatcher');
 
 goog.require('goog.events.EventTarget');
 goog.require('org.jboss.core.context.RequestParams');
 goog.require('org.jboss.core.service.query.QueryServiceEvent');
 goog.require('org.jboss.core.service.query.QueryServiceEventType');
+
+
+/**
+ * Expected structure of JSON response from "project name suggestions" service call.
+ * TODO: move all typedefs 'org.jboss.core.response.*' to separated file in the future
+ *       we can expect that this type will be used without direct connection to query dispatcher
+ *
+ * @typedef {{ query: !string, matching_items: !Array.<string>, did_you_mean_items: !Array.<string> }}
+ */
+org.jboss.core.response.ProjectNameSuggestions;
+
+
+/**
+ * @typedef {{ query: !org.jboss.core.context.RequestParams, response: !Object }}
+ */
+org.jboss.core.response.SearchResults;
 
 
 
@@ -102,7 +120,7 @@ org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQueryF
  * Dispatches SEARCH_SUCCEEDED event.
  * Metadata contains response JSON data.
  *
- * @param {Object|undefined} responseData normalized response data
+ * @param {!org.jboss.core.response.SearchResults} responseData normalized response data
  */
 org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQuerySucceeded = function(responseData) {
   var event = new org.jboss.core.service.query.QueryServiceEvent(
@@ -131,21 +149,6 @@ org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQueryE
         query_string: query_string,
         error: error
       }
-      );
-  this.dispatchEvent(event);
-};
-
-
-/**
- * Dispatches NEW_REQUEST_PARAMETERS.
- * Event contains {@link org.jboss.core.context.RequestParams}
- *
- * @param {org.jboss.core.context.RequestParams} requestParameters
- */
-org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchNewRequestParameters = function(requestParameters) {
-  var event = new org.jboss.core.service.query.QueryServiceEvent(
-      org.jboss.core.service.query.QueryServiceEventType.NEW_REQUEST_PARAMETERS,
-      requestParameters
       );
   this.dispatchEvent(event);
 };
@@ -285,7 +288,7 @@ org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchProjectNam
  * Dispatches PROJECT_NAME_SEARCH_SUGGESTIONS_SUCCEEDED event.
  * Metadata contains modified response JSON data.
  *
- * @param {Object|undefined} responseData normalized response data
+ * @param {org.jboss.core.response.ProjectNameSuggestions} responseData normalized response data
  */
 org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchProjectNameSuggestionsQuerySucceeded = function(responseData) {
   var event = new org.jboss.core.service.query.QueryServiceEvent(

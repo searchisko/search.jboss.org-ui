@@ -79,6 +79,7 @@ org.jboss.core.widget.list.mouse.MouseListener = function(div) {
               this.mouseleave(event.target);
               break;
             case goog.events.EventType.CLICK:
+              event.stopPropagation();
               this.click(event.target);
               break;
           }

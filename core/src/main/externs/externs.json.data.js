@@ -147,6 +147,7 @@ TopContributorFacet.prototype.gURL16;	// computed or modified by normalize.js
  * @interface
  */
 function filterItem() {}
+filterItem.prototype.query;   // actually this is part of org.jboss.core.response.ProjectNameSuggestions typedef
 filterItem.prototype.did_you_mean_items;
 filterItem.prototype.matching_items;
 filterItem.prototype.matching_items.name;

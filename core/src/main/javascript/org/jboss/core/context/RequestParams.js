@@ -38,12 +38,15 @@ goog.provide('org.jboss.core.context.RequestParams');
 goog.provide('org.jboss.core.context.RequestParams.Order');
 goog.provide('org.jboss.core.context.RequestParamsFactory');
 
+goog.require('goog.array');
 goog.require('goog.date.DateTime');
 
 
 
 /**
  * Request parameters. Do not create instances directly, use {@link RequestParamsFactory} instead.
+ * Note: Arguments of type array are in-place sorted.
+ *
  * TODO: get* functions should return safe copy of the values (like in case of arrays).
  *
  * @param {string} query_string
@@ -96,18 +99,27 @@ org.jboss.core.context.RequestParams = function(query_string, page, from, to, or
    * @private
    */
   this.contributors_ = contributors;
+  if (goog.isArray(this.contributors_) && !goog.array.isSorted(this.contributors_)) {
+    goog.array.sort(this.contributors_);
+  }
 
   /**
    * @type {?Array.<string>}
    * @private
    */
   this.projects_ = projects;
+  if (goog.isArray(this.projects_) && !goog.array.isSorted(this.projects_)) {
+    goog.array.sort(this.projects_);
+  }
 
   /**
    * @type {?Array.<string>}
    * @private
    */
   this.contentTypes_ = contentTypes;
+  if (goog.isArray(this.contentTypes_) && !goog.array.isSorted(this.contentTypes_)) {
+    goog.array.sort(this.contentTypes_);
+  }
 
   /**
    * @type {?string}
@@ -200,6 +212,57 @@ org.jboss.core.context.RequestParams.prototype.getLog = function() {
  */
 org.jboss.core.context.RequestParams.prototype.getResetCaches = function() {
   return this.resetCaches_;
+};
+
+
+/**
+ * Override the default toString function to return string that can be used as a unique
+ * representation of instances as a key in maps. However, this is implementations specific
+ * and some fields are ignored (like this.log_ and this.resetCaches_). Only those fields
+ * that are projected into URL fragment are considered "important" and included.
+ *
+ * Note: Right now this implementation is not very strong, we should consider using much
+ * better hashing function.
+ *
+ * @return {string}
+ * @override
+ *
+ * @see SimpleTimeCache
+ * @see org.jboss.core.util.urlGenerator
+ */
+org.jboss.core.context.RequestParams.prototype.toString = function() {
+  var arr = [];
+
+  if (goog.isDefAndNotNull(this.query_string_))
+    arr.push(this.query_string_);
+  if (goog.isDefAndNotNull(this.page_))
+    arr.push(this.page_);
+  if (goog.isDefAndNotNull(this.from_))
+    arr.push(this.from_.getTime().toString());
+  if (goog.isDefAndNotNull(this.to_))
+    arr.push(this.to_.getTime().toString());
+  if (goog.isDefAndNotNull(this.order_))
+    arr.push(this.order_);
+  if (goog.isDefAndNotNull(this.contributors_) && !goog.array.isEmpty(this.contributors_))
+    arr.push(goog.array.reduce(this.contributors_, this.arrayReduce_, ''));
+  if (goog.isDefAndNotNull(this.projects_) && !goog.array.isEmpty(this.projects_))
+    arr.push(goog.array.reduce(this.projects_, this.arrayReduce_, ''));
+  if (goog.isDefAndNotNull(this.contentTypes_) && !goog.array.isEmpty(this.contentTypes_))
+    arr.push(goog.array.reduce(this.contentTypes_, this.arrayReduce_, ''));
+
+  return arr.join(':');
+};
+
+
+/**
+ *
+ * @param {string} partial
+ * @param {string} actual
+ * @return {string}
+ * @private
+ */
+org.jboss.core.context.RequestParams.prototype.arrayReduce_ = function(partial, actual) {
+  return partial + actual;
 };
 
 
