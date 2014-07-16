@@ -50,6 +50,7 @@ goog.require('goog.Disposable');
  * @param {!HTMLSelectElement} date_order
  * @param {!HTMLSelectElement} technology_filter_order
  * @param {!HTMLInputElement} technology_filter_query_field
+ * @param {!HTMLSelectElement} author_filter_order
  * @param {!HTMLInputElement} author_filter_query_field
  * @param {!HTMLDivElement}   author_filter_items_div
  * @param {!HTMLDivElement}   content_filter_items_div
@@ -65,7 +66,7 @@ org.jboss.search.page.SearchPageElements = function(
     date_filter_body_div, technology_filter_body_div, author_filter_body_div, content_filter_body_div,
     date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
     date_order, technology_filter_order,
-    technology_filter_query_field, author_filter_query_field,
+    technology_filter_query_field, author_filter_order, author_filter_query_field,
     author_filter_items_div, content_filter_items_div, technology_filter_items_div,
     search_results_div, search_filters_div) {
 
@@ -89,6 +90,7 @@ org.jboss.search.page.SearchPageElements = function(
   /** @type {!HTMLSelectElement} */ this.date_order = date_order;
   /** @type {!HTMLSelectElement} */ this.technology_filter_order = technology_filter_order;
   /** @type {!HTMLInputElement} */ this.technology_filter_query_field = technology_filter_query_field;
+  /** @type {!HTMLSelectElement} */ this.author_filter_order = author_filter_order;
   /** @type {!HTMLInputElement} */ this.author_filter_query_field = author_filter_query_field;
   /** @type {!HTMLDivElement}   */ this.author_filter_items_div = author_filter_items_div;
   /** @type {!HTMLDivElement}   */ this.content_filter_items_div = content_filter_items_div;
@@ -121,10 +123,11 @@ org.jboss.search.page.SearchPageElements.prototype.disposeInternal = function() 
   delete this.date_order;
   delete this.technology_filter_order;
   delete this.technology_filter_query_field;
+  delete this.technology_filter_items_div;
+  delete this.author_filter_order;
   delete this.author_filter_query_field;
   delete this.author_filter_items_div;
   delete this.content_filter_items_div;
-  delete this.technology_filter_items_div;
   delete this.search_results_div;
   delete this.search_filters_div;
 };
@@ -153,10 +156,11 @@ org.jboss.search.page.SearchPageElements.prototype.isValid = function() {
       goog.isDefAndNotNull(this.date_order) &&
       goog.isDefAndNotNull(this.technology_filter_order) &&
       goog.isDefAndNotNull(this.technology_filter_query_field) &&
+      goog.isDefAndNotNull(this.technology_filter_items_div) &&
+      goog.isDefAndNotNull(this.author_filter_order) &&
       goog.isDefAndNotNull(this.author_filter_query_field) &&
       goog.isDefAndNotNull(this.author_filter_items_div) &&
       goog.isDefAndNotNull(this.content_filter_items_div) &&
-      goog.isDefAndNotNull(this.technology_filter_items_div) &&
       goog.isDefAndNotNull(this.search_results_div) &&
       goog.isDefAndNotNull(this.search_filters_div);
 };
@@ -267,6 +271,12 @@ org.jboss.search.page.SearchPageElements.prototype.getTechnology_filter_order = 
 /** @return {!HTMLInputElement} */
 org.jboss.search.page.SearchPageElements.prototype.getTechnology_filter_query_field = function() {
   return this.technology_filter_query_field;
+};
+
+
+/** @return {!HTMLSelectElement} */
+org.jboss.search.page.SearchPageElements.prototype.getAuthor_filter_order = function() {
+  return this.author_filter_order;
 };
 
 

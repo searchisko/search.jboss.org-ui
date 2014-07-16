@@ -60,6 +60,7 @@ goog.require('org.jboss.search.page.element.SearchFieldHandler');
 goog.require('org.jboss.search.page.event.ContributorIdSelected');
 goog.require('org.jboss.search.page.event.QuerySubmitted');
 goog.require('org.jboss.search.page.filter.ContentFilter');
+goog.require('org.jboss.search.page.filter.AuthorFilter');
 goog.require('org.jboss.search.page.filter.DateFilter');
 goog.require('org.jboss.search.page.filter.DateFilterEventType');
 goog.require('org.jboss.search.page.filter.DateOrderByChanged');
@@ -201,12 +202,6 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                 dateFilter_.refreshChart(false);
               }
 
-              // TODO: remove once author filter is migrated to ListWidget
-              // refresh author filter
-              var authorFilter_ = org.jboss.core.service.Locator.getInstance().getLookup().getAuthorFilter();
-              if (goog.isDefAndNotNull(authorFilter_)) {
-                authorFilter_.refreshItems(false);
-              }
             } catch (err) {
               // TODO: dispatch application error
               // console.log(err);
@@ -318,6 +313,13 @@ org.jboss.search.page.SearchPage = function(context, elements) {
    * @private
    */
   this.newRequestParamsFromContentFilterKey_;
+
+  /**
+   * This listener is called whenever a new {@link RequestParams} is dispatched from author filter.
+   * @type {goog.events.Key}
+   * @private
+   */
+  this.newRequestParamsFromAuthorFilterKey_;
 
   /**
    * @type {goog.events.Key}
@@ -755,8 +757,10 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
   goog.events.unlistenByKey(this.userQueryServiceDispatcherListenerId_);
   goog.events.unlistenByKey(this.userSuggestionsQueryServiceDispatcherListenerId_);
 
-  this.unlistenDateFilter_();
   this.unlistenTechnologyFilter_();
+  this.unlistenContentFilter_();
+  this.unlistenDateFilter_();
+  this.unlistenAuthorFilter_();
 
   // Remove references to COM objects.
 
@@ -851,6 +855,43 @@ org.jboss.search.page.SearchPage.prototype.listenOnTechnologyFilterChanges = fun
   if (goog.isDefAndNotNull(technologyFilter)) {
     this.newRequestParamsFromTechnologyFilterKey_ = goog.events.listen(
         technologyFilter,
+        [
+          org.jboss.search.page.filter.NewRequestParamsEventType.NEW_REQUEST_PARAMETERS
+        ],
+        function(e) {
+          var event = /** @type {org.jboss.search.page.filter.NewRequestParamsEvent} */ (e);
+          this.dispatchEvent(
+              new org.jboss.search.page.event.QuerySubmitted(
+                  event.getRequestParameters()
+              )
+          );
+        }, false, this
+        );
+  }
+};
+
+
+/**
+ * Unlisten on Author filter listeners.
+ * @private
+ */
+org.jboss.search.page.SearchPage.prototype.unlistenAuthorFilter_ = function() {
+  if (goog.isDefAndNotNull(this.newRequestParamsFromAuthorFilterKey_)) {
+    goog.events.unlistenByKey(this.newRequestParamsFromAuthorFilterKey_);
+  }
+};
+
+
+/**
+ *
+ * @param {org.jboss.search.page.filter.AuthorFilter} authorFilter
+ */
+org.jboss.search.page.SearchPage.prototype.listenOnAuthorFilterChanges = function(authorFilter) {
+  // unlisten if already registered
+  this.unlistenAuthorFilter_();
+  if (goog.isDefAndNotNull(authorFilter)) {
+    this.newRequestParamsFromAuthorFilterKey_ = goog.events.listen(
+        authorFilter,
         [
           org.jboss.search.page.filter.NewRequestParamsEventType.NEW_REQUEST_PARAMETERS
         ],

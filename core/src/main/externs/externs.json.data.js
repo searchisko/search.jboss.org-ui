@@ -112,6 +112,13 @@ SearchHit.prototype.facets.top_contributors.missing;
 SearchHit.prototype.facets.top_contributors.total;
 SearchHit.prototype.facets.top_contributors.terms;
 
+// Top contributors filter facet
+SearchHit.prototype.facets.top_contributors_filter;
+SearchHit.prototype.facets.top_contributors_filter.other;
+SearchHit.prototype.facets.top_contributors_filter.missing;
+SearchHit.prototype.facets.top_contributors_filter.total;
+SearchHit.prototype.facets.top_contributors_filter.terms;
+
 // Project counts facet
 SearchHit.prototype.facets.per_project_counts;
 SearchHit.prototype.facets.per_project_counts.other;

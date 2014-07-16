@@ -27,7 +27,6 @@ goog.provide('org.jboss.search.page.filter.TechnologyFilter');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS');
 goog.provide('org.jboss.search.page.filter.TechnologyFilterController.ORDER_KEY');
-goog.provide('org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN'); // can we not expose this?
 
 goog.require('goog.Uri');
 goog.require('goog.array');
@@ -75,30 +74,9 @@ goog.require('org.jboss.search.Constants');
 goog.require('org.jboss.search.page.filter.FilterUtils');
 goog.require('org.jboss.search.page.filter.NewRequestParamsEvent');
 goog.require('org.jboss.search.page.filter.NewRequestParamsEventType');
+goog.require('org.jboss.search.page.filter.OrderableSupport');
 goog.require('org.jboss.search.page.filter.templates');
 goog.require('org.jboss.search.response');
-
-
-/**
- * Functions that put specific order to input data. They can change data in-place.
- * @enum {function(!Array.<{name: string, code: string, orderBy: string, count: number, selected: boolean}>)}
- * @protected
- */
-org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN = {
-  NAME: function(data) {
-    goog.array.sort(data, function(one, two) {
-      return goog.array.defaultCompare(one.orderBy, two.orderBy);
-    });
-  },
-  FREQUENCY: function(data) {
-    goog.array.sort(data, function(one, two) {
-      // descending, thus '-'
-      var r = -goog.array.defaultCompare(one.count, two.count);
-      // secondary order is by name
-      return r == 0 ? goog.array.defaultCompare(one.orderBy, two.orderBy) : r;
-    });
-  }
-};
 
 
 
@@ -120,10 +98,10 @@ org.jboss.search.page.filter.AllTechnologyDataSource = function() {
   this.lookup_ = org.jboss.core.service.Locator.getInstance().getLookup();
 
   /**
-   * @type {org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN}
+   * @type {org.jboss.search.page.filter.OrderableSupport.ORDER_FN}
    * @private
    */
-  this.order_fn_ = org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.FREQUENCY;
+  this.order_fn_ = org.jboss.search.page.filter.OrderableSupport.ORDER_FN.FREQUENCY;
 };
 goog.inherits(org.jboss.search.page.filter.AllTechnologyDataSource, goog.events.EventTarget);
 
@@ -132,6 +110,7 @@ goog.inherits(org.jboss.search.page.filter.AllTechnologyDataSource, goog.events.
 org.jboss.search.page.filter.AllTechnologyDataSource.prototype.disposeInternal = function() {
   org.jboss.search.page.filter.AllTechnologyDataSource.superClass_.disposeInternal.call(this);
   delete this.lookup_;
+  delete this.order_fn_;
 };
 
 
@@ -142,7 +121,7 @@ org.jboss.search.page.filter.AllTechnologyDataSource.prototype.get = function() 
   /** @type {?org.jboss.core.context.RequestParams} */
   var requestParams = this.lookup_.getRequestParams();
   var selectedTechnologies = [];
-  if (goog.isDefAndNotNull(requestParams)) {
+  if (goog.isDefAndNotNull(requestParams) && goog.isDefAndNotNull(requestParams.getProjects())) {
     selectedTechnologies = requestParams.getProjects();
   }
 
@@ -163,7 +142,7 @@ org.jboss.search.page.filter.AllTechnologyDataSource.prototype.get = function() 
     }
   });
 
-  // get recent search results (can will get facets counts from it)
+  // get recent search results (we will get facets counts from it)
   var recentQueryResults = this.lookup_.getRecentQueryResultData();
 
   if (goog.isDefAndNotNull(recentQueryResults)) {
@@ -209,7 +188,7 @@ org.jboss.search.page.filter.AllTechnologyDataSource.prototype.isActive = functi
 
 /**
  *
- * @param {org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN} orderFn
+ * @param {org.jboss.search.page.filter.OrderableSupport.ORDER_FN} orderFn
  * @protected
  */
 org.jboss.search.page.filter.AllTechnologyDataSource.prototype.setOrderFunction = function(orderFn) {
@@ -340,13 +319,13 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
             // order
             switch (this.items_order_) {
               case org.jboss.search.page.filter.TechnologyFilterController.ORDER_KEY.NAME:
-                org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.NAME(mi);
+                org.jboss.search.page.filter.OrderableSupport.ORDER_FN.NAME(mi);
                 break;
               case org.jboss.search.page.filter.TechnologyFilterController.ORDER_KEY.FREQUENCY:
-                org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.FREQUENCY(mi);
+                org.jboss.search.page.filter.OrderableSupport.ORDER_FN.FREQUENCY(mi);
                 break;
               default:
-                org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.FREQUENCY(mi);
+                org.jboss.search.page.filter.OrderableSupport.ORDER_FN.FREQUENCY(mi);
                 break;
             }
           }
@@ -379,13 +358,13 @@ org.jboss.search.page.filter.TechnologyFilterController = function(lmc, lvc) {
             // order
             switch (this.items_order_) {
               case org.jboss.search.page.filter.TechnologyFilterController.ORDER_KEY.NAME:
-                org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.NAME(dymi);
+                org.jboss.search.page.filter.OrderableSupport.ORDER_FN.NAME(dymi);
                 break;
               case org.jboss.search.page.filter.TechnologyFilterController.ORDER_KEY.FREQUENCY:
-                org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.FREQUENCY(dymi);
+                org.jboss.search.page.filter.OrderableSupport.ORDER_FN.FREQUENCY(dymi);
                 break;
               default:
-                org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.FREQUENCY(dymi);
+                org.jboss.search.page.filter.OrderableSupport.ORDER_FN.FREQUENCY(dymi);
                 break;
             }
           }
@@ -537,14 +516,14 @@ org.jboss.search.page.filter.TechnologyFilterController.prototype.input = functi
   var order_function_;
   switch (this.items_order_) {
     case org.jboss.search.page.filter.TechnologyFilterController.ORDER_KEY.FREQUENCY:
-      order_function_ = org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.FREQUENCY;
+      order_function_ = org.jboss.search.page.filter.OrderableSupport.ORDER_FN.FREQUENCY;
       break;
     case org.jboss.search.page.filter.TechnologyFilterController.ORDER_KEY.NAME:
-      order_function_ = org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.NAME;
+      order_function_ = org.jboss.search.page.filter.OrderableSupport.ORDER_FN.NAME;
       break;
     default:
       // sanity check, possibly log unknown order?
-      order_function_ = org.jboss.search.page.filter.TechnologyFilterUtils.ORDER_FN.FREQUENCY;
+      order_function_ = org.jboss.search.page.filter.OrderableSupport.ORDER_FN.FREQUENCY;
       break;
   }
   this.queryContextDataSource_.setOrderFunction(order_function_);
@@ -932,7 +911,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.refreshItems = function(
  * @private
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.updateItems_ = function(data) {
-  // TODO: remove if not used!
+  // TODO: remove if not needed
   // scroll to top when changing the content of the filter
   if (this.items_div_.scrollTop && goog.isNumber(this.items_div_.scrollTop)) {
     this.items_div_.scrollTop = 0;
@@ -971,9 +950,10 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.isExpanded = function() 
 
 /**
  * Initialization of technology filter.
+ * TODO: move to common abstract parent
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.init = function() {
-  if (this.getOrder_ != null) {
+  if (this.getOrder_() != null) {
     // The only thing we can do now is to setup the default order to 'frequency'.
     var options = goog.object.getValueByKeys(this.items_order_, 'options');
     if (goog.isDefAndNotNull(options) && goog.isArrayLike(options)) {
@@ -991,6 +971,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.init = function() {
 /**
  * @return {?string}
  * @private
+ * TODO: move to common abstract parent
  */
 org.jboss.search.page.filter.TechnologyFilter.prototype.getOrder_ = function() {
   var so = goog.object.getValueByKeys(this.items_order_, 'selectedOptions');

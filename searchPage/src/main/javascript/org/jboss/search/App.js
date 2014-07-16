@@ -248,6 +248,7 @@ org.jboss.search.App = function() {
             elements.getAuthor_filter_body_div(),
             elements.getAuthor_filter_query_field(),
             elements.getAuthor_filter_items_div(),
+            elements.getAuthor_filter_order(),
             // isCollapsed
             function() {
               return goog.dom.classes.has(elements.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
@@ -275,10 +276,11 @@ org.jboss.search.App = function() {
             }
             );
         this.lookup_.setAuthorFilter(authorFilter);
+        authorFilter.init();
       }, this))
       .addCallback(
           goog.bind(function() {
-            //this.searchPage.listenOnAuthorFilterChanges(this.lookup_.getAuthorFilter());
+            this.searchPage.listenOnAuthorFilterChanges(this.lookup_.getAuthorFilter());
             status.increaseProgress();
           }, this));
 
@@ -542,6 +544,11 @@ org.jboss.search.App.prototype.locateDocumentElements_ = function() {
 
   // DIV element where authors are listed
   var author_filter_items_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('filter_items', author_filter_body_div));
+  var author_filter_order_select = /** @type {!HTMLSelectElement} */ (goog.dom.findNode(author_filter_body_div,
+      function(node) {
+        return (goog.dom.isElement(node) && node.getAttribute('id') == 'author_order');
+      }));
+
   // DIV element where content types are listed
   var content_filter_items_div = /** @type {!HTMLDivElement} */ (goog.dom.getElementByClass('filter_items', content_filter_body_div));
   // DIV element where projects are listed
@@ -567,7 +574,7 @@ org.jboss.search.App.prototype.locateDocumentElements_ = function() {
       date_filter_body_div, project_filter_body_div, author_filter_body_div, content_filter_body_div,
       date_histogram_chart_div, date_filter_from_field, date_filter_to_field,
       date_order, technology_filter_order_select,
-      project_filter_query_field, author_filter_query_field,
+      project_filter_query_field, author_filter_order_select, author_filter_query_field,
       author_filter_items_div, content_filter_items_div, project_filter_items_div,
       search_results_div, search_filters_div
       );
