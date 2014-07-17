@@ -45,8 +45,12 @@ org.jboss.core.util.fragmentGenerator.generate = function(requestParams, opt_req
 
   var p_ = org.jboss.core.util.fragmentParser.UI_param_suffix;
 
-  // always use query
-  var token = [[p_.QUERY, goog.string.urlEncode(requestParams.getQueryString())].join('')];
+  var token = [];
+
+  // use query is available
+  if (goog.isDefAndNotNull(requestParams.getQueryString())) {
+    token.push([p_.QUERY, goog.string.urlEncode(requestParams.getQueryString())].join(''));
+  }
 
   // use 'page' if provided and greater then 1
   if (goog.isDefAndNotNull(requestParams.getPage()) && requestParams.getPage() > 1) {

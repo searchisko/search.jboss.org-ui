@@ -25,6 +25,10 @@ var testFragmentGenerator = function() {
 
   var requestParams, urlFragment;
 
+  requestParams = org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString(null).build();
+  urlFragment = org.jboss.core.util.fragmentGenerator.generate(requestParams);
+  assertEquals('', urlFragment);
+
   requestParams = org.jboss.core.context.RequestParamsFactory.getInstance().reset().setQueryString('test').build();
   urlFragment = org.jboss.core.util.fragmentGenerator.generate(requestParams);
   assertEquals('q=test', urlFragment);

@@ -173,13 +173,16 @@ org.jboss.core.service.query.SimpleTimeCache.prototype.get = function(key) {
  * @throws {Error} if data is null or undefined
  */
 org.jboss.core.service.query.SimpleTimeCache.prototype.put = function(key, data) {
-  if (goog.isDefAndNotNull(data)) {
-    var d = goog.object.unsafeClone(data);
-    goog.object.set(this.cache_, key, { 'created': this.getNow_(), 'data': d });
-  } else {
-    // should not happen (may be compiler removes this?)
+  if (!goog.isDefAndNotNull(key)) {
+    // should not happen after ADVANCED compilation checks (may be compiler removes this?)
+    throw new Error('Undefined key not allowed.');
+  }
+  if (!goog.isDefAndNotNull(data)) {
+    // should not happen after ADVANCED compilation checks (may be compiler removes this?)
     throw new Error('Undefined or Null objects can not be put.');
   }
+  var d = goog.object.unsafeClone(data);
+  goog.object.set(this.cache_, key, { 'created': this.getNow_(), 'data': d });
 };
 
 

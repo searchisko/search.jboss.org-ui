@@ -139,7 +139,7 @@ org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQueryS
  *   error: {...}
  * }
  *
- * @param {string} query_string
+ * @param {?string} query_string
  * @param {Object} error
  */
 org.jboss.core.service.query.QueryServiceDispatcher.prototype.dispatchUserQueryError = function(query_string, error) {

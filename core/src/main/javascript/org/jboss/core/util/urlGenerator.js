@@ -107,13 +107,12 @@ org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, se
 
   if (!goog.isDefAndNotNull(requestParams)) {
     requestParams = org.jboss.core.context.RequestParamsFactory.getInstance()
-      .reset().setQueryString('').build();
+      .reset().build();
   }
   var query = requestParams.getQueryString();
-  if (!goog.isDefAndNotNull(requestParams.getQueryString())) {
-    query = '';
+  if (goog.isDefAndNotNull(requestParams.getQueryString())) {
+    rootUri.setParameterValue(params.QUERY, query);
   }
-  rootUri.setParameterValue(params.QUERY, query);
 
   if (goog.isDef(opt_settings) && goog.isArray(opt_settings.fields)) {
     rootUri.setParameterValues(params.FIELD, opt_settings.fields);
@@ -196,7 +195,7 @@ org.jboss.core.util.urlGenerator.searchUrl = function(rootUri, requestParams, se
 
   if (goog.isDef(opt_settings) && goog.isNumber(opt_settings.size)) {
     if (opt_settings.size > 0) {
-      // notice the hardcoded upper limit on the size
+      // hardcoded upper limit on the size
       rootUri.setParameterValue(params.SIZE, opt_settings.size > 100 ? '100' : opt_settings.size.toString(10));
     }
     if (opt_settings.size == 0) {

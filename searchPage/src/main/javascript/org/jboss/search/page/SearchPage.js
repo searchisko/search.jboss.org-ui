@@ -182,12 +182,16 @@ org.jboss.search.page.SearchPage = function(context, elements) {
            */
           case org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED:
             try {
-              //var response = /** @type {org.jboss.core.response.SearchResults} */ (event.getMetadata());
+              var response = /** @type {org.jboss.core.response.SearchResults} */ (event.getMetadata());
               // this.log_.info('Search request succeeded, took ' + response['took'] + 'ms, uuid [' +
               //   response['uuid'] + ']');
 
-              // render new HTML for search results first
-              this.renderSearchResults_();
+              var queryKey = response.query.toString();
+              if (goog.isDefAndNotNull(queryKey) && !goog.string.isEmpty(queryKey)) {
+                this.renderSearchResults_();
+              } else {
+                this.clearSearchResults();
+              }
               this.enableSearchResults_();
 
               // TODO: can this be removed? It should be moved to the filter itself (see Technology or Content filter)

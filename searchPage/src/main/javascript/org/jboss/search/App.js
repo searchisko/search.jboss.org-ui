@@ -154,8 +154,10 @@ org.jboss.search.App = function() {
     if (goog.isDefAndNotNull(requestParams.getQueryString())) {
       this.lookup_.getQueryService().userQuery(requestParams);
     } else {
-      // TODO: this might not be correct? (shall we clear previous requestParams and search results from lookup?)
-      this.searchPage.clearSearchResults();
+      this.lookup_.getQueryService().userQuery(
+          org.jboss.core.context.RequestParamsFactory.getInstance()
+          .reset().copy(requestParams).setQueryString(null).build()
+      );
     }
   };
 

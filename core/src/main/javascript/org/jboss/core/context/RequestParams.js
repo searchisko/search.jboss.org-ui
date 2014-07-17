@@ -49,7 +49,7 @@ goog.require('goog.date.DateTime');
  *
  * TODO: get* functions should return safe copy of the values (like in case of arrays).
  *
- * @param {string} query_string
+ * @param {?string} query_string
  * @param {?number} page
  * @param {?goog.date.DateTime} from
  * @param {?goog.date.DateTime} to
@@ -65,7 +65,7 @@ org.jboss.core.context.RequestParams = function(query_string, page, from, to, or
 												projects, contentTypes, log, resetCaches) {
 
   /**
-   * @type {string}
+   * @type {?string}
    * @private
    */
   this.query_string_ = query_string;
@@ -136,7 +136,7 @@ org.jboss.core.context.RequestParams = function(query_string, page, from, to, or
 
 
 /**
- * @return {string}
+ * @return {?string}
  */
 org.jboss.core.context.RequestParams.prototype.getQueryString = function() {
   return this.query_string_;
@@ -304,7 +304,7 @@ org.jboss.core.context.RequestParams.Order = {
 org.jboss.core.context.RequestParamsFactory = function() {
 
   /**
-   * @type {string}
+   * @type {?string}
    * @private
    */
   this.query_string_;
@@ -432,7 +432,7 @@ org.jboss.core.context.RequestParamsFactory.prototype.copy = function(requestPar
 /**
  * Set new query string value, <code>null</code> value is not allowed.
  *
- * @param {string} queryString
+ * @param {?string} queryString
  * @return {org.jboss.core.context.RequestParamsFactory}
  */
 org.jboss.core.context.RequestParamsFactory.prototype.setQueryString = function(queryString) {
