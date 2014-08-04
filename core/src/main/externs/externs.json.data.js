@@ -146,6 +146,8 @@ DateHistogram.prototype.count;
 function TopContributorFacet() {}
 TopContributorFacet.prototype.count;
 TopContributorFacet.prototype.term;
+TopContributorFacet.prototype.orderBy;
+TopContributorFacet.prototype.selected;
 TopContributorFacet.prototype.name;		// computed or modified by normalize.js
 TopContributorFacet.prototype.gURL16;	// computed or modified by normalize.js
 
