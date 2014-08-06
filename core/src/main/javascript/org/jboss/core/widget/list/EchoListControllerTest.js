@@ -154,7 +154,7 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
         var index = event.getItemIndex();
 
         if (index < data.length) {
-          switch (event.getType()) {
+          switch (event.type) {
             case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
               // console.log('selected', event);
               break;

@@ -761,7 +761,7 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
             var filterArray = rp.getProjects();
 
             // depending on event type update filterArray
-            switch (event.getType()) {
+            switch (event.type) {
               case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
                 if (!goog.array.contains(filterArray, selectedId)) {
                   filterArray = goog.array.concat(filterArray, selectedId);

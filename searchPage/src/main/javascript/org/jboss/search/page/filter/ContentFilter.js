@@ -431,7 +431,7 @@ org.jboss.search.page.filter.ContentFilter = function(element, content_filter_it
             var filterArray = rp.getContentTypes();
 
             // depending on event type update filterArray
-            switch (event.getType()) {
+            switch (event.type) {
               case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
                 if (!goog.array.contains(filterArray, selectedId)) {
                   filterArray = goog.array.concat(filterArray, selectedId);

@@ -580,7 +580,7 @@ org.jboss.search.page.filter.AuthorFilter = function(element, query_field, autho
             var filterArray = rp.getContributors();
 
             // depending on event type update filterArray
-            switch (event.getType()) {
+            switch (event.type) {
               case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
                 if (!goog.array.contains(filterArray, selectedId)) {
                   filterArray = goog.array.concat(filterArray, selectedId);

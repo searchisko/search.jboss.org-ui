@@ -109,7 +109,7 @@ org.jboss.core.widget.list.ListViewContainer = function(views, listModelContaine
           */
         // TODO: the following type declaration is not clean...
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent|org.jboss.core.widget.list.ListModelContainerEvent} */ (e);
-        switch (event.getType()) {
+        switch (event.type) {
 
           // create a new item list based on new data
           // this operation replaces DOM element which is related to changed list model only

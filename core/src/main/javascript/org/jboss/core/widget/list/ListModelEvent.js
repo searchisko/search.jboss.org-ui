@@ -57,12 +57,6 @@ org.jboss.core.widget.list.event.ListModelEvent = function(type, listModel, opt_
   goog.events.Event.call(this, type, listModel);
 
   /**
-   * @type {org.jboss.core.widget.list.event.ListModelEventType}
-   * @private
-   */
-  this.type_ = type;
-
-  /**
    * @type {?number}
    * @private
    */
@@ -70,16 +64,6 @@ org.jboss.core.widget.list.event.ListModelEvent = function(type, listModel, opt_
 
 };
 goog.inherits(org.jboss.core.widget.list.event.ListModelEvent, goog.events.Event);
-
-
-/**
- * Return type of the event.
- *
- * @return {org.jboss.core.widget.list.event.ListModelEventType}
- */
-org.jboss.core.widget.list.event.ListModelEvent.prototype.getType = function() {
-  return this.type_;
-};
 
 
 /**
