@@ -28,7 +28,6 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.dom.classes');
-goog.require('goog.dom.query');
 goog.require('org.jboss.core.Constants');
 goog.require('org.jboss.core.widget.list.ListModel');
 
@@ -132,10 +131,12 @@ org.jboss.core.widget.list.ListView.prototype.constructNewDOM = function(opt_lis
  *
  * @param {!Element} element
  * @param {number} index
- * @suppress {deprecated}
  */
 org.jboss.core.widget.list.ListView.prototype.pointInDOM = function(element, index) {
-  var candidates = goog.dom.query('.li', element);
+  var candidates = goog.dom.findNodes(element, function(node) {
+    return goog.dom.classes.has(node, org.jboss.core.widget.list.ListView.Constants.LIST_ITEM_CLASS);
+  });
+
   if (candidates.length > index) {
     goog.dom.classes.add(candidates[index], org.jboss.core.Constants.POINTED);
   }
