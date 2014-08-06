@@ -37,7 +37,7 @@ goog.require('org.jboss.core.widget.list.ListView.Constants');
 
 /**
  * Mouse listener listens on 'mouseenter', 'mouseleave' and 'click' events on given {@link HTMLElement}
- * and re-dispatches them. You can however dispatch the events also by calling to respective methods.
+ * and re-dispatches them. You can however dispatch the events also by making call to respective methods.
  * This implementation can be used in tests (because it is easy to fire Up and Down events
  * and it does not have to be tied to DOM element).
  *
