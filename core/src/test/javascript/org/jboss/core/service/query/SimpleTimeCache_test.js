@@ -49,13 +49,12 @@ function testSimpleCache() {
 
   var firstExpiration = false;
   var secondExpiration = false;
-  setTimeout(function() { firstExpiration = true; }, 500);
-  setTimeout(function() { secondExpiration = true; }, 700);
 
-  var cache = new org.jboss.core.service.query.SimpleTimeCache(0.3); // 300ms
+  var cache = new org.jboss.core.service.query.SimpleTimeCache(0.4); // 400ms
   assertNotNull(cache);
 
-  setTimeout(function() { cache.put('3', 'Three'); }, 200);
+  setTimeout(function() { firstExpiration = true; }, 500);
+  setTimeout(function() { secondExpiration = true; }, 1000);
 
   {
     assertTrue(cache.getCacheSize() == 0);
@@ -65,6 +64,7 @@ function testSimpleCache() {
 
     cache.put('1', 'One');
     cache.put('2', 'Two');
+    setTimeout(function() { cache.put('3', 'Three'); }, 400);
 
     assertTrue(cache.getCacheSize() == 2);
     assertTrue(cache.containsForKey('1'));
@@ -96,7 +96,7 @@ function testSimpleCache() {
       }
   );
 
-  setTimeout(function() {goog.dispose(cache)}, 1000);
+  setTimeout(function() {goog.dispose(cache)}, 1500);
 
   waitForCondition(
       function() {
