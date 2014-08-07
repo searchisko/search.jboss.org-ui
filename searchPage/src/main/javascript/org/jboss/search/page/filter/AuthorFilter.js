@@ -28,6 +28,7 @@ goog.provide('org.jboss.search.page.filter.AuthorFilterController.LIST_KEY');
 
 goog.require('goog.array');
 goog.require('goog.array.ArrayLike');
+goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
@@ -35,6 +36,8 @@ goog.require('goog.events.EventType');
 goog.require('goog.events.Key');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyEvent');
+goog.require('goog.events.KeyHandler');
+goog.require('goog.events.KeyHandler.EventType');
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('org.jboss.core.context.RequestParamsFactory');
@@ -634,6 +637,25 @@ org.jboss.search.page.filter.AuthorFilter = function(element, query_field, autho
         this.refreshItems();
       }, this));
 
+  /** @private */
+  this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
+
+  /**
+   * listen for key strokes (see #49)
+   * @private
+   */
+  this.keyListenerId_ = goog.events.listen(
+      this.keyHandler_,
+      goog.events.KeyHandler.EventType.KEY,
+      goog.bind(function(e) {
+        var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
+        if (!keyEvent.repeat) {
+          if (keyEvent.keyCode == goog.events.KeyCodes.ESC && !this.isCollapsed_()) {
+            this.collapseFilter();
+          }
+        }
+      }, this));
+
 };
 goog.inherits(org.jboss.search.page.filter.AuthorFilter, goog.events.EventTarget);
 
@@ -645,10 +667,12 @@ org.jboss.search.page.filter.AuthorFilter.prototype.disposeInternal = function()
   goog.events.unlistenByKey(this.authorFilterControllerKey_);
   goog.events.unlistenByKey(this.authorFilterOrderKey_);
   goog.events.unlistenByKey(this.updateOnSearchSuccessKey_);
+  goog.events.unlistenByKey(this.keyListenerId_);
 
   goog.dispose(this.authorFilterController_);
   goog.dispose(this.keyboardListener_);
   goog.dispose(this.mouseListener_);
+  goog.dispose(this.keyHandler_);
 
   delete this.query_field_;
   delete this.expandFilter_;
