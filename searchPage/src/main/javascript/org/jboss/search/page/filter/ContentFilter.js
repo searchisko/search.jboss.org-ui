@@ -33,6 +33,7 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.Key');
+goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.events.KeyHandler.EventType');
 goog.require('goog.object');
@@ -465,17 +466,17 @@ org.jboss.search.page.filter.ContentFilter = function(element, content_filter_it
    * listen for key strokes (see #49)
    * @private
    */
-  this.keyListenerId_ = goog.events.listen(this.keyHandler_,
+  this.keyListenerId_ = goog.events.listen(
+      this.keyHandler_,
       goog.events.KeyHandler.EventType.KEY,
       goog.bind(function(e) {
         var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
         if (!keyEvent.repeat) {
-          if (keyEvent.keyCode == goog.events.KeyCodes.ESC) {
+          if (keyEvent.keyCode == goog.events.KeyCodes.ESC && !this.isCollapsed_()) {
             this.collapseFilter();
           }
         }
-      }, this)
-      );
+      }, this));
 
 };
 goog.inherits(org.jboss.search.page.filter.ContentFilter, goog.events.EventTarget);
