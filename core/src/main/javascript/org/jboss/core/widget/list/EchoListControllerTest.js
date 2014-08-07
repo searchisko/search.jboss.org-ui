@@ -34,15 +34,17 @@ goog.require('org.jboss.core.widget.list.BaseListController');
 goog.require('org.jboss.core.widget.list.ListController');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
 goog.require('org.jboss.core.widget.list.ListViewContainer');
-goog.require('org.jboss.core.widget.list.event.ListModelEvent');
-goog.require('org.jboss.core.widget.list.event.ListModelEventType');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEvent');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEventType');
 goog.require('org.jboss.core.widget.list.datasource.EchoDataSource');
+goog.require('org.jboss.core.widget.list.event.ListModelEvent');
+goog.require('org.jboss.core.widget.list.event.ListModelEventType');
 goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener');
 goog.require('org.jboss.core.widget.list.keyboard.KeyboardListener.EventType');
 goog.require('org.jboss.core.widget.list.mouse.MouseListener');
 goog.require('org.jboss.core.widget.list.mouse.MouseListener.EventType');
+
+goog.setTestOnly('org.jboss.core.widget.list.EchoListControllerTest should be used in tests only');
 
 
 
@@ -113,7 +115,9 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
       org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
       function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
-        var model1 = this.getListModelContainer().getListModelById(org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1);
+        var model1 = this.getListModelContainer().getListModelById(
+            org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1
+            );
         if (model1 != null) {
           model1.setData(e.getData());
         }
@@ -128,15 +132,15 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
   this.echoDSlistenerId2_ = goog.events.listen(
       this.echoDS2_,
       org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
-      function(event) {
+      goog.bind(function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
-        var model2 = this.getListModelContainer().getListModelById(org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2);
+        var model2 = this.getListModelContainer().getListModelById(
+            org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2
+            );
         if (model2 != null) {
           model2.setData(e.getData());
         }
-      },
-      false, this
-      );
+      }, this));
 
   /**
    * @type {goog.events.Key}
@@ -148,7 +152,7 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
         org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
         org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED
       ],
-      function(e) {
+      goog.bind(function(e) {
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
         var data = event.target.getData();
         var index = event.getItemIndex();
@@ -164,8 +168,7 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
               break;
           }
         }
-      }, false, this
-      );
+      }, this));
 };
 goog.inherits(org.jboss.core.widget.list.EchoListControllerTest, org.jboss.core.widget.list.BaseListController);
 
@@ -248,7 +251,7 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.setKeyboardListener 
           org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.DOWN,
           org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.ENTER
         ],
-        function(e) {
+        goog.bind(function(e) {
           var event = /** @type {goog.events.Event} */ (e);
           switch (event.type) {
             case org.jboss.core.widget.list.keyboard.KeyboardListener.EventType.UP:
@@ -261,8 +264,7 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.setKeyboardListener 
               this.getListModelContainer().toggleSelectedPointedListItem();
               break;
           }
-        }, false, this
-        );
+        }, this));
   }
 };
 
@@ -285,7 +287,7 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.setMouseListener = f
           org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSEENTER,
           org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSELEAVE
         ],
-        function(e) {
+        goog.bind(function(e) {
           var event = /** @type {goog.events.Event} */ (e);
           switch (event.type) {
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSEENTER:
@@ -299,8 +301,7 @@ org.jboss.core.widget.list.EchoListControllerTest.prototype.setMouseListener = f
               this.getListModelContainer().toggleSelectedPointedListItem();
               break;
           }
-        }, false, this
-        );
+        }, this));
   }
 };
 

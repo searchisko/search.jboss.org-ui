@@ -62,7 +62,7 @@
 				goog.events.KeyHandler.EventType.KEY
 //				goog.events.EventType.CHANGE
 			],
-			function(e) {
+			goog.bind(function(e) {
 				// does not capture cut & paste events
 				if (goog.events.KeyCodes.isTextModifyingKeyEvent(/** @type {goog.events.BrowserEvent} */ (e))) {
                     goog.async.nextTick(
@@ -73,9 +73,7 @@
 						}, this
 					);
 				}
-			},
-			false, this
-		);
+			}, this));
 
 	</script>
 </body>
