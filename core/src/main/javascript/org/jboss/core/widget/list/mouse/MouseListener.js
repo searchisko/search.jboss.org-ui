@@ -37,35 +37,35 @@ goog.require('org.jboss.core.widget.list.ListView.Constants');
 
 /**
  * Mouse listener listens on 'mouseenter', 'mouseleave' and 'click' events on given {@link HTMLElement}
- * and re-dispatches them. You can however dispatch the events also by making call to respective methods.
- * This implementation can be used in tests (because it is easy to fire Up and Down events
- * and it does not have to be tied to DOM element).
+ * and re-dispatches them wrapped in custom events. It is however possible to dispatch custom events
+ * also by making call to respective methods. This implementation can be used in tests (because it is easy
+ * to fire Up and Down events and it does not have to be tied to DOM element).
  *
- * @param {!HTMLElement} div the HTML div element to listen the mouse events to
+ * @param {!HTMLElement} element the DOM element which is listened for mouse events
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.jboss.core.widget.list.mouse.MouseListener = function(div) {
+org.jboss.core.widget.list.mouse.MouseListener = function(element) {
   goog.events.EventTarget.call(this);
 
   /**
    * @type {!HTMLElement}
    * @private
    */
-  this.div_ = div;
+  this.element_ = element;
 
   /**
    * @type {goog.events.Key}
    * @private
    */
   this.divListener_ = goog.events.listen(
-      div,
+      this.element_,
       [
         goog.events.EventType.CLICK,
         goog.events.EventType.MOUSEENTER,
         goog.events.EventType.MOUSELEAVE
       ],
-      function(e) {
+      goog.bind(function(e) {
         var event = /** @type {goog.events.BrowserEvent} */ (e);
         if (event.target) {
           if (!goog.dom.classes.has(event.target, org.jboss.core.widget.list.ListView.Constants.LIST_ITEM_CLASS)) {
@@ -84,7 +84,8 @@ org.jboss.core.widget.list.mouse.MouseListener = function(div) {
               break;
           }
         }
-      }, true, this
+      }, this),
+      true // important: fire in capture phase
       );
 };
 goog.inherits(org.jboss.core.widget.list.mouse.MouseListener, goog.events.EventTarget);
@@ -97,12 +98,13 @@ org.jboss.core.widget.list.mouse.MouseListener.prototype.disposeInternal = funct
     goog.events.unlistenByKey(this.divListener_);
     this.divListener_ = null;
   }
+  delete this.element_;
 };
 
 
 /**
  * Dispatches event of type {@link org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSEENTER}.
- * @param {!HTMLDivElement} target
+ * @param {!Node} target
  */
 org.jboss.core.widget.list.mouse.MouseListener.prototype.mouseenter = function(target) {
   this.dispatchEvent(
@@ -113,7 +115,7 @@ org.jboss.core.widget.list.mouse.MouseListener.prototype.mouseenter = function(t
 
 /**
  * Dispatches event of type {@link org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSELEAVE}.
- * @param {!HTMLDivElement} target
+ * @param {!Node} target
  */
 org.jboss.core.widget.list.mouse.MouseListener.prototype.mouseleave = function(target) {
   this.dispatchEvent(
@@ -124,7 +126,7 @@ org.jboss.core.widget.list.mouse.MouseListener.prototype.mouseleave = function(t
 
 /**
  * Dispatches event of type {@link org.jboss.core.widget.list.mouse.MouseListener.EventType.CLICK}.
- * @param {!HTMLDivElement} target
+ * @param {!Node} target
  */
 org.jboss.core.widget.list.mouse.MouseListener.prototype.click = function(target) {
   this.dispatchEvent(

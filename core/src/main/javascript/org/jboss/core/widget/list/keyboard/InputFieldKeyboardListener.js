@@ -67,7 +67,7 @@ org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener = function(inputF
   this.listenerId_ = goog.events.listen(
       this.keyHandler_,
       goog.events.KeyHandler.EventType.KEY,
-      function(e) {
+      goog.bind(function(e) {
         var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
         switch (keyEvent.keyCode) {
           case goog.events.KeyCodes.DOWN:
@@ -89,8 +89,7 @@ org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener = function(inputF
             );
             break;
         }
-      }, false, this
-      );
+      }, this));
 };
 goog.inherits(org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener,
     org.jboss.core.widget.list.keyboard.KeyboardListener);
