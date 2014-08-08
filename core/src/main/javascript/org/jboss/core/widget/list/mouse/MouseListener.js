@@ -69,6 +69,7 @@ org.jboss.core.widget.list.mouse.MouseListener = function(element) {
         var event = /** @type {goog.events.BrowserEvent} */ (e);
         if (event.target) {
           if (!goog.dom.classes.has(event.target, org.jboss.core.widget.list.ListView.Constants.LIST_ITEM_CLASS)) {
+            event.stopPropagation();
             return;
           }
           switch (event.type) {
