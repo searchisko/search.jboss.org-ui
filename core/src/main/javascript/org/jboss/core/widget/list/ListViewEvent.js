@@ -51,23 +51,5 @@ org.jboss.core.widget.list.event.ListViewEventType = {
  */
 org.jboss.core.widget.list.event.ListViewEvent = function(listView, type) {
   goog.events.Event.call(this, type, listView);
-
-  /**
-   * TODO: the 'type' property and getter can be removed (it is in Event by default)
-   * @type {org.jboss.core.widget.list.event.ListViewEventType}
-   * @private
-   */
-  this.type_ = type;
-
 };
 goog.inherits(org.jboss.core.widget.list.event.ListViewEvent, goog.events.Event);
-
-
-/**
- * Return type of the event.
- *
- * @return {org.jboss.core.widget.list.event.ListViewEventType}
- */
-org.jboss.core.widget.list.event.ListViewEvent.prototype.getType = function() {
-  return this.type_;
-};
