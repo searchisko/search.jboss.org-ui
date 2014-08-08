@@ -88,13 +88,13 @@ org.jboss.search.page.filter.TypeDataSource = function() {
       [
         org.jboss.core.service.query.QueryServiceEventType.SEARCH_SUCCEEDED
       ],
-      function() {
+      goog.bind(function() {
         /** @type {org.jboss.search.page.filter.ContentFilter} */
         var f_ = lookup_.getContentFilter();
         if (goog.isDefAndNotNull(f_) && f_.isExpanded()) {
           this.get();
         }
-      }, false, this);
+      }, this));
 
 };
 goog.inherits(org.jboss.search.page.filter.TypeDataSource, goog.events.EventTarget);
@@ -212,11 +212,10 @@ org.jboss.search.page.filter.ContentFilterController = function(lmc, lvc) {
         org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
         org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED
       ],
-      function(e) {
+      goog.bind(function(e) {
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
         this.dispatchEvent(event);
-      }, false, this
-      );
+      }, this));
 
   /**
    * Type (sys_type) data source.
@@ -235,7 +234,7 @@ org.jboss.search.page.filter.ContentFilterController = function(lmc, lvc) {
   this.queryContextDSListenerId_ = goog.events.listen(
       this.queryContextDataSource_,
       org.jboss.core.widget.list.datasource.DataSourceEventType.DATA_SOURCE_EVENT,
-      function(event) {
+      goog.bind(function(event) {
         var e = /** @type {org.jboss.core.widget.list.datasource.DataSourceEvent} */ (event);
         var model = this.getListModelContainer().getListModelById(
             org.jboss.search.page.filter.ContentFilterController.LIST_KEYS.QUERY_CONTEXT
@@ -243,9 +242,7 @@ org.jboss.search.page.filter.ContentFilterController = function(lmc, lvc) {
         if (model != null) {
           model.setData(e.getData());
         }
-      },
-      false, this
-      );
+      }, this));
 
   /**
    * @type {org.jboss.core.widget.list.mouse.MouseListener}
@@ -320,7 +317,7 @@ org.jboss.search.page.filter.ContentFilterController.prototype.setMouseListener 
           org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSEENTER,
           org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSELEAVE
         ],
-        function(e) {
+        goog.bind(function(e) {
           var event = /** @type {goog.events.Event} */ (e);
           switch (event.type) {
             case org.jboss.core.widget.list.mouse.MouseListener.EventType.MOUSEENTER:
@@ -334,8 +331,7 @@ org.jboss.search.page.filter.ContentFilterController.prototype.setMouseListener 
               this.getListModelContainer().toggleSelectedPointedListItem();
               break;
           }
-        }, false, this
-        );
+        }, this));
   }
 };
 
@@ -418,7 +414,7 @@ org.jboss.search.page.filter.ContentFilter = function(element, content_filter_it
         org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED,
         org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_DESELECTED
       ],
-      function(e) {
+      goog.bind(function(e) {
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
         var data = event.target.getData();
         var index = event.getItemIndex();
@@ -456,8 +452,7 @@ org.jboss.search.page.filter.ContentFilter = function(element, content_filter_it
             );
           }
         }
-      }, false, this
-      );
+      }, this));
 
   /** @private */
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
