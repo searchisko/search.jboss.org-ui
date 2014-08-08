@@ -154,8 +154,9 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
       ],
       goog.bind(function(e) {
         var event = /** @type {org.jboss.core.widget.list.event.ListModelEvent} */ (e);
-        var data = event.target.getData();
         var index = event.getItemIndex();
+        var listModel = event.target;
+        var data = listModel.getData();
 
         if (index < data.length) {
 
@@ -169,8 +170,7 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
           // See {@link AuthorFilter}, {@link ContentFilter} or {@link TechnologyFilter}
           // for examples.
 
-          var listModel = event.target;
-          listModel.setData(listModel.getData());
+          listModel.setData(data);
 
           switch (event.type) {
             case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
