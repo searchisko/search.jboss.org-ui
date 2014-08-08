@@ -158,6 +158,20 @@ org.jboss.core.widget.list.EchoListControllerTest = function(lmc, lvc, conf1, co
         var index = event.getItemIndex();
 
         if (index < data.length) {
+
+          // To get the ListView updated we are using a little trick here.
+          // We simply get the updated model from the event target and then
+          // we set the data back again to the same model to trigger automatic view update.
+          //
+          // Although this seems confusing at first glance the reason for doing this
+          // is that with real controllers the data flow is different and we expect
+          // the data will be processed outside of the controller (including XHR processing).
+          // See {@link AuthorFilter}, {@link ContentFilter} or {@link TechnologyFilter}
+          // for examples.
+
+          var listModel = event.target;
+          listModel.setData(listModel.getData());
+
           switch (event.type) {
             case org.jboss.core.widget.list.event.ListModelEventType.LIST_ITEM_SELECTED:
               // console.log('selected', event);
