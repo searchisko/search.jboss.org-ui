@@ -4,14 +4,21 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Interactive test of ListWidget</title>
 	<style>
+        .list {
+            font-family: "Lucida Sans Unicode","Lucida Grande","Lucida Sans",Verdana,Arial,sans-serif;
+            font-size: 10pt;
+        }
         input { width: 100%;}
 		.list > div {
             border: 2px solid white;
             padding: 0 10pt;
+            color: black;
         }
 		div.caption {
-            font-style: italic;
-            text-decoration: underline;
+            color: dimgray;
+            font-size: 8pt;
+            margin-left: -5pt;
+            margin-top: 5pt;
         }
 		div.pointed { border: 2px solid dodgerblue; }
 		div.selected { background-color: rgba(70, 120, 170, 0.37); }
@@ -20,9 +27,12 @@
             padding: 10pt;
             margin-right: 3pt;
             float: left;
+            min-width: 150px;
         }
         .listItemsWrapper {
             border: 1px dotted #d3d3d3;
+            border-bottom: 1px solid dimgray;
+            border-top: 1px solid dimgray;
             max-height: 300px;
             overflow: auto;
         }
@@ -46,9 +56,16 @@
 <body>
 	<h3>Interactive test of <code>ListWidget</code></h3>
     <p>
-        This page allows for interactive manual testing of <code>ListWidget</code> component.
+        This page allows for interactive manual testing of <code>ListWidget</code> component
+        and control of <b>focus</b> over the page and filters.
     </p>
 
+    <div class="listWidget">
+        <input id="query_field_0" type="text" placeholder="No filter field...">
+        <p>
+            This field gets focus on page load.
+        </p>
+    </div>
     <div class="listWidget">
         <input id="query_field_1" type="text" placeholder="First filter...">
         <div class="listItemsWrapper">
@@ -61,7 +78,15 @@
             <div class="listWidget_2"></div>
         </div>
     </div>
+    <div class="listWidget">
+        <div class="listItemsWrapper">
+            <div class="listWidget_3"></div>
+        </div>
+    </div>
 	<script>
+
+        var noRelatedField = goog.dom.getElement('query_field_0');
+        noRelatedField.focus(); // see goog.dom.getActiveElement() to learn which element has a focus now
 
         // crete ListWidget #1
 
@@ -80,13 +105,13 @@
 				{key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2, caption: 'Fast'}
 			],
 			controllerConstructor: org.jboss.core.widget.list.EchoListControllerTest,
-			additionalConstructorParams: [{delay:2000, repFactor:3}, {delay:0, repFactor:10}],
+			additionalConstructorParams: [{delay:2000, repFactor:3}, {delay:0, repFactor:13}],
 			attach: hostingElement_1
 		});
 
 		controller_1.setKeyboardListener(keyboardListener_1);
         controller_1.setMouseListener(mouseListener_1);
-		controller_1.input('Welcome in list #1!');
+		controller_1.input('Welcome in list <em>#1</em>!');
 
 		var inputField_1_Value = inputField_1.value;
 
@@ -132,7 +157,7 @@
 
         controller_2.setKeyboardListener(keyboardListener_2);
         controller_2.setMouseListener(mouseListener_2);
-        controller_2.input('Welcome in list #2!');
+        controller_2.input('HTML is the <b>king</b>!');
 
 		var inputField_2_Value = inputField_2.value;
 
@@ -154,6 +179,28 @@
                         );
                     }
                 }, this));
+
+        // crete ListWidget #3
+
+        var hostingElement_3 = goog.dom.getElementByClass('listWidget_3');
+        var mouseListener_3 = new org.jboss.core.widget.list.mouse.MouseListener(hostingElement_3);
+
+        // use factory to create instance of ListController
+        var controller_3 = org.jboss.core.widget.list.ListWidgetFactory.build({
+            lists: [
+                // the first item list is without caption (you can also omit the caption property at all)
+                // the second item list has caption
+                {key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1, caption: 'Delayed (1 sec)'},
+                {key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2, caption: 'Fast'}
+            ],
+            controllerConstructor: org.jboss.core.widget.list.EchoListControllerTest,
+            additionalConstructorParams: [{delay:1000, repFactor:5}, {delay:0, repFactor:20}],
+            attach: hostingElement_3
+        });
+
+        controller_3.setMouseListener(mouseListener_3);
+        controller_3.input('No input field attached');
+
 	</script>
 </body>
 </html>
