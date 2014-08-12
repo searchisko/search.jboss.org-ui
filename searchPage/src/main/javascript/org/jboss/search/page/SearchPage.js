@@ -17,7 +17,7 @@
  */
 
 /**
- * @fileoverview Object represents the main search page.
+ * @fileoverview The main search page.
  *
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
@@ -80,11 +80,17 @@ goog.require('org.jboss.search.util.searchFilterGenerator');
 /**
  * @param {EventTarget|goog.events.EventTarget} context element to catch click events and control behaviour of the UI.
  *        Typically, this is the document.
- * @param {!org.jboss.search.page.SearchPageElements} elements HTML elements required by the search page
+ * @param {{
+ *    authorElements: !org.jboss.search.page.filter.CommonFilterElements,
+ *    technologyElements: !org.jboss.search.page.filter.CommonFilterElements,
+ *    contentElements: !org.jboss.search.page.filter.ContentFilterElements,
+ *    dateElements: !org.jboss.search.page.filter.DateFilterElements,
+ *    searchPageElements: !org.jboss.search.page.SearchPageElements
+ * }} params
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-org.jboss.search.page.SearchPage = function(context, elements) {
+org.jboss.search.page.SearchPage = function(context, params) {
 
   goog.events.EventTarget.call(this);
 
@@ -95,9 +101,34 @@ org.jboss.search.page.SearchPage = function(context, elements) {
   this.log_ = goog.debug.Logger.getLogger('org.jboss.search.page.SearchPage');
 
   /**
+   * @type {!org.jboss.search.page.SearchPageElements}
    * @private
-   * @type {org.jboss.search.page.SearchPageElements} */
-  this.elements_ = elements;
+   */
+  this.elements_ = params.searchPageElements;
+
+  /**
+   * @type {!org.jboss.search.page.filter.CommonFilterElements}
+   * @private
+   */
+  this.authorFilterElements_ = params.authorElements;
+
+  /**
+   * @type {!org.jboss.search.page.filter.CommonFilterElements}
+   * @private
+   */
+  this.technologyFilterElements_ = params.technologyElements;
+
+  /**
+   * @type {!org.jboss.search.page.filter.ContentFilterElements}
+   * @private
+   */
+  this.contentFilterElements_ = params.contentElements;
+
+  /**
+   * @type {!org.jboss.search.page.filter.DateFilterElements}
+   * @private
+   */
+  this.dateFilterElements_ = params.dateElements;
 
   /**
    * @private
@@ -381,7 +412,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
    * @private
    */
   this.dateClickListenerId_ = goog.events.listen(
-      this.elements_.getDate_filter_tab_div(),
+      this.dateFilterElements_.getTabElement(),
       goog.events.EventType.CLICK,
       goog.bind(function() {
         this.isDateFilterExpanded_() ? this.collapseDateFilter_() : this.expandDateFilter_();
@@ -392,7 +423,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
    * @private
    */
   this.projectClickListenerId_ = goog.events.listen(
-      this.elements_.getTechnology_filter_tab_div(),
+      this.technologyFilterElements_.getTabElement(),
       goog.events.EventType.CLICK,
       goog.bind(function() {
         this.isTechnologyFilterExpanded_() ? this.collapseTechnologyFilter_() : this.expandTechnologyFilter_();
@@ -403,7 +434,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
    * @private
    */
   this.authorClickListenerId_ = goog.events.listen(
-      this.elements_.getAuthor_filter_tab_div(),
+      this.authorFilterElements_.getTabElement(),
       goog.events.EventType.CLICK,
       goog.bind(function() {
         this.isAuthorFilterExpanded_() ? this.collapseAuthorFilter_() : this.expandAuthorFilter_();
@@ -414,7 +445,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
    * @private
    */
   this.contentClickListenerId_ = goog.events.listen(
-      this.elements_.getContent_filter_tab_div(),
+      this.contentFilterElements_.getTabElement(),
       goog.events.EventType.CLICK,
       goog.bind(function() {
         this.isContentFilterExpanded_() ? this.collapseContentFilter_() : this.expandContentFilter_();
@@ -437,26 +468,26 @@ org.jboss.search.page.SearchPage = function(context, elements) {
         }
 
         // if date filter (sub)element is clicked do not hide date filter
-        if (e.target !== this.elements_.getDate_filter_tab_div() &&
-            !goog.dom.contains(this.elements_.getDate_filter_body_div(), /** @type {Node} */ (e.target))) {
+        if (e.target !== this.dateFilterElements_.getTabElement() &&
+            !goog.dom.contains(this.dateFilterElements_.getHostingElement(), /** @type {Node} */ (e.target))) {
           this.collapseDateFilter_();
         }
 
         // if technology filter (sub)element is clicked do not hide technology filter
-        if (e.target !== this.elements_.getTechnology_filter_tab_div() &&
-            !goog.dom.contains(this.elements_.getTechnology_filter_body_div(), /** @type {Node} */ (e.target))) {
+        if (e.target !== this.technologyFilterElements_.getTabElement() &&
+            !goog.dom.contains(this.technologyFilterElements_.getHostingElement(), /** @type {Node} */ (e.target))) {
           this.collapseTechnologyFilter_();
         }
 
         // if author filter (sub)element is clicked do not hide author filter
-        if (e.target !== this.elements_.getAuthor_filter_tab_div() &&
-            !goog.dom.contains(this.elements_.getAuthor_filter_body_div(), /** @type {Node} */ (e.target))) {
+        if (e.target !== this.authorFilterElements_.getTabElement() &&
+            !goog.dom.contains(this.authorFilterElements_.getHostingElement(), /** @type {Node} */ (e.target))) {
           this.collapseAuthorFilter_();
         }
 
         // if content filter (sub)element is clicked do not hide content filter
-        if (e.target !== this.elements_.getContent_filter_tab_div() &&
-            !goog.dom.contains(this.elements_.getContent_filter_body_div(), /** @type {Node} */ (e.target))) {
+        if (e.target !== this.contentFilterElements_.getTabElement() &&
+            !goog.dom.contains(this.contentFilterElements_.getHostingElement(), /** @type {Node} */ (e.target))) {
           this.collapseContentFilter_();
         }
       }, this));
@@ -718,20 +749,17 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 goog.inherits(org.jboss.search.page.SearchPage, goog.events.EventTarget);
 
 
-/** @inheritDoc */
+/** @override */
 org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
 
-  // Call the superclass's disposeInternal() method.
   org.jboss.search.page.SearchPage.superClass_.disposeInternal.call(this);
 
-  // Dispose of all Disposable objects owned by this class.
   goog.dispose(this.elements_);
   goog.dispose(this.userQuerySearchField_);
   goog.dispose(this.query_suggestions_view_);
   goog.dispose(this.userIdle_);
   goog.dispose(this.userIdleDelay_);
 
-  // Remove listeners added by this class.
   goog.events.unlistenByKey(this.dateClickListenerId_);
   goog.events.unlistenByKey(this.projectClickListenerId_);
   goog.events.unlistenByKey(this.authorClickListenerId_);
@@ -753,14 +781,16 @@ org.jboss.search.page.SearchPage.prototype.disposeInternal = function() {
   this.unlistenDateFilter_();
   this.unlistenAuthorFilter_();
 
-  // Remove references to COM objects.
-
-  // Remove references to DOM nodes, which are COM objects in IE.
   this.log_ = null;
   delete this.xhrManager_;
   this.context_ = null;
   this.query_suggestions_model_ = null;
   delete this.queryServiceDispatcher_;
+  delete this.elements_;
+  delete this.authorFilterElements_;
+  delete this.technologyFilterElements_;
+  delete this.contentFilterElements_;
+  delete this.dateFilterElements_;
 };
 
 
@@ -1296,7 +1326,7 @@ org.jboss.search.page.SearchPage.prototype.parseQuerySuggestionsModel_ = functio
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded_ = function() {
-  return !goog.dom.classes.has(this.elements_.getDate_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+  return !goog.dom.classes.has(this.dateFilterElements_.getHostingElement(), org.jboss.core.Constants.HIDDEN);
 };
 
 
@@ -1305,7 +1335,7 @@ org.jboss.search.page.SearchPage.prototype.isDateFilterExpanded_ = function() {
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isTechnologyFilterExpanded_ = function() {
-  return !goog.dom.classes.has(this.elements_.getTechnology_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+  return !goog.dom.classes.has(this.technologyFilterElements_.getHostingElement(), org.jboss.core.Constants.HIDDEN);
 };
 
 
@@ -1314,7 +1344,7 @@ org.jboss.search.page.SearchPage.prototype.isTechnologyFilterExpanded_ = functio
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded_ = function() {
-  return !goog.dom.classes.has(this.elements_.getAuthor_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+  return !goog.dom.classes.has(this.authorFilterElements_.getHostingElement(), org.jboss.core.Constants.HIDDEN);
 };
 
 
@@ -1323,7 +1353,7 @@ org.jboss.search.page.SearchPage.prototype.isAuthorFilterExpanded_ = function() 
  * @private
  */
 org.jboss.search.page.SearchPage.prototype.isContentFilterExpanded_ = function() {
-  return !goog.dom.classes.has(this.elements_.getContent_filter_body_div(), org.jboss.core.Constants.HIDDEN);
+  return !goog.dom.classes.has(this.contentFilterElements_.getHostingElement(), org.jboss.core.Constants.HIDDEN);
 };
 
 
