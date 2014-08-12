@@ -88,8 +88,6 @@ org.jboss.search.page.SearchPage = function(context, elements) {
 
   goog.events.EventTarget.call(this);
 
-  var thiz_ = this; // TODO: get rid of thiz_ is possible
-
   /**
    * @type {goog.debug.Logger|goog.log.Logger|!goog.debug.Logger}
    * @private
@@ -106,12 +104,15 @@ org.jboss.search.page.SearchPage = function(context, elements) {
    * @type {!goog.net.XhrManager} */
   this.xhrManager_ = org.jboss.core.service.Locator.getInstance().getLookup().getXhrManager();
 
-  /** @private */ this.context_ = context;
+  /** @private */
+  this.context_ = context;
 
-  /** @private */ this.query_suggestions_view_ = new org.jboss.search.suggestions.query.view.View(
+  /** @private */
+  this.query_suggestions_view_ = new org.jboss.search.suggestions.query.view.View(
       this.elements_.getQuery_suggestions_div()
       );
-  /** @private */ this.query_suggestions_model_ = {};
+  /** @private */
+  this.query_suggestions_model_ = {};
 
   /**
    * @type {!org.jboss.core.service.query.QueryServiceDispatcher}
@@ -325,53 +326,48 @@ org.jboss.search.page.SearchPage = function(context, elements) {
    * @type {goog.events.Key}
    * @private
    */
-  this.xhrReadyListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.READY, function(e) {
-    thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_START);
-  });
+  this.xhrReadyListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.READY, goog.bind(function() {
+    this.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_START);
+  }, this));
 
   /**
    * @type {goog.events.Key}
    * @private
    */
-  this.xhrCompleteListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.COMPLETE, function(e) {
-    thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
-  });
+  this.xhrCompleteListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.COMPLETE, goog.bind(function() {
+    this.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
+  }, this));
 
   /**
    * @type {goog.events.Key}
    * @private
    */
-  this.xhrErrorListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ERROR, function(e) {
-    thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
-  });
+  this.xhrErrorListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ERROR, goog.bind(function() {
+    this.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
+  }, this));
 
   /**
    * @type {goog.events.Key}
    * @private
    */
-  this.xhrAbortListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ABORT, function(e) {
-    thiz_.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
-  });
+  this.xhrAbortListenerId_ = goog.events.listen(this.xhrManager_, goog.net.EventType.ABORT, goog.bind(function() {
+    this.dispatchEvent(org.jboss.search.suggestions.event.EventType.SEARCH_FINISH);
+  }, this));
 
   this.query_suggestions_view_.setClickCallbackFunction(
-      function() {
-        var selectedIndex = thiz_.query_suggestions_view_.getSelectedIndex();
-        thiz_.hideAndCleanSuggestionsElementAndModel_();
-        thiz_.elements_.getQuery_field().focus();
-
-        (function(selectedIndex) {
-          // TODO get query_string from model at the selectedIndex position
-          thiz_.dispatchEvent(
-              new org.jboss.search.page.event.QuerySubmitted(
-                  org.jboss.core.context.RequestParamsFactory.getInstance()
+      goog.bind(function() {
+        var selectedIndex = this.query_suggestions_view_.getSelectedIndex();
+        this.hideAndCleanSuggestionsElementAndModel_();
+        this.elements_.getQuery_field().focus();
+        this.dispatchEvent(
+            new org.jboss.search.page.event.QuerySubmitted(
+                org.jboss.core.context.RequestParamsFactory.getInstance()
                     .reset()
                     .setQueryString('option was selected by pointer (index: ' + selectedIndex + ')')
                     .build()
-              )
-          );
-
-        })(selectedIndex);
-      }
+            )
+        );
+      }, this)
   );
 
   var suggestionsCallback = function(query_string) {
@@ -387,10 +383,9 @@ org.jboss.search.page.SearchPage = function(context, elements) {
   this.dateClickListenerId_ = goog.events.listen(
       this.elements_.getDate_filter_tab_div(),
       goog.events.EventType.CLICK,
-      function() {
-        thiz_.isDateFilterExpanded_() ? thiz_.collapseDateFilter_() : thiz_.expandDateFilter_();
-      }
-      );
+      goog.bind(function() {
+        this.isDateFilterExpanded_() ? this.collapseDateFilter_() : this.expandDateFilter_();
+      }, this));
 
   /**
    * @type {goog.events.Key}
@@ -399,10 +394,9 @@ org.jboss.search.page.SearchPage = function(context, elements) {
   this.projectClickListenerId_ = goog.events.listen(
       this.elements_.getTechnology_filter_tab_div(),
       goog.events.EventType.CLICK,
-      function() {
-        thiz_.isTechnologyFilterExpanded_() ? thiz_.collapseTechnologyFilter_() : thiz_.expandTechnologyFilter_();
-      }
-      );
+      goog.bind(function() {
+        this.isTechnologyFilterExpanded_() ? this.collapseTechnologyFilter_() : this.expandTechnologyFilter_();
+      }, this));
 
   /**
    * @type {goog.events.Key}
@@ -411,10 +405,9 @@ org.jboss.search.page.SearchPage = function(context, elements) {
   this.authorClickListenerId_ = goog.events.listen(
       this.elements_.getAuthor_filter_tab_div(),
       goog.events.EventType.CLICK,
-      function() {
-        thiz_.isAuthorFilterExpanded_() ? thiz_.collapseAuthorFilter_() : thiz_.expandAuthorFilter_();
-      }
-      );
+      goog.bind(function() {
+        this.isAuthorFilterExpanded_() ? this.collapseAuthorFilter_() : this.expandAuthorFilter_();
+      }, this));
 
   /**
    * @type {goog.events.Key}
@@ -423,52 +416,50 @@ org.jboss.search.page.SearchPage = function(context, elements) {
   this.contentClickListenerId_ = goog.events.listen(
       this.elements_.getContent_filter_tab_div(),
       goog.events.EventType.CLICK,
-      function() {
-        thiz_.isContentFilterExpanded_() ? thiz_.collapseContentFilter_() : thiz_.expandContentFilter_();
-      }
-      );
+      goog.bind(function() {
+        this.isContentFilterExpanded_() ? this.collapseContentFilter_() : this.expandContentFilter_();
+      }, this));
 
   /**
    * @type {goog.events.Key}
    * @private
    */
   this.contextClickListenerId_ = goog.events.listen(
-      thiz_.context_,
+      this.context_,
       goog.events.EventType.CLICK,
-      function(event) {
+      goog.bind(function(event) {
         var e = /** @type {goog.events.Event} */ (event);
-        // thiz_.log_.info("Context clicked: " + goog.debug.expose(e));
+        // this.log_.info("Context clicked: " + goog.debug.expose(e));
 
         // if search field is clicked then do not hide search suggestions
-        if (e.target !== thiz_.elements_.getQuery_field()) {
-          thiz_.hideAndCleanSuggestionsElementAndModel_();
+        if (e.target !== this.elements_.getQuery_field()) {
+          this.hideAndCleanSuggestionsElementAndModel_();
         }
 
         // if date filter (sub)element is clicked do not hide date filter
-        if (e.target !== thiz_.elements_.getDate_filter_tab_div() &&
-            !goog.dom.contains(thiz_.elements_.getDate_filter_body_div(), /** @type {Node} */ (e.target))) {
-          thiz_.collapseDateFilter_();
+        if (e.target !== this.elements_.getDate_filter_tab_div() &&
+            !goog.dom.contains(this.elements_.getDate_filter_body_div(), /** @type {Node} */ (e.target))) {
+          this.collapseDateFilter_();
         }
 
         // if technology filter (sub)element is clicked do not hide technology filter
-        if (e.target !== thiz_.elements_.getTechnology_filter_tab_div() &&
-            !goog.dom.contains(thiz_.elements_.getTechnology_filter_body_div(), /** @type {Node} */ (e.target))) {
-          thiz_.collapseTechnologyFilter_();
+        if (e.target !== this.elements_.getTechnology_filter_tab_div() &&
+            !goog.dom.contains(this.elements_.getTechnology_filter_body_div(), /** @type {Node} */ (e.target))) {
+          this.collapseTechnologyFilter_();
         }
 
         // if author filter (sub)element is clicked do not hide author filter
-        if (e.target !== thiz_.elements_.getAuthor_filter_tab_div() &&
-            !goog.dom.contains(thiz_.elements_.getAuthor_filter_body_div(), /** @type {Node} */ (e.target))) {
-          thiz_.collapseAuthorFilter_();
+        if (e.target !== this.elements_.getAuthor_filter_tab_div() &&
+            !goog.dom.contains(this.elements_.getAuthor_filter_body_div(), /** @type {Node} */ (e.target))) {
+          this.collapseAuthorFilter_();
         }
 
         // if content filter (sub)element is clicked do not hide content filter
-        if (e.target !== thiz_.elements_.getContent_filter_tab_div() &&
-            !goog.dom.contains(thiz_.elements_.getContent_filter_body_div(), /** @type {Node} */ (e.target))) {
-          thiz_.collapseContentFilter_();
+        if (e.target !== this.elements_.getContent_filter_tab_div() &&
+            !goog.dom.contains(this.elements_.getContent_filter_body_div(), /** @type {Node} */ (e.target))) {
+          this.collapseContentFilter_();
         }
-
-      });
+      }, this));
 
   /**
    * This listener can catch events when the user navigates to the query field by other means then clicking,
@@ -480,9 +471,9 @@ org.jboss.search.page.SearchPage = function(context, elements) {
   this.query_field_focus_id_ = goog.events.listen(
       this.elements_.getQuery_field(),
       goog.events.EventType.INPUT,
-      function() {
-        thiz_.collapseAllFilters_();
-      });
+      goog.bind(function() {
+        this.collapseAllFilters_();
+      }, this));
 
   /** @private */
   this.userQuerySearchField_ = new org.jboss.search.page.element.SearchFieldHandler(
@@ -558,7 +549,7 @@ org.jboss.search.page.SearchPage = function(context, elements) {
                   var _id = clickedHit._id;
                   var uuid = d.uuid;
                   if (_id && uuid) {
-                    org.jboss.search.request.writeClickStreamStatistics(thiz_.getUserClickStreamUri(), uuid, _id);
+                    org.jboss.search.request.writeClickStreamStatistics(this.getUserClickStreamUri(), uuid, _id);
                   }
                 }
               }
