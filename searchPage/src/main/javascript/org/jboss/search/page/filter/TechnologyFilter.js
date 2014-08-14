@@ -44,6 +44,8 @@ goog.require('goog.events.KeyCodes');
 goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.events.KeyHandler.EventType');
+goog.require('goog.events.PasteHandler');
+goog.require('goog.events.PasteHandler.EventType');
 goog.require('goog.net.XhrManager.Event');
 goog.require('goog.object');
 goog.require('goog.string');
@@ -836,6 +838,21 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
       }, this));
 
   /**
+   * Handle modification of query field value caused by manual
+   * paste (ctrl+v) and right-mouse-click => paste actions.
+   * @type {goog.events.Key}
+   * @private
+   */
+  this.queryFieldPasteEventKey_ = goog.events.listen(
+      new goog.events.PasteHandler(this.query_field_),
+      [
+        goog.events.PasteHandler.EventType.AFTER_PASTE
+      ],
+      goog.bind(function() {
+        this.technologyFilterController_.input(this.query_field_.value);
+      }, this));
+
+  /**
    * Handle change of "order by".
    * @type {goog.events.Key}
    * @private
@@ -873,6 +890,7 @@ org.jboss.search.page.filter.TechnologyFilter.prototype.disposeInternal = functi
 
   goog.events.unlistenByKey(this.technologyFilterControllerKey_);
   goog.events.unlistenByKey(this.collapseKeyListenerKey_);
+  goog.events.unlistenByKey(this.queryFieldPasteEventKey_);
   goog.events.unlistenByKey(this.queryFieldListenerKey_);
   goog.events.unlistenByKey(this.technologyFilterOrderKey_);
   goog.events.unlistenByKey(this.updateOnSearchSuccessKey_);
