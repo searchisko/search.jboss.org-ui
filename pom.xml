@@ -4,7 +4,7 @@
 
     <groupId>org.jboss.search</groupId>
     <artifactId>web-ui</artifactId>
-    <version>0.9.0</version>
+    <version>1.0.0-beta-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>search.jboss.org Web UI</name>

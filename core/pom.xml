@@ -2,14 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.jboss.search.web-ui</groupId>
+    <!--<groupId>org.jboss.search.web-ui</groupId>-->
     <artifactId>core</artifactId>
+    <!--<version>1.0.0-beta-SNAPSHOT</version>-->
     <packaging>jsar</packaging>
 
     <parent>
         <groupId>org.jboss.search</groupId>
         <artifactId>web-ui</artifactId>
-        <version>0.9.0</version>
+        <version>1.0.0-beta-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <description>Set of various utilities that are used by other modules.</description>
