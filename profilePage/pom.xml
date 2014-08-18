@@ -38,6 +38,7 @@
                 <version>${jsframework.version}</version>
                 <configuration>
                     <prologue>${profile.prologue}</prologue>
+                    <browserVersion>${browserVersion}</browserVersion>
                 </configuration>
             </plugin>
         </plugins>

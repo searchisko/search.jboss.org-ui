@@ -31,6 +31,7 @@
                 <version>${jsframework.version}</version>
             </plugin>
 
+            <!--
             <plugin>
                 <groupId>com.github.jlgrock.javascript-framework</groupId>
                 <artifactId>closure-compiler-maven-plugin</artifactId>
@@ -39,6 +40,7 @@
                     <compileLevel>${closure.compiler.level}</compileLevel>
                 </configuration>
             </plugin>
+            -->
 
             <plugin>
                 <groupId>com.github.jlgrock.javascript-framework</groupId>
@@ -46,7 +48,7 @@
                 <version>${jsframework.version}</version>
                 <configuration>
                     <prologue>${profile.prologue}</prologue>
-                    <browserVersion>FF</browserVersion>
+                    <browserVersion>${browserVersion}</browserVersion>
                 </configuration>
             </plugin>
 

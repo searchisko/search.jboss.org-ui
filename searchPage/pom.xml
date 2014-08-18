@@ -38,6 +38,7 @@
                 <version>${jsframework.version}</version>
                 <configuration>
                     <prologue>${profile.prologue}</prologue>
+                    <browserVersion>${browserVersion}</browserVersion>
                 </configuration>
             </plugin>
             <plugin>
@@ -143,6 +144,76 @@
                            </execution>
                         </executions>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>production</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>rename-compiled-js-file</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <!--
+                                            Copy compiled JS into web app root.
+                                        -->
+                                        <exec dir="${project.build.directory}/${project.build.finalName}/" executable="mv">
+                                            <arg line=" -vf javascript/generated/output/compiled/${project.build.finalName}-min.js search-testing-only.js"/>
+                                        </exec>
+                                        <!--
+                                            Remove javascript folder.
+                                        -->
+                                        <exec dir="${project.build.directory}/${project.build.finalName}/" executable="rm">
+                                            <arg line=" -rf javascript design"/>
+                                        </exec>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!--
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>2.6</version>
+                        <executions>
+                            <execution>
+                                <id>copy-resources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <encoding>UTF-8</encoding>
+                                    <resources>
+                                        <resource>
+                                            <directory>
+                                                ${basedir}/target/search-web-ui-1.0.0-beta-SNAPSHOT/javascript/generated/output/compiled
+                                            </directory>
+                                            <includes>
+                                                <include>*.js</include>
+                                                <include>*.js.smap</include>
+                                            </includes>
+                                            <filtering>false</filtering>
+                                        </resource>
+                                    </resources>
+                                    <outputDirectory>${basedir}/target/search-web-ui-1.0.0-beta-SNAPSHOT
+                                    </outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    -->
                 </plugins>
             </build>
         </profile>

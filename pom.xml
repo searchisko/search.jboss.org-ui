@@ -43,15 +43,27 @@
         <jsframework.version>1.18.1</jsframework.version>
         <!-- Compiler v20131014 is used by default by CJF v1.18.1 -->
         <closure.library.version>v20131014</closure.library.version>
-        <!-- Compilation level is set in profile -->
+
         <!--<closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>-->
+        <!--<closure.compiler.level>SIMPLE_OPTIMIZATIONS</closure.compiler.level>-->
+        <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
+
+        <profile.prologue><![CDATA[
+                <script>
+                    goog.require('goog.testing.ContinuationTestCase');
+                    goog.require('goog.testing.jsunit');
+                </script>
+                ]]></profile.prologue>
+        <browserVersion>FF</browserVersion>
     </properties>
 
+    <!--
     <modules>
         <module>core</module>
         <module>searchPage</module>
         <module>profilePage</module>
     </modules>
+    -->
 
     <dependencies>
         <dependency>
@@ -61,6 +73,16 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.javascript</groupId>
+                <artifactId>closure-compiler</artifactId>
+                <version>${closure.library.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
@@ -78,20 +100,14 @@
     <profiles>
 
         <!-- No JS optimization. -->
+        <!--
         <profile>
             <id>whitespace</id>
             <properties>
-                <!--<closure.compiler.level>SIMPLE_OPTIMIZATIONS</closure.compiler.level>-->
                 <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>
-                <!--<closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>-->
-                <profile.prologue><![CDATA[
-                <script>
-                    goog.require('goog.testing.ContinuationTestCase');
-                    goog.require('goog.testing.jsunit');
-                </script>
-                ]]></profile.prologue>
             </properties>
         </profile>
+        -->
 
         <!-- Advanced JS optimization and stripping out goog.DEBUG and WTF.ENABLED parts. -->
         <profile>
@@ -99,15 +115,11 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties>
-                <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
-                <profile.prologue><![CDATA[
-                <script>
-                    goog.require('goog.testing.ContinuationTestCase');
-                    goog.require('goog.testing.jsunit');
-                </script>
-                ]]></profile.prologue>
-            </properties>
+            <modules>
+                <module>core</module>
+                <module>searchPage</module>
+                <module>profilePage</module>
+            </modules>
             <build>
                 <plugins>
                     <plugin>
@@ -128,13 +140,6 @@
                                 </define>
                             </defines>
                         </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.google.javascript</groupId>
-                                <artifactId>closure-compiler</artifactId>
-                                <version>${closure.library.version}</version>
-                            </dependency>
-                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
@@ -149,15 +154,11 @@
         -->
         <profile>
             <id>jenkins</id>
-            <properties>
-                <closure.compiler.level>ADVANCED_OPTIMIZATIONS</closure.compiler.level>
-                <profile.prologue><![CDATA[
-                <script>
-                    goog.require('goog.testing.ContinuationTestCase');
-                    goog.require('goog.testing.jsunit');
-                </script>
-                ]]></profile.prologue>
-            </properties>
+            <modules>
+                <module>core</module>
+                <module>searchPage</module>
+                <module>profilePage</module>
+            </modules>
             <build>
                 <plugins>
                     <plugin>
@@ -178,13 +179,42 @@
                                 </define>
                             </defines>
                         </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.google.javascript</groupId>
-                                <artifactId>closure-compiler</artifactId>
-                                <version>${closure.library.version}</version>
-                            </dependency>
-                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--
+            ==========================================================
+            TBD
+            ==========================================================
+        -->
+        <profile>
+            <id>production</id>
+            <modules>
+                <module>core</module>
+                <module>searchPage</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.jlgrock.javascript-framework</groupId>
+                        <artifactId>closure-compiler-maven-plugin</artifactId>
+                        <version>${jsframework.version}</version>
+                        <configuration>
+                            <defines>
+                                <define>
+                                    <defineName>goog.ENABLE_DEBUG_LOADER</defineName>
+                                    <value>false</value>
+                                    <valueType>boolean</valueType>
+                                </define>
+                                <define>
+                                    <defineName>goog.DEBUG</defineName>
+                                    <value>false</value>
+                                    <valueType>boolean</valueType>
+                                </define>
+                            </defines>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
