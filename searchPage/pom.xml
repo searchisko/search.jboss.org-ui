@@ -118,7 +118,7 @@
                                <configuration>
                                    <tasks>
                                        <exec dir="${project.build.directory}/${project.build.finalName}/" executable="mv">
-                                           <arg line=" -vf javascript/generated/output/compiled/${project.build.finalName}-min.js search-testing-only.js"/>
+                                           <arg line=" -vf javascript/generated/output/compiled/${project.build.finalName}-min.js search_app.js"/>
                                        </exec>
                                    </tasks>
                                </configuration>
