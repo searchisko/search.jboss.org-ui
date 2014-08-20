@@ -200,11 +200,16 @@
 
         <!--
             ==========================================================
-            Production build includes the search app page only now.
+            Production build includes the search app page only now
+            and it skips all tests.
             ==========================================================
         -->
         <profile>
             <id>production</id>
+            <properties>
+                <skipTests>true</skipTests>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
             <modules>
                 <module>core</module>
                 <module>searchPage</module>

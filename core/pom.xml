@@ -24,4 +24,19 @@
         </plugins>
     </build>
 
+    <!--
+        ==========================================================
+        Production build does not need to perform heavy
+        compilation of the core module. It it compiled later.
+        ==========================================================
+    -->
+    <profiles>
+        <profile>
+            <id>production</id>
+            <properties>
+                <closure.compiler.level>WHITESPACE_ONLY</closure.compiler.level>
+            </properties>
+        </profile>
+    </profiles>
+
 </project>

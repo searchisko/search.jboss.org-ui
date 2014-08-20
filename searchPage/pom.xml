@@ -141,9 +141,6 @@
         -->
         <profile>
             <id>production</id>
-            <!--<properties>-->
-                <!--<skipTests>true</skipTests>-->
-            <!--</properties>-->
             <build>
                 <plugins>
 

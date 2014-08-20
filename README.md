@@ -19,9 +19,10 @@ To get highly minified and optimized version run:
 
     $ mvn clean package -Pproduction
     
-If you want to skip tests use the following:    
+By default `production` profile skips all tests and performs advanced compilation only for the very last processed module.
+If you want to execute tests use the following:    
     
-    $ mvn clean package -Pproduction -DskipTests
+    $ mvn clean package -Pproduction -DskipTests=false -Dmaven.test.skip=false
 
 ### For Developers
 
