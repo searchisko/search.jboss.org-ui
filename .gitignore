@@ -16,7 +16,7 @@ target/
 
 # --------------------------------------------------------------------
 # This files are used only for development and are generated
-# by *ForTesting.sh scripts. They should never get into repo the repo.
+# by shell scripts. They should never get into repo the repo.
 
-searchPage/src/main/webapp/search-testing-only.js
+searchPage/src/main/webapp/search_app.js
 profilePage/src/main/webapp/profile-testing-only.js

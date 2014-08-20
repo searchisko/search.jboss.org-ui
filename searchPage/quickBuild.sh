@@ -14,7 +14,7 @@
   --root=./src/main/javascript \
   --namespace="init.search" \
   --output_mode='script' \
-  --output_file=./src/main/webapp/search-testing-only.js
+  --output_file=./src/main/webapp/search_app.js
 
 if [ $? -ne 0 ]; then
   echo "# ---------------------------------------"

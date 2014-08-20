@@ -4,7 +4,6 @@
 
     <!--<groupId>org.jboss.search.web-ui</groupId>-->
     <artifactId>search-web-ui</artifactId>
-    <!--<version>1.0.0-beta-SNAPSHOT</version>-->
     <packaging>war</packaging>
 
     <parent>
@@ -29,22 +28,10 @@
             <plugin>
                 <groupId>com.github.jlgrock.javascript-framework</groupId>
                 <artifactId>jsar-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <extensions>true</extensions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.jlgrock.javascript-framework</groupId>
-                <artifactId>closure-testing-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <configuration>
-                    <prologue>${profile.prologue}</prologue>
-                    <browserVersion>${browserVersion}</browserVersion>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.googlecode.jstd-maven-plugin</groupId>
                 <artifactId>jstd-maven-plugin</artifactId>
-                <version>${jstd.plugin.version}</version>
                 <configuration>
                     <verbose>true</verbose>
                     <!-- You might need to adjust this depending on your OS.  On Mac,
@@ -68,16 +55,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
             </plugin>
 
             <!--
@@ -111,6 +88,11 @@
         </plugins>
     </build>
 
+    <!--
+        ==========================================================
+        Profile used for Jenkins build.
+        ==========================================================
+    -->
     <profiles>
         <profile>
             <id>jenkins</id>
@@ -119,7 +101,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.7</version>
                         <executions>
                             <!--
                                 ==========================================================
@@ -147,39 +128,138 @@
                 </plugins>
             </build>
         </profile>
+
+        <!--
+            ===============================================================
+            Profile used to produce a production distribution:
+            - build the search page app only for now
+            - minifies css into a single file
+            - move compiled js and smap files into web app root
+            - remove all the garbage
+            - replace relevant resource paths in the main index.html
+            ===============================================================
+        -->
         <profile>
             <id>production</id>
+            <!--<properties>-->
+                <!--<skipTests>true</skipTests>-->
+            <!--</properties>-->
             <build>
                 <plugins>
+
+                    <plugin>
+                        <groupId>com.samaxes.maven</groupId>
+                        <artifactId>minify-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>minify-css</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>minify</goal>
+                                </goals>
+                                <configuration>
+                                    <charset>UTF-8</charset>
+                                    <cssSourceDir>css</cssSourceDir>
+                                    <cssFinalFile>style.css</cssFinalFile>
+                                    <!--
+                                        <cssSourceIncludes>
+                                            <cssSourceInclude>**/*.css</cssSourceInclude>
+                                        </cssSourceIncludes>
+                                        <cssSourceExcludes>
+                                            <cssSourceExclude>jbosscommunity/**</cssSourceExclude>
+                                        </cssSourceExcludes>
+                                    -->
+                                    <!-- Rather list files in the same order as stated in index.html -->
+                                    <cssSourceFiles>
+                                        <cssSourceFile>reset.css</cssSourceFile>
+                                        <cssSourceFile>reset_override.css</cssSourceFile>
+                                        <cssSourceFile>search_base.css</cssSourceFile>
+                                        <cssSourceFile>search_status_window.css</cssSourceFile>
+                                        <cssSourceFile>search_entertain.css</cssSourceFile>
+                                        <cssSourceFile>search_layout.css</cssSourceFile>
+                                        <cssSourceFile>search_field.css</cssSourceFile>
+                                        <cssSourceFile>search_suggestions.css</cssSourceFile>
+                                        <cssSourceFile>search_filter_active.css</cssSourceFile>
+                                        <cssSourceFile>search_filter_tab.css</cssSourceFile>
+                                        <cssSourceFile>search_results.css</cssSourceFile>
+                                        <cssSourceFile>search_visualization_histogram.css</cssSourceFile>
+                                        <cssSourceFile>search_log.css</cssSourceFile>
+                                        <cssSourceFile>goog/css/datepicker.css</cssSourceFile>
+                                        <cssSourceFile>goog/css/popupdatepicker.css</cssSourceFile>
+                                        <cssSourceFile>goog/goog.ui.z-index.override.css</cssSourceFile>
+                                    </cssSourceFiles>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.7</version>
                         <executions>
                             <execution>
-                                <id>rename-compiled-js-file</id>
+                                <id>rename-and-copy-resources</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <!--
-                                            Copy compiled JS into web app root.
-                                        -->
+                                        <!-- Copy compiled JS into web app root -->
                                         <exec dir="${project.build.directory}/${project.build.finalName}/" executable="mv">
-                                            <arg line=" -vf javascript/generated/output/compiled/${project.build.finalName}-min.js search-testing-only.js"/>
+                                            <arg line=" -vf javascript/generated/output/compiled/${project.build.finalName}-min.js search_app.js"/>
                                         </exec>
-                                        <!--
-                                            Remove javascript folder.
-                                        -->
+                                        <!-- Copy smap file to web app root as well -->
+                                        <exec dir="${project.build.directory}/${project.build.finalName}/" executable="mv">
+                                            <arg line=" -vf javascript/generated/output/compiled/${project.build.finalName}-min.js.smap ."/>
+                                        </exec>
+                                        <!-- Copy minified css file to web app root -->
+                                        <exec dir="${project.build.directory}/${project.build.finalName}/css" executable="mv">
+                                            <arg line=" -vf style.css .."/>
+                                        </exec>
+                                        <!-- Delete css folder -->
+                                        <exec dir="${project.build.directory}/${project.build.finalName}" executable="rm">
+                                            <arg line=" -rf css"/>
+                                        </exec>
+                                        <!-- Create empty css folder -->
+                                        <exec dir="${project.build.directory}/${project.build.finalName}" executable="mkdir">
+                                            <arg line=" css"/>
+                                        </exec>
+                                        <!-- Copy minified css file to css folder -->
+                                        <exec dir="${project.build.directory}/${project.build.finalName}/" executable="mv">
+                                            <arg line=" -vf style.css css"/>
+                                        </exec>
+                                        <!-- Remove folders -->
                                         <exec dir="${project.build.directory}/${project.build.finalName}/" executable="rm">
-                                            <arg line=" -rf javascript design"/>
+                                            <arg line=" -rf javascript design WEB-INF META-INF"/>
                                         </exec>
                                     </tasks>
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <file>${basedir}/target/${project.artifactId}-${project.version}/index.html</file>
+                            <regex>true</regex>
+                            <regexFlags>
+                                <regexFlag>DOTALL</regexFlag>
+                            </regexFlags>
+                            <token><![CDATA[<!--BeginReplaceForProduction.*EndReplaceForProduction-->]]></token>
+                            <value><![CDATA[<link rel="stylesheet" href="css/style.css">]]></value>
+                        </configuration>
                     </plugin>
 
                     <!--

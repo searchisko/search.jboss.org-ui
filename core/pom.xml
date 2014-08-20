@@ -4,7 +4,6 @@
 
     <!--<groupId>org.jboss.search.web-ui</groupId>-->
     <artifactId>core</artifactId>
-    <!--<version>1.0.0-beta-SNAPSHOT</version>-->
     <packaging>jsar</packaging>
 
     <parent>
@@ -21,69 +20,6 @@
             <plugin>
                 <groupId>com.github.jlgrock.javascript-framework</groupId>
                 <artifactId>jsar-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <extensions>true</extensions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.jlgrock.javascript-framework</groupId>
-                <artifactId>jsdependency-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-            </plugin>
-
-            <!--
-            <plugin>
-                <groupId>com.github.jlgrock.javascript-framework</groupId>
-                <artifactId>closure-compiler-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <configuration>
-                    <compileLevel>${closure.compiler.level}</compileLevel>
-                </configuration>
-            </plugin>
-            -->
-
-            <plugin>
-                <groupId>com.github.jlgrock.javascript-framework</groupId>
-                <artifactId>closure-testing-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <configuration>
-                    <prologue>${profile.prologue}</prologue>
-                    <browserVersion>${browserVersion}</browserVersion>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.jlgrock.javascript-framework</groupId>
-                <artifactId>jspreprocessor-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-            </plugin>
-
-            <!--
-            <plugin>
-                <groupId>com.github.jlgrock.javascript-framework</groupId>
-                <artifactId>jsdocs-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jsar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
-
-            <plugin>
-                <groupId>com.github.jlgrock.javascript-framework</groupId>
-                <artifactId>source-archive-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>js-gen-source-archive</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

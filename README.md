@@ -4,12 +4,12 @@ Upcoming new version of search frontend for <http://search.jboss.org> (work in p
 
 ### Build from source
 
-#### Development - fast build
+#### Development - quick build
 
 To get non-minified and non-optimized version run
 
     $ cd searchPage
-    $ searchForTesting.sh
+    $ ./quickBuild.sh
 
 and follow the instructions.
 
@@ -17,7 +17,11 @@ and follow the instructions.
 
 To get highly minified and optimized version run:
 
-    $ mvn clean package
+    $ mvn clean package -Pproduction
+    
+If you want to skip tests use the following:    
+    
+    $ mvn clean package -Pproduction -DskipTests
 
 ### For Developers
 

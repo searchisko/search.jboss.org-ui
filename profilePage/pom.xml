@@ -4,7 +4,6 @@
 
     <!--<groupId>org.jboss.search.web-ui</groupId>-->
     <artifactId>profile-web-ui</artifactId>
-    <!--<version>1.0.0-beta-SNAPSHOT</version>-->
     <packaging>war</packaging>
 
     <parent>
@@ -29,17 +28,6 @@
             <plugin>
                 <groupId>com.github.jlgrock.javascript-framework</groupId>
                 <artifactId>jsar-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <extensions>true</extensions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.jlgrock.javascript-framework</groupId>
-                <artifactId>closure-testing-maven-plugin</artifactId>
-                <version>${jsframework.version}</version>
-                <configuration>
-                    <prologue>${profile.prologue}</prologue>
-                    <browserVersion>${browserVersion}</browserVersion>
-                </configuration>
             </plugin>
         </plugins>
     </build>

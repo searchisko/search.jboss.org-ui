@@ -4,9 +4,7 @@
 
     <meta charset="UTF-8">
 
-    <!-- Consider using http://www.type-together.com/Bree for logo type -->
-    <!--<link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>-->
-
+    <!--BeginReplaceForProduction-->
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/reset_override.css">
     <link rel="stylesheet" href="css/search_base.css">
@@ -26,6 +24,7 @@
     <link rel="stylesheet" href="css/goog/css/datepicker.css">
     <link rel="stylesheet" href="css/goog/css/popupdatepicker.css">
     <link rel="stylesheet" href="css/goog/goog.ui.z-index.override.css">
+    <!--EndReplaceForProduction-->
 
     <title>JBoss Developer Search</title>
 
@@ -178,13 +177,7 @@
         // var CLOSURE_BASE_PATH = ".";
     </script>
 
-    <!-- SWITCH -->
-        <!-- in production -->
-        <!--<script type="text/javascript" src="javascript/compiled/search.jboss.org.web-ui-min.js" charset="UTF-8"></script>-->
-
-        <!-- in development -->
-        <script type="text/javascript" src="search-testing-only.js" charset="UTF-8"></script>
-    <!-- END -->
+    <script type="text/javascript" src="search_app.js" charset="UTF-8"></script>
 
 </body>
 </html>
