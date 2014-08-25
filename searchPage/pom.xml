@@ -254,8 +254,16 @@
                             <regexFlags>
                                 <regexFlag>DOTALL</regexFlag>
                             </regexFlags>
-                            <token><![CDATA[<!--BeginReplaceForProduction.*EndReplaceForProduction-->]]></token>
-                            <value><![CDATA[<link rel="stylesheet" href="css/style.css">]]></value>
+                            <replacements>
+                                <replacement>
+                                    <token><![CDATA[<body>]]></token>
+                                    <valueFile>${basedir}/src/main/resources/production.Google.Tag.Manager</valueFile>
+                                </replacement>
+                                <replacement>
+                                    <token><![CDATA[<!--BeginReplaceForProduction.*EndReplaceForProduction-->]]></token>
+                                    <value><![CDATA[<link rel="stylesheet" href="css/style.css">]]></value>
+                                </replacement>
+                            </replacements>
                         </configuration>
                     </plugin>
 
