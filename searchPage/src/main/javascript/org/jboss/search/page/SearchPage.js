@@ -20,6 +20,7 @@
  * @fileoverview The main search page.
  *
  * @author lvlcek@redhat.com (Lukas Vlcek)
+ * @suppress {deprecated}
  */
 
 goog.provide('org.jboss.search.page.SearchPage');
