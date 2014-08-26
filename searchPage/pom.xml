@@ -207,9 +207,11 @@
                                             <arg line=" -vf javascript/generated/output/compiled/${project.build.finalName}-min.js search_app.js"/>
                                         </exec>
                                         <!-- Copy smap file to web app root as well -->
+                                        <!--
                                         <exec dir="${project.build.directory}/${project.build.finalName}/" executable="mv">
                                             <arg line=" -vf javascript/generated/output/compiled/${project.build.finalName}-min.js.smap ."/>
                                         </exec>
+                                        -->
                                         <!-- Copy minified css file to web app root -->
                                         <exec dir="${project.build.directory}/${project.build.finalName}/css" executable="mv">
                                             <arg line=" -vf style.css .."/>
