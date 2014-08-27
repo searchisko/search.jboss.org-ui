@@ -25,7 +25,9 @@
 goog.provide('org.jboss.core.widget.list.ListWidgetFactory');
 
 goog.require('goog.array');
+goog.require('org.jboss.core.widget.list.BasicListItemRenderer');
 goog.require('org.jboss.core.widget.list.ListController');
+goog.require('org.jboss.core.widget.list.ListItemRenderer');
 goog.require('org.jboss.core.widget.list.ListModel');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
 goog.require('org.jboss.core.widget.list.ListView');
@@ -35,7 +37,7 @@ goog.require('org.jboss.core.widget.list.ListViewContainer');
 /**
  * Factory method to create a new controller instance.
  * <ul>
- *     <li> lists: array of tuples: key, caption (caption is optional)
+ *     <li> lists: array of objects: key, caption (can be null), renderer (constructor)
  *     <li> controllerConstructor: reference to constructor of object extending {@link ListController}
  *     <li> additionalConstructorParams: if constructor accepts additional parameters (except mandatory lmc and lvc) then supply array with them here (optional)
  *     <li> attach: which HTML Element to render the view to
@@ -44,7 +46,7 @@ goog.require('org.jboss.core.widget.list.ListViewContainer');
  * See ListWidgetFactory_test.js for example.
  *
  * @param {{
- *    lists: !Array.<{key: string, caption: string}>,
+ *    lists: !Array.<{key: string, caption: string, renderer: function(new:org.jboss.core.widget.list.ListItemRenderer)}>,
  *    controllerConstructor: !function(new:org.jboss.core.widget.list.ListController, org.jboss.core.widget.list.ListModelContainer, org.jboss.core.widget.list.ListViewContainer, ...[*]),
  *    additionalConstructorParams: (?Array.<*>|undefined),
  *    attach: !Element
@@ -70,6 +72,21 @@ org.jboss.core.widget.list.ListWidgetFactory.build = function(conf) {
         ).caption
         )
     );
+    var rendererConstructor = goog.array.find(
+        conf.lists, function(item) {
+          return item.key == key;
+        }).renderer;
+
+    /** @type {org.jboss.core.widget.list.ListItemRenderer} */
+    var renderer;
+
+    if (goog.isDefAndNotNull(rendererConstructor) && goog.isFunction(rendererConstructor)) {
+      renderer = /** @type {org.jboss.core.widget.list.ListItemRenderer} */ (Object.create(rendererConstructor.prototype));
+      rendererConstructor.apply(renderer);
+    } else {
+      renderer = new org.jboss.core.widget.list.BasicListItemRenderer();
+    }
+
     viewArray.push(
         new org.jboss.core.widget.list.ListView(
         key,
@@ -77,7 +94,8 @@ org.jboss.core.widget.list.ListWidgetFactory.build = function(conf) {
             conf.lists, function(item) {
               return item.key == key;
             }
-        ).caption
+        ).caption,
+        renderer
         )
     );
   }, org.jboss.core.widget.list.ListWidgetFactory);

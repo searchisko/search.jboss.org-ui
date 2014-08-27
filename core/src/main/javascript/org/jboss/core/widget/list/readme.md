@@ -9,6 +9,7 @@ UI components similar to [Spotlight][].
 
 [Spotlight]: http://en.wikipedia.org/wiki/Spotlight_(software)
 
+
 ## Design
 
 The design has been inspired by [MVC pattern] and it enables the developer to focus on the "C" (standing for the "controller")
@@ -17,6 +18,7 @@ part and do not bother much about the rest of the code.
 [MVC pattern]: http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller
 
 TODO: insert image that would describe the design.
+
 
 ## Important classes
 
@@ -30,6 +32,35 @@ for particular use cases. Instances of `ListController` are not instantiated dir
 To see example go to [EchoListControllerTest.js](EchoListControllerTest.js) which is a simple implementation used
 for manual testing (to see it in action open `core/src/test/html/org/jboss/core/widget/list/InteractiveListWidget_test.html`
 in web browser.)
+
+
+### ListItemRenderer
+
+Is a simple interface used by the `ListController` (and related classes) to get HTML representation of individual
+`ListItem`, ie. single item of the list.
+
+##### `BasicListItemRenderer`
+
+If not stated otherwise a default `BasicListItemRenderer` implementation is used.
+ 
+##### `SafeHTMLListItemRenderer`
+
+This class assumes the input content contains HTML and convert it into [DocumentFragment](https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment)
+and it makes sure it is sanitized. By default the most strict sanitization is used and especially all URIs are removed
+from Element attributes. This can be customized by extending this class and overriding the `urlPolicy` function.
+ 
+For example it is possible to allow all URIs that access trusted host: 
+ 
+```javascript
+/** @override */
+my.TrustedHostRenderer.prototype.urlPolicy = function(url) {
+  if ('my.trusted.domain' == goog.uri.utils.getDomain(url)) {
+    return url;
+  }
+  return null;
+};
+```
+
 
 ### ListWidgetFactory
 
@@ -53,6 +84,7 @@ var controller = org.jboss.core.widget.list.ListWidgetFactory.build({
 controller.input('I am the user input...');
 ```
 
+
 ##### `controllerConstructor` and `additionalConstructorParams`
 
 This will return instance of `fully.qualified.mane.of.ListController` class which is passed both the `ListModelContainer`
@@ -64,6 +96,21 @@ they can be passed via `additionalConstructorParams` field of the configuration 
 The `lists` configuration option describes lists that both the model and view will reflect. Each list requires unique
 `key` and optional `caption`. If the `caption` is provided then it will be rendered for each relevant non-empty model.
 
+In addition to this each list can also specify `renderer`. It must reference to constructor of class implementing
+`ListItemRenderer`.
+
+For example:
+
+```javascript
+var controller = org.jboss.core.widget.list.ListWidgetFactory.build({
+    lists: [
+        { key: 'LIST_1', caption: null, renderer: org.jboss.core.widget.list.BasicListItemRenderer },
+        { key: 'LIST_2', caption: 'List caption' }
+    ],
+    ...
+});
+```
+
 ##### `attach`
 
 The `attach` configuration option contains reference to the DOM element which the controller will render the view to.
@@ -73,6 +120,7 @@ gets the user input and passes it to all the `DataSource`s and stream the incomi
 (via `ListModelContainer`) which triggers update of the view layer. 
 
 [Factory]: http://en.wikipedia.org/wiki/Factory_(object-oriented_programming)
+
 
 ### DataSource
 
@@ -100,11 +148,13 @@ MyDataSource.prototype.get = function(query) {
 };
 ```
 
+
 ## Selecting List Items
 
 User can interact with the List Widget view layer via pointing device (mouse) or keyboard (or both). User has the option to
 select or unselect individual list items. This can be accomplished via two objects `KeyboardListener` and `MouseListener`
 that both can be **set** and **unset** on the controller at runtime (after controller is instantiated).
+
 
 ### KeyboardListener
 
@@ -119,6 +169,7 @@ var keyboardListener_ = new org.jboss.core.widget.list.keyboard.InputFieldKeyboa
 controller.setKeyboardListener(keyboardListener_);
 ```
 
+
 ### MouseListener
 
 [MouseListener](mouse/MouseListener.js) is ...TBD. Controller can be set MouseListener instance at runtime.
@@ -129,7 +180,9 @@ var mouseListener_ = new org.jboss.core.widget.list.mouse.MouseListener(hostingD
 controller.setMouseListener(mouseListener_);
 ```
 
+
 ## Examples
+
 
 ### Simple Echo Box
 
@@ -141,6 +194,7 @@ from remote data source).
 ```javascript
 // JavaScript example here.
 ```
+
 
 ### Search Suggestions
 

@@ -50,10 +50,11 @@
 		goog.require('goog.events.KeyHandler');
 		goog.require('goog.events.KeyHandler.EventType');
 		goog.require('goog.dom');
+		goog.require('org.jboss.core.widget.list.EchoListControllerTest');
 		goog.require('org.jboss.core.widget.list.ListWidgetFactory');
+		goog.require('org.jboss.core.widget.list.SafeHTMLListItemRenderer');
 		goog.require('org.jboss.core.widget.list.keyboard.InputFieldKeyboardListener');
 		goog.require('org.jboss.core.widget.list.mouse.MouseListener');
-		goog.require('org.jboss.core.widget.list.EchoListControllerTest');
 	</script>
 </head>
 <body>
@@ -104,8 +105,16 @@
 			lists: [
 				// the first item list is without caption (you can also omit the caption property at all)
 				// the second item list has caption
-				{key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1, caption: 'Delayed (2 sec)'},
-				{key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2, caption: 'Fast'}
+				{
+                    key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1,
+                    caption: 'Delayed (2 sec)',
+                    renderer: org.jboss.core.widget.list.SafeHTMLListItemRenderer
+                },
+				{
+                    key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2,
+                    caption: 'Fast',
+                    renderer: org.jboss.core.widget.list.SafeHTMLListItemRenderer
+                }
 			],
 			controllerConstructor: org.jboss.core.widget.list.EchoListControllerTest,
 			additionalConstructorParams: [{delay:2000, repFactor:3}, {delay:0, repFactor:13}],
@@ -150,8 +159,16 @@
             lists: [
                 // the first item list is without caption (you can also omit the caption property at all)
                 // the second item list has caption
-                {key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1, caption: 'Delayed (1 sec)'},
-                {key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2, caption: 'Fast'}
+                {
+                    key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY1,
+                    caption: 'Delayed (1 sec)',
+                    renderer: org.jboss.core.widget.list.SafeHTMLListItemRenderer
+                },
+                {
+                    key: org.jboss.core.widget.list.EchoListControllerTest.KEYS.KEY2,
+                    caption: 'Fast',
+                    renderer: org.jboss.core.widget.list.SafeHTMLListItemRenderer
+                }
             ],
             controllerConstructor: org.jboss.core.widget.list.EchoListControllerTest,
             additionalConstructorParams: [{delay:1000, repFactor:5}, {delay:0, repFactor:20}],

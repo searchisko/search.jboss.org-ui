@@ -61,6 +61,7 @@ goog.require('org.jboss.core.widget.list.ListItem');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
 goog.require('org.jboss.core.widget.list.ListViewContainer');
 goog.require('org.jboss.core.widget.list.ListWidgetFactory');
+goog.require('org.jboss.core.widget.list.SafeHTMLListItemRenderer');
 goog.require('org.jboss.core.widget.list.datasource.DataSource');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEvent');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEventType');
@@ -723,7 +724,8 @@ org.jboss.search.page.filter.TechnologyFilter = function(element, query_field, t
     lists: [
       {
         caption: 'Matching Technologies',
-        key: org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.MATCHING
+        key: org.jboss.search.page.filter.TechnologyFilterController.LIST_KEYS.MATCHING,
+        renderer: org.jboss.core.widget.list.SafeHTMLListItemRenderer
       },
       {
         caption: 'Did You Mean?',

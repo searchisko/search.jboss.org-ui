@@ -20,6 +20,7 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.testing.ContinuationTestCase');
 goog.require('goog.testing.jsunit');
+goog.require('org.jboss.core.widget.list.BasicListItemRenderer');
 goog.require('org.jboss.core.widget.list.ListItem');
 goog.require('org.jboss.core.widget.list.ListModel');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
@@ -81,10 +82,12 @@ function testHostingDOMContentAfterViewesWereUpdates() {
   var lm3 = new org.jboss.core.widget.list.ListModel('a3', 'caption a3');
   var lmc = new org.jboss.core.widget.list.ListModelContainer([lm1, lm2, lm3]);
 
+  var renderer = new org.jboss.core.widget.list.BasicListItemRenderer();
+
   // setup views and tell them which models they should observe for changes
-  var lv1 = new org.jboss.core.widget.list.ListView('a1', 'caption a1');
-  var lv2 = new org.jboss.core.widget.list.ListView('a2', 'caption a2');
-  var lv3 = new org.jboss.core.widget.list.ListView('a3', 'caption a3');
+  var lv1 = new org.jboss.core.widget.list.ListView('a1', 'caption a1', renderer);
+  var lv2 = new org.jboss.core.widget.list.ListView('a2', 'caption a2', renderer);
+  var lv3 = new org.jboss.core.widget.list.ListView('a3', 'caption a3', renderer);
   var lvc = new org.jboss.core.widget.list.ListViewContainer([lv1, lv2, lv3], lmc, hostingDom);
 
   goog.events.listen(
@@ -185,7 +188,9 @@ function testEmptyListDiv() {
   var lm1 = new org.jboss.core.widget.list.ListModel('a1', 'caption a1');
   var lmc = new org.jboss.core.widget.list.ListModelContainer([lm1]);
 
-  var lv1 = new org.jboss.core.widget.list.ListView('a1', 'caption a1');
+  var renderer = new org.jboss.core.widget.list.BasicListItemRenderer();
+
+  var lv1 = new org.jboss.core.widget.list.ListView('a1', 'caption a1', renderer);
   var lvc = new org.jboss.core.widget.list.ListViewContainer([lv1], lmc, hostingDom);
 
   assertEquals('hosting element contains 1 list', 1, goog.dom.getChildren(hostingDom).length);
@@ -252,8 +257,10 @@ function testDOMwithActiveItems() {
   var lm2 = new org.jboss.core.widget.list.ListModel('a2', 'caption a2');
   var lmc = new org.jboss.core.widget.list.ListModelContainer([lm1, lm2]);
 
-  var lv1 = new org.jboss.core.widget.list.ListView('a1', 'caption a1');
-  var lv2 = new org.jboss.core.widget.list.ListView('a2', 'caption a2');
+  var renderer = new org.jboss.core.widget.list.BasicListItemRenderer();
+
+  var lv1 = new org.jboss.core.widget.list.ListView('a1', 'caption a1', renderer);
+  var lv2 = new org.jboss.core.widget.list.ListView('a2', 'caption a2', renderer);
   var lvc = new org.jboss.core.widget.list.ListViewContainer([lv1, lv2], lmc, hostingDom);
 
   goog.events.listen(

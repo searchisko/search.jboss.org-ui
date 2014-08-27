@@ -17,31 +17,37 @@
  */
 
 /**
- * @fileoverview
+ * @fileoverview A view representing a single {@link ListModel}. It is usually not directly used by client
+ * but it is instantiated and managed by the {@link ListController} behind the scenes.
  *
  * @author lvlcek@redhat.com (Lukas Vlcek)
  */
 goog.provide('org.jboss.core.widget.list.ListView');
 goog.provide('org.jboss.core.widget.list.ListView.Constants');
 
+goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.dom.classes');
 goog.require('org.jboss.core.Constants');
+goog.require('org.jboss.core.widget.list.ListItemRenderer');
 goog.require('org.jboss.core.widget.list.ListModel');
 
 
 
 /**
- * A view representing a single {@link ListModel}. But it is not strictly tied to the {@link ListModel},
- * see {@link #constructNewDOM()}.
+ * A constructor.
  *
  * @param {string} id
  * @param {?string} caption
+ * @param {org.jboss.core.widget.list.ListItemRenderer} listItemRenderer
  * @constructor
+ * @extends {goog.Disposable}
  */
-org.jboss.core.widget.list.ListView = function(id, caption) {
+org.jboss.core.widget.list.ListView = function(id, caption, listItemRenderer) {
+
+  goog.Disposable.call(this);
 
   /**
    * @type {string}
@@ -54,6 +60,20 @@ org.jboss.core.widget.list.ListView = function(id, caption) {
    * @private
    */
   this.caption_ = caption;
+
+  /**
+   * @type {org.jboss.core.widget.list.ListItemRenderer}
+   * @private
+   */
+  this.renderer_ = listItemRenderer;
+};
+goog.inherits(org.jboss.core.widget.list.ListView, goog.Disposable);
+
+
+/** @override */
+org.jboss.core.widget.list.ListView.prototype.disposeInternal = function() {
+  org.jboss.core.widget.list.ListView.superClass_.disposeInternal.call(this);
+  this.renderer_ = null;
 };
 
 
@@ -113,9 +133,7 @@ org.jboss.core.widget.list.ListView.prototype.constructNewDOM = function(opt_lis
             if (opt_listModel.isItemSelected(listItem.getId())) {
               goog.dom.classes.add(item, org.jboss.core.Constants.SELECTED);
             }
-            // goog.dom.appendChild(item, goog.dom.createTextNode(listItem.getValue()));
-            // TODO: we need to be careful about XSS and catching click event with nested elements!
-            goog.dom.appendChild(item, goog.dom.htmlToDocumentFragment(listItem.getValue()));
+            goog.dom.appendChild(item, this.renderer_.render(listItem));
             goog.dom.appendChild(element, item);
           },
           this
