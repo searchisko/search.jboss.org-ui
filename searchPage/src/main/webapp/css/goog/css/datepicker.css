@@ -21,12 +21,22 @@
     -moz-user-focus: normal;
     -moz-user-select: none;
     position: relative;
-    border: 1px solid #000;
+    /*border: 1px solid #000;*/
+    border: 1px solid #777;
     float: left;
     padding: 2px;
     color: #000;
-    background: #c3d9ff;
+    /*background: #c3d9ff;*/
+    background: #e6e6e9;
     cursor: default;
+
+    -moz-box-shadow: 1px 1px 7px rgb(120, 120, 120);
+    -webkit-box-shadow: 1px 1px 7px rgb(120, 120, 120);
+    box-shadow: 1px 1px 7px rgb(120, 120, 120);
+
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius:  5px;
 }
 
 .goog-date-picker th {
