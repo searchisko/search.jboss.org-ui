@@ -55,7 +55,7 @@ org.jboss.core.widget.list.SafeHTMLListItemRenderer.prototype.render = function(
   // We need to be careful about XSS
   var originalValue = listItem.getValue();
   // var sanitizedHtml = goog.string.html.htmlSanitize(originalValue, this.urlPolicy);
-  var sanitizedHtml = fix.goog.string.html.htmlSanitize(originalValue, this.urlPolicy, null);
+  var sanitizedHtml = fix.goog.string.html.htmlSanitize(originalValue, goog.bind(this.urlPolicy, this), null);
   if (goog.DEBUG) {
     if (originalValue != sanitizedHtml) {
       // log at warn level that sanity check had to modify the string!

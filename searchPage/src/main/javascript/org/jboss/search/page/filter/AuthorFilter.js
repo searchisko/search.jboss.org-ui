@@ -25,10 +25,12 @@ goog.provide('org.jboss.search.page.filter.AuthorDataSource');
 goog.provide('org.jboss.search.page.filter.AuthorFilter');
 goog.provide('org.jboss.search.page.filter.AuthorFilterController');
 goog.provide('org.jboss.search.page.filter.AuthorFilterController.LIST_KEY');
+goog.provide('org.jboss.search.page.filter.AuthorListItemRenderer');
 
 goog.require('goog.array');
 goog.require('goog.array.ArrayLike');
 goog.require('goog.dom');
+goog.require('goog.dom.TagName');
 goog.require('goog.events');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
@@ -40,6 +42,7 @@ goog.require('goog.events.KeyHandler');
 goog.require('goog.events.KeyHandler.EventType');
 goog.require('goog.object');
 goog.require('goog.string');
+goog.require('goog.uri.utils');
 goog.require('org.jboss.core.context.RequestParamsFactory');
 goog.require('org.jboss.core.service.Locator');
 goog.require('org.jboss.core.service.query.QueryServiceEventType');
@@ -51,6 +54,7 @@ goog.require('org.jboss.core.widget.list.ListItem');
 goog.require('org.jboss.core.widget.list.ListModelContainer');
 goog.require('org.jboss.core.widget.list.ListViewContainer');
 goog.require('org.jboss.core.widget.list.ListWidgetFactory');
+goog.require('org.jboss.core.widget.list.SafeHTMLListItemRenderer');
 goog.require('org.jboss.core.widget.list.datasource.DataSource');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEvent');
 goog.require('org.jboss.core.widget.list.datasource.DataSourceEventType');
@@ -65,6 +69,32 @@ goog.require('org.jboss.search.page.filter.FilterUtils');
 goog.require('org.jboss.search.page.filter.NewRequestParamsEvent');
 goog.require('org.jboss.search.page.filter.NewRequestParamsEventType');
 goog.require('org.jboss.search.page.filter.OrderableSupport');
+
+
+
+/**
+ * SafeHTMLListItemRenderer extension that allows URIs from trusted list only.
+ *
+ * @constructor
+ * @extends {org.jboss.core.widget.list.SafeHTMLListItemRenderer}
+ */
+org.jboss.search.page.filter.AuthorListItemRenderer = function() {
+  org.jboss.core.widget.list.SafeHTMLListItemRenderer.call(this);
+  this.trustedDomains = ['www.gravatar.com', 'community.jboss.org'];
+};
+goog.inherits(org.jboss.search.page.filter.AuthorListItemRenderer, org.jboss.core.widget.list.SafeHTMLListItemRenderer);
+
+
+/** @override */
+org.jboss.search.page.filter.AuthorListItemRenderer.prototype.urlPolicy = function(url) {
+  if (url && url != null && !goog.string.isEmptySafe(url)) {
+    if (goog.array.contains(this.trustedDomains,
+        goog.uri.utils.getDomain(url))) {
+      return url;
+    }
+  }
+  return null;
+};
 
 
 
@@ -91,7 +121,7 @@ org.jboss.search.page.filter.AuthorDataSource = function() {
 goog.inherits(org.jboss.search.page.filter.AuthorDataSource, goog.events.EventTarget);
 
 
-/** @inheritDoc */
+/** @override */
 org.jboss.search.page.filter.AuthorDataSource.prototype.disposeInternal = function() {
   org.jboss.search.page.filter.AuthorDataSource.superClass_.disposeInternal.call(this);
   delete this.lookup_;
@@ -99,7 +129,7 @@ org.jboss.search.page.filter.AuthorDataSource.prototype.disposeInternal = functi
 };
 
 
-/** @inheritDoc */
+/** @override */
 org.jboss.search.page.filter.AuthorDataSource.prototype.get = function() {
 
   // get selected people
@@ -131,7 +161,7 @@ org.jboss.search.page.filter.AuthorDataSource.prototype.get = function() {
         }) != null;
         peopleArray.push({
           'code': code,
-          'name': name,
+          'name': '<img src="' + gURL16 + '"> ' + name,
           'orderBy': name.toLowerCase(),
           'count': count,
           'selected': selected,
@@ -156,7 +186,7 @@ org.jboss.search.page.filter.AuthorDataSource.prototype.get = function() {
           if (matchingFilter != null) {
             peopleArray.push({
               'code': matchingFilter.term,
-              'name': matchingFilter.name,
+              'name': '<img src="' + matchingFilter.gURL16 + '"> ' + matchingFilter.name,
               'orderBy': matchingFilter.name.toLowerCase(),
               'count': matchingFilter.count,
               'selected': true,
@@ -168,7 +198,8 @@ org.jboss.search.page.filter.AuthorDataSource.prototype.get = function() {
           // not found, but it is selected so we want to display it in the list (this is a rare situation)
           peopleArray.push({
             'code': selected,
-            'name': org.jboss.core.util.emailName.extractNameFromMail(selected).valueOf(),
+            'name': '<img src="' + org.jboss.core.util.gravatar.gravatarURI_Memo(selected, 16).valueOf() + '"> ' +
+                org.jboss.core.util.emailName.extractNameFromMail(selected).valueOf(),
             'orderBy': selected.toLowerCase(),
             'count': 0,
             'selected': true,
@@ -551,7 +582,8 @@ org.jboss.search.page.filter.AuthorFilter = function(element, query_field, autho
       },
       {
         caption: 'Top Contributors',
-        key: org.jboss.search.page.filter.AuthorFilterController.LIST_KEY.QUERY_CONTEXT
+        key: org.jboss.search.page.filter.AuthorFilterController.LIST_KEY.QUERY_CONTEXT,
+        renderer: org.jboss.search.page.filter.AuthorListItemRenderer
       }
     ],
     controllerConstructor: org.jboss.search.page.filter.AuthorFilterController,
