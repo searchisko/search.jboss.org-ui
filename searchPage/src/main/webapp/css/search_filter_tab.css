@@ -122,14 +122,10 @@
     margin-left: 10px;
 }
 
-/* highlight background of filter items on hover */
-/*
-.filter_items div:hover {
-.filter_items div {
-	background-color: lightgrey;
-	cursor: pointer;
+.filter_items div.li {
+    margin-left: 0px;
+    padding: 0 10px;
 }
-*/
 
 .filter_items div.caption {
     margin: 4px 0;
@@ -154,7 +150,7 @@
 }
 
 /* align small avatars on filter items */
-.filter_items div span img {
+.filter_items div img {
 	vertical-align: text-bottom;
 }
 
