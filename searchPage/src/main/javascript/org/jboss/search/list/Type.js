@@ -178,6 +178,7 @@ org.jboss.search.list.Type.prototype.getArray = function() {
 org.jboss.search.list.Type.PredefinedList_ = {
   // Note: the keys should be probably in externs and then we can put them without quotes here.
   'article': 'Article',
+  'demo': 'Demo',
   'blogpost': 'Blog Post',
   'contributor_profile': 'Author Profile',
   'forumthread': 'Forum',
