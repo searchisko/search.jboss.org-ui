@@ -37,7 +37,10 @@ var testFragmentParserForUserQuery = function() {
   assertEquals('Empty query', '', requestParams.getQueryString());
 
   requestParams = org.jboss.core.util.fragmentParser.parse('q=%20%20');
-  assertEquals('Still empty query', '', requestParams.getQueryString());
+  assertEquals('Reduced to a single space', ' ', requestParams.getQueryString());
+
+  requestParams = org.jboss.core.util.fragmentParser.parse('q=%20%20x%20%20');
+  assertEquals('Reduced to a single space too', 'x ', requestParams.getQueryString());
 
   requestParams = org.jboss.core.util.fragmentParser.parse('1&2&3&x=foo&q=first&q=second');
   assertEquals('The last parameter wins', 'second', requestParams.getQueryString());

@@ -408,6 +408,27 @@ org.jboss.search.page.SearchPage = function(context, params) {
       .userSuggestionQuery(query_string);
   };
 
+  var instantSearch = function(query_string) {
+    var q = goog.isDefAndNotNull(query_string) ? goog.string.collapseWhitespace(query_string) : '';
+    /** @type {?org.jboss.core.context.RequestParams} */
+    var rp = org.jboss.core.service.Locator.getInstance().getLookup().getRequestParams();
+    var tmp_ = rp.getQueryString();
+    var oldq = goog.isNull(tmp_) ? '' : goog.string.collapseWhitespace(tmp_);
+    if (oldq != q) {
+      //
+      if (!goog.string.isEmptySafe(query_string) && goog.string.endsWith(query_string, ' ')) {
+        q += ' ';
+      }
+      this.dispatchEvent(
+          new org.jboss.search.page.event.QuerySubmitted(
+              org.jboss.core.context.RequestParamsFactory.getInstance()
+                .reset()
+                .setQueryString(q)
+                .build()
+          ));
+    }
+  };
+
   /**
    * @type {goog.events.Key}
    * @private
@@ -510,8 +531,8 @@ org.jboss.search.page.SearchPage = function(context, params) {
   /** @private */
   this.userQuerySearchField_ = new org.jboss.search.page.element.SearchFieldHandler(
       this.elements_.getQuery_field(),
-      100,
-      suggestionsCallback,
+      500, // 100,
+      goog.bind(instantSearch, this), //suggestionsCallback,
       null,
       this.getPresetKeyHandlers_());
 
@@ -1148,8 +1169,11 @@ org.jboss.search.page.SearchPage.prototype.USER_CLICK_STREAM_URI_ = goog.Uri.par
  */
 org.jboss.search.page.SearchPage.prototype.setUserQuery_ = function(query) {
   var newValue = '';
-  if (!goog.string.isEmptySafe(query)) {
-    newValue = query.trim();
+  if (query != null && !goog.string.isEmpty(query)) {
+    newValue = goog.string.collapseWhitespace(query);
+    if (goog.string.endsWith(query, ' ')) {
+      newValue += ' ';
+    }
   }
   this.elements_.getQuery_field().value = newValue;
 };

@@ -113,11 +113,13 @@ org.jboss.core.util.fragmentParser.parse = function(opt_fragment) {
 
       // ------------------- QUERY --------------------
       if (goog.string.caseInsensitiveStartsWith(part, p_.QUERY)) {
-        parsed[intp_.QUERY] = goog.string.trim(
-            goog.string.urlDecode(
-                goog.string.removeAt(part, 0, p_.QUERY.length)
-            )
+        var q = goog.string.urlDecode(
+            goog.string.removeAt(part, 0, p_.QUERY.length)
             );
+        q = goog.string.endsWith(q, ' ') ?
+            goog.string.collapseWhitespace(q) + ' ' :
+            goog.string.collapseWhitespace(q);
+        parsed[intp_.QUERY] = q;
       } else
       // ------------------- PAGE ---------------------
       if (goog.string.caseInsensitiveStartsWith(part, p_.PAGE)) {
