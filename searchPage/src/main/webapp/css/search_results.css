@@ -69,7 +69,7 @@
         TODO: clicking avatar icon will fire Popover Right
         See: http://twitter.github.com/bootstrap/javascript.html#popovers
     */
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .hit > .main {
@@ -163,7 +163,7 @@
 }
 
 .hit > .main > .contributors_list img {
-    cursor: pointer;
+    /* cursor: pointer; */
     vertical-align: middle;
     opacity: 0.3;
     max-height: 16px;

@@ -135,8 +135,8 @@ org.jboss.search.App = function(params) {
   this.searchEventListenerId_ = goog.events.listen(
       this.searchPage,
       [
-        org.jboss.search.page.event.EventType.QUERY_SUBMITTED,
-        org.jboss.search.page.event.EventType.CONTRIBUTOR_ID_SELECTED
+        org.jboss.search.page.event.EventType.QUERY_SUBMITTED
+        // org.jboss.search.page.event.EventType.CONTRIBUTOR_ID_SELECTED
       ],
       function(e) {
         var event;
@@ -146,15 +146,15 @@ org.jboss.search.App = function(params) {
             var qp_ = event.getRequestParams();
             urlSetFragmentFunction(qp_);
             break;
-          case org.jboss.search.page.event.EventType.CONTRIBUTOR_ID_SELECTED:
-            event = /** @type {org.jboss.search.page.event.ContributorIdSelected} */ (e);
-            var urlFragment = org.jboss.core.util.fragmentGenerator.generate(
-                org.jboss.core.context.RequestParamsFactory.getInstance().reset()
-                  .setContributors([event.getContributorId()]).build()
-                );
-            var uri = [org.jboss.search.Variables.PROFILE_APP_BASE_URL, urlFragment].join('#');
-            goog.window.open(uri);
-            break;
+          // case org.jboss.search.page.event.EventType.CONTRIBUTOR_ID_SELECTED:
+            // event = /** @type {org.jboss.search.page.event.ContributorIdSelected} */ (e);
+            // var urlFragment = org.jboss.core.util.fragmentGenerator.generate(
+            //     org.jboss.core.context.RequestParamsFactory.getInstance().reset()
+            //       .setContributors([event.getContributorId()]).build()
+            //     );
+            // var uri = [org.jboss.search.Variables.PROFILE_APP_BASE_URL, urlFragment].join('#');
+            // goog.window.open(uri);
+            // break;
         }
       }
       );
