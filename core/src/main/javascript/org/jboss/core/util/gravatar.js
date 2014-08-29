@@ -79,7 +79,7 @@ org.jboss.core.util.gravatar.gravatarURI = function(email, opt_size) {
   return new String(
       [
         ['http://www.gravatar.com/avatar/', hash, '?s=', size].join(''),
-        ['d=', goog.string.urlEncode(['https://community.jboss.org/gravatar/', hash, '/', size, '.png'].join(''))].join('')
+        ['d=', goog.string.urlEncode(['https://developer.jboss.org/gravatar/', hash, '/', size, '.png'].join(''))].join('')
       ].join('&')
   );
 };

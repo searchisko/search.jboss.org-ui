@@ -80,7 +80,7 @@ goog.require('org.jboss.search.page.filter.OrderableSupport');
  */
 org.jboss.search.page.filter.AuthorListItemRenderer = function() {
   org.jboss.core.widget.list.SafeHTMLListItemRenderer.call(this);
-  this.trustedDomains = ['www.gravatar.com', 'community.jboss.org'];
+  this.trustedDomains = ['www.gravatar.com', 'developer.jboss.org', 'community.jboss.org'];
 };
 goog.inherits(org.jboss.search.page.filter.AuthorListItemRenderer, org.jboss.core.widget.list.SafeHTMLListItemRenderer);
 
