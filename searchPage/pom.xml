@@ -150,6 +150,14 @@
                 <plugins>
 
                     <plugin>
+                        <groupId>com.github.jlgrock.javascript-framework</groupId>
+                        <artifactId>closure-compiler-maven-plugin</artifactId>
+                        <configuration>
+                            <outputWrapper>(function() {%output%})();</outputWrapper>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
                         <groupId>com.samaxes.maven</groupId>
                         <artifactId>minify-maven-plugin</artifactId>
                         <executions>
@@ -246,14 +254,6 @@
                     <plugin>
                         <groupId>com.google.code.maven-replacer-plugin</groupId>
                         <artifactId>replacer</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>replace</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                         <configuration>
                             <encoding>UTF-8</encoding>
                             <file>${basedir}/target/${project.artifactId}-${project.version}/index.html</file>
@@ -261,37 +261,65 @@
                             <regexFlags>
                                 <regexFlag>DOTALL</regexFlag>
                             </regexFlags>
-                            <replacements>
-                                <replacement>
-                                    <token><![CDATA[<body>]]></token>
-                                    <valueFile>${basedir}/src/main/resources/production.Google.Tag.Manager</valueFile>
-                                </replacement>
-                                <replacement>
-                                    <token><![CDATA[<!--BeginReplaceForProduction.*EndReplaceForProduction-->]]></token>
-                                    <value><![CDATA[<link rel="stylesheet" href="css/style.css">]]></value>
-                                </replacement>
-                                <!--
-                                    To get index.html that can be run locally pass
-                                    '-Dabsolute.server.path=' to the mvn.
-                                -->
-                                <replacement>
-                                    <token>css/style.css</token>
-                                    <value>${absolute.server.path}css/style.css</value>
-                                </replacement>
-                                <replacement>
-                                    <token>js/lib/d3.v3.0.4/d3.v3.min.js</token>
-                                    <value>${absolute.server.path}js/lib/d3.v3.0.4/d3.v3.min.js</value>
-                                </replacement>
-                                <replacement>
-                                    <token>image/search_logo.png</token>
-                                    <value>${absolute.server.path}image/search_logo.png</value>
-                                </replacement>
-                                <replacement>
-                                    <token>search_app.js</token>
-                                    <value>${absolute.server.path}search_app.js</value>
-                                </replacement>
-                            </replacements>
                         </configuration>
+                        <executions>
+                            <execution>
+                                <id>1</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <file>${basedir}/target/${project.artifactId}-${project.version}/index.html</file>
+                                    <replacements>
+                                        <replacement>
+                                            <token><![CDATA[<body>]]></token>
+                                            <valueFile>${basedir}/src/main/resources/production.Google.Tag.Manager</valueFile>
+                                        </replacement>
+                                        <replacement>
+                                            <token><![CDATA[<!--BeginReplaceForProduction.*EndReplaceForProduction-->]]></token>
+                                            <value><![CDATA[<link rel="stylesheet" href="css/style.css">]]></value>
+                                        </replacement>
+                                        <!--
+                                            To get index.html that can be run locally pass
+                                            '-Dabsolute.server.path=' to the mvn.
+                                        -->
+                                        <replacement>
+                                            <token>css/style.css</token>
+                                            <value>${absolute.server.path}css/style.css</value>
+                                        </replacement>
+                                        <replacement>
+                                            <token>js/lib/d3.v3.0.4/d3.v3.min.js</token>
+                                            <value>${absolute.server.path}js/lib/d3.v3.0.4/d3.v3.min.js</value>
+                                        </replacement>
+                                        <replacement>
+                                            <token>image/search_logo.png</token>
+                                            <value>${absolute.server.path}image/search_logo.png</value>
+                                        </replacement>
+                                        <replacement>
+                                            <token>search_app.js</token>
+                                            <value>${absolute.server.path}search_app.js</value>
+                                        </replacement>
+                                    </replacements>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>2</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <file>${basedir}/target/${project.artifactId}-${project.version}/search_app.js</file>
+                                    <replacements>
+                                        <replacement>
+                                            <token>@ sourceMappingURL=${project.artifactId}-${project.version}-min.js.smap</token>
+                                            <value/>
+                                        </replacement>
+                                    </replacements>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
 
                     <!--
