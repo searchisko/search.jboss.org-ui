@@ -141,6 +141,11 @@
         -->
         <profile>
             <id>production</id>
+            <properties>
+                <release.version>1.0</release.version>
+                <app.name>search-beta</app.name>
+                <absolute.server.path>//static.jboss.org/${app.name}/${release.version}/</absolute.server.path>
+            </properties>
             <build>
                 <plugins>
 
@@ -264,6 +269,26 @@
                                 <replacement>
                                     <token><![CDATA[<!--BeginReplaceForProduction.*EndReplaceForProduction-->]]></token>
                                     <value><![CDATA[<link rel="stylesheet" href="css/style.css">]]></value>
+                                </replacement>
+                                <!--
+                                    To get index.html that can be run locally pass
+                                    '-Dabsolute.server.path=' to the mvn.
+                                -->
+                                <replacement>
+                                    <token>css/style.css</token>
+                                    <value>${absolute.server.path}css/style.css</value>
+                                </replacement>
+                                <replacement>
+                                    <token>js/lib/d3.v3.0.4/d3.v3.min.js</token>
+                                    <value>${absolute.server.path}js/lib/d3.v3.0.4/d3.v3.min.js</value>
+                                </replacement>
+                                <replacement>
+                                    <token>image/search_logo.png</token>
+                                    <value>${absolute.server.path}image/search_logo.png</value>
+                                </replacement>
+                                <replacement>
+                                    <token>search_app.js</token>
+                                    <value>${absolute.server.path}search_app.js</value>
                                 </replacement>
                             </replacements>
                         </configuration>
