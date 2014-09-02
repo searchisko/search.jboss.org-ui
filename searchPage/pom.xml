@@ -227,7 +227,7 @@
                                         -->
                                         <!-- Copy minified css file to web app root -->
                                         <exec dir="${project.build.directory}/${project.build.finalName}/css" executable="mv">
-                                            <arg line=" -vf style.css .."/>
+                                            <arg line=" -vf style.min.css .."/>
                                         </exec>
                                         <!-- Delete css folder -->
                                         <exec dir="${project.build.directory}/${project.build.finalName}" executable="rm">
@@ -239,7 +239,7 @@
                                         </exec>
                                         <!-- Copy minified css file to css folder -->
                                         <exec dir="${project.build.directory}/${project.build.finalName}/" executable="mv">
-                                            <arg line=" -vf style.css css"/>
+                                            <arg line=" -vf style.min.css css"/>
                                         </exec>
                                         <!-- Remove folders -->
                                         <exec dir="${project.build.directory}/${project.build.finalName}/" executable="rm">
@@ -286,7 +286,7 @@
                                         -->
                                         <replacement>
                                             <token>css/style.css</token>
-                                            <value>${absolute.server.path}css/style.css</value>
+                                            <value>${absolute.server.path}css/style.min.css</value>
                                         </replacement>
                                         <replacement>
                                             <token>js/lib/d3.v3.0.4/d3.v3.min.js</token>
