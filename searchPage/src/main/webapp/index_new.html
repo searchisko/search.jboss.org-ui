@@ -1,0 +1,340 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JBoss Developer Search</title>
+
+      <!--BeginReplaceForProduction-->
+      <link rel="stylesheet" href="css/foundation/foundation.css" />
+      <!--<script src="js/lib/modernizr/modernizr.js"></script>-->
+
+      <link rel="stylesheet" href="css/search_status_window.css">
+      <link rel="stylesheet" href="css/search_filter_active.css">
+      <link rel="stylesheet" href="css/search_filter_tab.css">
+      <link rel="stylesheet" href="css/search_results.css" />
+      <link rel="stylesheet" href="css/search_visualization_histogram.css">
+
+      <!-- Closure Tools CSS -->
+      <link rel="stylesheet" href="css/goog/css/datepicker.css">
+      <link rel="stylesheet" href="css/goog/css/popupdatepicker.css">
+      <link rel="stylesheet" href="css/goog/goog.ui.z-index.override.css">
+      <!--EndReplaceForProduction-->
+
+    <!-- foundation.css override and further css customization -->
+    <style>
+        body {
+            background-color: #eee;
+        }
+        .top_row {
+            /*background-color: #4a5d75;*/
+        }
+        .jcs_logo {
+            margin: 0.7rem 0;
+        }
+        #search_results {
+            width: auto; /* important */
+        }
+        .snippet {
+            font-size: 0.8rem !important;
+            font-weight: 400;
+        }
+        ul {
+            font-size: 100%;
+        }
+        .children {
+            font-size: 0.7rem !important;
+            font-weight: 200;
+        }
+        .tags_list {
+            font-size: 0.7rem !important;
+            font-weight: 200;
+        }
+    </style>
+  </head>
+  <body>
+
+  <!--<div class="row">-->
+  <!--<div class="large-8 large-push-4 medium-6 medium-push-6 small-12 columns">Text</div>-->
+  <!--<div class="large-4 large-pull-8 medium-6 medium-pull-6 small-12 columns">Image</div>-->
+  <!--</div>-->
+
+  <form method="GET" id="searchform" action="#">
+  <div class="row top_row">
+      <div class="medium-12 small-12 columns">
+          <a href="index_new.html"><img class="jcs_logo" src="image/search_logo.png"></a>
+          <div class="row">
+              <div class="large-12 columns">
+                  <div class="row collapse">
+                      <div class="small-10 columns">
+                          <div id="query_field_div_magnifier" class="hidden"></div>
+                          <div id="query_field_div_spinner" class="hidden"></div>
+                          <div id="query_field_div_x" class="hidden"></div>
+                          <input
+                                  id="query_field" type="text"
+                                  placeholder="Initialization..."
+                                  autocomplete="off"
+                                  spellcheck="false"
+                                  autofocus="true"
+                                  tabindex="1"
+                                  disabled >
+                      </div>
+                      <div class="small-2 columns">
+                          <a href="#" class="button postfix">
+                              <span class="show-for-medium-up">Search</span>
+                              <span class="show-for-small-only">O</span>
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  </form>
+
+  <div class="row">
+    <div class="medium-5 medium-push-7 small-12 columns">
+
+        <!-- Filters
+        ======================================================= -->
+        <div id="search_filters">
+            <div id="second_filters_row">
+                <!--<div class="filter caption">Filters</div>-->
+                <!--<div class="filter option domain">Site</div>-->
+                <div class="filter option date">Time</div>
+                <div class="filter option project">Technology</div>
+                <div class="filter option content">Type</div>
+                <div class="filter option author">People</div>
+                <div class="filter_clear"></div>
+            </div>
+        </div>
+
+        <!-- Filter tabs
+        ======================================================= -->
+        <div id="date_filter" class="filter_tab date hidden">
+            <div class="filter_tab_content">
+                <div id="date_histogram_chart"></div>
+
+                From <input id="date_filter_from_field" type="text" autocomplete="off" spellcheck="false" readonly>
+                To <input id="date_filter_to_field" type="text" autocomplete="off" spellcheck="false" readonly>
+
+                <hr size=1>
+                Search results order by <select id="date_order">
+                <option value="score">relevancy</option>
+                <option value="new_first">newest first</option>
+                <option value="old_first">oldest first</option>
+            </select>
+            </div>
+        </div>
+
+        <div id="project_filter" class="filter_tab project hidden">
+            <div class="filter_tab_content">
+
+                <div>
+                    <div class="float_left">
+                        <!--<form method="GET" id="project_filter_form" action="#">-->
+                        <input
+                                id="project_filter_query_field" type="text"
+                                placeholder="Filter technology"
+                                autocomplete="off"
+                                spellcheck="false"
+                                autofocus="true" >
+                        <!--</form>-->
+                    </div>
+                    <div class="float_right">
+                        Order by <select id="technology_order">
+                        <option value="name">name</option>
+                        <option value="frequency">frequency</option>
+                    </select>
+                    </div>
+                    <div class="clear_both"></div>
+                </div>
+
+                <div class="filter_items">
+                </div>
+
+            </div>
+        </div>
+
+        <div id="author_filter" class="filter_tab author hidden">
+            <div class="filter_tab_content">
+
+                <div>
+                    <div class="float_left">
+                        <!--<form method="GET" id="author_filter_form" action="#">-->
+                        <input
+                                id="author_filter_query_field" type="text"
+                                placeholder="Filter author"
+                                autocomplete="off"
+                                spellcheck="false"
+                                autofocus="true"
+                                disabled="true" >
+                        <!--</form>-->
+                    </div>
+                    <div class="float_right">
+                        Order by <select id="author_order">
+                        <option value="name">name</option>
+                        <option value="frequency">frequency</option>
+                    </select>
+                    </div>
+                    <div class="clear_both"></div>
+                </div>
+
+                <div class="filter_items">
+                </div>
+            </div>
+        </div>
+
+        <div id="content_filter" class="filter_tab content hidden">
+            <div class="filter_tab_content">
+                <div class="filter_items">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active filter badges
+    ======================================================= -->
+    <div id="active_search_filters"></div>
+
+    <div id="status_window" class="hidden" style="display:none;"></div>
+
+    <div id="search_suggestions" class="hidden"></div>
+
+    <!-- Search results
+    ======================================================= -->
+    <div class="medium-7 medium-pull-5 small-12 columns">
+        <div id="search_results">
+
+            <!--
+            <div class="statistics">Found 150 results for "dramatic" -&nbsp;page&nbsp;5/15.</div>
+
+            <div class="hit">
+                <div class="left"><p class="avatar"><img
+                        src="http://www.gravatar.com/avatar/43b569c63430ec7ec9e2f21b2a5e67b2?s=40&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F43b569c63430ec7ec9e2f21b2a5e67b2%2F40.png">
+                </p></div>
+                <div class="main">
+                    <div class="title cs_" hn_="0"><a
+                            href="https://community.jboss.org/community/switchyard/blog/2011/09/27/switchyard-and-forge-in-action">SwitchYard
+                        and Forge In Action</a></div>
+                    <div class="link cs_" hn_="0"><a
+                            href="https://community.jboss.org/community/switchyard/blog/2011/09/27/switchyard-and-forge-in-action">https://community.jboss.org/co...switchyard-and-forge-in-action</a>
+                    </div>
+                    <div class="snippet"><span class="date">2011-9-28, 1:18pm - </span><span class="sys_project">switchyard / </span><span
+                            class="sys_type">Blogpost</span>
+
+                        <div class="description"> seamlessly with the Forge environment.&nbsp; Second, it <span class="hlt">dramatically</span>
+                            speeds up the process of creating a new ap...
+                        </div>
+                    </div>
+                    <div class="contributors_list"><span class="ct_" hn_="0" cn_="0"><img
+                            src="http://www.gravatar.com/avatar/43b569c63430ec7ec9e2f21b2a5e67b2?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F43b569c63430ec7ec9e2f21b2a5e67b2%2F16.png"></span><span
+                            class="selected_contributor_name">—&nbsp;<span class="value">Keith Babo</span></span></div>
+                </div>
+            </div>
+
+            <div class="hit_spacer"></div>
+
+            <div class="hit">
+                <div class="left"><p class="avatar"><img
+                        src="http://www.gravatar.com/avatar/da8ac10ee07f549aa73bd5af4f305f8f?s=40&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2Fda8ac10ee07f549aa73bd5af4f305f8f%2F40.png">
+                </p></div>
+                <div class="main">
+                    <div class="title cs_" hn_="1"><a href="https://issues.jboss.org/browse/JBAS-7730">JBAS-7730 -
+                        WebAuthentication - unable to remove Principal from Cache</a></div>
+                    <div class="link cs_" hn_="1"><a href="https://issues.jboss.org/browse/JBAS-7730">https://issues.jboss.org/browse/JBAS-7730</a>
+                    </div>
+                    <div class="snippet"><span class="date">2011-3-22, 7:02pm - </span><span class="sys_type">Issue</span>
+
+                        <div class="description"> of attempts to authorize using the database increased <span class="hlt">dramatically</span>.
+                            - currently we have a DefaultCacheTimeout set to 9600 seconds, and after that time
+                        </div>
+                        <div class="tags_list">
+                            Tags: <span class="label secondary radius">hibernate</span> <span class="label secondary radius">infinispan</span>
+                        </div>
+                    </div>
+                    <div class="contributors_list"><span class="ct_" hn_="1" cn_="0"><img
+                            src="http://www.gravatar.com/avatar/eea032a47bd4b07dfed0e21be6fb14dd?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2Feea032a47bd4b07dfed0e21be6fb14dd%2F16.png"></span><span
+                            class="ct_" hn_="1" cn_="1"><img
+                            src="http://www.gravatar.com/avatar/6f79566a10adeb293e31006dc862a04e?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F6f79566a10adeb293e31006dc862a04e%2F16.png"></span><span
+                            class="ct_" hn_="1" cn_="2"><img
+                            src="http://www.gravatar.com/avatar/da8ac10ee07f549aa73bd5af4f305f8f?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2Fda8ac10ee07f549aa73bd5af4f305f8f%2F16.png"></span><span
+                            class="selected_contributor_name">—&nbsp;<span class="value">Jason Greene</span></span></div>
+                </div>
+            </div>
+
+            <div class="hit_spacer"></div>
+
+            <div class="hit">
+                <div class="left"><p class="avatar"><img
+                        src="http://www.gravatar.com/avatar/ba4b20fbd74d023d513aa78b7d9578ac?s=40&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2Fba4b20fbd74d023d513aa78b7d9578ac%2F40.png">
+                </p></div>
+                <div class="main">
+                    <div class="title cs_" hn_="2"><a href="https://issues.jboss.org/browse/JBIDE-1749">JBIDE-1749 -
+                        Updating Seam XML editor</a></div>
+                    <div class="link cs_" hn_="2"><a href="https://issues.jboss.org/browse/JBIDE-1749">https://issues.jboss.org/browse/JBIDE-1749</a>
+                    </div>
+                    <div class="snippet"><span class="date">2008-4-11, 4:36pm - </span><span class="sys_project">JBoss Tools / </span><span
+                            class="sys_type">Issue</span>
+
+                        <div class="description">In january, about 10 changes were made to schemas in jboss-seam.
+                            Do we need to support them in 2.0.1 version of Seam XML editor?
+                        </div>
+                        <div class="children comments">Comments:
+                            <ul>
+                                <li> that final 2.1 release also
+                                    will not have <span class="hlt">dramatic</span> changes in schemas? If so, support for
+                                    2.1 can be
+                                    implemented quite easily now. When is going to be the best time to update to
+                                    Seam Components editor to 2.1?&nbsp;…
+                                </li>
+                                <li> they are going to be <span class="hlt">dramatic</span> for the GA.
+
+                                    You could update now if you wanted to, but make sure 2.0 and 1.2 support still works and
+                                    no other
+                                    issues are urgent.&nbsp;…
+                                </li>
+                                <li>sorry, I misread your comment about <span class="hlt">dramatic</span> changes. You meant
+                                    there not many changes...I missed the not.&nbsp;…
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tags_list">
+                            Tags: <span class="label secondary radius">infinispan</span> <span class="label secondary radius">ivy</span>
+                                  <span class="label secondary radius">as7</span> <span class="label secondary radius">quartz</span>
+                        </div>
+                    </div>
+                    <div class="contributors_list"><span class="ct_" hn_="2" cn_="0"><img
+                            src="http://www.gravatar.com/avatar/ba4b20fbd74d023d513aa78b7d9578ac?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2Fba4b20fbd74d023d513aa78b7d9578ac%2F16.png"></span><span
+                            class="ct_" hn_="2" cn_="1"><img
+                            src="http://www.gravatar.com/avatar/f8e9309b730b53bb6b14bcd8c9c43323?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2Ff8e9309b730b53bb6b14bcd8c9c43323%2F16.png"></span><span
+                            class="selected_contributor_name">—&nbsp;<span class="value">Max Rydahl Andersen</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hit_spacer"></div>
+
+            <div class="pagination"><span class="pc_" pn_="1">1</span><span class="actual pc_" pn_="2">2</span><span class="pc_" pn_="3">3</span><span class="pc_" pn_="4">4</span><span class="pc_" pn_="5">5</span><span class="pc_" pn_="6">6</span><span class="pc_" pn_="7">7</span><span class="pc_" pn_="8">8</span><span class="pc_" pn_="9">9</span><span class="pc_" pn_="10">10</span></div>
+            -->
+        </div>
+    </div>
+  </div>
+
+
+  <script src="js/lib/d3.v3.0.4/d3.v3.min.js" charset="UTF-8"></script>
+  <script>
+      var CLOSURE_NO_DEPS = true;
+      // var CLOSURE_BASE_PATH = ".";
+  </script>
+  <script type="text/javascript" src="search_app.js" charset="UTF-8"></script>
+
+    <!--
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+    -->
+  </body>
+</html>
