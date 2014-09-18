@@ -32,8 +32,22 @@
         .jcs_logo {
             margin: 0.7rem 0;
         }
+        #searchform {
+            margin: 0;
+        }
+        .statistics {
+            margin: 0 0 20px 0;
+        }
         #search_results {
             width: auto; /* important */
+        }
+        .hit {
+            padding: 15px 25px 20px 15px;
+            background-color: #f8f8f8;
+        }
+        .hit_spacer {
+            height: 0;
+            margin-bottom: 20px;
         }
         .snippet {
             font-size: 0.8rem !important;
@@ -49,6 +63,10 @@
         .tags_list {
             font-size: 0.7rem !important;
             font-weight: 200;
+        }
+        .tags_list .label {
+            vertical-align: middle;
+            margin-top: 0.2rem;
         }
     </style>
   </head>
@@ -93,8 +111,9 @@
   </form>
 
   <div class="row">
-    <div class="medium-5 medium-push-7 small-12 columns">
+    <div class="medium-4 medium-push-8 small-12 columns">
 
+        <div class="statistics">&nbsp;</div> <!-- Temporary whitespace -->
         <!-- Filters
         ======================================================= -->
         <div id="search_filters">
@@ -203,7 +222,7 @@
 
     <!-- Search results
     ======================================================= -->
-    <div class="medium-7 medium-pull-5 small-12 columns">
+    <div class="medium-8 medium-pull-4 small-12 columns">
         <div id="search_results">
 
             <!--

@@ -63,7 +63,7 @@
 {template .search_results}
 
     <div class="statistics">
-        Found {$hits.total} results for "{$user_query}" -&nbsp;page&nbsp;{if isNonnull($pagination) and $pagination.total_pages == 0}0{else}{$actual_page}{/if}/
+        Found {$hits.total} results for <em>"{$user_query}"</em> -&nbsp;page&nbsp;{if isNonnull($pagination) and $pagination.total_pages == 0}0{else}{$actual_page}{/if}/
         {if isNonnull($pagination)}{$pagination.total_pages}{else}na{/if}.
     </div>
 
@@ -165,9 +165,10 @@
                     {/if}
                     {if $fields?.sys_tags_view?.length > 0}
                         <div class="tags_list">
-                            Tags:
+                            /*Tags:*/
                             {foreach $tag in $fields.sys_tags_view}
-                                <span> {$tag}{if not isLast($tag)},{/if}</span>
+                                /* <span> {$tag}{if not isLast($tag)},{/if}</span> */
+                                <span class="secondary radius label">{$tag}</span>{if not isLast($tag)} {/if}
                             {/foreach}
                         </div>
                     {/if}

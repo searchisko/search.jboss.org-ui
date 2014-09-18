@@ -58,7 +58,7 @@ org.jboss.search.page.templates.date_filter = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 org.jboss.search.page.templates.search_results = function(opt_data, opt_ignored) {
-  var output = '<div class="statistics">Found ' + soy.$$escapeHtml(opt_data.hits.total) + ' results for "' + soy.$$escapeHtml(opt_data.user_query) + '" -&nbsp;page&nbsp;' + ((opt_data.pagination != null && opt_data.pagination.total_pages == 0) ? '0' : soy.$$escapeHtml(opt_data.actual_page)) + '/' + ((opt_data.pagination != null) ? soy.$$escapeHtml(opt_data.pagination.total_pages) : 'na') + '.</div>';
+  var output = '<div class="statistics">Found ' + soy.$$escapeHtml(opt_data.hits.total) + ' results for <em>"' + soy.$$escapeHtml(opt_data.user_query) + '"</em> -&nbsp;page&nbsp;' + ((opt_data.pagination != null && opt_data.pagination.total_pages == 0) ? '0' : soy.$$escapeHtml(opt_data.actual_page)) + '/' + ((opt_data.pagination != null) ? soy.$$escapeHtml(opt_data.pagination.total_pages) : 'na') + '.</div>';
   var hitList108 = opt_data.hits.hits;
   var hitListLen108 = hitList108.length;
   for (var hitIndex108 = 0; hitIndex108 < hitListLen108; hitIndex108++) {
@@ -127,12 +127,12 @@ org.jboss.search.page.templates.hit = function(opt_data, opt_ignored) {
     output += '</ul></div>';
   }
   if (((opt_data.fields == null) ? null : (opt_data.fields.sys_tags_view == null) ? null : opt_data.fields.sys_tags_view.length) > 0) {
-    output += '<div class="tags_list">Tags:';
+    output += '<div class="tags_list">';
     var tagList230 = opt_data.fields.sys_tags_view;
     var tagListLen230 = tagList230.length;
     for (var tagIndex230 = 0; tagIndex230 < tagListLen230; tagIndex230++) {
       var tagData230 = tagList230[tagIndex230];
-      output += '<span> ' + soy.$$escapeHtml(tagData230) + ((! (tagIndex230 == tagListLen230 - 1)) ? ',' : '') + '</span>';
+      output += '<span class="secondary radius label">' + soy.$$escapeHtml(tagData230) + '</span>' + ((! (tagIndex230 == tagListLen230 - 1)) ? ' ' : '');
     }
     output += '</div>';
   }
