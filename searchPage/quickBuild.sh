@@ -26,7 +26,7 @@ fi
 
 echo "# ---------------------------------------"
 echo "# Success:"
-echo "# src/main/webapp/search-testing-only.js was generated"
+echo "# src/main/webapp/search_app.js was generated"
 echo "# to open the application in web browser (on Mac OSX) execute:"
 echo "# open ./src/main/webapp/index.html"
 echo "# ---------------------------------------"
