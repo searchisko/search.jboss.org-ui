@@ -20,9 +20,9 @@
      https://code.google.com/p/closure-templates/
      License: Apache License 2.0
 
-   - Eric Meyer's Reset CSS v2.0
-     http://meyerweb.com/eric/tools/css/reset/
-     License: none (public domain)
+   - Foundation 5.4.3 (custom build)
+     http://foundation.zurb.com/
+     License: MIT License
 
    - D3.js v3.0.4
      http://d3js.org
