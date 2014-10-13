@@ -24,10 +24,10 @@
     <!-- foundation.css override and further css customization -->
     <style>
         body {
-            background-color: #eee;
+            background-color: #f6f6f6;
         }
         .top_row {
-            /*background-color: #4a5d75;*/
+            background-color: #4a5d75;
         }
         .jcs_logo {
             margin: 0.7rem 0;
@@ -35,19 +35,30 @@
         #searchform {
             margin: 0;
         }
+        #query_field {
+            font-weight: 400;
+            font-size: 115%;
+        }
         .statistics {
-            margin: 0 0 20px 0;
+            margin: 15px 0 15px 0;
         }
         #search_results {
             width: auto; /* important */
         }
         .hit {
             padding: 15px 25px 20px 15px;
-            background-color: #f8f8f8;
-        }
-        .hit_spacer {
-            height: 0;
+            background-color: #fdfdfd;
+            border-top: #DADADA 1px solid;
+            border-right: #DADADA 1px solid;
+            border-left: #DADADA 1px solid;
+            border-bottom: #DADADA 2px solid;
             margin-bottom: 20px;
+
+        }
+        .hit_spacer { /* Could be removed. */
+            height: 0px;
+            margin-bottom: 0px;
+            visibility: hidden;
         }
         .snippet {
             font-size: 0.8rem !important;
@@ -78,36 +89,39 @@
   <!--</div>-->
 
   <form method="GET" id="searchform" action="#">
-  <div class="row top_row">
-      <div class="medium-12 small-12 columns">
-          <a href="index_new.html"><img class="jcs_logo" src="image/search_logo.png"></a>
+      <div class="top_row">
           <div class="row">
-              <div class="large-12 columns">
-                  <div class="row collapse">
-                      <div class="small-10 columns">
-                          <div id="query_field_div_magnifier" class="hidden"></div>
-                          <div id="query_field_div_spinner" class="hidden"></div>
-                          <div id="query_field_div_x" class="hidden"></div>
-                          <input
-                                  id="query_field" type="text"
-                                  placeholder="Initialization..."
-                                  autocomplete="off"
-                                  spellcheck="false"
-                                  autofocus="true"
-                                  tabindex="1"
-                                  disabled >
-                      </div>
-                      <div class="small-2 columns">
-                          <a href="#" class="button postfix">
-                              <span class="show-for-medium-up">Search</span>
-                              <span class="show-for-small-only">O</span>
-                          </a>
+              <div class="medium-12 small-12 columns">
+                  <a href="index_new.html"><img class="jcs_logo" src="image/search_logo.png"></a>
+
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <div class="row collapse">
+                              <div class="small-10 columns">
+                                  <div id="query_field_div_magnifier" class="hidden"></div>
+                                  <div id="query_field_div_spinner" class="hidden"></div>
+                                  <div id="query_field_div_x" class="hidden"></div>
+                                  <input
+                                          id="query_field" type="text"
+                                          placeholder="Initialization..."
+                                          autocomplete="off"
+                                          spellcheck="false"
+                                          autofocus="true"
+                                          tabindex="1"
+                                          disabled>
+                              </div>
+                              <div class="small-2 columns">
+                                  <a tabindex="2" class="button postfix">
+                                      <span class="show-for-medium-up">Search</span>
+                                      <span class="show-for-small-only">O</span>
+                                  </a>
+                              </div>
+                          </div>
                       </div>
                   </div>
               </div>
           </div>
       </div>
-  </div>
   </form>
 
   <div class="row">
