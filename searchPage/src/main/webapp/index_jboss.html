@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>JBoss Developer Search</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Cabin:400">
+    <link rel="stylesheet" type="text/css" href="http://static.jboss.org/ffe/www/1.2-build-440/stylesheets/app.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!--<script src="http://static.jboss.org/ffe/www/1.2-build-440/javascripts/foundation/foundation.js"></script>-->
+    <style>
+        header.main {
+            border-bottom: 1px solid #d5d5d5;
+        }
+        small.custom {
+            font-size: 80%;
+        }
+        .first_row {
+            padding-top: 1.26rem;
+        }
+        #search_button {
+            padding-top: 0.63rem;
+            padding-bottom: 0.63rem;
+        }
+    </style>
+    <link rel="stylesheet" href="css/search_results.css" />
+</head>
+<body class="home">
+
+    <div class="dropup">
+        <a class="tabnav-closed" href="https://www.jboss.org" id="tab">Red Hat</a>
+    </div>
+
+    <div class="site-wrapper">
+
+        <header class="main"><i class="nav-toggle nav-toggle-open"></i>
+            <div class="row">
+                <div class="large-7 columns">
+                    <h1 class="logo"><a href="http://www.jboss.org">JBoss<strong>Developer</strong></a></h1>
+                </div>
+            </div>
+        </header>
+        <div class="wrapper clearfix">
+            <div class="content-wrapper">
+                <!-- <Search Web UI> -->
+
+                <div class="row first_row">
+                    <div class="medium-19 large-20 columns">
+                        <input id="search_field" type="text" name="search_field" class="" placeholder="Search" autocomplete="off">
+                    </div>
+                    <div class="medium-5 large-4 columns">
+                        <a id="search_button" href="#" class="button expand">
+                            <!--<i class="fa fa-search"></i>-->
+                            SEARCH
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Filters -->
+                    <div class="medium-7 large-6 columns">
+                        <h4>Filters <small><a href="#">Clear All</a></small></h4>
+
+                        <div>
+                            <h5>Time</h5>
+                            <div class="panel">
+                                <p><br><br><br><br></p>
+                            </div>
+
+                            <h4><small>From</small></h4>
+                            <small class="custom"><input type="text" autocomplete="off"></small>
+
+                            <h4><small>To</small></h4>
+                            <small class="custom"><input type="text" autocomplete="off"></small>
+                        </div>
+
+                        <div class="switch large round">
+                            <input id="z" name="switch-z" type="radio" checked>
+                            <label for="z" onclick="">Off</label>
+                            <input id="z1" name="switch-z" type="radio">
+                            <label for="z1" onclick="">On</label>
+                            <span></span>
+                        </div>
+
+                        <div>
+                            <h5>Technology</h5>
+                            <small class="custom"><input type="text" placeholder="Filter Technology" autocomplete="off"></small>
+                        </div>
+
+                        <div>
+                            <h5>Type</h5>
+                            <small class="custom"><input type="text" placeholder="Filter Type" autocomplete="off"></small>
+                        </div>
+
+                        <div>
+                            <h5>People</h5>
+                            <small class="custom"><input type="text" placeholder="Filter People" autocomplete="off"></small>
+                        </div>
+
+                    </div>
+                    <!-- Search results -->
+                    <div class="medium-17 large-18 columns">
+                        <h4>Results</h4>
+                        <hr>
+                        <div id="search_results">
+
+                            <div class="hit">
+                                <div class="left"><p class="avatar"><img
+                                        src="http://www.gravatar.com/avatar/43b569c63430ec7ec9e2f21b2a5e67b2?s=40&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F43b569c63430ec7ec9e2f21b2a5e67b2%2F40.png">
+                                </p></div>
+                                <div class="main">
+                                    <div class="title cs_" hn_="0"><a
+                                            href="https://community.jboss.org/community/switchyard/blog/2011/09/27/switchyard-and-forge-in-action">SwitchYard
+                                        and Forge In Action</a></div>
+                                    <div class="link cs_" hn_="0"><a
+                                            href="https://community.jboss.org/community/switchyard/blog/2011/09/27/switchyard-and-forge-in-action">https://community.jboss.org/co...switchyard-and-forge-in-action</a>
+                                    </div>
+                                    <div class="snippet"><span class="date">2011-9-28, 1:18pm - </span><span class="sys_project">switchyard / </span><span
+                                            class="sys_type">Blogpost</span>
+
+                                        <div class="description"> seamlessly with the Forge environment.&nbsp; Second, it <span class="hlt">dramatically</span>
+                                            speeds up the process of creating a new ap...
+                                        </div>
+                                    </div>
+                                    <div class="contributors_list"><span class="ct_" hn_="0" cn_="0"><img
+                                            src="http://www.gravatar.com/avatar/43b569c63430ec7ec9e2f21b2a5e67b2?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F43b569c63430ec7ec9e2f21b2a5e67b2%2F16.png"></span><span
+                                            class="selected_contributor_name">—&nbsp;<span class="value">Keith Babo</span></span></div>
+                                </div>
+                            </div>
+
+                            <div class="hit_spacer"></div>
+
+                            <div class="hit">
+                                <div class="left"><p class="avatar"><img
+                                        src="http://www.gravatar.com/avatar/da8ac10ee07f549aa73bd5af4f305f8f?s=40&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2Fda8ac10ee07f549aa73bd5af4f305f8f%2F40.png">
+                                </p></div>
+                                <div class="main">
+                                    <div class="title cs_" hn_="1"><a href="https://issues.jboss.org/browse/JBAS-7730">JBAS-7730 -
+                                        WebAuthentication - unable to remove Principal from Cache</a></div>
+                                    <div class="link cs_" hn_="1"><a href="https://issues.jboss.org/browse/JBAS-7730">https://issues.jboss.org/browse/JBAS-7730</a>
+                                    </div>
+                                    <div class="snippet"><span class="date">2011-3-22, 7:02pm - </span><span class="sys_type">Issue</span>
+
+                                        <div class="description"> of attempts to authorize using the database increased <span class="hlt">dramatically</span>.
+                                            - currently we have a DefaultCacheTimeout set to 9600 seconds, and after that time
+                                        </div>
+                                        <div class="tags_list">
+                                            Tags: <span class="label secondary radius">hibernate</span> <span class="label secondary radius">infinispan</span>
+                                        </div>
+                                    </div>
+                                    <div class="contributors_list"><span class="ct_" hn_="1" cn_="0"><img
+                                            src="http://www.gravatar.com/avatar/eea032a47bd4b07dfed0e21be6fb14dd?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2Feea032a47bd4b07dfed0e21be6fb14dd%2F16.png"></span><span
+                                            class="ct_" hn_="1" cn_="1"><img
+                                            src="http://www.gravatar.com/avatar/6f79566a10adeb293e31006dc862a04e?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2F6f79566a10adeb293e31006dc862a04e%2F16.png"></span><span
+                                            class="ct_" hn_="1" cn_="2"><img
+                                            src="http://www.gravatar.com/avatar/da8ac10ee07f549aa73bd5af4f305f8f?s=16&amp;d=https%3A%2F%2Fcommunity.jboss.org%2Fgravatar%2Fda8ac10ee07f549aa73bd5af4f305f8f%2F16.png"></span><span
+                                            class="selected_contributor_name">—&nbsp;<span class="value">Jason Greene</span></span></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- </Search Web UI> -->
+            </div>
+        </div>
+    </div> <!-- /site-wrapper -->
+
+    <footer class="bottom">
+        <div class="row">
+            <ul class="footer-nav">
+                <li class="redhat"><a>Red Hat</a></li>
+                <li>Site Help:</li>
+                <li><a href="http://www.jboss.org/faq">FAQ</a></li>
+                <li><a href="mailto:help@jboss.org">Report a problem</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!---->
+
+    <!-- Initialize Zurb and whole JBoss Developer theme -->
+    <script type='text/javascript'>
+        //<![CDATA[
+        $(document).foundation();
+        // Toggle mobile Nav
+        $('.nav-toggle').on('click',function(){
+            $('body').toggleClass('nav-open');
+        });
+
+        // Mobile Nav dropdown
+        $('li.has-dropdown').on('click touchend',function(e){
+            $(this).toggleClass('sub-nav-open');
+        });
+        //]]>
+    </script>
+    <script src="http://static.jboss.org/ffe/www/1.2-build-440/javascripts/vendor/jbossorg-tabzilla.js"></script>
+
+</body>
+</html>
